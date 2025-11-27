@@ -239,31 +239,33 @@ export default function SignUpPage() {
                             />
                         </div>
 
-                        <div className="space-y-2">
-                            <button
-                                type="button"
-                                onClick={() => setShowChairpersonCode(!showChairpersonCode)}
-                                className="text-sm text-primary hover:underline"
-                            >
-                                {showChairpersonCode ? '− Hide' : '+ I have a chairperson code'}
-                            </button>
+                        {detectedRole === 'member' && (
+                            <div className="space-y-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowChairpersonCode(!showChairpersonCode)}
+                                    className="text-sm text-primary hover:underline"
+                                >
+                                    {showChairpersonCode ? '− Hide' : '+ I have a chairperson code'}
+                                </button>
 
-                            {showChairpersonCode && (
-                                <div className="space-y-2 pt-2">
-                                    <Label htmlFor="chairpersonCode">Chairperson Signup Code</Label>
-                                    <Input
-                                        id="chairpersonCode"
-                                        type="text"
-                                        placeholder="CHST-XXXXXXXX"
-                                        value={formData.chairpersonCode}
-                                        onChange={(e) => setFormData({ ...formData, chairpersonCode: e.target.value })}
-                                    />
-                                    <p className="text-xs text-muted-foreground">
-                                        Enter the code provided by the current chairperson
-                                    </p>
-                                </div>
-                            )}
-                        </div>
+                                {showChairpersonCode && (
+                                    <div className="space-y-2 pt-2">
+                                        <Label htmlFor="chairpersonCode">Chairperson Signup Code</Label>
+                                        <Input
+                                            id="chairpersonCode"
+                                            type="text"
+                                            placeholder="CHST-XXXXXXXX"
+                                            value={formData.chairpersonCode}
+                                            onChange={(e) => setFormData({ ...formData, chairpersonCode: e.target.value })}
+                                        />
+                                        <p className="text-xs text-muted-foreground">
+                                            Enter the code provided by the current chairperson
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </CardContent>
 
                     <CardFooter className="flex flex-col space-y-4">

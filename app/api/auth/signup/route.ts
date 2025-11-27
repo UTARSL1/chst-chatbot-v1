@@ -29,11 +29,19 @@ export async function POST(req: NextRequest) {
         }
 
         // Detect role from email domain
-        let role = detectRoleFromEmail(email);
+        let role: 'student' | 'member' | 'public' | 'chairperson' = detectRoleFromEmail(email);
         const autoApprove = shouldAutoApprove(email);
 
         // Check if chairperson code is provided
         if (chairpersonCode) {
+            // Only allow chairperson code for staff emails
+            if (!email.toLowerCase().endsWith('@utar.edu.my')) {
+                return NextResponse.json(
+                    { error: 'Chairperson code can only be used with a valid staff email (@utar.edu.my)' },
+                    { status: 400 }
+                );
+            }
+
             const signupCode = await prisma.signupCode.findUnique({
                 where: { code: chairpersonCode },
             });
@@ -83,16 +91,14 @@ export async function POST(req: NextRequest) {
                 passwordHash,
                 name,
                 role,
-                isApproved: autoApprove || role === 'chairperson',
+                isApproved: false, // All users require approval
             },
         });
 
         return NextResponse.json(
             {
                 success: true,
-                message: autoApprove || role === 'chairperson'
-                    ? 'Account created successfully'
-                    : 'Account created. Awaiting administrator approval.',
+                message: 'Account created. Awaiting administrator approval.',
                 user: {
                     id: user.id,
                     email: user.email,
