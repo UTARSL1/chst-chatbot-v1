@@ -1,0 +1,305 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { writeFile, mkdir } from 'fs/promises';
+import { join } from 'path';
+import { v4 as uuidv4 } from 'uuid';
+import { prisma } from '@/lib/db';
+import { extractTextFromPDF } from '@/lib/rag/pdfProcessor';
+import { chunkText, cleanText, generateEmbeddings } from '@/lib/rag/embeddings';
+import { storeDocumentChunks, deleteDocumentVectors } from '@/lib/rag/vectorStore';
+
+export async function POST(req: NextRequest) {
+    try {
+        const session = await getServerSession(authOptions);
+
+        // Only chairperson can upload documents
+        if (!session || session.user.role !== 'chairperson') {
+            return NextResponse.json(
+                { error: 'Unauthorized. Only chairpersons can upload documents.' },
+                { status: 403 }
+            );
+        }
+
+        const formData = await req.formData();
+        const file = formData.get('file') as File;
+        const accessLevel = formData.get('accessLevel') as string;
+        const category = (formData.get('category') as string) || 'policy';
+        const department = (formData.get('department') as string) || 'General';
+
+        if (!file) {
+            return NextResponse.json(
+                { error: 'No file provided' },
+                { status: 400 }
+            );
+        }
+
+        if (!accessLevel || !['student', 'member', 'chairperson'].includes(accessLevel)) {
+            return NextResponse.json(
+                { error: 'Invalid access level' },
+                { status: 400 }
+            );
+        }
+
+        // Validate file type
+        if (file.type !== 'application/pdf') {
+            return NextResponse.json(
+                { error: 'Only PDF files are allowed' },
+                { status: 400 }
+            );
+        }
+
+        // Validate file size (10MB max)
+        const maxSize = parseInt(process.env.MAX_FILE_SIZE || '10485760');
+        if (file.size > maxSize) {
+            return NextResponse.json(
+                { error: 'File size exceeds 10MB limit' },
+                { status: 400 }
+            );
+        }
+
+        // Generate unique filename
+        const fileId = uuidv4();
+        const filename = `${fileId}.pdf`;
+        const originalName = file.name;
+
+        // Create directory if it doesn't exist
+        const uploadDir = join(process.cwd(), 'documents', accessLevel);
+        await mkdir(uploadDir, { recursive: true });
+
+        // Save file
+        const filePath = join(uploadDir, filename);
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        await writeFile(filePath, buffer);
+
+        // Create document record in database
+        const document = await prisma.document.create({
+            data: {
+                filename,
+                originalName,
+                accessLevel: accessLevel as any,
+                category,
+                department,
+                filePath,
+                fileSize: file.size,
+                status: 'processing',
+                uploadedById: session.user.id,
+            },
+        });
+
+        // Process document asynchronously (don't wait for completion)
+        processDocument(document.id, filePath, filename, accessLevel as any)
+            .catch((error) => {
+                console.error('Error processing document:', error);
+                // Update document status to failed
+                prisma.document.update({
+                    where: { id: document.id },
+                    data: { status: 'failed' },
+                });
+            });
+
+        return NextResponse.json(
+            {
+                success: true,
+                document: {
+                    id: document.id,
+                    filename: document.originalName,
+                    accessLevel: document.accessLevel,
+                    status: document.status,
+                },
+            },
+            { status: 201 }
+        );
+    } catch (error) {
+        console.error('Upload error:', error);
+        return NextResponse.json(
+            { error: 'An error occurred during upload' },
+            { status: 500 }
+        );
+    }
+}
+
+/**
+ * Process document: extract text, generate embeddings, store in vector DB
+ */
+async function processDocument(
+    documentId: string,
+    filePath: string,
+    filename: string,
+    accessLevel: 'student' | 'member' | 'chairperson'
+) {
+    try {
+        // 1. Extract text from PDF
+        const rawText = await extractTextFromPDF(filePath);
+        const cleanedText = cleanText(rawText);
+
+        // 2. Chunk text
+        const chunks = chunkText(cleanedText, 500, 50);
+
+        // 3. Generate embeddings for all chunks
+        const embeddings = await generateEmbeddings(chunks);
+
+        // 4. Store in vector database
+        const chunkData = chunks.map((content, index) => ({
+            content,
+            embedding: embeddings[index],
+        }));
+
+        const vectorIds = await storeDocumentChunks(
+            chunkData,
+            documentId,
+            filename,
+            accessLevel
+        );
+
+        // 5. Update document status
+        await prisma.document.update({
+            where: { id: documentId },
+            data: {
+                status: 'processed',
+                processedAt: new Date(),
+                vectorIds: vectorIds,
+                chunkCount: chunks.length,
+            },
+        });
+
+        console.log(`Document ${documentId} processed successfully`);
+    } catch (error) {
+        console.error(`Error processing document ${documentId}:`, error);
+
+        // Log to file for debugging
+        try {
+            const { appendFile } = require('fs/promises');
+            await appendFile('processing-error.log', `${new Date().toISOString()} - Error processing ${documentId}: ${error}\n${JSON.stringify(error, Object.getOwnPropertyNames(error))}\n\n`);
+        } catch (e) {
+            console.error('Failed to write to error log', e);
+        }
+
+        // Update status to failed
+        await prisma.document.update({
+            where: { id: documentId },
+            data: { status: 'failed' },
+        });
+
+        throw error;
+    }
+}
+
+export async function GET(req: NextRequest) {
+    try {
+        const session = await getServerSession(authOptions);
+
+        if (!session) {
+            return NextResponse.json(
+                { error: 'Unauthorized' },
+                { status: 401 }
+            );
+        }
+
+        // Get all documents (chairperson sees all, others see based on role)
+        const documents = await prisma.document.findMany({
+            where:
+                session.user.role === 'chairperson'
+                    ? {}
+                    : {
+                        accessLevel: {
+                            in: session.user.role === 'member'
+                                ? ['student', 'member']
+                                : ['student'],
+                        },
+                    },
+            include: {
+                uploadedBy: {
+                    select: {
+                        name: true,
+                        email: true,
+                    },
+                },
+            },
+            orderBy: {
+                uploadedAt: 'desc',
+            },
+        });
+
+        return NextResponse.json({ documents }, { status: 200 });
+    } catch (error) {
+        console.error('Get documents error:', error);
+        return NextResponse.json(
+            { error: 'An error occurred while fetching documents' },
+            { status: 500 }
+        );
+    }
+}
+
+export async function DELETE(req: NextRequest) {
+    try {
+        const session = await getServerSession(authOptions);
+
+        // Only chairperson can delete documents
+        if (!session || session.user.role !== 'chairperson') {
+            return NextResponse.json(
+                { error: 'Unauthorized. Only chairpersons can delete documents.' },
+                { status: 403 }
+            );
+        }
+
+        const { searchParams } = new URL(req.url);
+        const id = searchParams.get('id');
+
+        if (!id) {
+            return NextResponse.json(
+                { error: 'Document ID is required' },
+                { status: 400 }
+            );
+        }
+
+        // Get document to find file path and vector IDs
+        const document = await prisma.document.findUnique({
+            where: { id },
+        });
+
+        if (!document) {
+            return NextResponse.json(
+                { error: 'Document not found' },
+                { status: 404 }
+            );
+        }
+
+        // 1. Delete from Pinecone (if processed)
+        const vectorIds = document.vectorIds as string[];
+        if (vectorIds && vectorIds.length > 0) {
+            try {
+                await deleteDocumentVectors(document.vectorIds as string[]);
+            } catch (error) {
+                console.error('Error deleting vectors:', error);
+                // Continue even if vector deletion fails
+            }
+        }
+
+        // 2. Delete file from filesystem
+        try {
+            const { unlink } = require('fs/promises');
+            await unlink(document.filePath);
+        } catch (error) {
+            console.error('Error deleting file:', error);
+            // Continue even if file deletion fails (might be already gone)
+        }
+
+        // 3. Delete from database
+        await prisma.document.delete({
+            where: { id },
+        });
+
+        return NextResponse.json(
+            { success: true, message: 'Document deleted successfully' },
+            { status: 200 }
+        );
+    } catch (error) {
+        console.error('Delete document error:', error);
+        return NextResponse.json(
+            { error: 'An error occurred while deleting the document' },
+            { status: 500 }
+        );
+    }
+}

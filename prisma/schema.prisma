@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User roles enum
+enum UserRole {
+  student
+  member
+  chairperson
+  public
+}
+
+// Document access level enum
+enum AccessLevel {
+  student
+  member
+  chairperson
+}
+
+// User model
+model User {
+  id            String        @id @default(uuid())
+  email         String        @unique
+  passwordHash  String
+  name          String
+  role          UserRole
+  isApproved    Boolean       @default(false) // For public users awaiting approval
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  
+  // Relations
+  chatSessions  ChatSession[]
+  messages      Message[]
+  documents     Document[]
+  
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+// Chat session model
+model ChatSession {
+  id        String    @id @default(uuid())
+  userId    String
+  title     String?   // First question or custom title
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? // Soft delete timestamp
+  deletedBy String?   // User ID who deleted this session
+  
+  // Relations
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  Message[]
+  
+  @@index([userId])
+  @@index([createdAt])
+  @@index([deletedAt])
+  @@map("chat_sessions")
+}
+
+// Message model
+model Message {
+  id          String      @id @default(uuid())
+  sessionId   String
+  userId      String
+  role        String      // 'user' or 'assistant'
+  content     String      @db.Text
+  sources     Json?       // Array of document sources used for RAG
+  createdAt   DateTime    @default(now())
+  
+  // Relations
+  session     ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([sessionId])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("messages")
+}
+
+// Document model
+model Document {
+  id            String      @id @default(uuid())
+  filename      String
+  originalName  String
+  accessLevel   AccessLevel @default(student)
+  category      String      @default("policy") // policy, form
+  department    String      @default("General") // DHR, IPSR, etc.
+  filePath      String
+  fileSize      Int
+  status        String      @default("processing") // 'processing', 'processed', 'failed'
+  uploadedById  String
+  uploadedAt    DateTime    @default(now())
+  processedAt   DateTime?
+  
+  // Vector DB metadata
+  vectorIds     Json?       // Array of vector IDs in Pinecone
+  chunkCount    Int?        // Number of chunks created
+  
+  // Relations
+  uploadedBy    User        @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+  
+  @@index([accessLevel])
+  @@index([status])
+  @@index([uploadedById])
+  @@map("documents")
+}
+
+// Chairperson signup code model
+model SignupCode {
+  id          String    @id @default(uuid())
+  code        String    @unique
+  isUsed      Boolean   @default(false)
+  usedBy      String?   // Email of user who used it
+  createdAt   DateTime  @default(now())
+  usedAt      DateTime?
+  expiresAt   DateTime? // Optional expiration
+  
+  @@index([code])
+  @@index([isUsed])
+  @@map("signup_codes")
+}
