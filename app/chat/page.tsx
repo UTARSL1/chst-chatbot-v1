@@ -31,14 +31,12 @@ export default function ChatPage() {
     const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
-    // Redirect if not authenticated
     useEffect(() => {
         if (status === 'unauthenticated') {
             router.push('/auth/signin');
         }
     }, [status, router]);
 
-    // Load chat sessions
     useEffect(() => {
         if (session) {
             loadChatSessions();
@@ -74,7 +72,6 @@ export default function ChatPage() {
         setInput('');
         setLoading(true);
 
-        // Add user message to UI immediately
         const tempUserMessage: Message = {
             id: Date.now().toString(),
             role: 'user',
@@ -96,7 +93,6 @@ export default function ChatPage() {
             const data = await response.json();
 
             if (data.success) {
-                // Add assistant message
                 const assistantMessage: Message = {
                     id: (Date.now() + 1).toString(),
                     role: 'assistant',
@@ -106,8 +102,6 @@ export default function ChatPage() {
                 };
                 setMessages((prev) => [...prev, assistantMessage]);
                 setSessionId(data.sessionId);
-
-                // Reload chat sessions
                 loadChatSessions();
             } else {
                 alert('Error: ' + data.error);
@@ -117,6 +111,29 @@ export default function ChatPage() {
             alert('Failed to send message');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleDeleteSession = async (sid: string) => {
+        if (!confirm('Delete this chat?')) return;
+
+        try {
+            const response = await fetch(`/api/chat-sessions/${sid}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                setChatSessions(prev => prev.filter(s => s.id !== sid));
+                if (sessionId === sid) {
+                    setMessages([]);
+                    setSessionId(null);
+                }
+            } else {
+                alert('Failed to delete');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to delete');
         }
     };
 
@@ -155,7 +172,6 @@ export default function ChatPage() {
 
     return (
         <div className="flex h-screen bg-background">
-            {/* Sidebar */}
             {sidebarOpen && (
                 <div className="w-64 border-r border-border bg-card p-4 flex flex-col">
                     <Button
@@ -168,26 +184,32 @@ export default function ChatPage() {
 
                     <div className="flex-1 overflow-y-auto space-y-2">
                         <h3 className="text-sm font-semibold text-muted-foreground mb-2">Chat History</h3>
-                        {chatSessions.map((session) => (
-                            <button
-                                key={session.id}
-                                onClick={() => loadMessages(session.id)}
-                                className={`w-full text-left px-3 py-2 rounded-md text-sm hover:bg-accent transition-colors ${sessionId === session.id ? 'bg-accent' : ''
-                                    }`}
-                            >
-                                <p className="truncate">{session.title}</p>
-                                <p className="text-xs text-muted-foreground">
-                                    {new Date(session.updatedAt).toLocaleDateString()}
-                                </p>
-                            </button>
+                        {chatSessions.map((s) => (
+                            <div key={s.id} className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm hover:bg-accent transition-colors ${sessionId === s.id ? 'bg-accent' : ''}`}>
+                                <button
+                                    onClick={() => loadMessages(s.id)}
+                                    className="flex-1 text-left min-w-0 pointer-events-auto"
+                                >
+                                    <p className="truncate">{s.title}</p>
+                                    <p className="text-xs text-muted-foreground">
+                                        {new Date(s.updatedAt).toLocaleDateString()}
+                                    </p>
+                                </button>
+                                <button
+                                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleDeleteSession(s.id); }}
+                                    className="text-red-500 hover:text-red-600 hover:bg-red-50 text-xl font-bold px-2 py-1 rounded pointer-events-auto"
+                                    title="Delete chat"
+                                    type="button"
+                                >
+                                    ×
+                                </button>
+                            </div>
                         ))}
                     </div>
                 </div>
             )}
 
-            {/* Main Chat Area */}
             <div className="flex-1 flex flex-col">
-                {/* Header */}
                 <div className="border-b border-border bg-card px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <button
@@ -226,7 +248,6 @@ export default function ChatPage() {
                     </div>
                 </div>
 
-                {/* Messages Area */}
                 <div className="flex-1 overflow-y-auto p-6 space-y-4">
                     {messages.length === 0 ? (
                         <div className="max-w-3xl mx-auto text-center space-y-6 mt-12">
@@ -295,7 +316,6 @@ export default function ChatPage() {
                     )}
                 </div>
 
-                {/* Input Area */}
                 <div className="border-t border-border bg-card p-6">
                     <form onSubmit={handleSubmit} className="max-w-4xl mx-auto flex gap-4">
                         <Input

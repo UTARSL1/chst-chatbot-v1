@@ -118,10 +118,16 @@ export async function GET(req: NextRequest) {
         } else {
             // Get all chat sessions for user
             // Filter out deleted sessions for regular users, show all for chairpersons
+            const whereClause: any = {
+                userId: session.user.id,
+            };
+
+            if (session.user.role !== 'chairperson') {
+                whereClause.deletedAt = null;
+            }
+
             const sessions = await prisma.chatSession.findMany({
-                where: {
-                    userId: session.user.id,
-                },
+                where: whereClause,
                 include: {
                     messages: {
                         take: 1,
