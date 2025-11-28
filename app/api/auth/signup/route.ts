@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/db';
-import { detectRoleFromEmail, shouldAutoApprove } from '@/lib/utils';
+import { isUTAREmail, isGeneralEmailProvider, isValidRecoveryEmail } from '@/lib/email-validation';
 
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { name, email, password, chairpersonCode } = body;
+        const { name, email, password, invitationCode, recoveryEmail } = body;
 
         // Validate input
         if (!name || !email || !password) {
             return NextResponse.json(
-                { error: 'All fields are required' },
+                { error: 'Name, email, and password are required' },
                 { status: 400 }
             );
         }
@@ -28,57 +28,92 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // Detect role from email domain
-        let role: 'student' | 'member' | 'public' | 'chairperson' = detectRoleFromEmail(email);
-        const autoApprove = shouldAutoApprove(email);
+        let role: 'student' | 'member' | 'public' | 'chairperson';
+        let invitationCodeId: string | undefined;
+        let finalRecoveryEmail: string | undefined;
 
-        // Check if chairperson code is provided
-        if (chairpersonCode) {
-            // Only allow chairperson code for staff emails
-            if (!email.toLowerCase().endsWith('@utar.edu.my')) {
+        // Determine signup type based on email domain
+        if (isUTAREmail(email)) {
+            // UTAR email - requires invitation code and recovery email
+            if (!invitationCode) {
                 return NextResponse.json(
-                    { error: 'Chairperson code can only be used with a valid staff email (@utar.edu.my)' },
+                    { error: 'Invitation code is required for UTAR email addresses' },
                     { status: 400 }
                 );
             }
 
-            const signupCode = await prisma.signupCode.findUnique({
-                where: { code: chairpersonCode },
+            if (!recoveryEmail) {
+                return NextResponse.json(
+                    { error: 'Recovery email is required for UTAR email addresses' },
+                    { status: 400 }
+                );
+            }
+
+            // Validate recovery email
+            if (!isValidRecoveryEmail(recoveryEmail)) {
+                return NextResponse.json(
+                    { error: 'Recovery email must be a personal email (Gmail, Outlook, Yahoo, etc.)' },
+                    { status: 400 }
+                );
+            }
+
+            // Validate invitation code
+            const code = await prisma.invitationCode.findUnique({
+                where: { code: invitationCode },
             });
 
-            if (!signupCode) {
+            if (!code) {
                 return NextResponse.json(
-                    { error: 'Invalid chairperson signup code' },
+                    { error: 'Invalid invitation code' },
                     { status: 400 }
                 );
             }
 
-            if (signupCode.isUsed) {
+            if (!code.isActive) {
                 return NextResponse.json(
-                    { error: 'This signup code has already been used' },
+                    { error: 'This invitation code is no longer active' },
                     { status: 400 }
                 );
             }
 
-            if (signupCode.expiresAt && new Date() > signupCode.expiresAt) {
+            if (code.expiresAt && new Date() > code.expiresAt) {
                 return NextResponse.json(
-                    { error: 'This signup code has expired' },
+                    { error: 'This invitation code has expired' },
                     { status: 400 }
                 );
             }
 
-            // Set role to chairperson
-            role = 'chairperson';
+            // Determine role based on UTAR domain
+            const domain = email.split('@')[1]?.toLowerCase();
+            if (domain === 'utar.edu.my') {
+                role = 'member'; // Staff
+            } else if (domain === '1utar.my') {
+                role = 'student';
+            } else {
+                role = 'public'; // Fallback
+            }
 
-            // Mark code as used
-            await prisma.signupCode.update({
-                where: { code: chairpersonCode },
-                data: {
-                    isUsed: true,
-                    usedBy: email.toLowerCase(),
-                    usedAt: new Date(),
-                },
+            invitationCodeId = code.id;
+            finalRecoveryEmail = recoveryEmail.toLowerCase();
+
+            // Increment usage count
+            await prisma.invitationCode.update({
+                where: { id: code.id },
+                data: { usageCount: { increment: 1 } },
             });
+
+        } else if (isGeneralEmailProvider(email)) {
+            // Public user with general email provider
+            role = 'public';
+            finalRecoveryEmail = undefined; // Use email itself for recovery
+            invitationCodeId = undefined;
+
+        } else {
+            // Company/institutional email (not allowed)
+            return NextResponse.json(
+                { error: 'Please use a personal email (Gmail, Outlook, etc.) or UTAR email address' },
+                { status: 400 }
+            );
         }
 
         // Hash password
@@ -91,6 +126,8 @@ export async function POST(req: NextRequest) {
                 passwordHash,
                 name,
                 role,
+                recoveryEmail: finalRecoveryEmail,
+                invitationCodeId,
                 isApproved: false, // All users require approval
             },
         });

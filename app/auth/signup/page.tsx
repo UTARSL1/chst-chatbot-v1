@@ -7,63 +7,102 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { detectRoleFromEmail } from '@/lib/utils';
 
 export default function SignUpPage() {
     const router = useRouter();
+    const [step, setStep] = useState(1); // 1 = basic info, 2 = recovery email (for UTAR)
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         password: '',
         confirmPassword: '',
-        chairpersonCode: '',
+        invitationCode: '',
+        recoveryEmail: '',
     });
-    const [detectedRole, setDetectedRole] = useState<string>('');
-    const [showChairpersonCode, setShowChairpersonCode] = useState(false);
+    const [emailType, setEmailType] = useState<'utar' | 'public' | 'invalid' | ''>('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
-    const [passwordStrength, setPasswordStrength] = useState(0);
 
-    // Detect role from email
+    // Detect email type
     useEffect(() => {
-        if (formData.email) {
-            const role = detectRoleFromEmail(formData.email);
-            setDetectedRole(role);
+        if (!formData.email) {
+            setEmailType('');
+            return;
+        }
+
+        const domain = formData.email.split('@')[1]?.toLowerCase();
+        const generalProviders = ['gmail.com', 'googlemail.com', 'outlook.com', 'hotmail.com', 'live.com', 'yahoo.com', 'ymail.com', 'icloud.com', 'me.com', 'protonmail.com', 'pm.me', 'aol.com', 'zoho.com', 'mail.com'];
+
+        if (domain === 'utar.edu.my' || domain === '1utar.my') {
+            setEmailType('utar');
+        } else if (generalProviders.includes(domain)) {
+            setEmailType('public');
         } else {
-            setDetectedRole('');
+            setEmailType('invalid');
         }
     }, [formData.email]);
 
-    // Calculate password strength
-    useEffect(() => {
-        const password = formData.password;
-        let strength = 0;
-        if (password.length >= 8) strength++;
-        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
-        if (/\d/.test(password)) strength++;
-        if (/[^a-zA-Z0-9]/.test(password)) strength++;
-        setPasswordStrength(strength);
-    }, [formData.password]);
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleNext = () => {
         setError('');
-        setSuccess('');
 
-        // Validation
+        // Validation for step 1
+        if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
+            setError('All fields are required');
+            return;
+        }
+
         if (formData.password !== formData.confirmPassword) {
             setError('Passwords do not match');
             return;
         }
 
         if (formData.password.length < 8) {
-            setError('Password must be at least 8 characters long');
+            setError('Password must be at least 8 characters');
             return;
         }
 
+        if (emailType === 'invalid') {
+            setError('Please use a personal email (Gmail, Outlook, etc.) or UTAR email');
+            return;
+        }
+
+        if (emailType === 'utar' && !formData.invitationCode) {
+            setError('Invitation code is required for UTAR emails');
+            return;
+        }
+
+        // If UTAR email, go to step 2 for recovery email
+        if (emailType === 'utar') {
+            setStep(2);
+        } else {
+            // Public user, submit directly
+            handleSubmit();
+        }
+    };
+
+    const handleSubmit = async () => {
+        setError('');
         setLoading(true);
+
+        // Validate recovery email for UTAR users
+        if (emailType === 'utar') {
+            if (!formData.recoveryEmail) {
+                setError('Recovery email is required');
+                setLoading(false);
+                return;
+            }
+
+            const recoveryDomain = formData.recoveryEmail.split('@')[1]?.toLowerCase();
+            const generalProviders = ['gmail.com', 'googlemail.com', 'outlook.com', 'hotmail.com', 'live.com', 'yahoo.com', 'ymail.com', 'icloud.com', 'me.com', 'protonmail.com', 'pm.me', 'aol.com', 'zoho.com', 'mail.com'];
+
+            if (!generalProviders.includes(recoveryDomain)) {
+                setError('Recovery email must be a personal email (Gmail, Outlook, etc.)');
+                setLoading(false);
+                return;
+            }
+        }
 
         try {
             const response = await fetch('/api/auth/signup', {
@@ -73,7 +112,8 @@ export default function SignUpPage() {
                     name: formData.name,
                     email: formData.email,
                     password: formData.password,
-                    chairpersonCode: formData.chairpersonCode || undefined,
+                    invitationCode: formData.invitationCode || undefined,
+                    recoveryEmail: formData.recoveryEmail || undefined,
                 }),
             });
 
@@ -85,42 +125,12 @@ export default function SignUpPage() {
             }
 
             setSuccess(data.message);
-
-            // Redirect to signin after 2 seconds
-            setTimeout(() => {
-                router.push('/auth/signin');
-            }, 2000);
+            setTimeout(() => router.push('/auth/signin'), 2000);
         } catch (err) {
             setError('An unexpected error occurred');
         } finally {
             setLoading(false);
         }
-    };
-
-    const getRoleBadgeClass = (role: string) => {
-        switch (role) {
-            case 'student': return 'role-badge-student';
-            case 'member': return 'role-badge-member';
-            case 'chairperson': return 'role-badge-chairperson';
-            case 'public': return 'role-badge-public';
-            default: return '';
-        }
-    };
-
-    const getPasswordStrengthColor = () => {
-        if (passwordStrength === 0) return 'bg-gray-500';
-        if (passwordStrength === 1) return 'bg-red-500';
-        if (passwordStrength === 2) return 'bg-yellow-500';
-        if (passwordStrength === 3) return 'bg-blue-500';
-        return 'bg-green-500';
-    };
-
-    const getPasswordStrengthText = () => {
-        if (passwordStrength === 0) return 'Too weak';
-        if (passwordStrength === 1) return 'Weak';
-        if (passwordStrength === 2) return 'Fair';
-        if (passwordStrength === 3) return 'Good';
-        return 'Strong';
     };
 
     return (
@@ -130,162 +140,169 @@ export default function SignUpPage() {
                     <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-4">
                         <span className="text-2xl font-bold text-white">C</span>
                     </div>
-                    <CardTitle className="text-2xl font-bold">Create Your Account</CardTitle>
-                    <CardDescription>Join CHST-Chatbot V1.2</CardDescription>
+                    <CardTitle className="text-2xl font-bold">Create an Account</CardTitle>
+                    <CardDescription>Join CHST-Chatbot V1.3</CardDescription>
                 </CardHeader>
-                <form onSubmit={handleSubmit}>
-                    <CardContent className="space-y-4">
-                        {error && (
-                            <div className="bg-red-500/10 border border-red-500/50 text-red-400 px-4 py-3 rounded-md text-sm">
-                                {error}
-                            </div>
-                        )}
 
-                        {success && (
-                            <div className="bg-green-500/10 border border-green-500/50 text-green-400 px-4 py-3 rounded-md text-sm">
-                                {success}
-                            </div>
-                        )}
-
-                        <div className="space-y-2">
-                            <Label htmlFor="name">Full Name</Label>
-                            <Input
-                                id="name"
-                                type="text"
-                                placeholder="John Doe"
-                                value={formData.name}
-                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                required
-                            />
+                <CardContent className="space-y-4">
+                    {error && (
+                        <div className="bg-red-500/10 border border-red-500/50 text-red-400 px-4 py-3 rounded-md text-sm">
+                            {error}
                         </div>
+                    )}
 
-                        <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                placeholder="your.email@utar.edu.my"
-                                value={formData.email}
-                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                required
-                            />
-                            {detectedRole && (
-                                <div className="flex items-center gap-2 mt-2">
-                                    <span className="text-sm text-muted-foreground">Detected role:</span>
-                                    <span className={`text-xs px-2 py-1 rounded-full ${getRoleBadgeClass(detectedRole)}`}>
-                                        {detectedRole === 'member' ? 'Staff' : detectedRole.charAt(0).toUpperCase() + detectedRole.slice(1)}
-                                    </span>
-                                    {detectedRole === 'public' && (
-                                        <span className="text-xs text-yellow-400">(Requires admin approval)</span>
-                                    )}
-                                </div>
-                            )}
+                    {success && (
+                        <div className="bg-green-500/10 border border-green-500/50 text-green-400 px-4 py-3 rounded-md text-sm">
+                            {success}
                         </div>
+                    )}
 
-                        <div className="space-y-2">
-                            <Label htmlFor="password">Password</Label>
-                            <div className="relative">
-                                <Input
-                                    id="password"
-                                    type={showPassword ? 'text' : 'password'}
-                                    placeholder="••••••••"
-                                    value={formData.password}
-                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                    required
-                                    className="pr-10"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                                >
-                                    {showPassword ? (
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                                        </svg>
-                                    ) : (
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
-                                    )}
-                                </button>
-                            </div>
-                            {formData.password && (
-                                <div className="space-y-1">
-                                    <div className="flex gap-1">
-                                        {[1, 2, 3, 4].map((i) => (
-                                            <div
-                                                key={i}
-                                                className={`h-1 flex-1 rounded-full ${i <= passwordStrength ? getPasswordStrengthColor() : 'bg-gray-700'
-                                                    }`}
-                                            />
-                                        ))}
-                                    </div>
-                                    <p className="text-xs text-muted-foreground">{getPasswordStrengthText()}</p>
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="confirmPassword">Confirm Password</Label>
-                            <Input
-                                id="confirmPassword"
-                                type="password"
-                                placeholder="••••••••"
-                                value={formData.confirmPassword}
-                                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                required
-                            />
-                        </div>
-
-                        {detectedRole === 'member' && (
+                    {step === 1 ? (
+                        <>
                             <div className="space-y-2">
-                                <button
-                                    type="button"
-                                    onClick={() => setShowChairpersonCode(!showChairpersonCode)}
-                                    className="text-sm text-primary hover:underline"
-                                >
-                                    {showChairpersonCode ? '− Hide' : '+ I have a chairperson code'}
-                                </button>
+                                <Label htmlFor="name">Full Name</Label>
+                                <Input
+                                    id="name"
+                                    type="text"
+                                    placeholder="John Doe"
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                    required
+                                />
+                            </div>
 
-                                {showChairpersonCode && (
-                                    <div className="space-y-2 pt-2">
-                                        <Label htmlFor="chairpersonCode">Chairperson Signup Code</Label>
-                                        <Input
-                                            id="chairpersonCode"
-                                            type="text"
-                                            placeholder="CHST-XXXXXXXX"
-                                            value={formData.chairpersonCode}
-                                            onChange={(e) => setFormData({ ...formData, chairpersonCode: e.target.value })}
-                                        />
-                                        <p className="text-xs text-muted-foreground">
-                                            Enter the code provided by the current chairperson
-                                        </p>
-                                    </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="email">Email</Label>
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    placeholder="your.email@example.com"
+                                    value={formData.email}
+                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                    required
+                                />
+                                {emailType === 'utar' && (
+                                    <p className="text-xs text-blue-400">✓ UTAR email detected</p>
+                                )}
+                                {emailType === 'public' && (
+                                    <p className="text-xs text-green-400">✓ Public email accepted</p>
+                                )}
+                                {emailType === 'invalid' && (
+                                    <p className="text-xs text-red-400">✗ Please use Gmail, Outlook, or UTAR email</p>
                                 )}
                             </div>
-                        )}
-                    </CardContent>
 
-                    <CardFooter className="flex flex-col space-y-4">
+                            {emailType === 'utar' && (
+                                <div className="space-y-2">
+                                    <Label htmlFor="invitationCode">Invitation Code</Label>
+                                    <Input
+                                        id="invitationCode"
+                                        type="text"
+                                        placeholder="INV-XXXXXXXX"
+                                        value={formData.invitationCode}
+                                        onChange={(e) => setFormData({ ...formData, invitationCode: e.target.value.toUpperCase() })}
+                                        required
+                                    />
+                                    <p className="text-xs text-muted-foreground">Required for UTAR signups</p>
+                                </div>
+                            )}
+
+                            <div className="space-y-2">
+                                <Label htmlFor="password">Password</Label>
+                                <div className="relative">
+                                    <Input
+                                        id="password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        placeholder="••••••••"
+                                        value={formData.password}
+                                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                        required
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                    >
+                                        {showPassword ? '👁️' : '👁️‍🗨️'}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                                <Input
+                                    id="confirmPassword"
+                                    type="password"
+                                    placeholder="••••••••"
+                                    value={formData.confirmPassword}
+                                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                                    required
+                                />
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className="bg-blue-500/10 border border-blue-500/50 text-blue-400 px-4 py-3 rounded-md text-sm">
+                                <p className="font-semibold mb-1">Recovery Email Required</p>
+                                <p className="text-xs">For password recovery, please provide a personal email (Gmail, Outlook, etc.)</p>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="recoveryEmail">Recovery Email</Label>
+                                <Input
+                                    id="recoveryEmail"
+                                    type="email"
+                                    placeholder="your.email@gmail.com"
+                                    value={formData.recoveryEmail}
+                                    onChange={(e) => setFormData({ ...formData, recoveryEmail: e.target.value })}
+                                    required
+                                />
+                                <p className="text-xs text-muted-foreground">
+                                    Password reset links will be sent to this email
+                                </p>
+                            </div>
+                        </>
+                    )}
+                </CardContent>
+
+                <CardFooter className="flex flex-col space-y-4">
+                    {step === 1 ? (
                         <Button
-                            type="submit"
+                            onClick={handleNext}
                             variant="gradient"
                             className="w-full"
-                            disabled={loading}
+                            disabled={loading || !emailType || emailType === 'invalid'}
                         >
-                            {loading ? 'Creating account...' : 'Sign Up'}
+                            {emailType === 'utar' ? 'Next →' : 'Sign Up'}
                         </Button>
+                    ) : (
+                        <div className="flex gap-2 w-full">
+                            <Button
+                                onClick={() => setStep(1)}
+                                variant="outline"
+                                className="flex-1"
+                                disabled={loading}
+                            >
+                                ← Back
+                            </Button>
+                            <Button
+                                onClick={handleSubmit}
+                                variant="gradient"
+                                className="flex-1"
+                                disabled={loading}
+                            >
+                                {loading ? 'Creating...' : 'Sign Up'}
+                            </Button>
+                        </div>
+                    )}
 
-                        <p className="text-center text-sm text-muted-foreground">
-                            Already have an account?{' '}
-                            <Link href="/auth/signin" className="text-primary hover:underline font-medium">
-                                Sign in
-                            </Link>
-                        </p>
-                    </CardFooter>
-                </form>
+                    <p className="text-center text-sm text-muted-foreground">
+                        Already have an account?{' '}
+                        <Link href="/auth/signin" className="text-primary hover:underline font-medium">
+                            Sign in
+                        </Link>
+                    </p>
+                </CardFooter>
             </Card>
         </div>
     );

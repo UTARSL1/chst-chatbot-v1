@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
 
@@ -12,15 +12,28 @@ export async function GET() {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
         }
 
-        // Get all users awaiting approval
+        const { searchParams } = new URL(req.url);
+        const view = searchParams.get('view');
+
+        const whereClause = view === 'all' ? {} : { isApproved: false };
+
+        // Get users based on view param
         const users = await prisma.user.findMany({
-            where: { isApproved: false },
+            where: whereClause,
             select: {
                 id: true,
                 email: true,
                 name: true,
                 role: true,
                 createdAt: true,
+                isApproved: true, // Need this to distinguish in the list
+                recoveryEmail: true,
+                invitationCode: {
+                    select: {
+                        code: true,
+                        createdAt: true,
+                    },
+                },
             },
             orderBy: { createdAt: 'desc' },
         });
