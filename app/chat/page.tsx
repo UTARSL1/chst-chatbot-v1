@@ -220,7 +220,7 @@ export default function ChatPage() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
-                        <h1 className="text-xl font-bold">CHST-Chatbot V1.2</h1>
+                        <h1 className="text-xl font-bold">CHST-Chatbot V1.3</h1>
                     </div>
 
                     <div className="flex items-center gap-4">
@@ -254,7 +254,7 @@ export default function ChatPage() {
                             <div className="w-20 h-20 mx-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                                 <span className="text-3xl font-bold text-white">C</span>
                             </div>
-                            <h2 className="text-2xl font-bold">Welcome to CHST-Chatbot V1.2</h2>
+                            <h2 className="text-2xl font-bold">Welcome to CHST-Chatbot V1.3</h2>
                             <p className="text-muted-foreground">
                                 Ask me anything about CHST research centre policies and forms
                             </p>

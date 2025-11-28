@@ -85,7 +85,7 @@ export function AdminSidebar() {
 
             <div className="p-4 border-t border-gray-800">
                 <div className="text-xs text-gray-500 text-center">
-                    CHST Chatbot v1.2
+                    CHST Chatbot v1.3
                 </div>
             </div>
         </div>
