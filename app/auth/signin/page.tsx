@@ -50,7 +50,7 @@ export default function SignInPage() {
                     <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-4">
                         <span className="text-2xl font-bold text-white">C</span>
                     </div>
-                    <CardTitle className="text-2xl font-bold">Welcome to CHST-Chatbot V1</CardTitle>
+                    <CardTitle className="text-2xl font-bold">Welcome to CHST-Chatbot V1.2</CardTitle>
                     <CardDescription>Sign in to continue</CardDescription>
                 </CardHeader>
                 <form onSubmit={handleSubmit}>

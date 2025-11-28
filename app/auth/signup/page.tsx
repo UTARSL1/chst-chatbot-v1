@@ -131,7 +131,7 @@ export default function SignUpPage() {
                         <span className="text-2xl font-bold text-white">C</span>
                     </div>
                     <CardTitle className="text-2xl font-bold">Create Your Account</CardTitle>
-                    <CardDescription>Join CHST-Chatbot V1</CardDescription>
+                    <CardDescription>Join CHST-Chatbot V1.2</CardDescription>
                 </CardHeader>
                 <form onSubmit={handleSubmit}>
                     <CardContent className="space-y-4">
