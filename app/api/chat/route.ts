@@ -101,13 +101,28 @@ export async function GET(req: NextRequest) {
 
         const { searchParams } = new URL(req.url);
         const sessionId = searchParams.get('sessionId');
+        const view = searchParams.get('view'); // 'admin' or undefined
 
         if (sessionId) {
             // Get messages for specific session
+            // Check if user has access
+            const chatSession = await prisma.chatSession.findUnique({
+                where: { id: sessionId },
+                select: { userId: true, deletedAt: true }
+            });
+
+            if (!chatSession) {
+                return NextResponse.json({ error: 'Session not found' }, { status: 404 });
+            }
+
+            // Access control: Owner or Chairperson
+            if (chatSession.userId !== session.user.id && session.user.role !== 'chairperson') {
+                return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+            }
+
             const messages = await prisma.message.findMany({
                 where: {
                     sessionId,
-                    userId: session.user.id,
                 },
                 orderBy: {
                     createdAt: 'asc',
@@ -116,19 +131,28 @@ export async function GET(req: NextRequest) {
 
             return NextResponse.json({ messages }, { status: 200 });
         } else {
-            // Get all chat sessions for user
-            // Filter out deleted sessions for regular users, show all for chairpersons
-            const whereClause: any = {
-                userId: session.user.id,
-            };
+            // Get chat sessions list
+            const whereClause: any = {};
 
-            if (session.user.role !== 'chairperson') {
+            if (view === 'admin' && session.user.role === 'chairperson') {
+                // Admin view: Show all sessions, including deleted ones
+                // No userId filter, no deletedAt filter
+            } else {
+                // Default view: Show only my active sessions
+                whereClause.userId = session.user.id;
                 whereClause.deletedAt = null;
             }
 
             const sessions = await prisma.chatSession.findMany({
                 where: whereClause,
                 include: {
+                    user: { // Include user details for admin view
+                        select: {
+                            name: true,
+                            email: true,
+                            role: true,
+                        }
+                    },
                     messages: {
                         take: 1,
                         orderBy: {

@@ -46,7 +46,7 @@ export default function AdminChatHistoryPage() {
 
     const loadAllSessions = async () => {
         try {
-            const response = await fetch('/api/chat');
+            const response = await fetch('/api/chat?view=admin');
             const data = await response.json();
             setSessions(data.sessions || []);
         } catch (error) {
