@@ -3,6 +3,8 @@ import { generateEmbedding } from './embeddings';
 import { searchSimilarDocuments } from './vectorStore';
 import { getAccessibleLevels } from '@/lib/utils';
 import { RAGQuery, RAGResponse, DocumentSource } from '@/types';
+import { prisma } from '@/lib/db';
+import { getRelatedDocuments } from './suggestions';
 
 // Initialize OpenAI client
 const openai = new OpenAI({
@@ -53,15 +55,34 @@ Important:
                 .map((chunk, index) => `[Document ${index + 1}: ${chunk.metadata.filename}]\n${chunk.content}`)
                 .join('\n\n---\n\n');
 
-            systemPrompt = `You are a helpful assistant for the CHST research centre at UTAR. Your role is to answer questions about university and centre-level research policies and forms based on the provided context.
+            // Fetch custom system prompt from database
+            const dbPrompt = await prisma.systemPrompt.findUnique({
+                where: { name: 'default_rag' },
+            });
+
+            if (dbPrompt && dbPrompt.isActive) {
+                // Use custom prompt from database
+                systemPrompt = dbPrompt.content;
+            } else {
+                // Use default prompt
+                systemPrompt = `You are a helpful assistant for the CHST research centre at UTAR. Your primary role is to answer questions about university and centre-level research policies and forms, but you can also help with general questions.
 
 Guidelines:
-- Use information from the provided context to answer questions
-- If the context doesn't contain enough information, say so clearly
-- Be specific and cite the relevant policy or form name
+- For policy/form questions: Use the provided context to give accurate, specific answers
+- For general questions (math, common knowledge, etc.): Answer normally using your general knowledge
+- If a policy question isn't covered in the context, say so clearly and offer to help in other ways
+- Be specific and cite relevant policy or form names when applicable
 - Provide step-by-step instructions when asked about procedures
-- If asked about deadlines or dates, be precise
-- Maintain a professional and helpful tone`;
+- Maintain a professional, friendly, and helpful tone
+- If asked about deadlines or dates from policies, be precise and cite the source
+
+CRITICAL - Form References:
+- ONLY mention forms that are explicitly stated in the provided context by name or form number
+- DO NOT suggest or mention forms that are not explicitly written in the policy text
+- If a form is mentioned in the context, include its full title and form number exactly as written
+- The download links will automatically appear for any forms you mention
+- If no specific forms are mentioned in the context, do not make up or suggest forms`;
+            }
 
             userPrompt = `Context from CHST policies and forms:
 
@@ -99,9 +120,25 @@ Please provide a helpful and accurate answer based on the context above. If the 
                 index === self.findIndex((s) => s.filename === source.filename)
         );
 
+        // Enrich sources with metadata for download links
+        const enrichedSources = await enrichSourcesWithMetadata(uniqueSources);
+
+        // Get related document suggestions
+        const referencedDocIds = enrichedSources
+            .filter(s => s.documentId)
+            .map(s => s.documentId!);
+
+        const suggestions = await getRelatedDocuments({
+            referencedDocIds,
+            userRole: query.userRole,
+            referencedChunks: relevantChunks,
+            limit: 5,
+        });
+
         return {
             answer,
-            sources: uniqueSources,
+            sources: enrichedSources,
+            suggestions,
             tokensUsed: completion.usage?.total_tokens,
         };
     } catch (error) {
@@ -196,5 +233,56 @@ Please provide a helpful and accurate answer based on the context above.`;
     } catch (error) {
         console.error('Error processing RAG query stream:', error);
         yield 'Sorry, an error occurred while processing your question.';
+    }
+}
+
+/**
+ * Enrich document sources with metadata for download links
+ * @param sources - Array of document sources
+ * @returns Enriched sources with document metadata
+ */
+async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<DocumentSource[]> {
+    if (sources.length === 0) return [];
+
+    try {
+        // Get unique filenames
+        const filenames = [...new Set(sources.map(s => s.filename))];
+
+        // Fetch document metadata from database
+        const documents = await prisma.document.findMany({
+            where: {
+                filename: {
+                    in: filenames,
+                },
+            },
+            select: {
+                id: true,
+                filename: true,
+                originalName: true,
+                category: true,
+                department: true,
+            },
+        });
+
+        // Create a map for quick lookup
+        const docMap = new Map(documents.map(doc => [doc.filename, doc]));
+
+        // Enrich sources with metadata
+        return sources.map(source => {
+            const doc = docMap.get(source.filename);
+            if (doc) {
+                return {
+                    ...source,
+                    documentId: doc.id,
+                    originalName: doc.originalName,
+                    category: doc.category,
+                    department: doc.department || undefined,
+                };
+            }
+            return source;
+        });
+    } catch (error) {
+        console.error('Error enriching sources with metadata:', error);
+        return sources; // Return original sources if enrichment fails
     }
 }

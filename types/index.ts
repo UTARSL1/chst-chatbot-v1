@@ -34,6 +34,10 @@ export interface DocumentSource {
     accessLevel: string;
     relevanceScore?: number;
     pageNumber?: number;
+    documentId?: string;
+    originalName?: string;
+    category?: string;
+    department?: string;
 }
 
 // Document types
@@ -87,6 +91,7 @@ export interface RAGQuery {
 export interface RAGResponse {
     answer: string;
     sources: DocumentSource[];
+    suggestions?: DocumentSource[];
     tokensUsed?: number;
 }
 

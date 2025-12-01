@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/db';
 import { isUTAREmail, isGeneralEmailProvider, isValidRecoveryEmail } from '@/lib/email-validation';
+import { sendVerificationEmail } from '@/lib/email';
+import crypto from 'crypto';
 
 export async function POST(req: NextRequest) {
     try {
@@ -119,6 +121,10 @@ export async function POST(req: NextRequest) {
         // Hash password
         const passwordHash = await bcrypt.hash(password, 12);
 
+        // Generate verification token with 24-hour expiry
+        const verificationToken = crypto.randomBytes(32).toString('hex');
+        const verificationTokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
         // Create user
         const user = await prisma.user.create({
             data: {
@@ -129,13 +135,19 @@ export async function POST(req: NextRequest) {
                 recoveryEmail: finalRecoveryEmail,
                 invitationCodeId,
                 isApproved: false, // All users require approval
+                verificationToken,
+                verificationTokenExpiry,
+                isVerified: false,
             },
         });
+
+        // Send verification email
+        await sendVerificationEmail(user.email, verificationToken);
 
         return NextResponse.json(
             {
                 success: true,
-                message: 'Account created. Awaiting administrator approval.',
+                message: 'Signup successful! Please check your email to verify your account before logging in.',
                 user: {
                     id: user.id,
                     email: user.email,

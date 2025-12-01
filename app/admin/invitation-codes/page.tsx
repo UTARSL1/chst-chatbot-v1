@@ -141,6 +141,15 @@ export default function InvitationCodesPage() {
                                         >
                                             {code.isActive ? '🟢 Active' : '🔴 Inactive'}
                                         </Button>
+                                        {code.isActive && (
+                                            <Button
+                                                onClick={() => toggleActive(code.id, true)}
+                                                variant="outline"
+                                                size="sm"
+                                            >
+                                                Deactivate
+                                            </Button>
+                                        )}
                                         <Button
                                             onClick={() => deleteCode(code.id)}
                                             variant="destructive"

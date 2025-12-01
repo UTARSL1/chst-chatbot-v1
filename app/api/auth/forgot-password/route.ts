@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                 <h2 style="color: #4F46E5;">Reset Your Password</h2>
                 <p>Hello ${user.name},</p>
-                <p>We received a request to reset your password for CHST-Chatbot V1.3. If you didn't make this request, you can safely ignore this email.</p>
+                <p>We received a request to reset your password for CHST-Chatbot V1.4. If you didn't make this request, you can safely ignore this email.</p>
                 <p>To reset your password, click the button below:</p>
                 <div style="text-align: center; margin: 30px 0;">
                     <a href="${resetLink}" style="background-color: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">Reset Password</a>

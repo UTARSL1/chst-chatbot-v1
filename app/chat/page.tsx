@@ -12,6 +12,7 @@ interface Message {
     role: 'user' | 'assistant';
     content: string;
     sources?: any[];
+    suggestions?: any[];
     createdAt: Date;
 }
 
@@ -98,6 +99,7 @@ export default function ChatPage() {
                     role: 'assistant',
                     content: data.answer,
                     sources: data.sources,
+                    suggestions: data.suggestions,
                     createdAt: new Date(),
                 };
                 setMessages((prev) => [...prev, assistantMessage]);
@@ -220,7 +222,7 @@ export default function ChatPage() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
-                        <h1 className="text-xl font-bold">CHST-Chatbot V1.3</h1>
+                        <h1 className="text-xl font-bold">CHST-Chatbot V1.6</h1>
                     </div>
 
                     <div className="flex items-center gap-4">
@@ -241,7 +243,7 @@ export default function ChatPage() {
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => router.push('/api/auth/signout')}
+                            onClick={() => router.push('/auth/signout')}
                         >
                             Logout
                         </Button>
@@ -251,10 +253,13 @@ export default function ChatPage() {
                 <div className="flex-1 overflow-y-auto p-6 space-y-4">
                     {messages.length === 0 ? (
                         <div className="max-w-3xl mx-auto text-center space-y-6 mt-12">
-                            <div className="w-20 h-20 mx-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                                <span className="text-3xl font-bold text-white">C</span>
+                            <div className="w-24 h-24 mx-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center gap-1">
+                                <span className="text-base font-bold text-white tracking-tight">CHST</span>
+                                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
                             </div>
-                            <h2 className="text-2xl font-bold">Welcome to CHST-Chatbot V1.3</h2>
+                            <h2 className="text-2xl font-bold">Welcome to CHST-Chatbot V1.6</h2>
                             <p className="text-muted-foreground">
                                 Ask me anything about CHST research centre policies and forms
                             </p>
@@ -284,17 +289,65 @@ export default function ChatPage() {
                                         }`}
                                 >
                                     <p className="whitespace-pre-wrap">{message.content}</p>
-                                    {message.sources && message.sources.length > 0 && (
-                                        <div className="mt-3 pt-3 border-t border-border">
-                                            <p className="text-xs text-muted-foreground mb-2">Sources:</p>
-                                            <div className="flex flex-wrap gap-2">
-                                                {message.sources.map((source, idx) => (
-                                                    <span
+                                    {message.sources && message.sources.length > 0 && (() => {
+                                        // Get unique documents based on documentId
+                                        const uniqueDocs = message.sources.filter((source, index, self) =>
+                                            source.documentId && index === self.findIndex(s => s.documentId === source.documentId)
+                                        );
+
+                                        return uniqueDocs.length > 0 && (
+                                            <div className="mt-4 p-3 bg-slate-800/50 rounded-lg border border-slate-700">
+                                                <p className="text-sm font-semibold text-slate-300 mb-2">
+                                                    📎 Referenced Documents:
+                                                </p>
+                                                <div className="space-y-2">
+                                                    {uniqueDocs.map((doc, idx) => (
+                                                        <a
+                                                            key={idx}
+                                                            href={`/api/documents/download?id=${doc.documentId}`}
+                                                            download
+                                                            className="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 hover:underline transition-colors"
+                                                        >
+                                                            <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                            </svg>
+                                                            <span className="flex-1">{doc.originalName || doc.filename}</span>
+                                                            {doc.category && (
+                                                                <span className="text-xs text-slate-500 px-2 py-0.5 bg-slate-700 rounded">
+                                                                    {doc.category}
+                                                                </span>
+                                                            )}
+                                                        </a>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        );
+                                    })()}
+
+                                    {/* Suggestions Section */}
+                                    {message.suggestions && message.suggestions.length > 0 && (
+                                        <div className="mt-3 p-3 bg-purple-900/20 rounded-lg border border-purple-700">
+                                            <p className="text-sm font-semibold text-purple-300 mb-2">
+                                                💡 You might also need:
+                                            </p>
+                                            <div className="space-y-2">
+                                                {message.suggestions.map((doc: any, idx: number) => (
+                                                    <a
                                                         key={idx}
-                                                        className="text-xs px-2 py-1 bg-accent rounded"
+                                                        href={`/api/documents/download?id=${doc.documentId}`}
+                                                        download
+                                                        className="flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300 hover:underline transition-colors"
                                                     >
-                                                        {source.filename}
-                                                    </span>
+                                                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                        </svg>
+                                                        <span className="flex-1">{doc.originalName || doc.filename}</span>
+                                                        {doc.category && (
+                                                            <span className="text-xs text-purple-500 px-2 py-0.5 bg-purple-800/50 rounded">
+                                                                {doc.category}
+                                                            </span>
+                                                        )}
+                                                    </a>
                                                 ))}
                                             </div>
                                         </div>

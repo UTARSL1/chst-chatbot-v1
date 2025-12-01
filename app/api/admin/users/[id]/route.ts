@@ -2,11 +2,13 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+import { sendApprovalEmail } from '@/lib/email';
 
 export async function POST(
     request: Request,
-    { params }: { params: { id: string } }
+    props: { params: Promise<{ id: string }> }
 ) {
+    const params = await props.params;
     try {
         const session = await getServerSession(authOptions);
 
@@ -17,13 +19,17 @@ export async function POST(
 
         const { id } = params;
 
-        // Approve the user
-        await prisma.user.update({
+        // Approve the user and get email/name
+        const user = await prisma.user.update({
             where: { id },
             data: { isApproved: true },
+            select: { email: true, name: true }
         });
 
-        return NextResponse.json({ success: true, message: 'User approved' });
+        // Send approval email
+        await sendApprovalEmail(user.email, user.name);
+
+        return NextResponse.json({ success: true, message: 'User approved and notified' });
     } catch (error) {
         console.error('Error approving user:', error);
         return NextResponse.json(
@@ -35,8 +41,9 @@ export async function POST(
 
 export async function DELETE(
     request: Request,
-    { params }: { params: { id: string } }
+    props: { params: Promise<{ id: string }> }
 ) {
+    const params = await props.params;
     try {
         const session = await getServerSession(authOptions);
 

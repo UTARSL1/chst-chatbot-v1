@@ -6,8 +6,8 @@ import { Providers } from "@/components/providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "CHST-Chatbot V1.3",
-    description: "AI-powered chatbot for CHST research centre policies and forms",
+    title: "CHST-Chatbot V1.7",
+    description: "CHST Chatbot V1.7 - AI-powered research policy assistant",
 };
 
 export default function RootLayout({

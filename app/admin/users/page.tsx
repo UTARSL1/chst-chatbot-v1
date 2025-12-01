@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
+import { ChatHistoryModal } from '@/components/admin/chat-history-modal';
 
 interface User {
     id: string;
@@ -15,6 +16,7 @@ interface User {
     createdAt: Date;
     isApproved: boolean;
     recoveryEmail?: string;
+    verificationTokenExpiry?: Date;
     invitationCode?: {
         code: string;
         createdAt: Date;
@@ -27,6 +29,8 @@ export default function AdminUsersPage() {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<'pending' | 'all'>('pending');
+    const [selectedUser, setSelectedUser] = useState<{ id: string; name: string } | null>(null);
+    const [showChatHistory, setShowChatHistory] = useState(false);
 
     useEffect(() => {
         if (status === 'unauthenticated') {
@@ -161,6 +165,11 @@ export default function AdminUsersPage() {
                                                 <span className={`text-xs px-2 py-1 rounded ${getRoleBadge(user.role)}`}>
                                                     {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                                                 </span>
+                                                {user.verificationTokenExpiry && new Date() > new Date(user.verificationTokenExpiry) && (
+                                                    <span className="text-xs px-2 py-1 rounded bg-red-100 text-red-800 font-semibold">
+                                                        EXPIRED
+                                                    </span>
+                                                )}
                                             </div>
                                             <p className="text-sm text-muted-foreground">{user.email}</p>
                                             {user.recoveryEmail && (
@@ -247,14 +256,27 @@ export default function AdminUsersPage() {
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 text-right">
-                                                <Button
-                                                    onClick={() => handleDelete(user.id, user.name)}
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                                                >
-                                                    Delete
-                                                </Button>
+                                                <div className="flex gap-2 justify-end">
+                                                    <Button
+                                                        onClick={() => {
+                                                            setSelectedUser({ id: user.id, name: user.name });
+                                                            setShowChatHistory(true);
+                                                        }}
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="text-blue-500 hover:text-blue-700 hover:bg-blue-50"
+                                                    >
+                                                        View History
+                                                    </Button>
+                                                    <Button
+                                                        onClick={() => handleDelete(user.id, user.name)}
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                                                    >
+                                                        Delete
+                                                    </Button>
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}
@@ -270,6 +292,14 @@ export default function AdminUsersPage() {
                         </div>
                     </CardContent>
                 </Card>
+            )}
+            {selectedUser && (
+                <ChatHistoryModal
+                    userId={selectedUser.id}
+                    userName={selectedUser.name}
+                    open={showChatHistory}
+                    onOpenChange={setShowChatHistory}
+                />
             )}
         </div>
     );

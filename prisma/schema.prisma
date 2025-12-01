@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // User roles enum
@@ -39,16 +40,43 @@ model User {
   resetTokenExpiry DateTime? // Expiration time for reset token
   recoveryEmail    String?    // Personal email for password recovery (for UTAR users)
   invitationCodeId String?    // Invitation code used during signup
+  verificationToken String?   @unique // Token for email verification
+  verificationTokenExpiry DateTime? // Expiration time for verification token
+  isVerified       Boolean    @default(false) // Email verification status
   
   // Relations
   chatSessions    ChatSession[]
   messages        Message[]
   documents       Document[]
+  knowledgeNotes  KnowledgeNote[]
   invitationCode  InvitationCode? @relation(fields: [invitationCodeId], references: [id])
   
   @@index([email])
   @@index([role])
   @@map("users")
+}
+
+// Knowledge Note model (Priority notes for RAG)
+model KnowledgeNote {
+  id          String   @id @default(uuid())
+  title       String
+  content     String   @db.Text
+  category    String?
+  priority    String   @default("standard") // standard, high, critical
+  accessLevel String[] @default(["public", "student", "member", "chairperson"]) // Array of roles
+  status      String   @default("active")   // processing, active, failed
+  isActive    Boolean  @default(true)
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  creator     User     @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  
+  @@index([isActive])
+  @@index([createdBy])
+  @@index([priority])
+  @@map("knowledge_notes")
 }
 
 // Chat session model
@@ -117,6 +145,18 @@ model Document {
   @@index([status])
   @@index([uploadedById])
   @@map("documents")
+}
+
+model SystemPrompt {
+  id          String   @id @default(uuid())
+  name        String   @unique // e.g., "default_rag"
+  content     String   @db.Text
+  isActive    Boolean  @default(true)
+  updatedBy   String?  // User ID of the editor
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+
+  @@map("system_prompts")
 }
 
 // Chairperson signup code model

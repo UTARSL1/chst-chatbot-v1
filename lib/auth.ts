@@ -36,6 +36,12 @@ export const authOptions: NextAuthOptions = {
                     throw new Error('Your account is pending approval by the administrator');
                 }
 
+                // Check if email is verified
+                if (!user.isVerified) {
+                    console.log('[AUTH] User email not verified');
+                    throw new Error('Please verify your email address before logging in');
+                }
+
                 // Verify password
                 const isPasswordValid = await bcrypt.compare(
                     credentials.password,

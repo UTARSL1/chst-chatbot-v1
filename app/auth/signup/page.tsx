@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -137,11 +137,14 @@ export default function SignUpPage() {
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4">
             <Card className="w-full max-w-md glassmorphism">
                 <CardHeader className="space-y-1 text-center">
-                    <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-4">
-                        <span className="text-2xl font-bold text-white">C</span>
+                    <div className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center gap-1 mb-4">
+                        <span className="text-sm font-bold text-white tracking-tight">CHST</span>
+                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
                     </div>
                     <CardTitle className="text-2xl font-bold">Create an Account</CardTitle>
-                    <CardDescription>Join CHST-Chatbot V1.3</CardDescription>
+                    <CardDescription>Join CHST-Chatbot V1.6</CardDescription>
                 </CardHeader>
 
                 <CardContent className="space-y-4">
@@ -164,7 +167,7 @@ export default function SignUpPage() {
                                 <Input
                                     id="name"
                                     type="text"
-                                    placeholder="John Doe"
+                                    placeholder=""
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                     required
@@ -176,7 +179,7 @@ export default function SignUpPage() {
                                 <Input
                                     id="email"
                                     type="email"
-                                    placeholder="your.email@example.com"
+                                    placeholder=""
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                     required
@@ -213,7 +216,7 @@ export default function SignUpPage() {
                                     <Input
                                         id="password"
                                         type={showPassword ? 'text' : 'password'}
-                                        placeholder="••••••••"
+                                        placeholder=""
                                         value={formData.password}
                                         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                         required
@@ -223,7 +226,11 @@ export default function SignUpPage() {
                                         onClick={() => setShowPassword(!showPassword)}
                                         className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                                     >
-                                        {showPassword ? '👁️' : '👁️‍🗨️'}
+                                        {showPassword ? (
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7c.44 0 .87-.03 1.28-.09" /><line x1="2" x2="22" y1="2" y2="22" /></svg>
+                                        ) : (
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
+                                        )}
                                     </button>
                                 </div>
                             </div>
@@ -233,7 +240,7 @@ export default function SignUpPage() {
                                 <Input
                                     id="confirmPassword"
                                     type="password"
-                                    placeholder="••••••••"
+                                    placeholder=""
                                     value={formData.confirmPassword}
                                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                                     required

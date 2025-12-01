@@ -1,8 +1,8 @@
-'use client';
+﻿'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,12 +15,31 @@ export default function SignInPage() {
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+
+    const searchParams = useSearchParams();
+    const verified = searchParams.get('verified');
+    const errorParam = searchParams.get('error');
+
+    useEffect(() => {
+        if (verified) {
+            setSuccess('Email verified! Your account is pending admin approval. You will be notified when active.');
+        }
+        if (errorParam === 'InvalidToken') {
+            setError('Invalid or expired verification link. Please try signing up again or contact support.');
+        } else if (errorParam === 'ExpiredToken') {
+            setError('Verification link expired. Your account has been removed. Please check your email and sign up again.');
+        } else if (errorParam === 'VerificationFailed') {
+            setError('Verification failed. Please try again later.');
+        }
+    }, [verified, errorParam]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+        setSuccess('');
         setLoading(true);
 
         try {
@@ -47,10 +66,13 @@ export default function SignInPage() {
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4">
             <Card className="w-full max-w-md glassmorphism">
                 <CardHeader className="space-y-1 text-center">
-                    <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-4">
-                        <span className="text-2xl font-bold text-white">C</span>
+                    <div className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center gap-1 mb-4">
+                        <span className="text-sm font-bold text-white tracking-tight">CHST</span>
+                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
                     </div>
-                    <CardTitle className="text-2xl font-bold">Welcome to CHST-Chatbot V1.3</CardTitle>
+                    <CardTitle className="text-2xl font-bold">Welcome to CHST-Chatbot V1.6</CardTitle>
                     <CardDescription>Sign in to continue</CardDescription>
                 </CardHeader>
                 <form onSubmit={handleSubmit}>
@@ -60,6 +82,11 @@ export default function SignInPage() {
                                 {error}
                             </div>
                         )}
+                        {success && (
+                            <div className="bg-green-500/10 border border-green-500/50 text-green-400 px-4 py-3 rounded-md text-sm">
+                                {success}
+                            </div>
+                        )}
 
                         <div className="space-y-2">
                             <Label htmlFor="email">Email</Label>
@@ -67,7 +94,7 @@ export default function SignInPage() {
                                 <Input
                                     id="email"
                                     type="email"
-                                    placeholder="your.email@utar.edu.my"
+                                    placeholder=""
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
@@ -90,7 +117,7 @@ export default function SignInPage() {
                                 <Input
                                     id="password"
                                     type={showPassword ? 'text' : 'password'}
-                                    placeholder="••••••••"
+                                    placeholder=""
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required

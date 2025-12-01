@@ -68,6 +68,73 @@ export async function sendEmail({ to, subject, html }: SendEmailParams) {
     }
 }
 
+export async function sendVerificationEmail(email: string, token: string) {
+    const verificationUrl = `${process.env.NEXTAUTH_URL}/api/auth/verify?token=${token}`;
+
+    const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #2563eb;">Welcome to CHST Chatbot!</h2>
+            <p>Thank you for signing up. Please verify your email address to activate your account.</p>
+            <p>Click the button below to verify:</p>
+            <a href="${verificationUrl}" style="display: inline-block; background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 20px 0;">Verify Email</a>
+            <p style="margin-top: 20px;">This link will expire in 24 hours.</p>
+            <p>If you didn't sign up for this account, you can safely ignore this email.</p>
+        </div>
+    `;
+
+    return sendEmail({
+        to: email,
+        subject: 'Verify your CHST Chatbot Account',
+        html,
+    });
+}
+
+export async function sendApprovalEmail(email: string, name: string) {
+    const loginUrl = `${process.env.NEXTAUTH_URL}/auth/signin`;
+
+    const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #2563eb;">Account Approved!</h2>
+            <p>Dear ${name},</p>
+            <p>Great news! Your account has been approved by the administrator.</p>
+            <p>You can now log in to CHST Chatbot and start using the system.</p>
+            <p>Click the button below to log in:</p>
+            <a href="${loginUrl}" style="display: inline-block; background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 20px 0;">Log In</a>
+            <p>Or copy and paste this link into your browser:</p>
+            <p><a href="${loginUrl}">${loginUrl}</a></p>
+            <p>Welcome aboard!</p>
+        </div>
+    `;
+
+    return sendEmail({
+        to: email,
+        subject: 'Your CHST Chatbot Account has been Approved',
+        html,
+    });
+}
+
+export async function sendExpiredTokenEmail(email: string, name: string) {
+    const signupUrl = `${process.env.NEXTAUTH_URL}/auth/signup`;
+
+    const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #dc2626;">Verification Link Expired</h2>
+            <p>Dear ${name},</p>
+            <p>Your email verification link has expired after 24 hours.</p>
+            <p>For security reasons, we've removed your pending registration from our system.</p>
+            <p>To continue, please sign up again with the same email address:</p>
+            <a href="${signupUrl}" style="display: inline-block; background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 20px 0;">Sign Up Again</a>
+            <p>If you didn't attempt to sign up, you can safely ignore this email.</p>
+        </div>
+    `;
+
+    return sendEmail({
+        to: email,
+        subject: 'CHST Chatbot - Verification Link Expired',
+        html,
+    });
+}
+
 function logEmailToConsole(to: string, subject: string, html: string) {
     console.log('\n================ EMAIL SIMULATION ================');
     console.log(`To: ${to}`);
