@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { prisma } from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 import { extractTextFromPDF } from '@/lib/rag/pdfProcessor';
 import { chunkText, cleanText, generateEmbeddings } from '@/lib/rag/embeddings';
 import { storeDocumentChunks, deleteDocumentVectors } from '@/lib/rag/vectorStore';
@@ -63,15 +62,26 @@ export async function POST(req: NextRequest) {
         const filename = `${fileId}.pdf`;
         const originalName = file.name;
 
-        // Create directory if it doesn't exist
-        const uploadDir = join(process.cwd(), 'documents', accessLevel);
-        await mkdir(uploadDir, { recursive: true });
-
-        // Save file
-        const filePath = join(uploadDir, filename);
+        // Convert file to buffer
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
-        await writeFile(filePath, buffer);
+
+        // Upload to Supabase Storage
+        const storagePath = `${accessLevel}/${filename}`;
+        const { error: uploadError } = await supabase.storage
+            .from('documents')
+            .upload(storagePath, buffer, {
+                contentType: 'application/pdf',
+                upsert: false,
+            });
+
+        if (uploadError) {
+            console.error('Supabase upload error:', uploadError);
+            return NextResponse.json(
+                { error: 'Failed to upload file to storage' },
+                { status: 500 }
+            );
+        }
 
         // Create document record in database
         const document = await prisma.document.create({
@@ -81,7 +91,7 @@ export async function POST(req: NextRequest) {
                 accessLevel: accessLevel as any,
                 category,
                 department,
-                filePath,
+                filePath: storagePath, // Store Supabase path instead of local path
                 fileSize: file.size,
                 status: 'processing',
                 uploadedById: session.user.id,
@@ -89,7 +99,7 @@ export async function POST(req: NextRequest) {
         });
 
         // Process document asynchronously (don't wait for completion)
-        processDocument(document.id, filePath, filename, accessLevel as any)
+        processDocument(document.id, buffer, filename, accessLevel as any)
             .catch((error) => {
                 console.error('Error processing document:', error);
                 // Update document status to failed
@@ -125,13 +135,13 @@ export async function POST(req: NextRequest) {
  */
 async function processDocument(
     documentId: string,
-    filePath: string,
+    fileBuffer: Buffer,
     filename: string,
     accessLevel: 'student' | 'member' | 'chairperson'
 ) {
     try {
-        // 1. Extract text from PDF
-        const rawText = await extractTextFromPDF(filePath);
+        // 1. Extract text from PDF (using buffer directly)
+        const rawText = await extractTextFromPDF(fileBuffer);
         const cleanedText = cleanText(rawText);
 
         // 2. Chunk text
@@ -277,10 +287,16 @@ export async function DELETE(req: NextRequest) {
             }
         }
 
-        // 2. Delete file from filesystem
+        // 2. Delete file from Supabase Storage
         try {
-            const { unlink } = require('fs/promises');
-            await unlink(document.filePath);
+            const { error: deleteError } = await supabase.storage
+                .from('documents')
+                .remove([document.filePath]);
+
+            if (deleteError) {
+                console.error('Error deleting from Supabase Storage:', deleteError);
+                // Continue even if storage deletion fails
+            }
         } catch (error) {
             console.error('Error deleting file:', error);
             // Continue even if file deletion fails (might be already gone)

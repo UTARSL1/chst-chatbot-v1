@@ -2,14 +2,21 @@ import { readFile } from 'fs/promises';
 
 /**
  * Extract text from PDF file
- * @param filePath - Path to PDF file
+ * @param input - Path to PDF file or Buffer
  * @returns Extracted text content
  */
-export async function extractTextFromPDF(filePath: string): Promise<string> {
+export async function extractTextFromPDF(input: string | Buffer): Promise<string> {
     try {
         // Use pdf-parse-fork which is more compatible with Next.js
         const pdf = require('pdf-parse-fork');
-        const dataBuffer = await readFile(filePath);
+
+        let dataBuffer: Buffer;
+        if (Buffer.isBuffer(input)) {
+            dataBuffer = input;
+        } else {
+            dataBuffer = await readFile(input);
+        }
+
         const data = await pdf(dataBuffer);
         return data.text;
     } catch (error) {
@@ -20,13 +27,20 @@ export async function extractTextFromPDF(filePath: string): Promise<string> {
 
 /**
  * Get PDF metadata
- * @param filePath - Path to PDF file
+ * @param input - Path to PDF file or Buffer
  * @returns PDF metadata
  */
-export async function getPDFMetadata(filePath: string) {
+export async function getPDFMetadata(input: string | Buffer) {
     try {
         const pdf = require('pdf-parse-fork');
-        const dataBuffer = await readFile(filePath);
+
+        let dataBuffer: Buffer;
+        if (Buffer.isBuffer(input)) {
+            dataBuffer = input;
+        } else {
+            dataBuffer = await readFile(input);
+        }
+
         const data = await pdf(dataBuffer);
 
         return {

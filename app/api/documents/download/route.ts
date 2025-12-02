@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
-import { readFile } from 'fs/promises';
+import { supabase } from '@/lib/supabase';
 
 export async function GET(req: NextRequest) {
     try {
@@ -54,11 +54,25 @@ export async function GET(req: NextRequest) {
             );
         }
 
-        // Read file from filesystem
-        const fileBuffer = await readFile(document.filePath);
+        // Download file from Supabase Storage
+        const { data, error } = await supabase.storage
+            .from('documents')
+            .download(document.filePath);
+
+        if (error || !data) {
+            console.error('Supabase download error:', error);
+            return NextResponse.json(
+                { error: 'Failed to download document from storage' },
+                { status: 500 }
+            );
+        }
+
+        // Convert blob to buffer
+        const arrayBuffer = await data.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
 
         // Return file with proper headers for download
-        return new NextResponse(fileBuffer, {
+        return new NextResponse(buffer, {
             headers: {
                 'Content-Type': 'application/pdf',
                 'Content-Disposition': `attachment; filename="${document.originalName}"`,
