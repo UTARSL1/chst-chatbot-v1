@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
                 userId: session.user.id,
                 role: 'assistant',
                 content: ragResponse.answer,
-                sources: ragResponse.sources,
+                sources: ragResponse.sources as any,
             },
         });
 
