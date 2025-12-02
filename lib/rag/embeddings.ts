@@ -91,6 +91,6 @@ export function cleanText(text: string): string {
     return text
         .replace(/\s+/g, ' ') // Replace multiple spaces with single space
         .replace(/\n+/g, '\n') // Replace multiple newlines with single newline
-        .replace(/[^\x00-\x7F]/g, '') // Remove non-ASCII characters (optional)
+        // .replace(/[^\x00-\x7F]/g, '') // Remove non-ASCII characters (optional)
         .trim();
 }

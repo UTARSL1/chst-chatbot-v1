@@ -144,7 +144,7 @@ export default function SignUpPage() {
                         </svg>
                     </div>
                     <CardTitle className="text-2xl font-bold">Create an Account</CardTitle>
-                    <CardDescription>Join CHST-Chatbot V1.6</CardDescription>
+                    <CardDescription>Join CHST-Chatbot V1.7</CardDescription>
                 </CardHeader>
 
                 <CardContent className="space-y-4">

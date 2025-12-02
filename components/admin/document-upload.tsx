@@ -13,10 +13,10 @@ export function DocumentUpload({ onUploadSuccess }: { onUploadSuccess?: () => vo
     const [category, setCategory] = useState<string>('Policy');
 
     // Department state
-    const [department, setDepartment] = useState<string>('DHR');
+    const [department, setDepartment] = useState<string>('CHST');
     const [customDepartment, setCustomDepartment] = useState<string>('');
     const [isCustomDepartment, setIsCustomDepartment] = useState(false);
-    const [existingDepartments, setExistingDepartments] = useState<string[]>(['DHR', 'IPSR']);
+    const [existingDepartments, setExistingDepartments] = useState<string[]>(['CHST', 'DHR', 'IPSR']);
 
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState('');
@@ -31,13 +31,15 @@ export function DocumentUpload({ onUploadSuccess }: { onUploadSuccess?: () => vo
                 const response = await fetch('/api/documents');
                 if (response.ok) {
                     const data = await response.json();
-                    const depts = new Set<string>(['DHR', 'IPSR']);
+                    const depts = new Set<string>(['CHST', 'DHR', 'IPSR']);
                     if (data.documents) {
                         data.documents.forEach((doc: any) => {
                             if (doc.department) depts.add(doc.department);
                         });
                     }
-                    setExistingDepartments(Array.from(depts));
+                    // Ensure CHST is always first
+                    const deptArray = Array.from(depts).filter(d => d !== 'CHST');
+                    setExistingDepartments(['CHST', ...deptArray]);
                 }
             } catch (error) {
                 console.error('Failed to fetch departments', error);
@@ -188,8 +190,8 @@ export function DocumentUpload({ onUploadSuccess }: { onUploadSuccess?: () => vo
                                 onDragLeave={handleDragLeave}
                                 onDrop={handleDrop}
                                 className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${isDragging ? 'border-violet-500 bg-violet-500/20' :
-                                        file ? 'border-violet-500 bg-violet-500/10' :
-                                            'border-gray-700 hover:bg-gray-800'
+                                    file ? 'border-violet-500 bg-violet-500/10' :
+                                        'border-gray-700 hover:bg-gray-800'
                                     }`}
                             >
                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -276,6 +278,7 @@ export function DocumentUpload({ onUploadSuccess }: { onUploadSuccess?: () => vo
                             >
                                 <option value="Policy">Policy</option>
                                 <option value="Form">Form</option>
+                                <option value="Meeting Minute">Meeting Minute</option>
                             </select>
                         </div>
                     </div>

@@ -28,6 +28,8 @@ export function DocumentList() {
     const [loading, setLoading] = useState(true);
     const [deleting, setDeleting] = useState<string | null>(null);
 
+    const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' }>({ key: 'uploadedAt', direction: 'desc' });
+
     useEffect(() => {
         fetchDocuments();
     }, []);
@@ -52,6 +54,41 @@ export function DocumentList() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleSort = (key: string) => {
+        setSortConfig((current) => ({
+            key,
+            direction: current.key === key && current.direction === 'asc' ? 'desc' : 'asc',
+        }));
+    };
+
+    const sortedDocuments = [...documents].sort((a: any, b: any) => {
+        const { key, direction } = sortConfig;
+        let aValue = a[key];
+        let bValue = b[key];
+
+        // Handle nested properties
+        if (key.includes('.')) {
+            const keys = key.split('.');
+            aValue = keys.reduce((obj: any, k: string) => obj?.[k], a);
+            bValue = keys.reduce((obj: any, k: string) => obj?.[k], b);
+        }
+
+        // Handle special cases
+        if (key === 'fileSize') {
+            aValue = Number(aValue);
+            bValue = Number(bValue);
+        }
+
+        if (aValue < bValue) return direction === 'asc' ? -1 : 1;
+        if (aValue > bValue) return direction === 'asc' ? 1 : -1;
+        return 0;
+    });
+
+    const SortIcon = ({ columnKey }: { columnKey: string }) => {
+        if (sortConfig.key !== columnKey) return <span className="ml-1 text-gray-600">↕</span>;
+        return <span className="ml-1 text-violet-400">{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>;
     };
 
     const handleDelete = async (id: string) => {
@@ -103,19 +140,35 @@ export function DocumentList() {
                         <table className="w-full text-left text-sm text-gray-400">
                             <thead className="text-xs uppercase bg-gray-800/50 text-gray-300">
                                 <tr>
-                                    <th className="px-6 py-3">Name</th>
-                                    <th className="px-6 py-3">Dept</th>
-                                    <th className="px-6 py-3">Type</th>
-                                    <th className="px-6 py-3">Access</th>
-                                    <th className="px-6 py-3">Size</th>
-                                    <th className="px-6 py-3">Uploaded By</th>
-                                    <th className="px-6 py-3">Date</th>
-                                    <th className="px-6 py-3">Status</th>
+                                    <th className="px-6 py-3 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('originalName')}>
+                                        Name <SortIcon columnKey="originalName" />
+                                    </th>
+                                    <th className="px-6 py-3 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('department')}>
+                                        Dept <SortIcon columnKey="department" />
+                                    </th>
+                                    <th className="px-6 py-3 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('category')}>
+                                        Type <SortIcon columnKey="category" />
+                                    </th>
+                                    <th className="px-6 py-3 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('accessLevel')}>
+                                        Access <SortIcon columnKey="accessLevel" />
+                                    </th>
+                                    <th className="px-6 py-3 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('fileSize')}>
+                                        Size <SortIcon columnKey="fileSize" />
+                                    </th>
+                                    <th className="px-6 py-3 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('uploadedBy.name')}>
+                                        Uploaded By <SortIcon columnKey="uploadedBy.name" />
+                                    </th>
+                                    <th className="px-6 py-3 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('uploadedAt')}>
+                                        Date <SortIcon columnKey="uploadedAt" />
+                                    </th>
+                                    <th className="px-6 py-3 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('status')}>
+                                        Status <SortIcon columnKey="status" />
+                                    </th>
                                     <th className="px-6 py-3">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {documents.map((doc) => (
+                                {sortedDocuments.map((doc) => (
                                     <tr key={doc.id} className="border-b border-gray-800 hover:bg-gray-800/30">
                                         <td className="px-6 py-4 font-medium text-white">
                                             {doc.originalName}
@@ -126,7 +179,9 @@ export function DocumentList() {
                                             </span>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${doc.category === 'Policy' ? 'bg-blue-500/20 text-blue-300' : 'bg-orange-500/20 text-orange-300'
+                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${doc.category === 'Policy' ? 'bg-blue-500/20 text-blue-300' :
+                                                doc.category === 'Meeting Minute' ? 'bg-green-500/20 text-green-300' :
+                                                    'bg-orange-500/20 text-orange-300'
                                                 }`}>
                                                 {doc.category || 'Policy'}
                                             </span>

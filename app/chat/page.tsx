@@ -222,7 +222,7 @@ export default function ChatPage() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
-                        <h1 className="text-xl font-bold">CHST-Chatbot V1.6</h1>
+                        <h1 className="text-xl font-bold">CHST-Chatbot V1.7</h1>
                     </div>
 
                     <div className="flex items-center gap-4">
@@ -259,7 +259,7 @@ export default function ChatPage() {
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                 </svg>
                             </div>
-                            <h2 className="text-2xl font-bold">Welcome to CHST-Chatbot V1.6</h2>
+                            <h2 className="text-2xl font-bold">Welcome to CHST-Chatbot V1.7</h2>
                             <p className="text-muted-foreground">
                                 Ask me anything about CHST research centre policies and forms
                             </p>
@@ -295,13 +295,31 @@ export default function ChatPage() {
                                             source.documentId && index === self.findIndex(s => s.documentId === source.documentId)
                                         );
 
-                                        return uniqueDocs.length > 0 && (
+                                        // Filter documents to only show those explicitly mentioned in the content
+                                        // We check if the filename or original name appears in the message (case-insensitive)
+                                        const relevantDocs = uniqueDocs.filter(doc => {
+                                            const content = message.content.toLowerCase();
+                                            const filename = (doc.filename || '').toLowerCase();
+                                            const originalName = (doc.originalName || '').toLowerCase();
+
+                                            // Check for exact filename match or significant part of original name
+                                            // Also check for "meeting minute" if it's a meeting minute doc
+                                            const isMeetingMinute = doc.category === 'Meeting Minute' || originalName.includes('meeting minute');
+
+                                            if (isMeetingMinute && content.includes('meeting minute')) {
+                                                return true;
+                                            }
+
+                                            return content.includes(filename) || content.includes(originalName);
+                                        });
+
+                                        return relevantDocs.length > 0 && (
                                             <div className="mt-4 p-3 bg-slate-800/50 rounded-lg border border-slate-700">
                                                 <p className="text-sm font-semibold text-slate-300 mb-2">
                                                     📎 Referenced Documents:
                                                 </p>
                                                 <div className="space-y-2">
-                                                    {uniqueDocs.map((doc, idx) => (
+                                                    {relevantDocs.map((doc, idx) => (
                                                         <a
                                                             key={idx}
                                                             href={`/api/documents/download?id=${doc.documentId}`}
