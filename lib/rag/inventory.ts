@@ -31,7 +31,7 @@ export async function getDocumentInventory(userRole: UserRole): Promise<Document
         const documents = await prisma.document.findMany({
             where: {
                 accessLevel: {
-                    in: accessLevels,
+                    in: accessLevels as any,
                 },
                 status: 'processed', // Only count successfully processed documents
             },
