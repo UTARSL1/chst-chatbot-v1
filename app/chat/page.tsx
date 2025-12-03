@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { TermsOfUseModal } from '@/components/TermsOfUseModal';
 
 interface Message {
     id: string;
@@ -33,6 +34,7 @@ export default function ChatPage() {
     const [sessionId, setSessionId] = useState<string | null>(null);
     const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
     const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [termsModalOpen, setTermsModalOpen] = useState(false);
 
     useEffect(() => {
         if (status === 'unauthenticated') {
@@ -462,6 +464,17 @@ export default function ChatPage() {
                     </form>
                 </div>
             </div>
+
+            {/* Terms of Use Button */}
+            <button
+                onClick={() => setTermsModalOpen(true)}
+                className="fixed bottom-6 right-6 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg shadow-lg transition-colors duration-200 z-50"
+            >
+                Terms of Use
+            </button>
+
+            {/* Terms of Use Modal */}
+            <TermsOfUseModal open={termsModalOpen} onOpenChange={setTermsModalOpen} />
         </div>
     );
 }
