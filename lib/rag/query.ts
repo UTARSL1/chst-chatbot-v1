@@ -5,6 +5,7 @@ import { getAccessibleLevels } from '@/lib/utils';
 import { RAGQuery, RAGResponse, DocumentSource } from '@/types';
 import { prisma } from '@/lib/db';
 import { getRelatedDocuments } from './suggestions';
+import { searchKnowledgeNotes } from './knowledgeSearch';
 
 // Initialize OpenAI client
 const openai = new OpenAI({
@@ -24,19 +25,26 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
         // 2. Get accessible document levels based on user role
         const accessLevels = getAccessibleLevels(query.userRole);
 
-        // 3. Search for similar documents
+        // 3. Search Priority Knowledge Base first
+        const knowledgeNotes = await searchKnowledgeNotes(
+            query.query,
+            accessLevels,
+            3 // Top 3 most relevant knowledge notes
+        );
+
+        // 4. Search for similar documents
         const relevantChunks = await searchSimilarDocuments(
             queryEmbedding,
             accessLevels,
             5 // Top 5 most relevant chunks
         );
 
-        // 4. Prepare context and system prompt
+        // 5. Prepare context and system prompt
         let systemPrompt: string;
         let userPrompt: string;
 
-        if (relevantChunks.length === 0) {
-            // No documents found - allow general conversation
+        if (knowledgeNotes.length === 0 && relevantChunks.length === 0) {
+            // No documents or knowledge notes found - allow general conversation
             systemPrompt = `You are a helpful assistant for the CHST research centre at UTAR. 
 
 You help users with questions about university and centre-level research policies and forms.
@@ -50,10 +58,26 @@ Important:
 
             userPrompt = query.query;
         } else {
-            // Documents found - use RAG context
-            const context = relevantChunks
-                .map((chunk) => `[Source: ${chunk.metadata.filename}]\n${chunk.content}`)
-                .join('\n\n---\n\n');
+            // Build context from knowledge notes (higher priority) and documents
+            let contextParts: string[] = [];
+
+            // Add knowledge notes first (highest priority)
+            if (knowledgeNotes.length > 0) {
+                const knowledgeContext = knowledgeNotes
+                    .map((note) => `[Priority Knowledge: ${note.title}]\n${note.content}`)
+                    .join('\n\n---\n\n');
+                contextParts.push(knowledgeContext);
+            }
+
+            // Add document chunks
+            if (relevantChunks.length > 0) {
+                const docContext = relevantChunks
+                    .map((chunk) => `[Source: ${chunk.metadata.filename}]\n${chunk.content}`)
+                    .join('\n\n---\n\n');
+                contextParts.push(docContext);
+            }
+
+            const context = contextParts.join('\n\n=== === ===\n\n');
 
             // Fetch custom system prompt from database
             const dbPrompt = await prisma.systemPrompt.findUnique({
@@ -69,6 +93,7 @@ Important:
 
 Guidelines:
 - Language Support: Answer in the same language as the user's question (English or Chinese).
+- PRIORITY KNOWLEDGE: If "Priority Knowledge" entries are provided in the context, use them as the PRIMARY source of truth and prioritize them over regular documents
 - For policy/form questions: Use the provided context to give accurate, specific answers
 - For general questions (math, common knowledge, etc.): Answer normally using your general knowledge
 - If a policy question isn't covered in the context, say so clearly and offer to help in other ways
@@ -155,95 +180,6 @@ Please provide a helpful and accurate answer based on the context above. If the 
 }
 
 /**
- * Generate a streaming response for RAG query
- * @param query - User query with role information
- * @returns Async generator for streaming response
- */
-export async function* processRAGQueryStream(query: RAGQuery): AsyncGenerator<string> {
-    try {
-        // 1. Generate embedding for the query
-        const queryEmbedding = await generateEmbedding(query.query);
-
-        // 2. Get accessible document levels based on user role
-        const accessLevels = getAccessibleLevels(query.userRole);
-
-        // 3. Search for similar documents
-        const relevantChunks = await searchSimilarDocuments(
-            queryEmbedding,
-            accessLevels,
-            5
-        );
-
-        // 4. Prepare context and system prompt
-        let systemPrompt: string;
-        let userPrompt: string;
-
-        if (relevantChunks.length === 0) {
-            // No documents found - allow general conversation
-            systemPrompt = `You are a helpful assistant for the CHST research centre at UTAR. 
-
-You help users with questions about university and centre-level research policies and forms.
-
-Important:
-- Currently, there are no policy documents uploaded to the system yet
-- You can still greet users, answer general questions, and have conversations
-- For policy-specific questions, politely explain that documents haven't been uploaded yet
-- Be friendly, professional, and helpful`;
-
-            userPrompt = query.query;
-        } else {
-            // Documents found - use RAG context
-            const context = relevantChunks
-                .map((chunk, index) => `[Document ${index + 1}: ${chunk.metadata.filename}]\n${chunk.content}`)
-                .join('\n\n---\n\n');
-
-            systemPrompt = `You are a helpful assistant for the CHST research centre at UTAR. Your role is to answer questions about university and centre-level research policies and forms based on the provided context.
-
-Guidelines:
-- Use information from the provided context to answer questions
-- If the context doesn't contain enough information, say so clearly
-- Be specific and cite the relevant policy or form name
-- Provide step-by-step instructions when asked about procedures
-- If asked about deadlines or dates, be precise
-- Maintain a professional and helpful tone`;
-
-            userPrompt = `Context from CHST policies and forms:
-
-${context}
-
----
-
-User Question: ${query.query}
-
-Please provide a helpful and accurate answer based on the context above.`;
-        }
-
-        // 5. Generate streaming response using GPT-4o
-        const stream = await openai.chat.completions.create({
-            model: 'gpt-4o',
-            messages: [
-                { role: 'system', content: systemPrompt },
-                { role: 'user', content: userPrompt },
-            ],
-            temperature: 0.7,
-            max_tokens: 1000,
-            stream: true,
-        });
-
-        // 6. Yield chunks as they arrive
-        for await (const chunk of stream) {
-            const content = chunk.choices[0]?.delta?.content || '';
-            if (content) {
-                yield content;
-            }
-        }
-    } catch (error) {
-        console.error('Error processing RAG query stream:', error);
-        yield 'Sorry, an error occurred while processing your question.';
-    }
-}
-
-/**
  * Enrich document sources with metadata for download links
  * @param sources - Array of document sources
  * @returns Enriched sources with document metadata
@@ -291,5 +227,118 @@ async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<Doc
     } catch (error) {
         console.error('Error enriching sources with metadata:', error);
         return sources; // Return original sources if enrichment fails
+    }
+}
+
+/**
+ * Generate a streaming response for RAG query
+ * @param query - User query with role information
+ * @returns Async generator for streaming response
+ */
+export async function* processRAGQueryStream(query: RAGQuery): AsyncGenerator<string> {
+    try {
+        // 1. Generate embedding for the query
+        const queryEmbedding = await generateEmbedding(query.query);
+
+        // 2. Get accessible document levels based on user role
+        const accessLevels = getAccessibleLevels(query.userRole);
+
+        // 3. Search Priority Knowledge Base first
+        const knowledgeNotes = await searchKnowledgeNotes(
+            query.query,
+            accessLevels,
+            3
+        );
+
+        // 4. Search for similar documents
+        const relevantChunks = await searchSimilarDocuments(
+            queryEmbedding,
+            accessLevels,
+            5
+        );
+
+        // 5. Prepare context and system prompt
+        let systemPrompt: string;
+        let userPrompt: string;
+
+        if (knowledgeNotes.length === 0 && relevantChunks.length === 0) {
+            // No documents or knowledge notes found - allow general conversation
+            systemPrompt = `You are a helpful assistant for the CHST research centre at UTAR. 
+
+You help users with questions about university and centre-level research policies and forms.
+
+Important:
+- Currently, there are no policy documents uploaded to the system yet
+- You can still greet users, answer general questions, and have conversations
+- For policy-specific questions, politely explain that documents haven't been uploaded yet
+- Be friendly, professional, and helpful`;
+
+            userPrompt = query.query;
+        } else {
+            // Build context from knowledge notes and documents
+            let contextParts: string[] = [];
+
+            // Add knowledge notes first (highest priority)
+            if (knowledgeNotes.length > 0) {
+                const knowledgeContext = knowledgeNotes
+                    .map((note) => `[Priority Knowledge: ${note.title}]\\n${note.content}`)
+                    .join('\\n\\n---\\n\\n');
+                contextParts.push(knowledgeContext);
+            }
+
+            // Add document chunks
+            if (relevantChunks.length > 0) {
+                const docContext = relevantChunks
+                    .map((chunk, index) => `[Document ${index + 1}: ${chunk.metadata.filename}]\\n${chunk.content}`)
+                    .join('\\n\\n---\\n\\n');
+                contextParts.push(docContext);
+            }
+
+            const context = contextParts.join('\\n\\n=== === ===\\n\\n');
+
+            systemPrompt = `You are a helpful assistant for the CHST research centre at UTAR. Your role is to answer questions about university and centre-level research policies and forms based on the provided context.
+
+Guidelines:
+- PRIORITY KNOWLEDGE: If "Priority Knowledge" entries are provided in the context, use them as the PRIMARY source of truth
+- Use information from the provided context to answer questions
+- If the context doesn't contain enough information, say so clearly
+- Be specific and cite the relevant policy or form name
+- Provide step-by-step instructions when asked about procedures
+- If asked about deadlines or dates, be precise
+- Maintain a professional and helpful tone`;
+
+            userPrompt = `Context from CHST policies and forms:
+
+${context}
+
+---
+
+User Question: ${query.query}
+
+Please provide a helpful and accurate answer based on the context above.`;
+        }
+
+        // 6. Generate streaming response using GPT-4o
+        const stream = await openai.chat.completions.create({
+            model: 'gpt-4o',
+            messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: userPrompt },
+            ],
+            temperature: 0.7,
+            max_tokens: 1000,
+            stream: true,
+        });
+
+        // 7. Yield chunks as they arrive
+        for await (const chunk of stream) {
+            const content = chunk.choices[0]?.delta?.content || '';
+            if (content) {
+                yield content;
+            }
+        }
+    } catch (error) {
+        console.error('Error processing RAG query stream:', error);
+        yield 'Sorry, an error occurred while processing your question.';
     }
 }
