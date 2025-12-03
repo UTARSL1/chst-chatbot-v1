@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/card';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { TermsOfUseModal } from '@/components/TermsOfUseModal';
+import { Linkedin, Globe, FolderOpen } from 'lucide-react';
 
 interface Message {
     id: string;
@@ -227,6 +228,46 @@ export default function ChatPage() {
                             </svg>
                         </button>
                         <h1 className="text-xl font-bold">CHST-Chatbot V1.7</h1>
+                    </div>
+
+                    {/* Quick Links */}
+                    <div className="flex items-center gap-2 mr-4">
+                        <a
+                            href="https://www.linkedin.com/company/hst-research-group/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group relative p-2 rounded-lg bg-slate-800/50 hover:bg-blue-600/20 transition-all duration-200"
+                            title="LinkedIn Group"
+                        >
+                            <Linkedin className="w-4 h-4 text-blue-400 group-hover:text-blue-300" />
+                            <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs bg-slate-900 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                                LinkedIn Group
+                            </span>
+                        </a>
+                        <a
+                            href="http://chst.research.utar.edu.my/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group relative p-2 rounded-lg bg-slate-800/50 hover:bg-teal-600/20 transition-all duration-200"
+                            title="CHST Website"
+                        >
+                            <Globe className="w-4 h-4 text-teal-400 group-hover:text-teal-300" />
+                            <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs bg-slate-900 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                                CHST Website
+                            </span>
+                        </a>
+                        <a
+                            href="https://www.dropbox.com/scl/fo/1lgconbww9vjda2vgsgiz/ALgvtMRZGD2J9oZrFzK9Gns?rlkey=ce7gkp0455zu90q6jpf7879hw&dl=0"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group relative p-2 rounded-lg bg-slate-800/50 hover:bg-purple-600/20 transition-all duration-200"
+                            title="Shared Resources"
+                        >
+                            <FolderOpen className="w-4 h-4 text-purple-400 group-hover:text-purple-300" />
+                            <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs bg-slate-900 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                                Shared Resources
+                            </span>
+                        </a>
                     </div>
 
                     <div className="flex items-center gap-4">
