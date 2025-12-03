@@ -84,7 +84,7 @@ RULES:
 Your response (numbers only or NONE):`;
 
         const completion = await openai.chat.completions.create({
-            model: 'gpt-4',
+            model: 'gpt-4o',
             messages: [
                 { role: 'system', content: 'You are a precise document analyzer. Only suggest documents explicitly mentioned in policies.' },
                 { role: 'user', content: prompt },

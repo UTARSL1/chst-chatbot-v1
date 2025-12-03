@@ -102,9 +102,9 @@ User Question: ${query.query}
 Please provide a helpful and accurate answer based on the context above. If the context doesn't contain the information needed to answer the question, please say so.`;
         }
 
-        // 5. Generate response using GPT-4
+        // 5. Generate response using GPT-4o
         const completion = await openai.chat.completions.create({
-            model: 'gpt-4',
+            model: 'gpt-4o',
             messages: [
                 { role: 'system', content: systemPrompt },
                 { role: 'user', content: userPrompt },
@@ -218,9 +218,9 @@ User Question: ${query.query}
 Please provide a helpful and accurate answer based on the context above.`;
         }
 
-        // 5. Generate streaming response using GPT-4
+        // 5. Generate streaming response using GPT-4o
         const stream = await openai.chat.completions.create({
-            model: 'gpt-4',
+            model: 'gpt-4o',
             messages: [
                 { role: 'system', content: systemPrompt },
                 { role: 'user', content: userPrompt },
