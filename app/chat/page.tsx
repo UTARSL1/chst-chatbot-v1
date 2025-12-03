@@ -163,6 +163,10 @@ export default function ChatPage() {
         "Conference funding for students?",
         "Internal grant deadlines?",
         "Research ethics approval process?",
+        "What are the publication incentives?",
+        "Download membership application form",
+        "Travel claim submission guidelines",
+        "List of available research clusters",
     ];
 
     if (status === 'loading') {
@@ -300,7 +304,7 @@ export default function ChatPage() {
                             </div>
                             <h2 className="text-2xl font-bold">Welcome to CHST-Chatbot V1.7</h2>
                             <p className="text-muted-foreground">
-                                Ask me anything about CHST research centre policies and forms
+                                Ask me anything about CHST research centre
                             </p>
 
                             <div className="grid grid-cols-2 gap-3 mt-8">
@@ -485,7 +489,7 @@ export default function ChatPage() {
                         <Input
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            placeholder="Ask a question about policies and forms..."
+                            placeholder="Ask me a question..."
                             className="flex-1"
                             disabled={loading}
                         />
