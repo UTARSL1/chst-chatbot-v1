@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface Message {
     id: string;
@@ -288,7 +290,61 @@ export default function ChatPage() {
                                         : 'bg-card'
                                         }`}
                                 >
-                                    <p className="whitespace-pre-wrap">{message.content}</p>
+                                    <div className="markdown-content">
+                                        <ReactMarkdown
+                                            remarkPlugins={[remarkGfm]}
+                                            components={{
+                                                a: ({ node, ...props }) => (
+                                                    <a
+                                                        {...props}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-blue-400 hover:underline font-medium break-all"
+                                                    />
+                                                ),
+                                                p: ({ node, ...props }) => (
+                                                    <p {...props} className="mb-2 last:mb-0 leading-relaxed" />
+                                                ),
+                                                ul: ({ node, ...props }) => (
+                                                    <ul {...props} className="list-disc pl-5 mb-2 space-y-1" />
+                                                ),
+                                                ol: ({ node, ...props }) => (
+                                                    <ol {...props} className="list-decimal pl-5 mb-2 space-y-1" />
+                                                ),
+                                                li: ({ node, ...props }) => (
+                                                    <li {...props} className="pl-1" />
+                                                ),
+                                                code: ({ node, className, children, ...props }: any) => {
+                                                    const match = /language-(\w+)/.exec(className || '');
+                                                    return !match ? (
+                                                        <code {...props} className="bg-slate-800/50 px-1.5 py-0.5 rounded text-sm font-mono text-pink-300">
+                                                            {children}
+                                                        </code>
+                                                    ) : (
+                                                        <code {...props} className={className}>
+                                                            {children}
+                                                        </code>
+                                                    );
+                                                },
+                                                table: ({ node, ...props }) => (
+                                                    <div className="overflow-x-auto my-4 rounded-lg border border-slate-700">
+                                                        <table {...props} className="w-full text-sm text-left" />
+                                                    </div>
+                                                ),
+                                                thead: ({ node, ...props }) => (
+                                                    <thead {...props} className="bg-slate-800/50 text-xs uppercase text-slate-400" />
+                                                ),
+                                                th: ({ node, ...props }) => (
+                                                    <th {...props} className="px-4 py-3 font-medium" />
+                                                ),
+                                                td: ({ node, ...props }) => (
+                                                    <td {...props} className="px-4 py-3 border-t border-slate-700" />
+                                                ),
+                                            }}
+                                        >
+                                            {message.content}
+                                        </ReactMarkdown>
+                                    </div>
                                     {message.sources && message.sources.length > 0 && (() => {
                                         // Get unique documents based on documentId
                                         const uniqueDocs = message.sources.filter((source, index, self) =>
