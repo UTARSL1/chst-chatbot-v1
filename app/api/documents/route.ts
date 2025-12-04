@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
                 accessLevel: accessLevel as any,
                 category,
                 department,
-                filePath: storagePath, // Store Supabase path instead of local path
+                filePath: storagePath, // Store Supabase path (e.g., 'category/filename.pdf')
                 fileSize: file.size,
                 status: 'processing',
                 uploadedById: session.user.id,

@@ -61,6 +61,8 @@ export default function ChatPage() {
 
     const handleDownload = async (documentId: string, e: React.MouseEvent) => {
         e.preventDefault();
+        e.stopPropagation(); // Stop event bubbling
+
         try {
             console.log('[Frontend] Requesting download for document:', documentId);
             const response = await fetch(`/api/documents/download?id=${documentId}`);
@@ -70,14 +72,9 @@ export default function ChatPage() {
 
             if (data.success && data.downloadUrl) {
                 console.log('[Frontend] Opening URL:', data.downloadUrl);
-                // Create a temporary anchor element and trigger download
-                const link = document.createElement('a');
-                link.href = data.downloadUrl;
-                link.target = '_blank';
-                link.rel = 'noopener noreferrer';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                // Use window.location.href for reliable download of attachments
+                // This works better than window.open for file downloads and avoids popup blockers
+                window.location.href = data.downloadUrl;
             } else {
                 const errorMsg = data.error || 'Failed to download document';
                 const details = data.details ? `\n\nDetails: ${data.details}` : '';
@@ -450,7 +447,7 @@ export default function ChatPage() {
                                                     {relevantDocs.map((doc, idx) => (
                                                         <a
                                                             key={idx}
-                                                            href="#"
+                                                            href="javascript:void(0)"
                                                             onClick={(e) => handleDownload(doc.documentId, e)}
                                                             className="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 hover:underline transition-colors cursor-pointer"
                                                         >
@@ -480,7 +477,7 @@ export default function ChatPage() {
                                                 {message.suggestions.map((doc: any, idx: number) => (
                                                     <a
                                                         key={idx}
-                                                        href="#"
+                                                        href="javascript:void(0)"
                                                         onClick={(e) => handleDownload(doc.documentId, e)}
                                                         className="flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300 hover:underline transition-colors cursor-pointer"
                                                     >
