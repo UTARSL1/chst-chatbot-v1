@@ -265,7 +265,7 @@ export default function ChatPage() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
-                        <h1 className="text-xl font-bold">CHST-Chatbot V1.7</h1>
+                        <h1 className="text-xl font-bold">Version 1.8</h1>
                     </div>
 
                     <div className="flex items-center gap-4">
@@ -302,10 +302,20 @@ export default function ChatPage() {
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                 </svg>
                             </div>
-                            <h2 className="text-2xl font-bold">Welcome to CHST-Chatbot V1.7</h2>
-                            <p className="text-muted-foreground">
-                                Ask me anything about CHST research centre
+                            <h2 className="text-2xl font-bold">Welcome to CHST-Chatbot</h2>
+                            <p className="text-muted-foreground text-lg">
+                                Your AI Assistant for CHST Administration and Research Support
                             </p>
+
+                            {/* Typing Indicator */}
+                            <div className="flex justify-center items-center gap-2 h-6 text-violet-400">
+                                <div className="flex gap-1">
+                                    <span className="w-1.5 h-1.5 bg-violet-500 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                                    <span className="w-1.5 h-1.5 bg-violet-500 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                                    <span className="w-1.5 h-1.5 bg-violet-500 rounded-full animate-bounce"></span>
+                                </div>
+                                <span className="text-sm font-medium">Ask me a question...</span>
+                            </div>
 
                             <div className="grid grid-cols-2 gap-3 mt-8">
                                 {sampleQuestions.map((question, index) => (

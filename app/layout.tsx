@@ -6,7 +6,7 @@ import { Providers } from "@/components/providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "CHST-Chatbot V1.7",
+    title: "CHST-Chatbot V1.8",
     description: "CHST Chatbot V1.7 - AI-powered research policy assistant",
 };
 
