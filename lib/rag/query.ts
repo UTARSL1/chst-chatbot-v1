@@ -194,11 +194,13 @@ async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<Doc
         const filenames = [...new Set(sources.map(s => s.filename))];
 
         // Fetch document metadata from database
+        // Search in both filename (UUID) and originalName fields
         const documents = await prisma.document.findMany({
             where: {
-                filename: {
-                    in: filenames,
-                },
+                OR: [
+                    { filename: { in: filenames } },
+                    { originalName: { in: filenames } }
+                ]
             },
             select: {
                 id: true,
@@ -209,8 +211,12 @@ async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<Doc
             },
         });
 
-        // Create a map for quick lookup
-        const docMap = new Map(documents.map(doc => [doc.filename, doc]));
+        // Create a map for quick lookup - map both UUID filename and originalName to the doc
+        const docMap = new Map();
+        documents.forEach(doc => {
+            docMap.set(doc.filename, doc);
+            docMap.set(doc.originalName, doc);
+        });
 
         // Enrich sources with metadata
         return sources.map(source => {
