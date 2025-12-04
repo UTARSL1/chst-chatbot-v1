@@ -66,8 +66,14 @@ export default function ChatPage() {
             const data = await response.json();
 
             if (data.success && data.downloadUrl) {
-                // Open the signed URL in a new tab to trigger download
-                window.open(data.downloadUrl, '_blank');
+                // Create a temporary anchor element and trigger download
+                const link = document.createElement('a');
+                link.href = data.downloadUrl;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             } else {
                 alert(data.error || 'Failed to download document');
             }
