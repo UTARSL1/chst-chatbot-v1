@@ -62,10 +62,14 @@ export default function ChatPage() {
     const handleDownload = async (documentId: string, e: React.MouseEvent) => {
         e.preventDefault();
         try {
+            console.log('[Frontend] Requesting download for document:', documentId);
             const response = await fetch(`/api/documents/download?id=${documentId}`);
             const data = await response.json();
 
+            console.log('[Frontend] Download API response:', data);
+
             if (data.success && data.downloadUrl) {
+                console.log('[Frontend] Opening URL:', data.downloadUrl);
                 // Create a temporary anchor element and trigger download
                 const link = document.createElement('a');
                 link.href = data.downloadUrl;
@@ -75,11 +79,14 @@ export default function ChatPage() {
                 link.click();
                 document.body.removeChild(link);
             } else {
-                alert(data.error || 'Failed to download document');
+                const errorMsg = data.error || 'Failed to download document';
+                const details = data.details ? `\n\nDetails: ${data.details}` : '';
+                console.error('[Frontend] Download failed:', data);
+                alert(errorMsg + details);
             }
         } catch (error) {
-            console.error('Download error:', error);
-            alert('Failed to download document');
+            console.error('[Frontend] Download error:', error);
+            alert('Failed to download document. Check console for details.');
         }
     };
 

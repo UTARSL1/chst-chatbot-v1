@@ -55,17 +55,27 @@ export async function GET(req: NextRequest) {
         }
 
         // Generate a signed URL that expires in 60 seconds
+        console.log('[Download] Attempting to create signed URL for:', document.filePath);
         const { data: signedUrlData, error: signedUrlError } = await supabase.storage
             .from('documents')
             .createSignedUrl(document.filePath, 60);
 
         if (signedUrlError || !signedUrlData) {
             console.error('Supabase signed URL error:', signedUrlError);
+            console.error('Document filePath:', document.filePath);
+            console.error('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+            console.error('Has service key:', !!process.env.SUPABASE_SERVICE_ROLE_KEY);
             return NextResponse.json(
-                { error: 'Failed to generate download link' },
+                {
+                    error: 'Failed to generate download link',
+                    details: signedUrlError?.message || 'Unknown error',
+                    filePath: document.filePath
+                },
                 { status: 500 }
             );
         }
+
+        console.log('[Download] Signed URL created successfully:', signedUrlData.signedUrl);
 
         // Return the signed URL in JSON format
         // The frontend will handle the actual download
