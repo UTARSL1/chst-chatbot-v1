@@ -307,16 +307,6 @@ export default function ChatPage() {
                                 Your AI Assistant for CHST Administration and Research Support
                             </p>
 
-                            {/* Typing Indicator */}
-                            <div className="flex justify-center items-center gap-2 h-6 text-violet-400">
-                                <div className="flex gap-1">
-                                    <span className="w-1.5 h-1.5 bg-violet-500 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                                    <span className="w-1.5 h-1.5 bg-violet-500 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-                                    <span className="w-1.5 h-1.5 bg-violet-500 rounded-full animate-bounce"></span>
-                                </div>
-                                <span className="text-sm font-medium">Ask me a question...</span>
-                            </div>
-
                             <div className="grid grid-cols-2 gap-3 mt-8">
                                 {sampleQuestions.map((question, index) => (
                                     <button
@@ -496,13 +486,24 @@ export default function ChatPage() {
 
                 <div className="border-t border-border bg-card p-6">
                     <form onSubmit={handleSubmit} className="max-w-4xl mx-auto flex gap-4">
-                        <Input
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            placeholder="Ask me a question..."
-                            className="flex-1"
-                            disabled={loading}
-                        />
+                        <div className="relative flex-1">
+                            <Input
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                className="w-full"
+                                disabled={loading}
+                            />
+                            {!input && (
+                                <div className="absolute inset-0 flex items-center px-3 pointer-events-none gap-2">
+                                    <div className="flex gap-1">
+                                        <span className="w-1.5 h-1.5 bg-violet-500 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                                        <span className="w-1.5 h-1.5 bg-violet-500 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                                        <span className="w-1.5 h-1.5 bg-violet-500 rounded-full animate-bounce"></span>
+                                    </div>
+                                    <span className="text-muted-foreground text-sm">Ask me a question...</span>
+                                </div>
+                            )}
+                        </div>
                         <Button
                             type="submit"
                             variant="gradient"
@@ -524,6 +525,6 @@ export default function ChatPage() {
 
             {/* Terms of Use Modal */}
             <TermsOfUseModal open={termsModalOpen} onOpenChange={setTermsModalOpen} />
-        </div >
+        </div>
     );
 }
