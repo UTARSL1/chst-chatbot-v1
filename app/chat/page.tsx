@@ -270,7 +270,7 @@ export default function ChatPage() {
 
                     <div className="flex items-center gap-4">
                         <span className={`text-xs px-3 py-1 rounded-full ${getRoleBadgeClass(session.user.role)}`}>
-                            {session.user.role === 'member' ? 'Staff' : session.user.role.charAt(0).toUpperCase() + session.user.role.slice(1)}
+                            {session.user.role === 'member' ? 'Member' : session.user.role.charAt(0).toUpperCase() + session.user.role.slice(1)}
                         </span>
                         {session.user.role === 'chairperson' && (
                             <Button

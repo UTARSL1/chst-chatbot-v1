@@ -29,7 +29,7 @@ interface KnowledgeNote {
 const ROLES = [
     { id: 'public', label: 'Public' },
     { id: 'student', label: 'Student' },
-    { id: 'member', label: 'Staff (Member)' },
+    { id: 'member', label: 'Member' },
     { id: 'chairperson', label: 'Chairperson' },
 ];
 

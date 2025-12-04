@@ -54,31 +54,21 @@ export async function GET(req: NextRequest) {
             );
         }
 
-        // Download file from Supabase Storage
-        const { data, error } = await supabase.storage
+        // Generate a signed URL that expires in 60 seconds
+        const { data: signedUrlData, error: signedUrlError } = await supabase.storage
             .from('documents')
-            .download(document.filePath);
+            .createSignedUrl(document.filePath, 60);
 
-        if (error || !data) {
-            console.error('Supabase download error:', error);
+        if (signedUrlError || !signedUrlData) {
+            console.error('Supabase signed URL error:', signedUrlError);
             return NextResponse.json(
-                { error: 'Failed to download document from storage' },
+                { error: 'Failed to generate download link' },
                 { status: 500 }
             );
         }
 
-        // Convert blob to buffer
-        const arrayBuffer = await data.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-
-        // Return file with proper headers for download
-        return new NextResponse(buffer, {
-            headers: {
-                'Content-Type': 'application/pdf',
-                'Content-Disposition': `attachment; filename="${document.originalName}"`,
-                'Content-Length': document.fileSize.toString(),
-            },
-        });
+        // Redirect to the signed URL
+        return NextResponse.redirect(signedUrlData.signedUrl);
     } catch (error) {
         console.error('Document download error:', error);
         return NextResponse.json(

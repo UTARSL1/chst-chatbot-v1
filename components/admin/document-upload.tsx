@@ -292,7 +292,7 @@ export function DocumentUpload({ onUploadSuccess }: { onUploadSuccess?: () => vo
                             className="w-full p-2 rounded-md bg-gray-950 border border-gray-800 text-white focus:ring-2 focus:ring-violet-500 outline-none"
                         >
                             <option value="student">Student (Public)</option>
-                            <option value="member">Member (Staff Only)</option>
+                            <option value="member">Member</option>
                             <option value="chairperson">Chairperson Only</option>
                         </select>
                         <p className="text-xs text-gray-500">
