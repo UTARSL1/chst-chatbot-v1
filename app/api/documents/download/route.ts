@@ -67,8 +67,13 @@ export async function GET(req: NextRequest) {
             );
         }
 
-        // Redirect to the signed URL
-        return NextResponse.redirect(signedUrlData.signedUrl);
+        // Return the signed URL in JSON format
+        // The frontend will handle the actual download
+        return NextResponse.json({
+            success: true,
+            downloadUrl: signedUrlData.signedUrl,
+            filename: document.originalName
+        });
     } catch (error) {
         console.error('Document download error:', error);
         return NextResponse.json(

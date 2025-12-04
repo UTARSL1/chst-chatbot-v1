@@ -59,6 +59,24 @@ export default function ChatPage() {
         }
     };
 
+    const handleDownload = async (documentId: string, e: React.MouseEvent) => {
+        e.preventDefault();
+        try {
+            const response = await fetch(`/api/documents/download?id=${documentId}`);
+            const data = await response.json();
+
+            if (data.success && data.downloadUrl) {
+                // Open the signed URL in a new tab to trigger download
+                window.open(data.downloadUrl, '_blank');
+            } else {
+                alert(data.error || 'Failed to download document');
+            }
+        } catch (error) {
+            console.error('Download error:', error);
+            alert('Failed to download document');
+        }
+    };
+
     const loadMessages = async (sid: string) => {
         try {
             const response = await fetch(`/api/chat?sessionId=${sid}`);
@@ -419,9 +437,9 @@ export default function ChatPage() {
                                                     {relevantDocs.map((doc, idx) => (
                                                         <a
                                                             key={idx}
-                                                            href={`/api/documents/download?id=${doc.documentId}`}
-                                                            download
-                                                            className="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 hover:underline transition-colors"
+                                                            href="#"
+                                                            onClick={(e) => handleDownload(doc.documentId, e)}
+                                                            className="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 hover:underline transition-colors cursor-pointer"
                                                         >
                                                             <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -449,9 +467,9 @@ export default function ChatPage() {
                                                 {message.suggestions.map((doc: any, idx: number) => (
                                                     <a
                                                         key={idx}
-                                                        href={`/api/documents/download?id=${doc.documentId}`}
-                                                        download
-                                                        className="flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300 hover:underline transition-colors"
+                                                        href="#"
+                                                        onClick={(e) => handleDownload(doc.documentId, e)}
+                                                        className="flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300 hover:underline transition-colors cursor-pointer"
                                                     >
                                                         <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
