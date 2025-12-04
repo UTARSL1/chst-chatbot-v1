@@ -39,6 +39,50 @@ export async function POST(
     }
 }
 
+export async function PATCH(
+    request: Request,
+    props: { params: Promise<{ id: string }> }
+) {
+    const params = await props.params;
+    try {
+        const session = await getServerSession(authOptions);
+
+        // Only chairpersons can update user roles
+        if (!session || session.user.role !== 'chairperson') {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+        }
+
+        const { id } = params;
+        const body = await request.json();
+        const { role } = body;
+
+        // Validate role
+        const validRoles = ['public', 'student', 'member', 'chairperson'];
+        if (!role || !validRoles.includes(role)) {
+            return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
+        }
+
+        // Update user role
+        const updatedUser = await prisma.user.update({
+            where: { id },
+            data: { role },
+            select: { id: true, name: true, email: true, role: true }
+        });
+
+        return NextResponse.json({
+            success: true,
+            message: 'User role updated successfully',
+            user: updatedUser
+        });
+    } catch (error) {
+        console.error('Error updating user role:', error);
+        return NextResponse.json(
+            { error: 'Failed to update user role' },
+            { status: 500 }
+        );
+    }
+}
+
 export async function DELETE(
     request: Request,
     props: { params: Promise<{ id: string }> }

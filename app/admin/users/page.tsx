@@ -97,6 +97,32 @@ export default function AdminUsersPage() {
         }
     };
 
+    const handleRoleChange = async (userId: string, newRole: string) => {
+        try {
+            const response = await fetch(`/api/admin/users/${userId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ role: newRole }),
+            });
+
+            if (response.ok) {
+                // Update the local state
+                setUsers(prev => prev.map(u =>
+                    u.id === userId ? { ...u, role: newRole } : u
+                ));
+                alert('User role updated successfully');
+            } else {
+                const data = await response.json();
+                alert(data.error || 'Failed to update user role');
+            }
+        } catch (error) {
+            console.error('Error updating user role:', error);
+            alert('Failed to update user role');
+        }
+    };
+
     const getRoleBadge = (role: string) => {
         const colors: any = {
             public: 'bg-gray-100 text-gray-800',
@@ -228,14 +254,23 @@ export default function AdminUsersPage() {
                                             <td className="px-6 py-4">
                                                 <div className="font-medium">{user.name}</div>
                                                 <div className="text-xs text-muted-foreground mb-1">{user.email}</div>
-                                                <span className={`text-[10px] px-1.5 py-0.5 rounded ${getRoleBadge(user.role)}`}>
-                                                    {user.role.toUpperCase()}
-                                                </span>
-                                                {!user.isApproved && (
-                                                    <span className="ml-2 text-[10px] bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded">
-                                                        PENDING
-                                                    </span>
-                                                )}
+                                                <div className="flex items-center gap-2">
+                                                    <select
+                                                        value={user.role}
+                                                        onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                                                        className={`text-[10px] px-1.5 py-0.5 rounded border-0 font-semibold cursor-pointer ${getRoleBadge(user.role)}`}
+                                                    >
+                                                        <option value="public">PUBLIC</option>
+                                                        <option value="student">STUDENT</option>
+                                                        <option value="member">MEMBER</option>
+                                                        <option value="chairperson">CHAIRPERSON</option>
+                                                    </select>
+                                                    {!user.isApproved && (
+                                                        <span className="text-[10px] bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded">
+                                                            PENDING
+                                                        </span>
+                                                    )}
+                                                </div>
                                             </td>
                                             <td className="px-6 py-4 text-muted-foreground">
                                                 {user.recoveryEmail || '-'}
