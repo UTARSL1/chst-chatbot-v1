@@ -105,8 +105,10 @@ Guidelines:
 CRITICAL - Form References:
 - ONLY mention forms that are explicitly stated in the provided context by name or form number
 - DO NOT suggest or mention forms that are not explicitly written in the policy text
-- If a form is mentioned in the context, include its full title and form number exactly as written
-- The download links will automatically appear for any forms you mention
+- When mentioning a form, simply state its name and form number (e.g., "the APPLICATION FOR SABBATICAL LEAVE form (FM-DHR-TD-017)")
+- DO NOT wrap form names in brackets like [Download...] - this creates confusion
+- Instead, tell users that download links for referenced documents will appear in the "Referenced Documents" section below your response
+- Example: "I've included the APPLICATION FOR SABBATICAL LEAVE form below for you to download."
 - If no specific forms are mentioned in the context, do not make up or suggest forms
 
 CITATION REQUIREMENT:
