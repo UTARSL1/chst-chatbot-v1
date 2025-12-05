@@ -226,10 +226,10 @@ Please provide a helpful and accurate answer based on the context above. If the 
             console.log('[RAG] Detected potential download request:', query.query);
 
             // Try to extract document names from the query
-            // Look for quoted text or capitalized phrases that might be document names
             const potentialDocNames: string[] = [];
+            const queryLower = query.query.toLowerCase();
 
-            // Extract quoted text
+            // 1. Extract quoted text
             const quotedMatches = query.query.match(/"([^"]+)"|'([^']+)'/g);
             if (quotedMatches) {
                 quotedMatches.forEach(match => {
@@ -237,103 +237,58 @@ Please provide a helpful and accurate answer based on the context above. If the 
                 });
             }
 
-            // Also search for any documents mentioned in the inventory context
-            if (isInventoryQuestion) {
-                // Get all accessible documents
-                const allDocs = await prisma.document.findMany({
-                    where: {
-                        accessLevel: { in: accessLevels as any },
-                        status: 'processed'
-                    },
-                    select: {
-                        id: true,
-                        filename: true,
-                        originalName: true,
-                        category: true,
-                        department: true,
-                        accessLevel: true,
+            // 2. Fuzzy search all accessible documents to find matches
+            // We want to be lenient here to ensure we find what the user is asking for
+            const allDocs = await prisma.document.findMany({
+                where: {
+                    accessLevel: { in: accessLevels as any },
+                    status: 'processed'
+                },
+                select: {
+                    id: true,
+                    filename: true,
+                    originalName: true,
+                }
+            });
+
+            allDocs.forEach(doc => {
+                const nameLower = doc.originalName.toLowerCase();
+                const filenameLower = doc.filename.toLowerCase();
+
+                // Exact UUID match
+                if (queryLower.includes(filenameLower.replace('.pdf', ''))) {
+                    potentialDocNames.push(doc.originalName);
+                    return;
+                }
+
+                // Keyword match logic
+                // Filter out common words to focus on unique terms
+                const commonWords = ['application', 'form', 'policy', 'request', 'leave', 'for', 'the', 'download', 'document', 'file'];
+                const nameWords = nameLower.split(/\s+/).filter(w => w.length > 3 && !commonWords.includes(w));
+                const queryWords = queryLower.split(/\s+/).filter(w => w.length > 3);
+
+                // If the document has unique words (like "sabbatical", "research", "grant"), 
+                // and the query contains them, it's a match.
+
+                // If query contains specific unique words from the document title
+                const hasStrongMatch = nameWords.some(word => queryLower.includes(word));
+
+                // Or if significant overlap
+                let matchCount = 0;
+                nameWords.forEach(word => {
+                    if (queryWords.some(qw => qw.includes(word) || word.includes(qw))) {
+                        matchCount++;
                     }
                 });
 
-                // Check if any document name appears in the query
-                const queryLower = query.query.toLowerCase();
-                allDocs.forEach(doc => {
-                    const nameLower = doc.originalName.toLowerCase();
-                    const filenameLower = doc.filename.toLowerCase();
+                // Threshold: If we have a strong unique word match, or multiple partial matches
+                if (hasStrongMatch || matchCount >= 2) {
+                    potentialDocNames.push(doc.originalName);
+                    console.log(`[RAG] Matched document '${doc.originalName}' via fuzzy search`);
+                }
+            });
 
-                    // Check if filename (UUID) is mentioned
-                    if (queryLower.includes(filenameLower.replace('.pdf', ''))) {
-                        potentialDocNames.push(doc.originalName);
-                        potentialDocNames.push(doc.filename);
-                        return;
-                    }
-
-                    // Check for partial matches (at least 3 consecutive words or 50% of the name)
-                    const nameWords = nameLower.split(/\s+/);
-                    const queryWords = queryLower.split(/\s+/);
-
-                    // Check if significant portion of document name appears in query
-                    let matchCount = 0;
-                    nameWords.forEach(word => {
-                        if (word.length > 3 && queryWords.some(qw => qw.includes(word) || word.includes(qw))) {
-                            matchCount++;
-                        }
-                    });
-
-                    if (matchCount >= Math.min(3, nameWords.length * 0.5)) {
-                        potentialDocNames.push(doc.originalName);
-                    }
-                });
-            } else {
-                // Not an inventory question, but still a download request
-                // Search all accessible documents for matches
-                const allDocs = await prisma.document.findMany({
-                    where: {
-                        accessLevel: { in: accessLevels as any },
-                        status: 'processed'
-                    },
-                    select: {
-                        id: true,
-                        filename: true,
-                        originalName: true,
-                        category: true,
-                        department: true,
-                        accessLevel: true,
-                    }
-                });
-
-                const queryLower = query.query.toLowerCase();
-                allDocs.forEach(doc => {
-                    const nameLower = doc.originalName.toLowerCase();
-                    const filenameLower = doc.filename.toLowerCase();
-
-                    // Check if filename (UUID) is mentioned - exact match
-                    if (queryLower.includes(filenameLower.replace('.pdf', ''))) {
-                        potentialDocNames.push(doc.originalName);
-                        potentialDocNames.push(doc.filename);
-                        console.log('[RAG] Found document by UUID filename:', doc.filename);
-                        return;
-                    }
-
-                    // Check for originalName matches
-                    const nameWords = nameLower.split(/\s+/);
-                    const queryWords = queryLower.split(/\s+/);
-
-                    let matchCount = 0;
-                    nameWords.forEach(word => {
-                        if (word.length > 3 && queryWords.some(qw => qw.includes(word) || word.includes(qw))) {
-                            matchCount++;
-                        }
-                    });
-
-                    if (matchCount >= Math.min(2, nameWords.length * 0.3)) {
-                        potentialDocNames.push(doc.originalName);
-                        console.log('[RAG] Found potential document by name:', doc.originalName);
-                    }
-                });
-            }
-
-            // Search for these documents in the database
+            // 3. Fetch full metadata for identified documents and add to sources
             if (potentialDocNames.length > 0) {
                 console.log('[RAG] Searching for potential documents:', potentialDocNames);
 
