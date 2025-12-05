@@ -100,23 +100,22 @@ Guidelines:
 - Be specific and cite relevant policy or form names when applicable
 - Provide step-by-step instructions when asked about procedures
 - Maintain a professional, friendly, and helpful tone
-- If asked about deadlines or dates from policies, be precise and cite the source
+- When answering based on a document (especially meeting minutes or policies), explicitly cite the source document name.
+- Example: "According to [Document Name]..." or "...as stated in [Document Name]."
+- NEVER refer to documents as "Document 1", "Document 2", etc. Always use the actual filename or title.
+- This ensures the correct documents are highlighted for the user.
 
 CRITICAL - Form References:
 - ONLY mention forms that are explicitly stated in the provided context by name or form number
 - DO NOT suggest or mention forms that are not explicitly written in the policy text
 - When mentioning a form, simply state its name and form number (e.g., "the APPLICATION FOR SABBATICAL LEAVE form (FM-DHR-TD-017)")
-- DO NOT wrap form names in brackets like [Download...] - this creates confusion
-- DO NOT generate Markdown links for documents (e.g., [Title](filename)) - these will be broken
-- Instead, tell users that download links for referenced documents will appear in the "Referenced Documents" section below your response
-- Example: "I've included the APPLICATION FOR SABBATICAL LEAVE form below for you to download."
-- If no specific forms are mentioned in the context, do not make up or suggest forms
-
-CITATION REQUIREMENT:
-- When answering based on a document (especially meeting minutes or policies), explicitly cite the source document name.
-- Example: "According to [Document Name]..." or "...as stated in [Document Name]."
-- NEVER refer to documents as "Document 1", "Document 2", etc. Always use the actual filename or title.
-- This ensures the correct documents are highlighted for the user.`;
+- **STRICT RULE**: If you want to provide a download link, use this EXACT format: \`[Download Document Name](download:DocumentName)\`
+- **CRITICAL**: ONLY provide a download link if the document is explicitly listed in the "Context" provided above.
+- If the document is NOT in the context, do NOT offer a download link. Instead, say "I couldn't find that document in the database."
+- Example: \`[Download Policy on Research Leave](download:Policy on Research Leave)\`
+- Do NOT use http/https links for documents.
+- The system will detect this format and convert it into a working download button.
+- If no specific forms are mentioned in the context, do not make up or suggest forms`;
             }
 
             userPrompt = `Context from CHST policies and forms:
@@ -193,6 +192,7 @@ async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<Doc
     try {
         // Get unique filenames
         const filenames = [...new Set(sources.map(s => s.filename))];
+        console.log('[RAG] Looking up documents for filenames:', filenames);
 
         // Fetch document metadata from database
         // Search in both filename (UUID) and originalName fields
@@ -212,6 +212,8 @@ async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<Doc
             },
         });
 
+        console.log('[RAG] Found matching documents in DB:', documents.map(d => ({ id: d.id, filename: d.filename, originalName: d.originalName })));
+
         // Create a map for quick lookup - map both UUID filename and originalName to the doc
         const docMap = new Map();
         documents.forEach(doc => {
@@ -220,7 +222,7 @@ async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<Doc
         });
 
         // Enrich sources with metadata
-        return sources.map(source => {
+        const enriched = sources.map(source => {
             const doc = docMap.get(source.filename);
             if (doc) {
                 return {
@@ -231,8 +233,11 @@ async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<Doc
                     department: doc.department || undefined,
                 };
             }
+            console.log('[RAG] WARNING: Could not find DB record for source file:', source.filename);
             return source;
         });
+
+        return enriched;
     } catch (error) {
         console.error('Error enriching sources with metadata:', error);
         return sources; // Return original sources if enrichment fails

@@ -369,14 +369,45 @@ export default function ChatPage() {
                                         <ReactMarkdown
                                             remarkPlugins={[remarkGfm]}
                                             components={{
-                                                a: ({ node, ...props }) => (
-                                                    <a
-                                                        {...props}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="text-blue-400 hover:underline font-medium break-all"
-                                                    />
-                                                ),
+                                                a: ({ node, href, children, ...props }) => {
+                                                    // Handle special download protocol
+                                                    if (href?.startsWith('download:')) {
+                                                        const docName = href.replace('download:', '').trim();
+                                                        // Find matching document in sources
+                                                        const doc = message.sources?.find((s: any) =>
+                                                            s.originalName === docName || s.filename === docName
+                                                        );
+
+                                                        if (doc && doc.documentId) {
+                                                            return (
+                                                                <button
+                                                                    onClick={(e) => handleDownload(doc.documentId, e)}
+                                                                    className="text-blue-400 hover:underline font-medium inline-flex items-center gap-1"
+                                                                >
+                                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                                                    {children}
+                                                                </button>
+                                                            );
+                                                        } else {
+                                                            // AI suggested a download but we don't have the file
+                                                            return (
+                                                                <span className="text-gray-400 italic" title="Document not found in database">
+                                                                    {children} (Document not available)
+                                                                </span>
+                                                            );
+                                                        }
+                                                    }
+
+                                                    return (
+                                                        <a
+                                                            href={href}
+                                                            {...props}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-blue-400 hover:underline font-medium break-all"
+                                                        />
+                                                    );
+                                                },
                                                 p: ({ node, ...props }) => (
                                                     <p {...props} className="mb-2 last:mb-0 leading-relaxed" />
                                                 ),
