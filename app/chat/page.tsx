@@ -262,7 +262,7 @@ export default function ChatPage() {
                             className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20 transition-all duration-200 group"
                         >
                             <Users className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />
-                            <span className="text-sm text-indigo-400 group-hover:text-indigo-300">CHST Microsoft Teams</span>
+                            <span className="text-sm text-indigo-400 group-hover:text-indigo-300">CHST Teams Portal</span>
                         </a>
                         <a
                             href="https://www.linkedin.com/company/hst-research-group/"
@@ -271,7 +271,7 @@ export default function ChatPage() {
                             className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20 transition-all duration-200 group"
                         >
                             <Linkedin className="w-4 h-4 text-blue-400 group-hover:text-blue-300" />
-                            <span className="text-sm text-blue-400 group-hover:text-blue-300">LinkedIn Group</span>
+                            <span className="text-sm text-blue-400 group-hover:text-blue-300">CHST LinkedIn Community</span>
                         </a>
                         <a
                             href="http://chst.research.utar.edu.my/"
@@ -280,7 +280,7 @@ export default function ChatPage() {
                             className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-teal-600/10 hover:bg-teal-600/20 border border-teal-600/20 transition-all duration-200 group"
                         >
                             <Globe className="w-4 h-4 text-teal-400 group-hover:text-teal-300" />
-                            <span className="text-sm text-teal-400 group-hover:text-teal-300">CHST Website</span>
+                            <span className="text-sm text-teal-400 group-hover:text-teal-300">CHST Official Website</span>
                         </a>
                         {!['student', 'public'].includes(session.user.role) && (
                             <a
@@ -290,7 +290,7 @@ export default function ChatPage() {
                                 className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-purple-600/10 hover:bg-purple-600/20 border border-purple-600/20 transition-all duration-200 group"
                             >
                                 <FolderOpen className="w-4 h-4 text-purple-400 group-hover:text-purple-300" />
-                                <span className="text-sm text-purple-400 group-hover:text-purple-300">Shared Resources</span>
+                                <span className="text-sm text-purple-400 group-hover:text-purple-300">CHST Resource Hub</span>
                             </a>
                         )}
                     </div>
