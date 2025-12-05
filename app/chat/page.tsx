@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -247,7 +247,7 @@ export default function ChatPage() {
                                     title="Delete chat"
                                     type="button"
                                 >
-                                    �
+                                    ×
                                 </button>
                             </div>
                         ))}
@@ -669,7 +669,7 @@ export default function ChatPage() {
                                         return relevantDocs.length > 0 && (
                                             <div className="mt-4 p-3 bg-slate-800/50 rounded-lg border border-slate-700">
                                                 <p className="text-sm font-semibold text-slate-300 mb-2">
-                                                    ?? Referenced Documents:
+                                                    📎 Referenced Documents:
                                                 </p>
                                                 <div className="space-y-2">
                                                     {relevantDocs.map((doc, idx) => (
@@ -699,7 +699,7 @@ export default function ChatPage() {
                                     {message.suggestions && message.suggestions.length > 0 && (
                                         <div className="mt-3 p-3 bg-purple-900/20 rounded-lg border border-purple-700">
                                             <p className="text-sm font-semibold text-purple-300 mb-2">
-                                                ?? You might also need:
+                                                💡 You might also need:
                                             </p>
                                             <div className="space-y-2">
                                                 {message.suggestions.map((doc: any, idx: number) => (
