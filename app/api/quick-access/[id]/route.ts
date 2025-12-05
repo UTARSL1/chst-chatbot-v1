@@ -12,11 +12,26 @@ export async function PATCH(
     try {
         const session = await getServerSession(authOptions);
 
-        if (!session || session.user.role !== 'chairperson') {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+        if (!session) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
         const { id } = params;
+
+        // Fetch the link first to check ownership
+        const existingLink = await prisma.quickAccessLink.findUnique({
+            where: { id }
+        });
+
+        if (!existingLink) {
+            return NextResponse.json({ error: 'Link not found' }, { status: 404 });
+        }
+
+        // Allow if user is the creator OR is a chairperson
+        if (existingLink.createdBy !== session.user.id && session.user.role !== 'chairperson') {
+            return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+        }
+
         const body = await request.json();
         const { name, url, section, icon, roles, order, isActive } = body;
 
@@ -53,11 +68,25 @@ export async function DELETE(
     try {
         const session = await getServerSession(authOptions);
 
-        if (!session || session.user.role !== 'chairperson') {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+        if (!session) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
         const { id } = params;
+
+        // Fetch the link first to check ownership
+        const existingLink = await prisma.quickAccessLink.findUnique({
+            where: { id }
+        });
+
+        if (!existingLink) {
+            return NextResponse.json({ error: 'Link not found' }, { status: 404 });
+        }
+
+        // Allow if user is the creator OR is a chairperson
+        if (existingLink.createdBy !== session.user.id && session.user.role !== 'chairperson') {
+            return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+        }
 
         await prisma.quickAccessLink.delete({
             where: { id }
