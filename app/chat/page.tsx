@@ -9,7 +9,7 @@ import { Card } from '@/components/ui/card';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { TermsOfUseModal } from '@/components/TermsOfUseModal';
-import { Linkedin, Globe, FolderOpen, Users } from 'lucide-react';
+import { Linkedin, Globe, FolderOpen, Users, ChevronDown, BookOpen, GraduationCap, Briefcase, FileText, DollarSign, TrendingUp, UserPlus } from 'lucide-react';
 
 interface Message {
     id: string;
@@ -36,6 +36,7 @@ export default function ChatPage() {
     const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [termsModalOpen, setTermsModalOpen] = useState(false);
+    const [ipsrOpen, setIpsrOpen] = useState(false);
 
     useEffect(() => {
         if (status === 'unauthenticated') {
@@ -253,48 +254,223 @@ export default function ChatPage() {
                     </div>
 
                     {/* Quick Links - Fixed at bottom */}
-                    <div className="mt-4 pt-4 border-t border-border space-y-2">
-                        <h3 className="text-xs font-semibold text-muted-foreground mb-2">Quick Access</h3>
-                        {!['student', 'public'].includes(session.user.role) && (
+                    <div className="mt-4 pt-4 border-t border-border space-y-4">
+                        {/* CHST Quick Access */}
+                        <div className="space-y-2">
+                            <h3 className="text-xs font-semibold text-muted-foreground mb-2">Quick Access (CHST)</h3>
+                            {!['student', 'public'].includes(session.user.role) && (
+                                <a
+                                    href="https://teams.microsoft.com/l/team/19%3A50c3f438061846c2809c8318fcf1ac17%40thread.tacv2/conversations?groupId=9795c98d-9bc0-4453-8150-0b2495001652&tenantId=4edf9354-0b3b-429a-bb8f-f21f957f1d1c"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20 transition-all duration-200 group"
+                                >
+                                    <Users className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />
+                                    <span className="text-sm text-indigo-400 group-hover:text-indigo-300">CHST Teams Portal</span>
+                                </a>
+                            )}
                             <a
-                                href="https://teams.microsoft.com/l/team/19%3A50c3f438061846c2809c8318fcf1ac17%40thread.tacv2/conversations?groupId=9795c98d-9bc0-4453-8150-0b2495001652&tenantId=4edf9354-0b3b-429a-bb8f-f21f957f1d1c"
+                                href="https://www.linkedin.com/company/hst-research-group/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20 transition-all duration-200 group"
+                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20 transition-all duration-200 group"
                             >
-                                <Users className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />
-                                <span className="text-sm text-indigo-400 group-hover:text-indigo-300">CHST Teams Portal</span>
+                                <Linkedin className="w-4 h-4 text-blue-400 group-hover:text-blue-300" />
+                                <span className="text-sm text-blue-400 group-hover:text-blue-300">CHST LinkedIn Community</span>
                             </a>
-                        )}
-                        <a
-                            href="https://www.linkedin.com/company/hst-research-group/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20 transition-all duration-200 group"
-                        >
-                            <Linkedin className="w-4 h-4 text-blue-400 group-hover:text-blue-300" />
-                            <span className="text-sm text-blue-400 group-hover:text-blue-300">CHST LinkedIn Community</span>
-                        </a>
-                        <a
-                            href="http://chst.research.utar.edu.my/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-teal-600/10 hover:bg-teal-600/20 border border-teal-600/20 transition-all duration-200 group"
-                        >
-                            <Globe className="w-4 h-4 text-teal-400 group-hover:text-teal-300" />
-                            <span className="text-sm text-teal-400 group-hover:text-teal-300">CHST Official Website</span>
-                        </a>
-                        {!['student', 'public'].includes(session.user.role) && (
                             <a
-                                href="https://www.dropbox.com/scl/fo/1lgconbww9vjda2vgsgiz/ALgvtMRZGD2J9oZrFzK9Gns?rlkey=ce7gkp0455zu90q6jpf7879hw&dl=0"
+                                href="http://chst.research.utar.edu.my/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-purple-600/10 hover:bg-purple-600/20 border border-purple-600/20 transition-all duration-200 group"
+                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-teal-600/10 hover:bg-teal-600/20 border border-teal-600/20 transition-all duration-200 group"
                             >
-                                <FolderOpen className="w-4 h-4 text-purple-400 group-hover:text-purple-300" />
-                                <span className="text-sm text-purple-400 group-hover:text-purple-300">CHST Resource Hub</span>
+                                <Globe className="w-4 h-4 text-teal-400 group-hover:text-teal-300" />
+                                <span className="text-sm text-teal-400 group-hover:text-teal-300">CHST Official Website</span>
                             </a>
-                        )}
+                            {!['student', 'public'].includes(session.user.role) && (
+                                <a
+                                    href="https://www.dropbox.com/scl/fo/1lgconbww9vjda2vgsgiz/ALgvtMRZGD2J9oZrFzK9Gns?rlkey=ce7gkp0455zu90q6jpf7879hw&dl=0"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-purple-600/10 hover:bg-purple-600/20 border border-purple-600/20 transition-all duration-200 group"
+                                >
+                                    <FolderOpen className="w-4 h-4 text-purple-400 group-hover:text-purple-300" />
+                                    <span className="text-sm text-purple-400 group-hover:text-purple-300">CHST Resource Hub</span>
+                                </a>
+                            )}
+                        </div>
+
+                        {/* IPSR Quick Access - Collapsible */}
+                        <div className="space-y-2">
+                            <button
+                                onClick={() => setIpsrOpen(!ipsrOpen)}
+                                className="w-full flex items-center justify-between text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                                <span>Quick Access (IPSR)</span>
+                                <ChevronDown className={`w-4 h-4 transition-transform ${ipsrOpen ? 'rotate-180' : ''}`} />
+                            </button>
+
+                            {ipsrOpen && (
+                                <div className="space-y-2 mt-2">
+                                    {/* Public Links */}
+                                    {session.user.role === 'public' && (
+                                        <>
+                                            <a
+                                                href="https://ipsr.utar.edu.my/"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-emerald-600/10 hover:bg-emerald-600/20 border border-emerald-600/20 transition-all duration-200 group"
+                                            >
+                                                <BookOpen className="w-4 h-4 text-emerald-400 group-hover:text-emerald-300" />
+                                                <span className="text-sm text-emerald-400 group-hover:text-emerald-300">List of Programmes</span>
+                                            </a>
+                                            <a
+                                                href="https://ipsr.utar.edu.my/Handbook.php"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-cyan-600/10 hover:bg-cyan-600/20 border border-cyan-600/20 transition-all duration-200 group"
+                                            >
+                                                <GraduationCap className="w-4 h-4 text-cyan-400 group-hover:text-cyan-300" />
+                                                <span className="text-sm text-cyan-400 group-hover:text-cyan-300">Links for Potential Students</span>
+                                            </a>
+                                            <a
+                                                href="https://research.utar.edu.my/utar-gra.php"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-amber-600/10 hover:bg-amber-600/20 border border-amber-600/20 transition-all duration-200 group"
+                                            >
+                                                <Briefcase className="w-4 h-4 text-amber-400 group-hover:text-amber-300" />
+                                                <span className="text-sm text-amber-400 group-hover:text-amber-300">Research Opportunities</span>
+                                            </a>
+                                            <a
+                                                href="https://ipsr.utar.edu.my/Apply.php"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-rose-600/10 hover:bg-rose-600/20 border border-rose-600/20 transition-all duration-200 group"
+                                            >
+                                                <FileText className="w-4 h-4 text-rose-400 group-hover:text-rose-300" />
+                                                <span className="text-sm text-rose-400 group-hover:text-rose-300">Postgraduate Study Application</span>
+                                            </a>
+                                        </>
+                                    )}
+
+                                    {/* Student Links */}
+                                    {session.user.role === 'student' && (
+                                        <>
+                                            <a
+                                                href="https://ipsr.utar.edu.my/Handbook.php"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-cyan-600/10 hover:bg-cyan-600/20 border border-cyan-600/20 transition-all duration-200 group"
+                                            >
+                                                <GraduationCap className="w-4 h-4 text-cyan-400 group-hover:text-cyan-300" />
+                                                <span className="text-sm text-cyan-400 group-hover:text-cyan-300">Important Links for Students</span>
+                                            </a>
+                                            <a
+                                                href="https://research.utar.edu.my/utar-gra.php"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-amber-600/10 hover:bg-amber-600/20 border border-amber-600/20 transition-all duration-200 group"
+                                            >
+                                                <Briefcase className="w-4 h-4 text-amber-400 group-hover:text-amber-300" />
+                                                <span className="text-sm text-amber-400 group-hover:text-amber-300">Research Opportunities</span>
+                                            </a>
+                                        </>
+                                    )}
+
+                                    {/* Member & Chairperson Links */}
+                                    {['member', 'chairperson'].includes(session.user.role) && (
+                                        <>
+                                            <a
+                                                href="https://research.utar.edu.my/External-Grant-List-2025.php"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-green-600/10 hover:bg-green-600/20 border border-green-600/20 transition-all duration-200 group"
+                                            >
+                                                <DollarSign className="w-4 h-4 text-green-400 group-hover:text-green-300" />
+                                                <span className="text-sm text-green-400 group-hover:text-green-300">External Grant Opportunities</span>
+                                            </a>
+                                            <a
+                                                href="https://login.libezp2.utar.edu.my/login?url=https://jcr.clarivate.com/"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-sky-600/10 hover:bg-sky-600/20 border border-sky-600/20 transition-all duration-200 group"
+                                            >
+                                                <TrendingUp className="w-4 h-4 text-sky-400 group-hover:text-sky-300" />
+                                                <span className="text-sm text-sky-400 group-hover:text-sky-300">Journal Citation Report (JCR)</span>
+                                            </a>
+                                            <a
+                                                href="https://research.utar.edu.my/utar-gra.php"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-amber-600/10 hover:bg-amber-600/20 border border-amber-600/20 transition-all duration-200 group"
+                                            >
+                                                <Briefcase className="w-4 h-4 text-amber-400 group-hover:text-amber-300" />
+                                                <span className="text-sm text-amber-400 group-hover:text-amber-300">Research Opportunities</span>
+                                            </a>
+                                            <a
+                                                href="https://research.utar.edu.my/UTAR_FSJPP.php"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-violet-600/10 hover:bg-violet-600/20 border border-violet-600/20 transition-all duration-200 group"
+                                            >
+                                                <FileText className="w-4 h-4 text-violet-400 group-hover:text-violet-300" />
+                                                <span className="text-sm text-violet-400 group-hover:text-violet-300">Journal Financial Support</span>
+                                            </a>
+                                            <a
+                                                href="https://ipsr.utar.edu.my/Apply.php"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-rose-600/10 hover:bg-rose-600/20 border border-rose-600/20 transition-all duration-200 group"
+                                            >
+                                                <FileText className="w-4 h-4 text-rose-400 group-hover:text-rose-300" />
+                                                <span className="text-sm text-rose-400 group-hover:text-rose-300">Postgraduate Study Application</span>
+                                            </a>
+                                            <a
+                                                href="https://ipsrprogress.utar.edu.my/"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-orange-600/10 hover:bg-orange-600/20 border border-orange-600/20 transition-all duration-200 group"
+                                            >
+                                                <TrendingUp className="w-4 h-4 text-orange-400 group-hover:text-orange-300" />
+                                                <span className="text-sm text-orange-400 group-hover:text-orange-300">Postgraduate Research Progress Monitoring</span>
+                                            </a>
+                                            <a
+                                                href="https://research.utar.edu.my/V11000.php"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-pink-600/10 hover:bg-pink-600/20 border border-pink-600/20 transition-all duration-200 group"
+                                            >
+                                                <UserPlus className="w-4 h-4 text-pink-400 group-hover:text-pink-300" />
+                                                <span className="text-sm text-pink-400 group-hover:text-pink-300">Student Hiring</span>
+                                            </a>
+                                            <a
+                                                href="https://forms.office.com/pages/responsepage.aspx?id=VJPfTjsLmkK7j_IflX8dHNsKZgLlro5FjOid_4ntRNFUM1pHUFc1R0lBMDlLQjVOWFpaUUU4Njk5MS4u&route=shorturl"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-fuchsia-600/10 hover:bg-fuchsia-600/20 border border-fuchsia-600/20 transition-all duration-200 group"
+                                            >
+                                                <Briefcase className="w-4 h-4 text-fuchsia-400 group-hover:text-fuchsia-300" />
+                                                <span className="text-sm text-fuchsia-400 group-hover:text-fuchsia-300">GRA Vacancy Advertisement</span>
+                                            </a>
+                                        </>
+                                    )}
+
+                                    {/* Chairperson Only Link */}
+                                    {session.user.role === 'chairperson' && (
+                                        <a
+                                            href="https://research.utar.edu.my/Research-Centres.php"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
+                                        >
+                                            <Globe className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
+                                            <span className="text-sm text-slate-400 group-hover:text-slate-300">Other Research Centres</span>
+                                        </a>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             )}
@@ -348,20 +524,23 @@ export default function ChatPage() {
                                 </svg>
                             </div>
                             <h2 className="text-2xl font-bold">Welcome to CHST-Chatbot</h2>
-                            <p className="text-muted-foreground text-lg">
+                            <p className="text-white text-lg">
                                 Your AI Assistant for CHST Administration and Research Support
                             </p>
 
-                            <div className="grid grid-cols-2 gap-3 mt-8">
-                                {sampleQuestions.map((question, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => setInput(question)}
-                                        className="p-4 text-left border border-border rounded-lg hover:bg-accent transition-colors"
-                                    >
-                                        <p className="text-sm">{question}</p>
-                                    </button>
-                                ))}
+                            <div className="mt-8">
+                                <h3 className="text-sm font-semibold text-muted-foreground mb-4">Popular Questions</h3>
+                                <div className="grid grid-cols-2 gap-3">
+                                    {sampleQuestions.map((question, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => setInput(question)}
+                                            className="p-4 text-left border border-border rounded-lg hover:bg-accent transition-colors"
+                                        >
+                                            <p className="text-sm text-muted-foreground">{question}</p>
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     ) : (
