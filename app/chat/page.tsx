@@ -554,11 +554,38 @@ export default function ChatPage() {
                                                     // Handle special download protocol
                                                     if (href?.startsWith('download:')) {
                                                         const docName = href.replace('download:', '').trim().toLowerCase();
-                                                        // Find matching document in sources (case-insensitive)
-                                                        const doc = message.sources?.find((s: any) =>
-                                                            (s.originalName && s.originalName.toLowerCase() === docName) ||
-                                                            (s.filename && s.filename.toLowerCase() === docName)
-                                                        );
+                                                        console.log('[Download Link] Looking for document:', docName);
+                                                        console.log('[Download Link] Available sources:', message.sources);
+
+                                                        // Find matching document in sources with flexible matching
+                                                        const doc = message.sources?.find((s: any) => {
+                                                            const originalNameLower = (s.originalName || '').toLowerCase();
+                                                            const filenameLower = (s.filename || '').toLowerCase();
+
+                                                            // Exact match
+                                                            if (originalNameLower === docName || filenameLower === docName) {
+                                                                return true;
+                                                            }
+
+                                                            // Partial match - check if one contains the other
+                                                            if (originalNameLower.includes(docName) || docName.includes(originalNameLower)) {
+                                                                return true;
+                                                            }
+
+                                                            // Remove file extension and try again
+                                                            const docNameNoExt = docName.replace(/\.(pdf|docx?|xlsx?|pptx?)$/i, '');
+                                                            const originalNameNoExt = originalNameLower.replace(/\.(pdf|docx?|xlsx?|pptx?)$/i, '');
+
+                                                            if (originalNameNoExt === docNameNoExt ||
+                                                                originalNameNoExt.includes(docNameNoExt) ||
+                                                                docNameNoExt.includes(originalNameNoExt)) {
+                                                                return true;
+                                                            }
+
+                                                            return false;
+                                                        });
+
+                                                        console.log('[Download Link] Matched document:', doc);
 
                                                         if (doc && doc.documentId) {
                                                             return (
@@ -572,6 +599,7 @@ export default function ChatPage() {
                                                             );
                                                         } else {
                                                             // AI suggested a download but we don't have the file
+                                                            console.warn('[Download Link] Document not found in sources for:', docName);
                                                             return (
                                                                 <span className="text-gray-400 italic" title="Document not found in database">
                                                                     {children} (Document not available)
