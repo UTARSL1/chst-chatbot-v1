@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plus, Pencil, Trash2, ExternalLink } from 'lucide-react';
+import { Pencil, Trash2, ExternalLink } from 'lucide-react';
 
 interface QuickAccessLink {
     id: string;
@@ -140,9 +140,8 @@ export default function AdminQuickAccessPage() {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold text-white">Quick Access Management</h1>
-                <Button onClick={() => setShowAddModal(true)} className="bg-violet-600 hover:bg-violet-700">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add System Link
+                <Button onClick={() => setShowAddModal(true)} variant="gradient">
+                    + Add System Link
                 </Button>
             </div>
 
