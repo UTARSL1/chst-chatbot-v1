@@ -87,25 +87,37 @@ Important:
                         },
                         select: {
                             originalName: true,
-                            category: true
+                            category: true,
+                            department: true
                         }
                     });
 
                     const total = docs.length;
+
                     const byCategory = docs.reduce((acc, doc) => {
                         const cat = doc.category || 'Uncategorized';
                         acc[cat] = (acc[cat] || 0) + 1;
                         return acc;
                     }, {} as Record<string, number>);
 
+                    const byDepartment = docs.reduce((acc, doc) => {
+                        const dept = doc.department || 'General';
+                        acc[dept] = (acc[dept] || 0) + 1;
+                        return acc;
+                    }, {} as Record<string, number>);
+
                     const inventoryInfo = `
 [SYSTEM DATABASE INVENTORY]
 Total Documents Accessible: ${total}
+
 Breakdown by Category:
 ${Object.entries(byCategory).map(([cat, count]) => `- ${cat}: ${count}`).join('\n')}
 
+Breakdown by Department:
+${Object.entries(byDepartment).map(([dept, count]) => `- ${dept}: ${count}`).join('\n')}
+
 Full List of Accessible Documents:
-${docs.map(d => `- ${d.originalName} (${d.category})`).join('\n')}
+${docs.map(d => `- ${d.originalName} (${d.category} | ${d.department || 'General'})`).join('\n')}
 `;
                     contextParts.push(inventoryInfo);
                     console.log('[RAG] Injected inventory context');
@@ -152,7 +164,9 @@ CRITICAL - Form References:
 - Example: \`[Download Policy on Research Leave](download:Policy on Research Leave)\`
 - Do NOT use http/https links for documents.
 - The system will detect this format and convert it into a working download button.
-- If no specific forms are mentioned in the context, do not make up or suggest forms`;
+- If no specific forms are mentioned in the context, do not make up or suggest forms
+- **INVENTORY LISTS**: When listing documents from the "System Database Inventory", do NOT generate download links for them unless the user specifically asked to download them. Just list their names.
+- Do NOT claim to "provide" documents if you are only listing their names from the inventory. State that these are the documents *available* in the system.`;
             }
 
             userPrompt = `Context from CHST policies and forms:
