@@ -29,6 +29,7 @@ export async function GET(req: NextRequest) {
                 isApproved: true, // Need this to distinguish in the list
                 isVerified: true, // Need this to check if email is verified
                 recoveryEmail: true,
+                lastLogin: true, // Last login timestamp
                 invitationCode: {
                     select: {
                         code: true,
