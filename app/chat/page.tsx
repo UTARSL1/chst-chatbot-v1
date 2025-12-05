@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -247,7 +247,7 @@ export default function ChatPage() {
                                     title="Delete chat"
                                     type="button"
                                 >
-                                    ×
+                                    �
                                 </button>
                             </div>
                         ))}
@@ -319,37 +319,37 @@ export default function ChatPage() {
                                                 href="https://ipsr.utar.edu.my/"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-emerald-600/10 hover:bg-emerald-600/20 border border-emerald-600/20 transition-all duration-200 group"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
                                             >
-                                                <BookOpen className="w-4 h-4 text-emerald-400 group-hover:text-emerald-300" />
-                                                <span className="text-sm text-emerald-400 group-hover:text-emerald-300">List of Programmes</span>
+                                                <BookOpen className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
+                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">List of Programmes</span>
                                             </a>
                                             <a
                                                 href="https://ipsr.utar.edu.my/Handbook.php"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-cyan-600/10 hover:bg-cyan-600/20 border border-cyan-600/20 transition-all duration-200 group"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
                                             >
-                                                <GraduationCap className="w-4 h-4 text-cyan-400 group-hover:text-cyan-300" />
-                                                <span className="text-sm text-cyan-400 group-hover:text-cyan-300">Links for Potential Students</span>
+                                                <GraduationCap className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
+                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Links for Potential Students</span>
                                             </a>
                                             <a
                                                 href="https://research.utar.edu.my/utar-gra.php"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-amber-600/10 hover:bg-amber-600/20 border border-amber-600/20 transition-all duration-200 group"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
                                             >
-                                                <Briefcase className="w-4 h-4 text-amber-400 group-hover:text-amber-300" />
-                                                <span className="text-sm text-amber-400 group-hover:text-amber-300">Research Opportunities</span>
+                                                <Briefcase className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
+                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Research Opportunities</span>
                                             </a>
                                             <a
                                                 href="https://ipsr.utar.edu.my/Apply.php"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-rose-600/10 hover:bg-rose-600/20 border border-rose-600/20 transition-all duration-200 group"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
                                             >
-                                                <FileText className="w-4 h-4 text-rose-400 group-hover:text-rose-300" />
-                                                <span className="text-sm text-rose-400 group-hover:text-rose-300">Postgraduate Study Application</span>
+                                                <FileText className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
+                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Postgraduate Study Application</span>
                                             </a>
                                         </>
                                     )}
@@ -361,19 +361,19 @@ export default function ChatPage() {
                                                 href="https://ipsr.utar.edu.my/Handbook.php"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-cyan-600/10 hover:bg-cyan-600/20 border border-cyan-600/20 transition-all duration-200 group"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
                                             >
-                                                <GraduationCap className="w-4 h-4 text-cyan-400 group-hover:text-cyan-300" />
-                                                <span className="text-sm text-cyan-400 group-hover:text-cyan-300">Important Links for Students</span>
+                                                <GraduationCap className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
+                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Important Links for Students</span>
                                             </a>
                                             <a
                                                 href="https://research.utar.edu.my/utar-gra.php"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-amber-600/10 hover:bg-amber-600/20 border border-amber-600/20 transition-all duration-200 group"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
                                             >
-                                                <Briefcase className="w-4 h-4 text-amber-400 group-hover:text-amber-300" />
-                                                <span className="text-sm text-amber-400 group-hover:text-amber-300">Research Opportunities</span>
+                                                <Briefcase className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
+                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Research Opportunities</span>
                                             </a>
                                         </>
                                     )}
@@ -385,73 +385,73 @@ export default function ChatPage() {
                                                 href="https://research.utar.edu.my/External-Grant-List-2025.php"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-green-600/10 hover:bg-green-600/20 border border-green-600/20 transition-all duration-200 group"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
                                             >
-                                                <DollarSign className="w-4 h-4 text-green-400 group-hover:text-green-300" />
-                                                <span className="text-sm text-green-400 group-hover:text-green-300">External Grant Opportunities</span>
+                                                <DollarSign className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
+                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">External Grant Opportunities</span>
                                             </a>
                                             <a
                                                 href="https://login.libezp2.utar.edu.my/login?url=https://jcr.clarivate.com/"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-sky-600/10 hover:bg-sky-600/20 border border-sky-600/20 transition-all duration-200 group"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
                                             >
-                                                <TrendingUp className="w-4 h-4 text-sky-400 group-hover:text-sky-300" />
-                                                <span className="text-sm text-sky-400 group-hover:text-sky-300">Journal Citation Report (JCR)</span>
+                                                <TrendingUp className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
+                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Journal Citation Report (JCR)</span>
                                             </a>
                                             <a
                                                 href="https://research.utar.edu.my/utar-gra.php"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-amber-600/10 hover:bg-amber-600/20 border border-amber-600/20 transition-all duration-200 group"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
                                             >
-                                                <Briefcase className="w-4 h-4 text-amber-400 group-hover:text-amber-300" />
-                                                <span className="text-sm text-amber-400 group-hover:text-amber-300">Research Opportunities</span>
+                                                <Briefcase className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
+                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Research Opportunities</span>
                                             </a>
                                             <a
                                                 href="https://research.utar.edu.my/UTAR_FSJPP.php"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-violet-600/10 hover:bg-violet-600/20 border border-violet-600/20 transition-all duration-200 group"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
                                             >
-                                                <FileText className="w-4 h-4 text-violet-400 group-hover:text-violet-300" />
-                                                <span className="text-sm text-violet-400 group-hover:text-violet-300">Journal Financial Support</span>
+                                                <FileText className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
+                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Journal Financial Support</span>
                                             </a>
                                             <a
                                                 href="https://ipsr.utar.edu.my/Apply.php"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-rose-600/10 hover:bg-rose-600/20 border border-rose-600/20 transition-all duration-200 group"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
                                             >
-                                                <FileText className="w-4 h-4 text-rose-400 group-hover:text-rose-300" />
-                                                <span className="text-sm text-rose-400 group-hover:text-rose-300">Postgraduate Study Application</span>
+                                                <FileText className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
+                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Postgraduate Study Application</span>
                                             </a>
                                             <a
                                                 href="https://ipsrprogress.utar.edu.my/"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-orange-600/10 hover:bg-orange-600/20 border border-orange-600/20 transition-all duration-200 group"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
                                             >
-                                                <TrendingUp className="w-4 h-4 text-orange-400 group-hover:text-orange-300" />
-                                                <span className="text-sm text-orange-400 group-hover:text-orange-300">Postgraduate Research Progress Monitoring</span>
+                                                <TrendingUp className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
+                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Postgraduate Research Progress Monitoring</span>
                                             </a>
                                             <a
                                                 href="https://research.utar.edu.my/V11000.php"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-pink-600/10 hover:bg-pink-600/20 border border-pink-600/20 transition-all duration-200 group"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
                                             >
-                                                <UserPlus className="w-4 h-4 text-pink-400 group-hover:text-pink-300" />
-                                                <span className="text-sm text-pink-400 group-hover:text-pink-300">Student Hiring</span>
+                                                <UserPlus className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
+                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Student Hiring</span>
                                             </a>
                                             <a
                                                 href="https://forms.office.com/pages/responsepage.aspx?id=VJPfTjsLmkK7j_IflX8dHNsKZgLlro5FjOid_4ntRNFUM1pHUFc1R0lBMDlLQjVOWFpaUUU4Njk5MS4u&route=shorturl"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-fuchsia-600/10 hover:bg-fuchsia-600/20 border border-fuchsia-600/20 transition-all duration-200 group"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
                                             >
-                                                <Briefcase className="w-4 h-4 text-fuchsia-400 group-hover:text-fuchsia-300" />
-                                                <span className="text-sm text-fuchsia-400 group-hover:text-fuchsia-300">GRA Vacancy Advertisement</span>
+                                                <Briefcase className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
+                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">GRA Vacancy Advertisement</span>
                                             </a>
                                         </>
                                     )}
@@ -669,7 +669,7 @@ export default function ChatPage() {
                                         return relevantDocs.length > 0 && (
                                             <div className="mt-4 p-3 bg-slate-800/50 rounded-lg border border-slate-700">
                                                 <p className="text-sm font-semibold text-slate-300 mb-2">
-                                                    📎 Referenced Documents:
+                                                    ?? Referenced Documents:
                                                 </p>
                                                 <div className="space-y-2">
                                                     {relevantDocs.map((doc, idx) => (
@@ -699,7 +699,7 @@ export default function ChatPage() {
                                     {message.suggestions && message.suggestions.length > 0 && (
                                         <div className="mt-3 p-3 bg-purple-900/20 rounded-lg border border-purple-700">
                                             <p className="text-sm font-semibold text-purple-300 mb-2">
-                                                💡 You might also need:
+                                                ?? You might also need:
                                             </p>
                                             <div className="space-y-2">
                                                 {message.suggestions.map((doc: any, idx: number) => (

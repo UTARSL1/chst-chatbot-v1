@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/db';
 import { isUTAREmail, isGeneralEmailProvider, isValidRecoveryEmail } from '@/lib/email-validation';
-import { sendVerificationEmail } from '@/lib/email';
+import { sendVerificationEmail, sendAdminNotification } from '@/lib/email';
 import crypto from 'crypto';
 
 export async function POST(req: NextRequest) {
@@ -143,6 +143,9 @@ export async function POST(req: NextRequest) {
 
         // Send verification email
         await sendVerificationEmail(user.email, verificationToken);
+
+        // Notify admin of new registration
+        await sendAdminNotification(user.name, user.email, user.role);
 
         return NextResponse.json(
             {

@@ -135,6 +135,30 @@ export async function sendExpiredTokenEmail(email: string, name: string) {
     });
 }
 
+export async function sendAdminNotification(userName: string, userEmail: string, userRole: string) {
+    const adminUrl = `${process.env.NEXTAUTH_URL}/admin/users`;
+
+    const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #2563eb;">New User Registration</h2>
+            <p>A new user has registered and is awaiting approval:</p>
+            <ul style="line-height: 1.8;">
+                <li><strong>Name:</strong> ${userName}</li>
+                <li><strong>Email:</strong> ${userEmail}</li>
+                <li><strong>Role:</strong> ${userRole}</li>
+            </ul>
+            <p>Click the button below to review and approve:</p>
+            <a href="${adminUrl}" style="display: inline-block; background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 20px 0;">Review User</a>
+        </div>
+    `;
+
+    return sendEmail({
+        to: 'ychum2@gmail.com',
+        subject: 'CHST Chatbot - New User Registration Pending Approval',
+        html,
+    });
+}
+
 function logEmailToConsole(to: string, subject: string, html: string) {
     console.log('\n================ EMAIL SIMULATION ================');
     console.log(`To: ${to}`);
