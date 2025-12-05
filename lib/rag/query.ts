@@ -107,6 +107,7 @@ CRITICAL - Form References:
 - DO NOT suggest or mention forms that are not explicitly written in the policy text
 - When mentioning a form, simply state its name and form number (e.g., "the APPLICATION FOR SABBATICAL LEAVE form (FM-DHR-TD-017)")
 - DO NOT wrap form names in brackets like [Download...] - this creates confusion
+- DO NOT generate Markdown links for documents (e.g., [Title](filename)) - these will be broken
 - Instead, tell users that download links for referenced documents will appear in the "Referenced Documents" section below your response
 - Example: "I've included the APPLICATION FOR SABBATICAL LEAVE form below for you to download."
 - If no specific forms are mentioned in the context, do not make up or suggest forms

@@ -72,9 +72,15 @@ export default function ChatPage() {
 
             if (data.success && data.downloadUrl) {
                 console.log('[Frontend] Opening URL:', data.downloadUrl);
-                // Use window.location.href for reliable download of attachments
-                // This works better than window.open for file downloads and avoids popup blockers
-                window.location.href = data.downloadUrl;
+                // Create a temporary anchor element and trigger download in new tab
+                const link = document.createElement('a');
+                link.href = data.downloadUrl;
+                link.target = '_blank'; // Open in new tab
+                link.rel = 'noopener noreferrer';
+                // link.download = data.filename; // Note: download attribute often ignored for cross-origin
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             } else {
                 const errorMsg = data.error || 'Failed to download document';
                 const details = data.details ? `\n\nDetails: ${data.details}` : '';

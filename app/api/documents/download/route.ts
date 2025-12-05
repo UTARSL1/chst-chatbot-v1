@@ -58,7 +58,9 @@ export async function GET(req: NextRequest) {
         console.log('[Download] Attempting to create signed URL for:', document.filePath);
         const { data: signedUrlData, error: signedUrlError } = await supabase.storage
             .from('documents')
-            .createSignedUrl(document.filePath, 60);
+            .createSignedUrl(document.filePath, 60, {
+                download: document.originalName // Force download with original filename
+            });
 
         if (signedUrlError || !signedUrlData) {
             console.error('Supabase signed URL error:', signedUrlError);
