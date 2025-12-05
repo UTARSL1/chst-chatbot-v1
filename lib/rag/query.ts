@@ -77,6 +77,43 @@ Important:
                 contextParts.push(docContext);
             }
 
+            // [NEW] Check for inventory/metadata questions and inject DB stats
+            const isInventoryQuestion = /how many|list|inventory|what documents|count|uploaded/i.test(query.query);
+            if (isInventoryQuestion) {
+                try {
+                    const docs = await prisma.document.findMany({
+                        where: {
+                            accessLevel: { in: accessLevels as any }
+                        },
+                        select: {
+                            originalName: true,
+                            category: true
+                        }
+                    });
+
+                    const total = docs.length;
+                    const byCategory = docs.reduce((acc, doc) => {
+                        const cat = doc.category || 'Uncategorized';
+                        acc[cat] = (acc[cat] || 0) + 1;
+                        return acc;
+                    }, {} as Record<string, number>);
+
+                    const inventoryInfo = `
+[SYSTEM DATABASE INVENTORY]
+Total Documents Accessible: ${total}
+Breakdown by Category:
+${Object.entries(byCategory).map(([cat, count]) => `- ${cat}: ${count}`).join('\n')}
+
+Full List of Accessible Documents:
+${docs.map(d => `- ${d.originalName} (${d.category})`).join('\n')}
+`;
+                    contextParts.push(inventoryInfo);
+                    console.log('[RAG] Injected inventory context');
+                } catch (err) {
+                    console.error('Error fetching inventory:', err);
+                }
+            }
+
             const context = contextParts.join('\n\n=== === ===\n\n');
 
             // Fetch custom system prompt from database
