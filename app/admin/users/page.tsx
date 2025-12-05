@@ -18,6 +18,7 @@ interface User {
     isVerified: boolean;
     recoveryEmail?: string;
     verificationTokenExpiry?: Date;
+    lastLogin?: Date;
     invitationCode?: {
         code: string;
         createdAt: Date;
@@ -252,6 +253,7 @@ export default function AdminUsersPage() {
                                         <th className="px-6 py-3">User Name / Role</th>
                                         <th className="px-6 py-3">Recovery Email</th>
                                         <th className="px-6 py-3">Registration Date</th>
+                                        <th className="px-6 py-3">Last Login</th>
                                         <th className="px-6 py-3">Invitation Code</th>
                                         <th className="px-6 py-3 text-right">Actions</th>
                                     </tr>
@@ -294,6 +296,18 @@ export default function AdminUsersPage() {
                                                     {new Date(user.createdAt).toLocaleTimeString()}
                                                 </div>
                                             </td>
+                                            <td className="px-6 py-4 text-muted-foreground">
+                                                {user.lastLogin ? (
+                                                    <>
+                                                        {new Date(user.lastLogin).toLocaleDateString()}
+                                                        <div className="text-xs opacity-70">
+                                                            {new Date(user.lastLogin).toLocaleTimeString()}
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <span className="text-xs italic opacity-50">Never</span>
+                                                )}
+                                            </td>
                                             <td className="px-6 py-4">
                                                 {user.invitationCode ? (
                                                     <span className="font-mono text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">
@@ -330,7 +344,7 @@ export default function AdminUsersPage() {
                                     ))}
                                     {users.length === 0 && (
                                         <tr>
-                                            <td colSpan={5} className="px-6 py-8 text-center text-muted-foreground">
+                                            <td colSpan={6} className="px-6 py-8 text-center text-muted-foreground">
                                                 No users found
                                             </td>
                                         </tr>

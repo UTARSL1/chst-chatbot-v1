@@ -43,6 +43,7 @@ model User {
   verificationToken String?   @unique // Token for email verification
   verificationTokenExpiry DateTime? // Expiration time for verification token
   isVerified       Boolean    @default(false) // Email verification status
+  lastLogin        DateTime?  // Last login timestamp
   
   // Relations
   chatSessions    ChatSession[]

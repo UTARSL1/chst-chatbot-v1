@@ -55,6 +55,14 @@ export const authOptions: NextAuthOptions = {
                     throw new Error('Invalid password');
                 }
 
+                // Update last login timestamp
+                await prisma.user.update({
+                    where: { id: user.id },
+                    data: { lastLogin: new Date() },
+                });
+
+                console.log('[AUTH] Login successful, lastLogin updated');
+
                 // Return user object
                 return {
                     id: user.id,
