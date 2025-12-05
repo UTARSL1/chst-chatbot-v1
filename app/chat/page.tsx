@@ -549,6 +549,10 @@ export default function ChatPage() {
                                     <div className="markdown-content">
                                         <ReactMarkdown
                                             remarkPlugins={[remarkGfm]}
+                                            urlTransform={(uri) => {
+                                                if (uri.startsWith('download:')) return uri;
+                                                return uri;
+                                            }}
                                             components={{
                                                 a: ({ node, href, children, ...props }) => {
                                                     // Handle special download protocol
