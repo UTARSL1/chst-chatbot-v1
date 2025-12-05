@@ -149,8 +149,8 @@ export function DocumentList() {
                                     <th className="px-6 py-3 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('category')}>
                                         Type <SortIcon columnKey="category" />
                                     </th>
-                                    <th className="px-6 py-3 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('accessLevel')}>
-                                        Access <SortIcon columnKey="accessLevel" />
+                                    <th className="px-6 py-3 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('status')}>
+                                        Status <SortIcon columnKey="status" />
                                     </th>
                                     <th className="px-6 py-3 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('fileSize')}>
                                         Size <SortIcon columnKey="fileSize" />
@@ -161,8 +161,8 @@ export function DocumentList() {
                                     <th className="px-6 py-3 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('uploadedAt')}>
                                         Date <SortIcon columnKey="uploadedAt" />
                                     </th>
-                                    <th className="px-6 py-3 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('status')}>
-                                        Status <SortIcon columnKey="status" />
+                                    <th className="px-6 py-3 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('accessLevel')}>
+                                        Access <SortIcon columnKey="accessLevel" />
                                     </th>
                                     <th className="px-6 py-3">Actions</th>
                                 </tr>
@@ -187,11 +187,11 @@ export function DocumentList() {
                                             </span>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${doc.accessLevel === 'chairperson' ? 'bg-purple-500/20 text-purple-300' :
-                                                doc.accessLevel === 'member' ? 'bg-blue-500/20 text-blue-300' :
-                                                    'bg-green-500/20 text-green-300'
+                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${doc.status === 'processed' ? 'bg-green-500/10 text-green-400' :
+                                                doc.status === 'processing' ? 'bg-yellow-500/10 text-yellow-400' :
+                                                    'bg-red-500/10 text-red-400'
                                                 }`}>
-                                                {doc.accessLevel.charAt(0).toUpperCase() + doc.accessLevel.slice(1)}
+                                                {doc.status.charAt(0).toUpperCase() + doc.status.slice(1)}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4">
@@ -204,11 +204,11 @@ export function DocumentList() {
                                             {formatRelativeTime(new Date(doc.uploadedAt))}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${doc.status === 'processed' ? 'bg-green-500/10 text-green-400' :
-                                                doc.status === 'processing' ? 'bg-yellow-500/10 text-yellow-400' :
-                                                    'bg-red-500/10 text-red-400'
+                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${doc.accessLevel === 'chairperson' ? 'bg-purple-500/20 text-purple-300' :
+                                                doc.accessLevel === 'member' ? 'bg-blue-500/20 text-blue-300' :
+                                                    'bg-green-500/20 text-green-300'
                                                 }`}>
-                                                {doc.status.charAt(0).toUpperCase() + doc.status.slice(1)}
+                                                {doc.accessLevel.charAt(0).toUpperCase() + doc.accessLevel.slice(1)}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4">

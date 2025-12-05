@@ -8,6 +8,9 @@ import { extractTextFromPDF } from '@/lib/rag/pdfProcessor';
 import { chunkText, cleanText, generateEmbeddings } from '@/lib/rag/embeddings';
 import { storeDocumentChunks, deleteDocumentVectors } from '@/lib/rag/vectorStore';
 
+
+export const maxDuration = 60; // Set max duration to 60 seconds for Vercel
+
 export async function POST(req: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
@@ -98,16 +101,29 @@ export async function POST(req: NextRequest) {
             },
         });
 
-        // Process document asynchronously (don't wait for completion)
-        processDocument(document.id, buffer, filename, accessLevel as any)
-            .catch((error) => {
-                console.error('Error processing document:', error);
-                // Update document status to failed
-                prisma.document.update({
-                    where: { id: document.id },
-                    data: { status: 'failed' },
-                });
+        // Process document synchronously (wait for completion)
+        // In Vercel/Serverless, async background tasks are often killed if the response is returned.
+        try {
+            await processDocument(document.id, buffer, filename, accessLevel as any);
+        } catch (error) {
+            console.error('Error processing document:', error);
+
+            // Update document status to failed
+            await prisma.document.update({
+                where: { id: document.id },
+                data: { status: 'failed' },
             });
+
+            // Return error to user so they know processing failed
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: 'File uploaded but processing failed. Please try again.',
+                    details: error instanceof Error ? error.message : String(error)
+                },
+                { status: 500 }
+            );
+        }
 
         return NextResponse.json(
             {
@@ -116,7 +132,7 @@ export async function POST(req: NextRequest) {
                     id: document.id,
                     filename: document.originalName,
                     accessLevel: document.accessLevel,
-                    status: document.status,
+                    status: 'processed', // We know it's processed now
                 },
             },
             { status: 201 }
@@ -177,21 +193,6 @@ async function processDocument(
         console.log(`Document ${documentId} processed successfully`);
     } catch (error) {
         console.error(`Error processing document ${documentId}:`, error);
-
-        // Log to file for debugging
-        try {
-            const { appendFile } = require('fs/promises');
-            await appendFile('processing-error.log', `${new Date().toISOString()} - Error processing ${documentId}: ${error}\n${JSON.stringify(error, Object.getOwnPropertyNames(error))}\n\n`);
-        } catch (e) {
-            console.error('Failed to write to error log', e);
-        }
-
-        // Update status to failed
-        await prisma.document.update({
-            where: { id: documentId },
-            data: { status: 'failed' },
-        });
-
         throw error;
     }
 }
