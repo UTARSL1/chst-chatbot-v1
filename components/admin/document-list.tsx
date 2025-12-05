@@ -20,6 +20,7 @@ interface Document {
         name: string;
         email: string;
     };
+    chunkCount?: number;
 }
 
 export function DocumentList() {
@@ -192,6 +193,7 @@ export function DocumentList() {
                                                     'bg-red-500/10 text-red-400'
                                                 }`}>
                                                 {doc.status.charAt(0).toUpperCase() + doc.status.slice(1)}
+                                                {doc.status === 'processed' && doc.chunkCount ? ` (${doc.chunkCount} chunks)` : ''}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4">
