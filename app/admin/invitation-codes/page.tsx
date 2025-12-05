@@ -13,6 +13,7 @@ interface InvitationCode {
     createdAt: string;
     expiresAt: string | null;
     usageCount: number;
+    remark: string | null;
     _count: {
         users: number;
     };
@@ -22,6 +23,8 @@ export default function InvitationCodesPage() {
     const [codes, setCodes] = useState<InvitationCode[]>([]);
     const [loading, setLoading] = useState(true);
     const [generating, setGenerating] = useState(false);
+    const [newRemark, setNewRemark] = useState('');
+    const [editingRemark, setEditingRemark] = useState<{ id: string, remark: string } | null>(null);
 
     useEffect(() => {
         fetchCodes();
@@ -47,10 +50,11 @@ export default function InvitationCodesPage() {
             const response = await fetch('/api/admin/invitation-codes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({}),
+                body: JSON.stringify({ remark: newRemark || null }),
             });
 
             if (response.ok) {
+                setNewRemark('');
                 await fetchCodes();
             }
         } catch (error) {
@@ -92,6 +96,23 @@ export default function InvitationCodesPage() {
         }
     };
 
+    const updateRemark = async (id: string, remark: string) => {
+        try {
+            const response = await fetch(`/api/admin/invitation-codes/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ remark: remark || null }),
+            });
+
+            if (response.ok) {
+                setEditingRemark(null);
+                await fetchCodes();
+            }
+        } catch (error) {
+            console.error('Error updating remark:', error);
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex items-center justify-center h-full">
@@ -102,17 +123,40 @@ export default function InvitationCodesPage() {
 
     return (
         <div className="max-w-6xl mx-auto space-y-6">
-            <div className="flex justify-between items-center">
-                <div>
-                    <h1 className="text-3xl font-bold">Invitation Codes</h1>
-                    <p className="text-muted-foreground mt-1">
-                        Manage invitation codes for UTAR staff and student signups
-                    </p>
-                </div>
-                <Button onClick={generateCode} disabled={generating} variant="gradient">
-                    {generating ? 'Generating...' : '+ Generate Code'}
-                </Button>
+            <div>
+                <h1 className="text-3xl font-bold">Invitation Codes</h1>
+                <p className="text-muted-foreground mt-1">
+                    Manage invitation codes for UTAR staff and student signups
+                </p>
             </div>
+
+            {/* Generate Code Section */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>Generate New Code</CardTitle>
+                    <CardDescription>Create a new invitation code with an optional remark</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <div>
+                        <label className="text-sm font-medium mb-2 block">
+                            Remark (Optional)
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="e.g., Cohort 2025, Research Team, etc."
+                            value={newRemark}
+                            onChange={(e) => setNewRemark(e.target.value)}
+                            className="w-full px-3 py-2 bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                            Add a note to identify which group or cohort this code is for
+                        </p>
+                    </div>
+                    <Button onClick={generateCode} disabled={generating} variant="gradient" className="w-full">
+                        {generating ? 'Generating...' : '+ Generate Code'}
+                    </Button>
+                </CardContent>
+            </Card>
 
             {codes.length === 0 ? (
                 <Card>
@@ -161,6 +205,56 @@ export default function InvitationCodesPage() {
                                 </div>
                             </CardHeader>
                             <CardContent>
+                                {/* Remark Section */}
+                                <div className="mb-4 pb-4 border-b border-border">
+                                    {editingRemark?.id === code.id ? (
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-medium">Remark</label>
+                                            <div className="flex gap-2">
+                                                <input
+                                                    type="text"
+                                                    value={editingRemark.remark}
+                                                    onChange={(e) => setEditingRemark({ id: code.id, remark: e.target.value })}
+                                                    className="flex-1 px-3 py-2 bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-sm"
+                                                    placeholder="e.g., Cohort 2025, Research Team"
+                                                    autoFocus
+                                                />
+                                                <Button
+                                                    onClick={() => updateRemark(code.id, editingRemark.remark)}
+                                                    size="sm"
+                                                    variant="default"
+                                                >
+                                                    Save
+                                                </Button>
+                                                <Button
+                                                    onClick={() => setEditingRemark(null)}
+                                                    size="sm"
+                                                    variant="outline"
+                                                >
+                                                    Cancel
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="flex justify-between items-start">
+                                            <div>
+                                                <span className="text-sm font-medium text-muted-foreground">Remark:</span>
+                                                <p className="text-sm mt-1">
+                                                    {code.remark || <span className="italic text-muted-foreground">No remark</span>}
+                                                </p>
+                                            </div>
+                                            <Button
+                                                onClick={() => setEditingRemark({ id: code.id, remark: code.remark || '' })}
+                                                size="sm"
+                                                variant="ghost"
+                                            >
+                                                ✏️ Edit
+                                            </Button>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Stats Section */}
                                 <div className="flex gap-8 text-sm">
                                     <div>
                                         <span className="text-muted-foreground">Total Signups:</span>

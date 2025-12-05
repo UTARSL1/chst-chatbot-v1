@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json();
-        const { expiresAt } = body;
+        const { expiresAt, remark } = body;
 
         const code = generateInvitationCode();
 
@@ -48,6 +48,7 @@ export async function POST(req: NextRequest) {
                 code,
                 createdBy: session.user.id,
                 expiresAt: expiresAt ? new Date(expiresAt) : null,
+                remark: remark || null,
             },
         });
 

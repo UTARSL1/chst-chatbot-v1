@@ -184,6 +184,7 @@ model InvitationCode {
   createdAt  DateTime  @default(now())
   expiresAt  DateTime? // Optional expiration
   usageCount Int       @default(0)
+  remark     String?   // Optional note/description (e.g., cohort, group)
   
   // Relations
   users      User[]

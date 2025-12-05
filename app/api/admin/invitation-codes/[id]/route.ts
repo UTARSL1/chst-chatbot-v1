@@ -16,11 +16,17 @@ export async function PATCH(
             return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
         }
 
-        const { isActive } = await req.json();
+        const body = await req.json();
+        const { isActive, remark } = body;
+
+        // Build update data dynamically
+        const updateData: any = {};
+        if (isActive !== undefined) updateData.isActive = isActive;
+        if (remark !== undefined) updateData.remark = remark;
 
         const code = await prisma.invitationCode.update({
             where: { id: params.id },
-            data: { isActive },
+            data: updateData,
         });
 
         return NextResponse.json(code);
