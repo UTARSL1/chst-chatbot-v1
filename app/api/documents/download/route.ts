@@ -54,36 +54,29 @@ export async function GET(req: NextRequest) {
             );
         }
 
-        // Generate a signed URL that expires in 60 seconds
-        console.log('[Download] Attempting to create signed URL for:', document.filePath);
-        const { data: signedUrlData, error: signedUrlError } = await supabase.storage
+        // Generate a public URL
+        console.log('[Download] Generating public URL for:', document.filePath);
+        const { data: publicUrlData } = supabase.storage
             .from('documents')
-            .createSignedUrl(document.filePath, 60, {
-                download: document.originalName // Force download with original filename
-            });
+            .getPublicUrl(document.filePath);
 
-        if (signedUrlError || !signedUrlData) {
-            console.error('Supabase signed URL error:', signedUrlError);
-            console.error('Document filePath:', document.filePath);
-            console.error('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
-            console.error('Has service key:', !!process.env.SUPABASE_SERVICE_ROLE_KEY);
+        if (!publicUrlData || !publicUrlData.publicUrl) {
+            console.error('Failed to generate public URL');
             return NextResponse.json(
                 {
                     error: 'Failed to generate download link',
-                    details: signedUrlError?.message || 'Unknown error',
                     filePath: document.filePath
                 },
                 { status: 500 }
             );
         }
 
-        console.log('[Download] Signed URL created successfully:', signedUrlData.signedUrl);
+        console.log('[Download] Public URL generated:', publicUrlData.publicUrl);
 
-        // Return the signed URL in JSON format
-        // The frontend will handle the actual download
+        // Return the public URL in JSON format
         return NextResponse.json({
             success: true,
-            downloadUrl: signedUrlData.signedUrl,
+            downloadUrl: publicUrlData.publicUrl,
             filename: document.originalName
         });
     } catch (error) {
