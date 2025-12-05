@@ -658,7 +658,8 @@ export default function ChatPage() {
                                                 ),
                                             }}
                                         >
-                                            {message.content}
+                                            {/* Remove backticks around download links for backward compatibility */}
+                                            {message.content.replace(/`(\[Download[^\]]+\]\(download:[^\)]+\))`/g, '$1')}
                                         </ReactMarkdown>
                                     </div>
                                     {message.sources && message.sources.length > 0 && (() => {
