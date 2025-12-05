@@ -34,6 +34,9 @@ IMPORTANT - Document Downloads:
 - **CRITICAL**: ONLY provide a download link if the document is explicitly listed in the "Context" provided above.
 - If the document is NOT in the context, do NOT offer a download link. Instead, say "I couldn't find that document in the database."
 - Example: [Download APPLICATION FOR SABBATICAL LEAVE](download:APPLICATION FOR SABBATICAL LEAVE)
+- **CRITICAL SYNTAX NOTE**: Do NOT put a space between the square brackets [] and parentheses ().
+  - CORRECT: [Download Link](download:Filename)
+  - WRONG: [Download Link] (download:Filename)
 - Do NOT use http/https links for documents.
 - The system will detect this format and convert it into a working download button.
 - Instead, say things like: "I've included the form below for you to download" or "You can download the required form using the link below"

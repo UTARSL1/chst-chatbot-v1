@@ -164,6 +164,9 @@ CRITICAL - Form References:
 - **CRITICAL**: ONLY provide a download link if the document is explicitly listed in the "Context" provided above.
 - If the document is NOT in the context, do NOT offer a download link. Instead, say "I couldn't find that document in the database."
 - Example: [Download Policy on Research Leave](download:Policy on Research Leave)
+- **CRITICAL SYNTAX NOTE**: Do NOT put a space between the square brackets [] and parentheses (). 
+  - CORRECT: [Link](download:File)
+  - WRONG: [Link] (download:File)
 - Do NOT use http/https links for documents.
 - The system will detect this format and convert it into a working download button.
 - If no specific forms are mentioned in the context, do not make up or suggest forms
@@ -534,7 +537,13 @@ Guidelines:
 - Be specific and cite the relevant policy or form name
 - Provide step-by-step instructions when asked about procedures
 - If asked about deadlines or dates, be precise
-- Maintain a professional and helpful tone`;
+- Maintain a professional and helpful tone
+- **STRICT RULE**: If you want to provide a download link, use this EXACT format: [Download Document Name](download:DocumentName)
+- **CRITICAL**: ONLY provide a download link if the document is explicitly listed in the "Context" provided above.
+- Example: [Download Policy on Research Leave](download:Policy on Research Leave)
+- **CRITICAL SYNTAX NOTE**: Do NOT put a space between the square brackets [] and parentheses (). 
+  - CORRECT: [Link](download:File)
+  - WRONG: [Link] (download:File)`;
 
             userPrompt = `Context from CHST policies and forms:
 
