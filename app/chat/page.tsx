@@ -19,6 +19,8 @@ interface QuickAccessLink {
     icon?: string;
     roles: string[];
     order: number;
+    createdBy: string;
+    isSystem: boolean;
 }
 
 interface Message {
@@ -428,20 +430,24 @@ export default function ChatPage() {
                                                 <ExternalLink className="w-4 h-4 text-blue-400 group-hover:text-blue-300" />
                                                 <span className="text-sm text-blue-400 group-hover:text-blue-300">{link.name}</span>
                                             </a>
-                                            <button
-                                                onClick={() => setEditingLink(link)}
-                                                className="p-2 rounded-lg bg-amber-600/10 hover:bg-amber-600/20 border border-amber-600/20 transition-all"
-                                                title="Edit link"
-                                            >
-                                                <Pencil className="w-3 h-3 text-amber-400" />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDeleteLink(link.id)}
-                                                className="p-2 rounded-lg bg-red-600/10 hover:bg-red-600/20 border border-red-600/20 transition-all"
-                                                title="Delete link"
-                                            >
-                                                <Trash2 className="w-3 h-3 text-red-400" />
-                                            </button>
+                                            {!link.isSystem && (
+                                                <>
+                                                    <button
+                                                        onClick={() => setEditingLink(link)}
+                                                        className="p-2 rounded-lg bg-amber-600/10 hover:bg-amber-600/20 border border-amber-600/20 transition-all"
+                                                        title="Edit link"
+                                                    >
+                                                        <Pencil className="w-3 h-3 text-amber-400" />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDeleteLink(link.id)}
+                                                        className="p-2 rounded-lg bg-red-600/10 hover:bg-red-600/20 border border-red-600/20 transition-all"
+                                                        title="Delete link"
+                                                    >
+                                                        <Trash2 className="w-3 h-3 text-red-400" />
+                                                    </button>
+                                                </>
+                                            )}
                                         </div>
                                     ))}
 
