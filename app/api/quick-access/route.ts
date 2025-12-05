@@ -16,18 +16,20 @@ export async function GET(req: NextRequest) {
         const userId = session.user.id;
 
         // Fetch active links that:
-        // 1. Are visible to the user's role (System links)
-        // 2. OR were created by the user (Personal links)
+        // 1. Are System links visible to the user's role
+        // 2. OR are Personal links created by the user
         const links = await prisma.quickAccessLink.findMany({
             where: {
                 isActive: true,
                 OR: [
                     {
+                        isSystem: true,
                         roles: {
                             has: userRole
                         }
                     },
                     {
+                        isSystem: false,
                         createdBy: userId
                     }
                 ]
@@ -58,7 +60,7 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json();
-        const { name, url, section, icon, roles, order } = body;
+        const { name, url, section, icon, roles, order, isSystem } = body;
 
         // Validate input
         if (!name || !url) {
@@ -68,21 +70,31 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // Create the link
-        // For personal links, we can default roles to empty or just the user's role, 
-        // but since we filter by createdBy in GET, roles doesn't strictly matter for visibility 
-        // to the creator. However, to keep it clean, we can just set it to the user's role 
-        // or keep the default 'public', 'student', 'member', 'chairperson' if we want it potentially shareable later.
-        // For now, let's keep the default behavior but allow any user to create.
+        // Only chairpersons can create system links
+        if (isSystem && session.user.role !== 'chairperson') {
+            return NextResponse.json(
+                { error: 'Only chairpersons can create system links' },
+                { status: 403 }
+            );
+        }
 
+        // Determine roles:
+        // - System links: Use provided roles or default to all
+        // - Personal links: Always empty (private)
+        const linkRoles = isSystem
+            ? (roles || ['public', 'student', 'member', 'chairperson'])
+            : [];
+
+        // Create the link
         const link = await prisma.quickAccessLink.create({
             data: {
                 name,
                 url,
                 section: section || 'others',
                 icon: icon || null,
-                roles: roles || [], // Default to empty roles for personal links so they are private
+                roles: linkRoles,
                 order: order || 0,
+                isSystem: !!isSystem,
                 createdBy: session.user.id
             }
         });

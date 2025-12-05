@@ -33,7 +33,12 @@ export async function PATCH(
         }
 
         const body = await request.json();
-        const { name, url, section, icon, roles, order, isActive } = body;
+        const { name, url, section, icon, roles, order, isActive, isSystem } = body;
+
+        // Only chairpersons can change isSystem status
+        if (isSystem !== undefined && session.user.role !== 'chairperson') {
+            return NextResponse.json({ error: 'Only chairpersons can change system link status' }, { status: 403 });
+        }
 
         // Update the link
         const link = await prisma.quickAccessLink.update({
@@ -45,7 +50,8 @@ export async function PATCH(
                 ...(icon !== undefined && { icon }),
                 ...(roles !== undefined && { roles }),
                 ...(order !== undefined && { order }),
-                ...(isActive !== undefined && { isActive })
+                ...(isActive !== undefined && { isActive }),
+                ...(isSystem !== undefined && { isSystem })
             }
         });
 

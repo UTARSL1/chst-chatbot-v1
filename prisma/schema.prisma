@@ -202,6 +202,7 @@ model QuickAccessLink {
   roles       String[] @default(["public", "student", "member", "chairperson"]) // Roles that can see this link
   order       Int      @default(0) // Display order
   isActive    Boolean  @default(true)
+  isSystem    Boolean  @default(false) // True for admin-forced links, False for personal links
   createdBy   String   // User ID who created it
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
