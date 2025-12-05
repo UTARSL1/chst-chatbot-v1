@@ -372,10 +372,11 @@ export default function ChatPage() {
                                                 a: ({ node, href, children, ...props }) => {
                                                     // Handle special download protocol
                                                     if (href?.startsWith('download:')) {
-                                                        const docName = href.replace('download:', '').trim();
-                                                        // Find matching document in sources
+                                                        const docName = href.replace('download:', '').trim().toLowerCase();
+                                                        // Find matching document in sources (case-insensitive)
                                                         const doc = message.sources?.find((s: any) =>
-                                                            s.originalName === docName || s.filename === docName
+                                                            (s.originalName && s.originalName.toLowerCase() === docName) ||
+                                                            (s.filename && s.filename.toLowerCase() === docName)
                                                         );
 
                                                         if (doc && doc.documentId) {
@@ -580,16 +581,10 @@ export default function ChatPage() {
                 </div>
             </div>
 
-            {/* Terms of Use Button */}
-            <button
-                onClick={() => setTermsModalOpen(true)}
-                className="fixed bottom-6 right-6 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg shadow-lg transition-colors duration-200 z-50"
-            >
-                Terms of Use
-            </button>
-
-            {/* Terms of Use Modal */}
-            <TermsOfUseModal open={termsModalOpen} onOpenChange={setTermsModalOpen} />
+            <TermsOfUseModal
+                open={termsModalOpen}
+                onOpenChange={setTermsModalOpen}
+            />
         </div>
     );
 }
