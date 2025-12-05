@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
-import { sendExpiredTokenEmail } from '@/lib/email';
+import { sendExpiredTokenEmail, sendAdminNotification } from '@/lib/email';
 
 export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
@@ -46,6 +46,9 @@ export async function GET(req: NextRequest) {
                 verificationTokenExpiry: null, // Clear expiry
             },
         });
+
+        // Notify admin of verified user registration (only after email verification)
+        await sendAdminNotification(user.name, user.email, user.role);
 
         // Redirect to login with success message
         const loginUrl = new URL('/auth/signin', req.url);
