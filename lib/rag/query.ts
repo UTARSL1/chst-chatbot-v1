@@ -160,10 +160,10 @@ CRITICAL - Form References:
 - ONLY mention forms that are explicitly stated in the provided context by name or form number
 - DO NOT suggest or mention forms that are not explicitly written in the policy text
 - When mentioning a form, simply state its name and form number (e.g., "the APPLICATION FOR SABBATICAL LEAVE form (FM-DHR-TD-017)")
-- **STRICT RULE**: If you want to provide a download link, use this EXACT format: \`[Download Document Name](download:DocumentName)\`
+- **STRICT RULE**: If you want to provide a download link, use this EXACT format: [Download Document Name](download:DocumentName)
 - **CRITICAL**: ONLY provide a download link if the document is explicitly listed in the "Context" provided above.
 - If the document is NOT in the context, do NOT offer a download link. Instead, say "I couldn't find that document in the database."
-- Example: \`[Download Policy on Research Leave](download:Policy on Research Leave)\`
+- Example: [Download Policy on Research Leave](download:Policy on Research Leave)
 - Do NOT use http/https links for documents.
 - The system will detect this format and convert it into a working download button.
 - If no specific forms are mentioned in the context, do not make up or suggest forms

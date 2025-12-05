@@ -100,7 +100,7 @@ export async function searchSimilarDocuments(
             metadata: {
                 documentId: (match.metadata?.documentId as string) || '',
                 filename: (match.metadata?.filename as string) || '',
-                originalName: (match.metadata?.originalName as string) || '',
+                originalName: (match.metadata?.originalName as string) || (match.metadata?.filename as string) || '',
                 accessLevel: (match.metadata?.accessLevel as AccessLevel) || 'student',
                 chunkIndex: (match.metadata?.chunkIndex as number) || 0,
             },
