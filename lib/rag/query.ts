@@ -496,9 +496,13 @@ Guidelines:
 - Provide step-by-step instructions when asked about procedures
 - If asked about deadlines or dates, be precise
 - Maintain a professional and helpful tone
-- **STRICT RULE**: If you want to provide a download link, use this EXACT format: [Download Document Name](download:DocumentNameWithoutSpaces)
-- **CRITICAL**: ONLY provide a download link if the document is explicitly listed in the "Context" provided above.
-- Example: [Download Policy on Research Leave](download:PolicyOnResearchLeave)
+- **STRICT RULE**: If you want to provide a download link, use this EXACT format: [Download Display Name](download:ExactSourceFilename)
+- **CRITICAL**: The \`ExactSourceFilename\` inside the parentheses MUST be the exact filename listed in the \`[Source: ...]\` header of the context where you found the information.
+- Do NOT use a descriptive title for the link target; use the actual file name from the Source header.
+- Example:
+  - Context: \`[Source: POL-001_Travel_Policy.pdf] ... content ...\`
+  - Correct Response: \`[Download Travel Policy](download:POL-001_Travel_Policy.pdf)\`
+  - Incorrect: \`[Download Travel Policy](download:TravelPolicy)\`
 - **CRITICAL SYNTAX NOTE**: 
   1. Do NOT put a space between the square brackets [] and parentheses ().
   2. **REMOVE ALL SPACES** from the document name in the URL part (inside the parentheses).

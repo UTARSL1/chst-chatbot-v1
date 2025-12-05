@@ -168,7 +168,7 @@ export default function ChatPage() {
 
     const handleDownload = async (documentId: string, e: React.MouseEvent) => {
         e.preventDefault();
-        e.stopPropagation(); // Stop event bubbling
+        e.stopPropagation();
 
         try {
             console.log('[Frontend] Requesting download for document:', documentId);
@@ -178,25 +178,36 @@ export default function ChatPage() {
             console.log('[Frontend] Download API response:', data);
 
             if (data.success && data.downloadUrl) {
-                console.log('[Frontend] Opening URL:', data.downloadUrl);
-                // Create a temporary anchor element and trigger download in new tab
-                const link = document.createElement('a');
-                link.href = data.downloadUrl;
-                link.target = '_blank'; // Open in new tab
-                link.rel = 'noopener noreferrer';
-                // link.download = data.filename; // Note: download attribute often ignored for cross-origin
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                // For Supabase public URLs, we need to fetch the blob to force the filename
+                console.log('[Frontend] Fetching blob to force filename:', data.filename);
+
+                try {
+                    const fileResponse = await fetch(data.downloadUrl);
+                    const blob = await fileResponse.blob();
+                    const url = window.URL.createObjectURL(blob);
+
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = data.filename || 'document.pdf'; // Force the original filename
+                    document.body.appendChild(link);
+                    link.click();
+
+                    // Cleanup
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(link);
+                } catch (blobError) {
+                    console.error('[Frontend] Blob fetch failed, falling back to direct link:', blobError);
+                    // Fallback: Open in new tab (filename might be UUID)
+                    window.open(data.downloadUrl, '_blank');
+                }
             } else {
                 const errorMsg = data.error || 'Failed to download document';
-                const details = data.details ? `\n\nDetails: ${data.details}` : '';
                 console.error('[Frontend] Download failed:', data);
-                alert(errorMsg + details);
+                alert(errorMsg);
             }
         } catch (error) {
             console.error('[Frontend] Download error:', error);
-            alert('Failed to download document. Check console for details.');
+            alert('Failed to download document.');
         }
     };
 
