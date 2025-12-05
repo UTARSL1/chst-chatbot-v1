@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
                 url,
                 section: section || 'others',
                 icon: icon || null,
-                roles: roles || ['public', 'student', 'member', 'chairperson'],
+                roles: roles || [], // Default to empty roles for personal links so they are private
                 order: order || 0,
                 createdBy: session.user.id
             }
