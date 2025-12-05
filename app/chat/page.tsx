@@ -9,7 +9,7 @@ import { Card } from '@/components/ui/card';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { TermsOfUseModal } from '@/components/TermsOfUseModal';
-import { Linkedin, Globe, FolderOpen, Users, ChevronDown, BookOpen, GraduationCap, Briefcase, FileText, DollarSign, TrendingUp, UserPlus, Plus, ExternalLink } from 'lucide-react';
+import { Linkedin, Globe, FolderOpen, Users, ChevronDown, BookOpen, GraduationCap, Briefcase, FileText, DollarSign, TrendingUp, UserPlus, Plus, ExternalLink, Pencil, Trash2 } from 'lucide-react';
 
 interface QuickAccessLink {
     id: string;
@@ -49,6 +49,7 @@ export default function ChatPage() {
     const [othersOpen, setOthersOpen] = useState(false);
     const [customLinks, setCustomLinks] = useState<QuickAccessLink[]>([]);
     const [showAddLinkModal, setShowAddLinkModal] = useState(false);
+    const [editingLink, setEditingLink] = useState<QuickAccessLink | null>(null);
     const [newLink, setNewLink] = useState({ name: '', url: '', section: 'others', roles: ['public', 'student', 'member', 'chairperson'] });
 
     useEffect(() => {
@@ -109,6 +110,57 @@ export default function ChatPage() {
         } catch (error) {
             console.error('Error adding link:', error);
             alert('Error adding link');
+        }
+    };
+
+    const handleEditLink = async () => {
+        if (!editingLink || !editingLink.name || !editingLink.url) {
+            alert('Please provide both name and URL');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/quick-access/${editingLink.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: editingLink.name,
+                    url: editingLink.url
+                })
+            });
+
+            if (response.ok) {
+                setEditingLink(null);
+                loadCustomLinks();
+            } else {
+                const data = await response.json();
+                alert(data.error || 'Failed to update link');
+            }
+        } catch (error) {
+            console.error('Error updating link:', error);
+            alert('Error updating link');
+        }
+    };
+
+    const handleDeleteLink = async (linkId: string) => {
+        if (!confirm('Are you sure you want to delete this link?')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/quick-access/${linkId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                loadCustomLinks();
+            } else {
+                const data = await response.json();
+                alert(data.error || 'Failed to delete link');
+            }
+        } catch (error) {
+            console.error('Error deleting link:', error);
+            alert('Error deleting link');
         }
     };
 
@@ -364,22 +416,34 @@ export default function ChatPage() {
 
                             {othersOpen && (
                                 <div className="space-y-2 mt-2">
-                                    {/* Display custom links from database */}
-                                    {customLinks
-                                        .filter(link => link.section === 'others')
-                                        .map((link) => (
+                                    {/* Display custom links with edit/delete buttons */}
+                                    {customLinks.map((link) => (
+                                        <div key={link.id} className="flex items-center gap-2">
                                             <a
-                                                key={link.id}
                                                 href={link.url}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
+                                                className="flex-1 flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20 transition-all duration-200 group"
                                             >
-                                                <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
-                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">{link.name}</span>
+                                                <ExternalLink className="w-4 h-4 text-blue-400 group-hover:text-blue-300" />
+                                                <span className="text-sm text-blue-400 group-hover:text-blue-300">{link.name}</span>
                                             </a>
-                                        ))
-                                    }
+                                            <button
+                                                onClick={() => setEditingLink(link)}
+                                                className="p-2 rounded-lg bg-amber-600/10 hover:bg-amber-600/20 border border-amber-600/20 transition-all"
+                                                title="Edit link"
+                                            >
+                                                <Pencil className="w-3 h-3 text-amber-400" />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDeleteLink(link.id)}
+                                                className="p-2 rounded-lg bg-red-600/10 hover:bg-red-600/20 border border-red-600/20 transition-all"
+                                                title="Delete link"
+                                            >
+                                                <Trash2 className="w-3 h-3 text-red-400" />
+                                            </button>
+                                        </div>
+                                    ))}
 
                                     {/* Add Quick Access button for all users */}
                                     <button
@@ -719,28 +783,6 @@ export default function ChatPage() {
                                     placeholder="https://example.com"
                                 />
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Visible to Roles</label>
-                                <div className="space-y-2">
-                                    {['public', 'student', 'member', 'chairperson'].map((role) => (
-                                        <label key={role} className="flex items-center gap-2">
-                                            <input
-                                                type="checkbox"
-                                                checked={newLink.roles.includes(role)}
-                                                onChange={(e) => {
-                                                    if (e.target.checked) {
-                                                        setNewLink({ ...newLink, roles: [...newLink.roles, role] });
-                                                    } else {
-                                                        setNewLink({ ...newLink, roles: newLink.roles.filter(r => r !== role) });
-                                                    }
-                                                }}
-                                                className="rounded"
-                                            />
-                                            <span className="text-sm capitalize">{role}</span>
-                                        </label>
-                                    ))}
-                                </div>
-                            </div>
                             <div className="flex gap-2 mt-6">
                                 <Button onClick={handleAddLink} variant="gradient" className="flex-1">
                                     Add Link
@@ -750,6 +792,45 @@ export default function ChatPage() {
                                         setShowAddLinkModal(false);
                                         setNewLink({ name: '', url: '', section: 'others', roles: ['public', 'student', 'member', 'chairperson'] });
                                     }}
+                                    variant="outline"
+                                    className="flex-1"
+                                >
+                                    Cancel
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Edit Quick Access Link Modal */}
+            {editingLink && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <div className="bg-card p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+                        <h2 className="text-xl font-bold mb-4">Edit Quick Access Link</h2>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Link Name</label>
+                                <Input
+                                    value={editingLink.name}
+                                    onChange={(e) => setEditingLink({ ...editingLink, name: e.target.value })}
+                                    placeholder="e.g., External Grant Opportunities"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-1">URL</label>
+                                <Input
+                                    value={editingLink.url}
+                                    onChange={(e) => setEditingLink({ ...editingLink, url: e.target.value })}
+                                    placeholder="https://example.com"
+                                />
+                            </div>
+                            <div className="flex gap-2 mt-6">
+                                <Button onClick={handleEditLink} variant="gradient" className="flex-1">
+                                    Save Changes
+                                </Button>
+                                <Button
+                                    onClick={() => setEditingLink(null)}
                                     variant="outline"
                                     className="flex-1"
                                 >
