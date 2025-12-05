@@ -43,6 +43,9 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
         let systemPrompt: string;
         let userPrompt: string;
 
+        // Check for inventory/metadata questions early (used later for download detection)
+        const isInventoryQuestion = /how many|list|inventory|what documents|count|uploaded/i.test(query.query);
+
         if (knowledgeNotes.length === 0 && relevantChunks.length === 0) {
             // No documents or knowledge notes found - allow general conversation
             systemPrompt = `You are a helpful assistant for the CHST research centre at UTAR. 
@@ -72,13 +75,12 @@ Important:
             // Add document chunks
             if (relevantChunks.length > 0) {
                 const docContext = relevantChunks
-                    .map((chunk) => `[Source: ${chunk.metadata.filename}]\n${chunk.content}`)
+                    .map((chunk) => `[Source: ${chunk.metadata.originalName || chunk.metadata.filename}]\n${chunk.content}`)
                     .join('\n\n---\n\n');
                 contextParts.push(docContext);
             }
 
             // [NEW] Check for inventory/metadata questions and inject DB stats
-            const isInventoryQuestion = /how many|list|inventory|what documents|count|uploaded/i.test(query.query);
             if (isInventoryQuestion) {
                 try {
                     const docs = await prisma.document.findMany({
@@ -196,6 +198,7 @@ Please provide a helpful and accurate answer based on the context above. If the 
         // 6. Prepare sources
         const sources: DocumentSource[] = relevantChunks.map((chunk) => ({
             filename: chunk.metadata.filename,
+            originalName: chunk.metadata.originalName,
             accessLevel: chunk.metadata.accessLevel,
         }));
 
@@ -206,7 +209,112 @@ Please provide a helpful and accurate answer based on the context above. If the 
         );
 
         // Enrich sources with metadata for download links
-        const enrichedSources = await enrichSourcesWithMetadata(uniqueSources);
+        let enrichedSources = await enrichSourcesWithMetadata(uniqueSources);
+
+        // [NEW] Detect if user is explicitly asking for a document download
+        // and add that document to sources if found
+        const downloadKeywords = /download|get|provide|give me|send me|show me|need|want/i;
+        const isDownloadRequest = downloadKeywords.test(query.query);
+
+        if (isDownloadRequest) {
+            console.log('[RAG] Detected potential download request:', query.query);
+
+            // Try to extract document names from the query
+            // Look for quoted text or capitalized phrases that might be document names
+            const potentialDocNames: string[] = [];
+
+            // Extract quoted text
+            const quotedMatches = query.query.match(/"([^"]+)"|'([^']+)'/g);
+            if (quotedMatches) {
+                quotedMatches.forEach(match => {
+                    potentialDocNames.push(match.replace(/['"]/g, ''));
+                });
+            }
+
+            // Also search for any documents mentioned in the inventory context
+            if (isInventoryQuestion) {
+                // Get all accessible documents
+                const allDocs = await prisma.document.findMany({
+                    where: {
+                        accessLevel: { in: accessLevels as any },
+                        status: 'processed'
+                    },
+                    select: {
+                        id: true,
+                        filename: true,
+                        originalName: true,
+                        category: true,
+                        department: true,
+                        accessLevel: true,
+                    }
+                });
+
+                // Check if any document name appears in the query
+                const queryLower = query.query.toLowerCase();
+                allDocs.forEach(doc => {
+                    const nameLower = doc.originalName.toLowerCase();
+                    // Check for partial matches (at least 3 consecutive words or 50% of the name)
+                    const nameWords = nameLower.split(/\s+/);
+                    const queryWords = queryLower.split(/\s+/);
+
+                    // Check if significant portion of document name appears in query
+                    let matchCount = 0;
+                    nameWords.forEach(word => {
+                        if (word.length > 3 && queryWords.some(qw => qw.includes(word) || word.includes(qw))) {
+                            matchCount++;
+                        }
+                    });
+
+                    if (matchCount >= Math.min(3, nameWords.length * 0.5)) {
+                        potentialDocNames.push(doc.originalName);
+                    }
+                });
+            }
+
+            // Search for these documents in the database
+            if (potentialDocNames.length > 0) {
+                console.log('[RAG] Searching for potential documents:', potentialDocNames);
+
+                const requestedDocs = await prisma.document.findMany({
+                    where: {
+                        AND: [
+                            { accessLevel: { in: accessLevels as any } },
+                            { status: 'processed' },
+                            {
+                                OR: potentialDocNames.map(name => ({
+                                    originalName: { contains: name, mode: 'insensitive' as any }
+                                }))
+                            }
+                        ]
+                    },
+                    select: {
+                        id: true,
+                        filename: true,
+                        originalName: true,
+                        category: true,
+                        department: true,
+                        accessLevel: true,
+                    }
+                });
+
+                console.log('[RAG] Found requested documents:', requestedDocs.map(d => d.originalName));
+
+                // Add these documents to enriched sources if not already present
+                requestedDocs.forEach(doc => {
+                    const alreadyInSources = enrichedSources.some(s => s.documentId === doc.id);
+                    if (!alreadyInSources) {
+                        enrichedSources.push({
+                            filename: doc.filename,
+                            originalName: doc.originalName,
+                            accessLevel: doc.accessLevel,
+                            documentId: doc.id,
+                            category: doc.category,
+                            department: doc.department || undefined,
+                        });
+                    }
+                });
+            }
+        }
 
         // Get related document suggestions
         const referencedDocIds = enrichedSources

@@ -76,6 +76,7 @@ export async function POST(req: NextRequest) {
                 sessionId: chatSession.id,
                 answer: ragResponse.answer,
                 sources: ragResponse.sources,
+                suggestions: ragResponse.suggestions,
             },
             { status: 200 }
         );

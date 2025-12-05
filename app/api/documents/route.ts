@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
         // Process document synchronously (wait for completion)
         // In Vercel/Serverless, async background tasks are often killed if the response is returned.
         try {
-            await processDocument(document.id, buffer, filename, accessLevel as any);
+            await processDocument(document.id, buffer, filename, originalName, accessLevel as any);
         } catch (error) {
             console.error('Error processing document:', error);
 
@@ -153,6 +153,7 @@ async function processDocument(
     documentId: string,
     fileBuffer: Buffer,
     filename: string,
+    originalName: string,
     accessLevel: 'student' | 'member' | 'chairperson'
 ) {
     try {
@@ -176,6 +177,7 @@ async function processDocument(
             chunkData,
             documentId,
             filename,
+            originalName,
             accessLevel
         );
 

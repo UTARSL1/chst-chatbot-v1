@@ -28,6 +28,7 @@ export async function storeDocumentChunks(
     chunks: { content: string; embedding: number[] }[],
     documentId: string,
     filename: string,
+    originalName: string,
     accessLevel: AccessLevel
 ): Promise<string[]> {
     try {
@@ -45,6 +46,7 @@ export async function storeDocumentChunks(
                 metadata: {
                     documentId,
                     filename,
+                    originalName,
                     accessLevel,
                     chunkIndex: index,
                     content: chunk.content.substring(0, 1000), // Store first 1000 chars in metadata
@@ -98,6 +100,7 @@ export async function searchSimilarDocuments(
             metadata: {
                 documentId: (match.metadata?.documentId as string) || '',
                 filename: (match.metadata?.filename as string) || '',
+                originalName: (match.metadata?.originalName as string) || '',
                 accessLevel: (match.metadata?.accessLevel as AccessLevel) || 'student',
                 chunkIndex: (match.metadata?.chunkIndex as number) || 0,
             },

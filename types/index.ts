@@ -101,6 +101,7 @@ export interface DocumentChunk {
     metadata: {
         documentId: string;
         filename: string;
+        originalName: string;
         accessLevel: AccessLevel;
         chunkIndex: number;
         pageNumber?: number;
