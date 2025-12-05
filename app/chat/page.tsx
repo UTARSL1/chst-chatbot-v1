@@ -9,7 +9,17 @@ import { Card } from '@/components/ui/card';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { TermsOfUseModal } from '@/components/TermsOfUseModal';
-import { Linkedin, Globe, FolderOpen, Users, ChevronDown, BookOpen, GraduationCap, Briefcase, FileText, DollarSign, TrendingUp, UserPlus } from 'lucide-react';
+import { Linkedin, Globe, FolderOpen, Users, ChevronDown, BookOpen, GraduationCap, Briefcase, FileText, DollarSign, TrendingUp, UserPlus, Plus, ExternalLink } from 'lucide-react';
+
+interface QuickAccessLink {
+    id: string;
+    name: string;
+    url: string;
+    section: string;
+    icon?: string;
+    roles: string[];
+    order: number;
+}
 
 interface Message {
     id: string;
@@ -36,7 +46,10 @@ export default function ChatPage() {
     const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [termsModalOpen, setTermsModalOpen] = useState(false);
-    const [ipsrOpen, setIpsrOpen] = useState(false);
+    const [othersOpen, setOthersOpen] = useState(false);
+    const [customLinks, setCustomLinks] = useState<QuickAccessLink[]>([]);
+    const [showAddLinkModal, setShowAddLinkModal] = useState(false);
+    const [newLink, setNewLink] = useState({ name: '', url: '', section: 'others', roles: ['public', 'student', 'member', 'chairperson'] });
 
     useEffect(() => {
         if (status === 'unauthenticated') {
@@ -47,8 +60,21 @@ export default function ChatPage() {
     useEffect(() => {
         if (session) {
             loadChatSessions();
+            loadCustomLinks();
         }
     }, [session]);
+
+    const loadCustomLinks = async () => {
+        try {
+            const response = await fetch('/api/quick-access');
+            if (response.ok) {
+                const data = await response.json();
+                setCustomLinks(data.links || []);
+            }
+        } catch (error) {
+            console.error('Error loading custom links:', error);
+        }
+    };
 
     const loadChatSessions = async () => {
         try {
@@ -57,6 +83,32 @@ export default function ChatPage() {
             setChatSessions(data.sessions || []);
         } catch (error) {
             console.error('Error loading chat sessions:', error);
+        }
+    };
+
+    const handleAddLink = async () => {
+        if (!newLink.name || !newLink.url) {
+            alert('Please provide both name and URL');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/quick-access', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newLink)
+            });
+
+            if (response.ok) {
+                setShowAddLinkModal(false);
+                setNewLink({ name: '', url: '', section: 'others', roles: ['public', 'student', 'member', 'chairperson'] });
+                loadCustomLinks(); // Reload links
+            } else {
+                alert('Failed to add link');
+            }
+        } catch (error) {
+            console.error('Error adding link:', error);
+            alert('Error adding link');
         }
     };
 
@@ -303,170 +355,41 @@ export default function ChatPage() {
                         {/* IPSR Quick Access - Collapsible */}
                         <div className="space-y-2">
                             <button
-                                onClick={() => setIpsrOpen(!ipsrOpen)}
+                                onClick={() => setOthersOpen(!othersOpen)}
                                 className="w-full flex items-center justify-between text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
                             >
-                                <span>Quick Access (IPSR)</span>
-                                <ChevronDown className={`w-4 h-4 transition-transform ${ipsrOpen ? 'rotate-180' : ''}`} />
+                                <span>Quick Access (Others)</span>
+                                <ChevronDown className={`w-4 h-4 transition-transform ${othersOpen ? 'rotate-180' : ''}`} />
                             </button>
 
-                            {ipsrOpen && (
+                            {othersOpen && (
                                 <div className="space-y-2 mt-2">
-                                    {/* Public Links */}
-                                    {session.user.role === 'public' && (
-                                        <>
+                                    {/* Display custom links from database */}
+                                    {customLinks
+                                        .filter(link => link.section === 'others')
+                                        .map((link) => (
                                             <a
-                                                href="https://ipsr.utar.edu.my/"
+                                                key={link.id}
+                                                href={link.url}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
                                             >
-                                                <BookOpen className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
-                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">List of Programmes</span>
+                                                <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
+                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">{link.name}</span>
                                             </a>
-                                            <a
-                                                href="https://ipsr.utar.edu.my/Handbook.php"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
-                                            >
-                                                <GraduationCap className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
-                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Links for Potential Students</span>
-                                            </a>
-                                            <a
-                                                href="https://research.utar.edu.my/utar-gra.php"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
-                                            >
-                                                <Briefcase className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
-                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Research Opportunities</span>
-                                            </a>
-                                            <a
-                                                href="https://ipsr.utar.edu.my/Apply.php"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
-                                            >
-                                                <FileText className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
-                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Postgraduate Study Application</span>
-                                            </a>
-                                        </>
-                                    )}
+                                        ))
+                                    }
 
-                                    {/* Student Links */}
-                                    {session.user.role === 'student' && (
-                                        <>
-                                            <a
-                                                href="https://ipsr.utar.edu.my/Handbook.php"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
-                                            >
-                                                <GraduationCap className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
-                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Important Links for Students</span>
-                                            </a>
-                                            <a
-                                                href="https://research.utar.edu.my/utar-gra.php"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
-                                            >
-                                                <Briefcase className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
-                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Research Opportunities</span>
-                                            </a>
-                                        </>
-                                    )}
-
-                                    {/* Member & Chairperson Links */}
-                                    {['member', 'chairperson'].includes(session.user.role) && (
-                                        <>
-                                            <a
-                                                href="https://research.utar.edu.my/External-Grant-List-2025.php"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
-                                            >
-                                                <DollarSign className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
-                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">External Grant Opportunities</span>
-                                            </a>
-                                            <a
-                                                href="https://login.libezp2.utar.edu.my/login?url=https://jcr.clarivate.com/"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
-                                            >
-                                                <TrendingUp className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
-                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Journal Citation Report (JCR)</span>
-                                            </a>
-                                            <a
-                                                href="https://research.utar.edu.my/utar-gra.php"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
-                                            >
-                                                <Briefcase className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
-                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Research Opportunities</span>
-                                            </a>
-                                            <a
-                                                href="https://research.utar.edu.my/UTAR_FSJPP.php"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
-                                            >
-                                                <FileText className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
-                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Journal Financial Support</span>
-                                            </a>
-                                            <a
-                                                href="https://ipsr.utar.edu.my/Apply.php"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
-                                            >
-                                                <FileText className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
-                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Postgraduate Study Application</span>
-                                            </a>
-                                            <a
-                                                href="https://ipsrprogress.utar.edu.my/"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
-                                            >
-                                                <TrendingUp className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
-                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Postgraduate Research Progress Monitoring</span>
-                                            </a>
-                                            <a
-                                                href="https://research.utar.edu.my/V11000.php"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
-                                            >
-                                                <UserPlus className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
-                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">Student Hiring</span>
-                                            </a>
-                                            <a
-                                                href="https://forms.office.com/pages/responsepage.aspx?id=VJPfTjsLmkK7j_IflX8dHNsKZgLlro5FjOid_4ntRNFUM1pHUFc1R0lBMDlLQjVOWFpaUUU4Njk5MS4u&route=shorturl"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
-                                            >
-                                                <Briefcase className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
-                                                <span className="text-sm text-slate-400 group-hover:text-slate-300">GRA Vacancy Advertisement</span>
-                                            </a>
-                                        </>
-                                    )}
-
-                                    {/* Chairperson Only Link */}
+                                    {/* Add Quick Access button for chairpersons */}
                                     {session.user.role === 'chairperson' && (
-                                        <a
-                                            href="https://research.utar.edu.my/Research-Centres.php"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-600/10 hover:bg-slate-600/20 border border-slate-600/20 transition-all duration-200 group"
+                                        <button
+                                            onClick={() => setShowAddLinkModal(true)}
+                                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20 transition-all duration-200 group"
                                         >
-                                            <Globe className="w-4 h-4 text-slate-400 group-hover:text-slate-300" />
-                                            <span className="text-sm text-slate-400 group-hover:text-slate-300">Other Research Centres</span>
-                                        </a>
+                                            <Plus className="w-4 h-4 text-blue-400 group-hover:text-blue-300" />
+                                            <span className="text-sm text-blue-400 group-hover:text-blue-300">Add Quick Access</span>
+                                        </button>
                                     )}
                                 </div>
                             )}
@@ -775,6 +698,70 @@ export default function ChatPage() {
                 open={termsModalOpen}
                 onOpenChange={setTermsModalOpen}
             />
+
+            {/* Add Quick Access Link Modal */}
+            {showAddLinkModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <div className="bg-card p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+                        <h2 className="text-xl font-bold mb-4">Add Quick Access Link</h2>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Link Name</label>
+                                <Input
+                                    value={newLink.name}
+                                    onChange={(e) => setNewLink({ ...newLink, name: e.target.value })}
+                                    placeholder="e.g., External Grant Opportunities"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-1">URL</label>
+                                <Input
+                                    value={newLink.url}
+                                    onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
+                                    placeholder="https://example.com"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Visible to Roles</label>
+                                <div className="space-y-2">
+                                    {['public', 'student', 'member', 'chairperson'].map((role) => (
+                                        <label key={role} className="flex items-center gap-2">
+                                            <input
+                                                type="checkbox"
+                                                checked={newLink.roles.includes(role)}
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        setNewLink({ ...newLink, roles: [...newLink.roles, role] });
+                                                    } else {
+                                                        setNewLink({ ...newLink, roles: newLink.roles.filter(r => r !== role) });
+                                                    }
+                                                }}
+                                                className="rounded"
+                                            />
+                                            <span className="text-sm capitalize">{role}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="flex gap-2 mt-6">
+                                <Button onClick={handleAddLink} variant="gradient" className="flex-1">
+                                    Add Link
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        setShowAddLinkModal(false);
+                                        setNewLink({ name: '', url: '', section: 'others', roles: ['public', 'student', 'member', 'chairperson'] });
+                                    }}
+                                    variant="outline"
+                                    className="flex-1"
+                                >
+                                    Cancel
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

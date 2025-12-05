@@ -191,3 +191,23 @@ model InvitationCode {
   @@index([isActive])
   @@map("invitation_codes")
 }
+
+// Quick Access Link model (Custom links in sidebar)
+model QuickAccessLink {
+  id          String   @id @default(uuid())
+  name        String   // Display name of the link
+  url         String   // URL to navigate to
+  section     String   @default("others") // "chst" or "others"
+  icon        String?  // Optional icon name from lucide-react
+  roles       String[] @default(["public", "student", "member", "chairperson"]) // Roles that can see this link
+  order       Int      @default(0) // Display order
+  isActive    Boolean  @default(true)
+  createdBy   String   // User ID who created it
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([section])
+  @@index([isActive])
+  @@index([order])
+  @@map("quick_access_links")
+}
