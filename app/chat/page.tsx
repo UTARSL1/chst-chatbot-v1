@@ -488,7 +488,7 @@ export default function ChatPage() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
-                        <h1 className="text-xl font-bold">Version 1.8</h1>
+                        <h1 className="text-xl font-bold">Version 1.9</h1>
                     </div>
 
                     <div className="flex items-center gap-4">
