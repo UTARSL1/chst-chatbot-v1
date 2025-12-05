@@ -253,6 +253,15 @@ Please provide a helpful and accurate answer based on the context above. If the 
                 const queryLower = query.query.toLowerCase();
                 allDocs.forEach(doc => {
                     const nameLower = doc.originalName.toLowerCase();
+                    const filenameLower = doc.filename.toLowerCase();
+
+                    // Check if filename (UUID) is mentioned
+                    if (queryLower.includes(filenameLower.replace('.pdf', ''))) {
+                        potentialDocNames.push(doc.originalName);
+                        potentialDocNames.push(doc.filename);
+                        return;
+                    }
+
                     // Check for partial matches (at least 3 consecutive words or 50% of the name)
                     const nameWords = nameLower.split(/\s+/);
                     const queryWords = queryLower.split(/\s+/);
@@ -267,6 +276,53 @@ Please provide a helpful and accurate answer based on the context above. If the 
 
                     if (matchCount >= Math.min(3, nameWords.length * 0.5)) {
                         potentialDocNames.push(doc.originalName);
+                    }
+                });
+            } else {
+                // Not an inventory question, but still a download request
+                // Search all accessible documents for matches
+                const allDocs = await prisma.document.findMany({
+                    where: {
+                        accessLevel: { in: accessLevels as any },
+                        status: 'processed'
+                    },
+                    select: {
+                        id: true,
+                        filename: true,
+                        originalName: true,
+                        category: true,
+                        department: true,
+                        accessLevel: true,
+                    }
+                });
+
+                const queryLower = query.query.toLowerCase();
+                allDocs.forEach(doc => {
+                    const nameLower = doc.originalName.toLowerCase();
+                    const filenameLower = doc.filename.toLowerCase();
+
+                    // Check if filename (UUID) is mentioned - exact match
+                    if (queryLower.includes(filenameLower.replace('.pdf', ''))) {
+                        potentialDocNames.push(doc.originalName);
+                        potentialDocNames.push(doc.filename);
+                        console.log('[RAG] Found document by UUID filename:', doc.filename);
+                        return;
+                    }
+
+                    // Check for originalName matches
+                    const nameWords = nameLower.split(/\s+/);
+                    const queryWords = queryLower.split(/\s+/);
+
+                    let matchCount = 0;
+                    nameWords.forEach(word => {
+                        if (word.length > 3 && queryWords.some(qw => qw.includes(word) || word.includes(qw))) {
+                            matchCount++;
+                        }
+                    });
+
+                    if (matchCount >= Math.min(2, nameWords.length * 0.3)) {
+                        potentialDocNames.push(doc.originalName);
+                        console.log('[RAG] Found potential document by name:', doc.originalName);
                     }
                 });
             }

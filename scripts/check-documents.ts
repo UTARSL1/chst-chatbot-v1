@@ -3,61 +3,49 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function checkDocuments() {
-    console.log('\n=== Checking Documents in Database ===\n');
+    console.log('Checking document database state...\n');
 
     const documents = await prisma.document.findMany({
         select: {
             id: true,
             filename: true,
             originalName: true,
-            category: true,
+            status: true,
             accessLevel: true,
-        }
+            chunkCount: true,
+            vectorIds: true,
+        },
+        orderBy: {
+            uploadedAt: 'desc',
+        },
+        take: 10,
     });
 
-    console.log(`Total documents: ${documents.length}\n`);
+    console.log(`Total documents found: ${documents.length}\n`);
+
+    if (documents.length === 0) {
+        console.log('❌ No documents found in database!');
+        console.log('You need to upload documents first.');
+        return;
+    }
 
     documents.forEach((doc, index) => {
-        console.log(`${index + 1}. ${doc.originalName}`);
-        console.log(`   ID: ${doc.id}`);
-        console.log(`   Filename: ${doc.filename}`);
-        console.log(`   Category: ${doc.category}`);
-        console.log(`   Access Level: ${doc.accessLevel}`);
-        console.log('');
-    });
+        console.log(`\n--- Document ${index + 1} ---`);
+        console.log(`ID: ${doc.id}`);
+        console.log(`Filename (UUID): ${doc.filename}`);
+        console.log(`Original Name: ${doc.originalName || '❌ MISSING'}`);
+        console.log(`Status: ${doc.status}`);
+        console.log(`Access Level: ${doc.accessLevel}`);
+        console.log(`Chunk Count: ${doc.chunkCount || 'N/A'}`);
+        console.log(`Has Vector IDs: ${doc.vectorIds && (doc.vectorIds as any[]).length > 0 ? '✅' : '❌'}`);
 
-    // Check for sabbatical leave specifically
-    const sabbatical = documents.find(d =>
-        d.originalName?.toLowerCase().includes('sabbatical') ||
-        d.filename?.toLowerCase().includes('sabbatical')
-    );
-
-    if (sabbatical) {
-        console.log('✅ Found sabbatical leave document:');
-        console.log(JSON.stringify(sabbatical, null, 2));
-    } else {
-        console.log('❌ No sabbatical leave document found');
-    }
-
-    // Check system prompt
-    console.log('\n=== Checking System Prompt ===\n');
-    const systemPrompt = await prisma.systemPrompt.findUnique({
-        where: { name: 'default_rag' }
-    });
-
-    if (systemPrompt) {
-        console.log('System Prompt Found:');
-        console.log('Active:', systemPrompt.isActive);
-        console.log('Content length:', systemPrompt.content.length);
-        console.log('\nChecking for download instructions...');
-        if (systemPrompt.content.includes('download:')) {
-            console.log('✅ Contains download: format instruction');
-        } else {
-            console.log('❌ Missing download: format instruction');
+        if (doc.status !== 'processed') {
+            console.log('⚠️  Document not processed!');
         }
-    } else {
-        console.log('❌ No system prompt found - using default');
-    }
+        if (!doc.originalName) {
+            console.log('⚠️  Missing originalName - download links won\'t work!');
+        }
+    });
 
     await prisma.$disconnect();
 }
