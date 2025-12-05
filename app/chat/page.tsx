@@ -381,16 +381,14 @@ export default function ChatPage() {
                                         ))
                                     }
 
-                                    {/* Add Quick Access button for chairpersons */}
-                                    {session.user.role === 'chairperson' && (
-                                        <button
-                                            onClick={() => setShowAddLinkModal(true)}
-                                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20 transition-all duration-200 group"
-                                        >
-                                            <Plus className="w-4 h-4 text-blue-400 group-hover:text-blue-300" />
-                                            <span className="text-sm text-blue-400 group-hover:text-blue-300">Add Quick Access</span>
-                                        </button>
-                                    )}
+                                    {/* Add Quick Access button for all users */}
+                                    <button
+                                        onClick={() => setShowAddLinkModal(true)}
+                                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg bg-green-600/10 hover:bg-green-600/20 border border-green-600/20 transition-all duration-200 group"
+                                    >
+                                        <Plus className="w-4 h-4 text-green-400 group-hover:text-green-300" />
+                                        <span className="text-sm text-green-400 group-hover:text-green-300">Add Quick Access</span>
+                                    </button>
                                 </div>
                             )}
                         </div>
