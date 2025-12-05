@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 
-// GET - Fetch all quick access links (filtered by user role)
+// GET - Fetch quick access links (System + Personal)
 export async function GET(req: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
@@ -13,14 +13,24 @@ export async function GET(req: NextRequest) {
         }
 
         const userRole = session.user.role;
+        const userId = session.user.id;
 
-        // Fetch active links that the user has access to
+        // Fetch active links that:
+        // 1. Are visible to the user's role (System links)
+        // 2. OR were created by the user (Personal links)
         const links = await prisma.quickAccessLink.findMany({
             where: {
                 isActive: true,
-                roles: {
-                    has: userRole
-                }
+                OR: [
+                    {
+                        roles: {
+                            has: userRole
+                        }
+                    },
+                    {
+                        createdBy: userId
+                    }
+                ]
             },
             orderBy: [
                 { section: 'asc' },
@@ -38,13 +48,13 @@ export async function GET(req: NextRequest) {
     }
 }
 
-// POST - Create a new quick access link (chairperson only)
+// POST - Create a new quick access link
 export async function POST(req: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
 
-        if (!session || session.user.role !== 'chairperson') {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+        if (!session) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
         const body = await req.json();
@@ -59,6 +69,12 @@ export async function POST(req: NextRequest) {
         }
 
         // Create the link
+        // For personal links, we can default roles to empty or just the user's role, 
+        // but since we filter by createdBy in GET, roles doesn't strictly matter for visibility 
+        // to the creator. However, to keep it clean, we can just set it to the user's role 
+        // or keep the default 'public', 'student', 'member', 'chairperson' if we want it potentially shareable later.
+        // For now, let's keep the default behavior but allow any user to create.
+
         const link = await prisma.quickAccessLink.create({
             data: {
                 name,
