@@ -27,6 +27,7 @@ export async function GET(req: NextRequest) {
                 role: true,
                 createdAt: true,
                 isApproved: true, // Need this to distinguish in the list
+                isVerified: true, // Need this to check if email is verified
                 recoveryEmail: true,
                 invitationCode: {
                     select: {

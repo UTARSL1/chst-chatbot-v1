@@ -22,11 +22,15 @@ export async function POST(
         // Check if user is already approved to prevent duplicate emails
         const existingUser = await prisma.user.findUnique({
             where: { id },
-            select: { isApproved: true, email: true, name: true }
+            select: { isApproved: true, email: true, name: true, isVerified: true }
         });
 
         if (!existingUser) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
+        }
+
+        if (!existingUser.isVerified) {
+            return NextResponse.json({ error: 'User email not verified' }, { status: 400 });
         }
 
         if (existingUser.isApproved) {

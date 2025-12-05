@@ -15,6 +15,7 @@ interface User {
     role: string;
     createdAt: Date;
     isApproved: boolean;
+    isVerified: boolean;
     recoveryEmail?: string;
     verificationTokenExpiry?: Date;
     invitationCode?: {
@@ -191,6 +192,11 @@ export default function AdminUsersPage() {
                                                 <span className={`text-xs px-2 py-1 rounded ${getRoleBadge(user.role)}`}>
                                                     {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                                                 </span>
+                                                {!user.isVerified && (
+                                                    <span className="text-xs px-2 py-1 rounded bg-amber-100 text-amber-800 font-semibold border border-amber-200">
+                                                        Unverified Email
+                                                    </span>
+                                                )}
                                                 {user.verificationTokenExpiry && new Date() > new Date(user.verificationTokenExpiry) && (
                                                     <span className="text-xs px-2 py-1 rounded bg-red-100 text-red-800 font-semibold">
                                                         EXPIRED
@@ -215,7 +221,9 @@ export default function AdminUsersPage() {
                                         <div className="flex gap-3">
                                             <Button
                                                 onClick={() => handleApprove(user.id)}
-                                                className="bg-green-600 hover:bg-green-700"
+                                                disabled={!user.isVerified}
+                                                className={`bg-green-600 hover:bg-green-700 ${!user.isVerified ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                title={!user.isVerified ? "User must verify email before approval" : "Approve User"}
                                             >
                                                 ✓ Approve
                                             </Button>
@@ -268,6 +276,11 @@ export default function AdminUsersPage() {
                                                     {!user.isApproved && (
                                                         <span className="text-[10px] bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded">
                                                             PENDING
+                                                        </span>
+                                                    )}
+                                                    {!user.isVerified && (
+                                                        <span className="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded border border-amber-200 ml-1">
+                                                            UNVERIFIED
                                                         </span>
                                                     )}
                                                 </div>
