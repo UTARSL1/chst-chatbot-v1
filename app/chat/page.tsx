@@ -556,18 +556,15 @@ export default function ChatPage() {
                                             components={{
                                                 a: ({ node, href, children, ...props }) => {
                                                     // Handle special download protocol
-                                                    // Handle special download protocol
                                                     if (href?.startsWith('download:')) {
                                                         const rawDocName = href.replace('download:', '').trim();
                                                         console.log('[Download Link] Looking for document:', rawDocName);
-                                                        console.log('[Download Link] Available sources:', message.sources);
 
-                                                        // Helper to normalize strings for comparison (remove extension, lower case, replace _ with space)
+                                                        // Helper to normalize strings: purely lowercase alphanumeric for robust matching
                                                         const normalizeForMatch = (str: string) => {
                                                             return str.toLowerCase()
                                                                 .replace(/\.[^/.]+$/, "") // Remove extension
-                                                                .replace(/_/g, "")        // Remove underscores
-                                                                .replace(/\s+/g, "")      // Remove ALL spaces
+                                                                .replace(/[^a-z0-9]/g, "") // Remove EVERYTHING that is not a letter or number
                                                                 .trim();
                                                         };
 
@@ -578,7 +575,7 @@ export default function ChatPage() {
                                                             const sourceOriginal = normalizeForMatch(s.originalName || '');
                                                             const sourceFilename = normalizeForMatch(s.filename || '');
 
-                                                            // 1. Check exact match after normalization
+                                                            // 1. Check exact match after aggressive normalization
                                                             if (sourceOriginal === targetName || sourceFilename === targetName) {
                                                                 return true;
                                                             }
@@ -591,27 +588,30 @@ export default function ChatPage() {
                                                             return false;
                                                         });
 
-                                                        console.log('[Download Link] Matched document:', doc);
+                                                        console.log(`[Download Link] Match result for '${targetName}':`, doc ? 'Found' : 'Not Found');
 
                                                         if (doc && doc.documentId) {
                                                             return (
                                                                 <button
                                                                     onClick={(e) => handleDownload(doc.documentId, e)}
                                                                     className="text-blue-400 hover:underline font-medium inline-flex items-center gap-1"
+                                                                    title={`Download ${doc.originalName}`}
                                                                 >
-                                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                                    </svg>
                                                                     {children}
                                                                 </button>
                                                             );
-                                                        } else {
-                                                            // AI suggested a download but we don't have the file
-                                                            console.warn('[Download Link] Document not found in sources for:', rawDocName);
-                                                            return (
-                                                                <span className="text-gray-400 italic" title="Document not found in database">
-                                                                    {children} (Document not available)
-                                                                </span>
-                                                            );
                                                         }
+
+                                                        // If no document found, return text with warning
+                                                        return (
+                                                            <span className="text-gray-400 cursor-not-allowed inline-flex items-center gap-1" title="Document not found">
+                                                                {children}
+                                                                <span className="text-xs italic">(Document not available)</span>
+                                                            </span>
+                                                        );
                                                     }
 
                                                     return (
@@ -621,7 +621,9 @@ export default function ChatPage() {
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             className="text-blue-400 hover:underline font-medium break-all"
-                                                        />
+                                                        >
+                                                            {children}
+                                                        </a>
                                                     );
                                                 },
                                                 p: ({ node, ...props }) => (
@@ -795,17 +797,18 @@ export default function ChatPage() {
                         </Button>
                     </form>
                 </div>
-            </div>
+            </div >
 
             {/* Floating Terms of Use Button */}
-            <button
-                onClick={() => setTermsModalOpen(true)}
+            < button
+                onClick={() => setTermsModalOpen(true)
+                }
                 className="fixed bottom-6 right-6 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 z-40"
                 title="View Terms of Use"
             >
                 <FileText className="w-4 h-4" />
                 Terms of Use
-            </button>
+            </button >
 
             <TermsOfUseModal
                 open={termsModalOpen}
@@ -813,85 +816,89 @@ export default function ChatPage() {
             />
 
             {/* Add Quick Access Link Modal */}
-            {showAddLinkModal && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-card p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
-                        <h2 className="text-xl font-bold mb-4">Add Quick Access Link</h2>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Link Name</label>
-                                <Input
-                                    value={newLink.name}
-                                    onChange={(e) => setNewLink({ ...newLink, name: e.target.value })}
-                                    placeholder="e.g., External Grant Opportunities"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-1">URL</label>
-                                <Input
-                                    value={newLink.url}
-                                    onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
-                                    placeholder="https://example.com"
-                                />
-                            </div>
-                            <div className="flex gap-2 mt-6">
-                                <Button onClick={handleAddLink} variant="gradient" className="flex-1">
-                                    Add Link
-                                </Button>
-                                <Button
-                                    onClick={() => {
-                                        setShowAddLinkModal(false);
-                                        setNewLink({ name: '', url: '', section: 'others', roles: ['public', 'student', 'member', 'chairperson'] });
-                                    }}
-                                    variant="outline"
-                                    className="flex-1"
-                                >
-                                    Cancel
-                                </Button>
+            {
+                showAddLinkModal && (
+                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                        <div className="bg-card p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+                            <h2 className="text-xl font-bold mb-4">Add Quick Access Link</h2>
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Link Name</label>
+                                    <Input
+                                        value={newLink.name}
+                                        onChange={(e) => setNewLink({ ...newLink, name: e.target.value })}
+                                        placeholder="e.g., External Grant Opportunities"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">URL</label>
+                                    <Input
+                                        value={newLink.url}
+                                        onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
+                                        placeholder="https://example.com"
+                                    />
+                                </div>
+                                <div className="flex gap-2 mt-6">
+                                    <Button onClick={handleAddLink} variant="gradient" className="flex-1">
+                                        Add Link
+                                    </Button>
+                                    <Button
+                                        onClick={() => {
+                                            setShowAddLinkModal(false);
+                                            setNewLink({ name: '', url: '', section: 'others', roles: ['public', 'student', 'member', 'chairperson'] });
+                                        }}
+                                        variant="outline"
+                                        className="flex-1"
+                                    >
+                                        Cancel
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             {/* Edit Quick Access Link Modal */}
-            {editingLink && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-card p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
-                        <h2 className="text-xl font-bold mb-4">Edit Quick Access Link</h2>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Link Name</label>
-                                <Input
-                                    value={editingLink.name}
-                                    onChange={(e) => setEditingLink({ ...editingLink, name: e.target.value })}
-                                    placeholder="e.g., External Grant Opportunities"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-1">URL</label>
-                                <Input
-                                    value={editingLink.url}
-                                    onChange={(e) => setEditingLink({ ...editingLink, url: e.target.value })}
-                                    placeholder="https://example.com"
-                                />
-                            </div>
-                            <div className="flex gap-2 mt-6">
-                                <Button onClick={handleEditLink} variant="gradient" className="flex-1">
-                                    Save Changes
-                                </Button>
-                                <Button
-                                    onClick={() => setEditingLink(null)}
-                                    variant="outline"
-                                    className="flex-1"
-                                >
-                                    Cancel
-                                </Button>
+            {
+                editingLink && (
+                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                        <div className="bg-card p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+                            <h2 className="text-xl font-bold mb-4">Edit Quick Access Link</h2>
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Link Name</label>
+                                    <Input
+                                        value={editingLink.name}
+                                        onChange={(e) => setEditingLink({ ...editingLink, name: e.target.value })}
+                                        placeholder="e.g., External Grant Opportunities"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">URL</label>
+                                    <Input
+                                        value={editingLink.url}
+                                        onChange={(e) => setEditingLink({ ...editingLink, url: e.target.value })}
+                                        placeholder="https://example.com"
+                                    />
+                                </div>
+                                <div className="flex gap-2 mt-6">
+                                    <Button onClick={handleEditLink} variant="gradient" className="flex-1">
+                                        Save Changes
+                                    </Button>
+                                    <Button
+                                        onClick={() => setEditingLink(null)}
+                                        variant="outline"
+                                        className="flex-1"
+                                    >
+                                        Cancel
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 }
