@@ -556,33 +556,35 @@ export default function ChatPage() {
                                             components={{
                                                 a: ({ node, href, children, ...props }) => {
                                                     // Handle special download protocol
+                                                    // Handle special download protocol
                                                     if (href?.startsWith('download:')) {
-                                                        const docName = href.replace('download:', '').trim().toLowerCase();
-                                                        console.log('[Download Link] Looking for document:', docName);
+                                                        const rawDocName = href.replace('download:', '').trim();
+                                                        console.log('[Download Link] Looking for document:', rawDocName);
                                                         console.log('[Download Link] Available sources:', message.sources);
+
+                                                        // Helper to normalize strings for comparison (remove extension, lower case, replace _ with space)
+                                                        const normalize = (str: string) => {
+                                                            return str.toLowerCase()
+                                                                .replace(/\.[^/.]+$/, "") // Remove extension
+                                                                .replace(/_/g, " ")       // Replace underscores with spaces
+                                                                .replace(/\s+/g, " ")     // Collapse multiple spaces
+                                                                .trim();
+                                                        };
+
+                                                        const targetName = normalize(rawDocName);
 
                                                         // Find matching document in sources with flexible matching
                                                         const doc = message.sources?.find((s: any) => {
-                                                            const originalNameLower = (s.originalName || '').toLowerCase();
-                                                            const filenameLower = (s.filename || '').toLowerCase();
+                                                            const sourceOriginal = normalize(s.originalName || '');
+                                                            const sourceFilename = normalize(s.filename || '');
 
-                                                            // Exact match
-                                                            if (originalNameLower === docName || filenameLower === docName) {
+                                                            // 1. Check exact match after normalization
+                                                            if (sourceOriginal === targetName || sourceFilename === targetName) {
                                                                 return true;
                                                             }
 
-                                                            // Partial match - check if one contains the other
-                                                            if (originalNameLower.includes(docName) || docName.includes(originalNameLower)) {
-                                                                return true;
-                                                            }
-
-                                                            // Remove file extension and try again
-                                                            const docNameNoExt = docName.replace(/\.(pdf|docx?|xlsx?|pptx?)$/i, '');
-                                                            const originalNameNoExt = originalNameLower.replace(/\.(pdf|docx?|xlsx?|pptx?)$/i, '');
-
-                                                            if (originalNameNoExt === docNameNoExt ||
-                                                                originalNameNoExt.includes(docNameNoExt) ||
-                                                                docNameNoExt.includes(originalNameNoExt)) {
+                                                            // 2. Check if one contains the other
+                                                            if (sourceOriginal.includes(targetName) || targetName.includes(sourceOriginal)) {
                                                                 return true;
                                                             }
 
@@ -603,7 +605,7 @@ export default function ChatPage() {
                                                             );
                                                         } else {
                                                             // AI suggested a download but we don't have the file
-                                                            console.warn('[Download Link] Document not found in sources for:', docName);
+                                                            console.warn('[Download Link] Document not found in sources for:', rawDocName);
                                                             return (
                                                                 <span className="text-gray-400 italic" title="Document not found in database">
                                                                     {children} (Document not available)
