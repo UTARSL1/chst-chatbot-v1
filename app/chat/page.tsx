@@ -255,15 +255,17 @@ export default function ChatPage() {
                     {/* Quick Links - Fixed at bottom */}
                     <div className="mt-4 pt-4 border-t border-border space-y-2">
                         <h3 className="text-xs font-semibold text-muted-foreground mb-2">Quick Access</h3>
-                        <a
-                            href="https://teams.microsoft.com/l/team/19%3A50c3f438061846c2809c8318fcf1ac17%40thread.tacv2/conversations?groupId=9795c98d-9bc0-4453-8150-0b2495001652&tenantId=4edf9354-0b3b-429a-bb8f-f21f957f1d1c"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20 transition-all duration-200 group"
-                        >
-                            <Users className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />
-                            <span className="text-sm text-indigo-400 group-hover:text-indigo-300">CHST Teams Portal</span>
-                        </a>
+                        {!['student', 'public'].includes(session.user.role) && (
+                            <a
+                                href="https://teams.microsoft.com/l/team/19%3A50c3f438061846c2809c8318fcf1ac17%40thread.tacv2/conversations?groupId=9795c98d-9bc0-4453-8150-0b2495001652&tenantId=4edf9354-0b3b-429a-bb8f-f21f957f1d1c"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20 transition-all duration-200 group"
+                            >
+                                <Users className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />
+                                <span className="text-sm text-indigo-400 group-hover:text-indigo-300">CHST Teams Portal</span>
+                            </a>
+                        )}
                         <a
                             href="https://www.linkedin.com/company/hst-research-group/"
                             target="_blank"
