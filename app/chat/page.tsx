@@ -563,27 +563,27 @@ export default function ChatPage() {
                                                         console.log('[Download Link] Available sources:', message.sources);
 
                                                         // Helper to normalize strings for comparison (remove extension, lower case, replace _ with space)
-                                                        const normalize = (str: string) => {
+                                                        const normalizeForMatch = (str: string) => {
                                                             return str.toLowerCase()
                                                                 .replace(/\.[^/.]+$/, "") // Remove extension
-                                                                .replace(/_/g, " ")       // Replace underscores with spaces
-                                                                .replace(/\s+/g, " ")     // Collapse multiple spaces
+                                                                .replace(/_/g, "")        // Remove underscores
+                                                                .replace(/\s+/g, "")      // Remove ALL spaces
                                                                 .trim();
                                                         };
 
-                                                        const targetName = normalize(rawDocName);
+                                                        const targetName = normalizeForMatch(rawDocName);
 
                                                         // Find matching document in sources with flexible matching
                                                         const doc = message.sources?.find((s: any) => {
-                                                            const sourceOriginal = normalize(s.originalName || '');
-                                                            const sourceFilename = normalize(s.filename || '');
+                                                            const sourceOriginal = normalizeForMatch(s.originalName || '');
+                                                            const sourceFilename = normalizeForMatch(s.filename || '');
 
                                                             // 1. Check exact match after normalization
                                                             if (sourceOriginal === targetName || sourceFilename === targetName) {
                                                                 return true;
                                                             }
 
-                                                            // 2. Check if one contains the other
+                                                            // 2. Check if one contains the other (robust partial match)
                                                             if (sourceOriginal.includes(targetName) || targetName.includes(sourceOriginal)) {
                                                                 return true;
                                                             }

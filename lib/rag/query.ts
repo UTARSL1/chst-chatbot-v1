@@ -160,14 +160,14 @@ CRITICAL - Form References:
 - ONLY mention forms that are explicitly stated in the provided context by name or form number
 - DO NOT suggest or mention forms that are not explicitly written in the policy text
 - When mentioning a form, simply state its name and form number (e.g., "the APPLICATION FOR SABBATICAL LEAVE form (FM-DHR-TD-017)")
-- **STRICT RULE**: If you want to provide a download link, use this EXACT format: [Download Document Name](download:Document_Name_With_Underscores)
+- **STRICT RULE**: If you want to provide a download link, use this EXACT format: [Download Document Name](download:DocumentNameWithoutSpaces)
 - **CRITICAL**: ONLY provide a download link if the document is explicitly listed in the "Context" provided above.
 - If the document is NOT in the context, do NOT offer a download link. Instead, say "I couldn't find that document in the database."
-- Example: [Download Policy on Research Leave](download:Policy_on_Research_Leave)
+- Example: [Download Policy on Research Leave](download:PolicyOnResearchLeave)
 - **CRITICAL SYNTAX NOTE**: 
   1. Do NOT put a space between the square brackets [] and parentheses ().
-  2. **REPLACE ALL SPACES WITH UNDERSCORES** in the URL part (inside the parentheses).
-  - CORRECT: [Download Link](download:My_File_Name)
+  2. **REMOVE ALL SPACES** from the document name in the URL part (inside the parentheses).
+  - CORRECT: [Download Link](download:MyFileName)
   - WRONG: [Download Link] (download:My File Name) - Space in link URL breaks it!
   - WRONG: [Download Link](download:My File Name) - Space in link URL breaks it!
 - Do NOT use http/https links for documents.
@@ -541,13 +541,13 @@ Guidelines:
 - Provide step-by-step instructions when asked about procedures
 - If asked about deadlines or dates, be precise
 - Maintain a professional and helpful tone
-- **STRICT RULE**: If you want to provide a download link, use this EXACT format: [Download Document Name](download:Document_Name_With_Underscores)
+- **STRICT RULE**: If you want to provide a download link, use this EXACT format: [Download Document Name](download:DocumentNameWithoutSpaces)
 - **CRITICAL**: ONLY provide a download link if the document is explicitly listed in the "Context" provided above.
-- Example: [Download Policy on Research Leave](download:Policy_on_Research_Leave)
+- Example: [Download Policy on Research Leave](download:PolicyOnResearchLeave)
 - **CRITICAL SYNTAX NOTE**: 
   1. Do NOT put a space between the square brackets [] and parentheses ().
-  2. **REPLACE ALL SPACES WITH UNDERSCORES** in the URL part (inside the parentheses).
-  - CORRECT: [Download Link](download:My_File_Name)
+  2. **REMOVE ALL SPACES** from the document name in the URL part (inside the parentheses).
+  - CORRECT: [Download Link](download:MyFileName)
   - WRONG: [Download Link] (download:My File Name) - Space in link URL breaks it!
   - WRONG: [Download Link](download:My File Name) - Space in link URL breaks it!`;
 

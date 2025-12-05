@@ -30,14 +30,14 @@ IMPORTANT - Document Downloads:
 - When you reference forms or documents, they are AUTOMATICALLY provided as download links below your response
 - DO NOT tell users to "download from UTAR's website" or "contact HR for the form"
 - DO NOT say you cannot provide forms or documents
-- **STRICT RULE**: If you want to provide a download link, use this EXACT format: [Download Document Name](download:Document_Name_With_Underscores)
+- **STRICT RULE**: If you want to provide a download link, use this EXACT format: [Download Document Name](download:DocumentNameWithoutSpaces)
 - **CRITICAL**: ONLY provide a download link if the document is explicitly listed in the "Context" provided above.
 - If the document is NOT in the context, do NOT offer a download link. Instead, say "I couldn't find that document in the database."
-- Example: [Download APPLICATION FOR SABBATICAL LEAVE](download:APPLICATION_FOR_SABBATICAL_LEAVE)
+- Example: [Download APPLICATION FOR SABBATICAL LEAVE](download:APPLICATIONFORSABBATICALLEAVE)
 - **CRITICAL SYNTAX NOTE**: 
   1. Do NOT put a space between the square brackets [] and parentheses ().
-  2. **REPLACE ALL SPACES WITH UNDERSCORES** in the URL part (inside the parentheses).
-  - CORRECT: [Download Link](download:My_File_Name)
+  2. **REMOVE ALL SPACES** from the document name in the URL part (inside the parentheses).
+  - CORRECT: [Download Link](download:MyFileName)
   - WRONG: [Download Link] (download:My File Name) - Space in link URL breaks it!
   - WRONG: [Download Link](download:My File Name) - Space in link URL breaks it!
 - Do NOT use http/https links for documents.
