@@ -14,6 +14,7 @@ async function main() {
         update: {
             role: 'chairperson',
             isApproved: true,
+            isVerified: true,
         },
         create: {
             email,
@@ -21,6 +22,7 @@ async function main() {
             passwordHash: hashedPassword,
             role: 'chairperson',
             isApproved: true,
+            isVerified: true,
         },
     });
 
