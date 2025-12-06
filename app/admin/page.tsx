@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { prisma } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminDashboard() {
     // Fetch stats directly on the server (parallelized)
     const [totalUsers, pendingUsers, totalDocuments, totalChats] = await Promise.all([
