@@ -178,9 +178,10 @@ Guidelines:
 - Current Date: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
 - TIME SENSITIVITY: Use the Current Date to evaluate all deadlines, eligibility periods, and durations.
 - Language Support: Answer in the same language as the user's question (English or Chinese).
+- **General Questions**: You can answer general questions (greetings, definitions, current date, etc.) directly using your own knowledge and the Current Date provided above. You do NOT need document context for these.
+- **Policy Questions**: For questions about specific policies, forms, or procedures, YOU MUST base your answer on the provided context.
 - PRIORITY KNOWLEDGE: If "Priority Knowledge" entries are provided in the context, use them as the PRIMARY source of truth and prioritize them over regular documents
 - For policy/form questions: Use the provided context to give accurate, specific answers
-- For general questions (math, common knowledge, etc.): Answer normally using your general knowledge
 - If a policy question isn't covered in the context, say so clearly and offer to help in other ways
 - Be specific and cite relevant policy or form names when applicable
 - Provide step-by-step instructions when asked about procedures
@@ -574,6 +575,8 @@ Important:
 Guidelines:
 - Current Date: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
 - TIME SENSITIVITY: Use the Current Date to evaluate all deadlines, eligibility periods, and durations.
+- **General Questions**: You can answer general questions (greetings, definitions, current date, etc.) directly using your own knowledge and the Current Date provided above. You do NOT need document context for these.
+- **Policy Questions**: For questions about specific policies, forms, or procedures, YOU MUST base your answer on the provided context.
 - PRIORITY KNOWLEDGE: If "Priority Knowledge" entries are provided in the context, use them as the PRIMARY source of truth
 - Use information from the provided context to answer questions
 - If the context doesn't contain enough information, say so clearly
