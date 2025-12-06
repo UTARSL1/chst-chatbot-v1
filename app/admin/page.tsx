@@ -6,11 +6,22 @@ export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboard() {
     // Fetch stats directly on the server (parallelized)
-    const [totalUsers, pendingUsers, totalDocuments, totalChats] = await Promise.all([
+    const [totalUsers, pendingUsers, totalDocuments, totalChats, recentDocs] = await Promise.all([
         prisma.user.count(),
         prisma.user.count({ where: { isApproved: false } }),
         prisma.document.count(),
         prisma.chatSession.count(),
+        prisma.document.findMany({
+            take: 5,
+            orderBy: { uploadedAt: 'desc' },
+            select: {
+                id: true,
+                originalName: true,
+                uploadedAt: true,
+                status: true,
+                accessLevel: true
+            }
+        })
     ]);
 
     const stats = {
@@ -40,7 +51,7 @@ export default async function AdminDashboard() {
                 </svg>
             ),
             color: 'bg-yellow-500/10 border-yellow-500/20',
-            href: '/admin/users', // Use Link instead of router.push
+            href: '/admin/users',
             clickable: true,
         },
         {
@@ -110,12 +121,32 @@ export default async function AdminDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <Card className="bg-gray-900/50 border-white/10 backdrop-blur-xl">
                     <CardHeader>
-                        <CardTitle className="text-white">Recent Activity</CardTitle>
+                        <CardTitle className="text-white">Recently Uploaded Documents</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-gray-400 text-sm">
-                            No recent activity to display.
-                        </div>
+                        {recentDocs.length === 0 ? (
+                            <div className="text-gray-400 text-sm">
+                                No documents uploaded yet.
+                            </div>
+                        ) : (
+                            <div className="space-y-4">
+                                {recentDocs.map((doc) => (
+                                    <div key={doc.id} className="flex items-center justify-between border-b border-white/5 pb-2 last:border-0 last:pb-0">
+                                        <div className="min-w-0 flex-1 mr-4">
+                                            <p className="text-sm font-medium text-white truncate">{doc.originalName}</p>
+                                            <p className="text-xs text-gray-500">
+                                                {new Date(doc.uploadedAt).toLocaleDateString()} • {doc.accessLevel}
+                                            </p>
+                                        </div>
+                                        <div className={`px-2 py-1 rounded text-xs font-medium uppercase
+                                            ${doc.status === 'processed' ? 'bg-green-500/10 text-green-400' :
+                                                doc.status === 'failed' ? 'bg-red-500/10 text-red-400' : 'bg-yellow-500/10 text-yellow-400'}`}>
+                                            {doc.status}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </CardContent>
                 </Card>
 

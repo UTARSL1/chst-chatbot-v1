@@ -53,7 +53,7 @@ export function AdminSidebar() {
             ),
         },
         {
-            name: 'Quick Access (Other)',
+            name: 'Quick Access (Others)',
             href: '/admin/quick-access',
             icon: (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
