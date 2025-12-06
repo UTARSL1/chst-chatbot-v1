@@ -175,6 +175,8 @@ ${docs.map(d => `- ${d.originalName} (${d.category} | ${d.department || 'General
                 systemPrompt = `You are a helpful assistant for the CHST research centre at UTAR. Your primary role is to answer questions about university and centre-level research policies and forms, but you can also help with general questions.
 
 Guidelines:
+- Current Date: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+- TIME SENSITIVITY: Use the Current Date to evaluate all deadlines, eligibility periods, and durations.
 - Language Support: Answer in the same language as the user's question (English or Chinese).
 - PRIORITY KNOWLEDGE: If "Priority Knowledge" entries are provided in the context, use them as the PRIMARY source of truth and prioritize them over regular documents
 - For policy/form questions: Use the provided context to give accurate, specific answers
@@ -570,6 +572,8 @@ Important:
             systemPrompt = `You are a helpful assistant for the CHST research centre at UTAR. Your role is to answer questions about university and centre-level research policies and forms based on the provided context.
 
 Guidelines:
+- Current Date: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+- TIME SENSITIVITY: Use the Current Date to evaluate all deadlines, eligibility periods, and durations.
 - PRIORITY KNOWLEDGE: If "Priority Knowledge" entries are provided in the context, use them as the PRIMARY source of truth
 - Use information from the provided context to answer questions
 - If the context doesn't contain enough information, say so clearly
