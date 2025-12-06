@@ -1,30 +1,21 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { prisma } from '@/lib/db';
 
-export default function AdminDashboard() {
-    const router = useRouter();
-    const [stats, setStats] = useState({
-        totalUsers: 0,
-        pendingUsers: 0,
-        totalDocuments: 0,
-        totalChats: 0,
-    });
+export default async function AdminDashboard() {
+    // Fetch stats directly on the server (parallelized)
+    const [totalUsers, pendingUsers, totalDocuments, totalChats] = await Promise.all([
+        prisma.user.count(),
+        prisma.user.count({ where: { isApproved: false } }),
+        prisma.document.count(),
+        prisma.chatSession.count(),
+    ]);
 
-    useEffect(() => {
-        loadStats();
-    }, []);
-
-    const loadStats = async () => {
-        try {
-            const response = await fetch('/api/admin/stats');
-            const data = await response.json();
-            setStats(data);
-        } catch (error) {
-            console.error('Error loading stats:', error);
-        }
+    const stats = {
+        totalUsers,
+        pendingUsers,
+        totalDocuments,
+        totalChats,
     };
 
     const dashboardCards = [
@@ -47,7 +38,7 @@ export default function AdminDashboard() {
                 </svg>
             ),
             color: 'bg-yellow-500/10 border-yellow-500/20',
-            onClick: () => router.push('/admin/users'),
+            href: '/admin/users', // Use Link instead of router.push
             clickable: true,
         },
         {
@@ -80,26 +71,38 @@ export default function AdminDashboard() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {dashboardCards.map((stat) => (
-                    <Card
-                        key={stat.name}
-                        className={`backdrop-blur-xl border ${stat.color} bg-gray-900/50 ${stat.clickable ? 'cursor-pointer hover:scale-105 transition-transform' : ''}`}
-                        onClick={stat.onClick}
-                    >
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium text-gray-400">
-                                {stat.name}
-                            </CardTitle>
-                            {stat.icon}
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold text-white">{stat.value}</div>
-                            {stat.clickable && stat.value > 0 && (
-                                <p className="text-xs text-yellow-400 mt-1">Click to review →</p>
+                {dashboardCards.map((stat) => {
+                    const CardComponent = (
+                        <Card
+                            className={`backdrop-blur-xl border ${stat.color} bg-gray-900/50 ${stat.clickable ? 'cursor-pointer hover:scale-105 transition-transform' : ''} h-full`}
+                        >
+                            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium text-gray-400">
+                                    {stat.name}
+                                </CardTitle>
+                                {stat.icon}
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold text-white">{stat.value}</div>
+                                {stat.clickable && stat.value > 0 && (
+                                    <p className="text-xs text-yellow-400 mt-1">Click to review →</p>
+                                )}
+                            </CardContent>
+                        </Card>
+                    );
+
+                    return (
+                        <div key={stat.name}>
+                            {stat.href ? (
+                                <Link href={stat.href} className="block h-full">
+                                    {CardComponent}
+                                </Link>
+                            ) : (
+                                CardComponent
                             )}
-                        </CardContent>
-                    </Card>
-                ))}
+                        </div>
+                    );
+                })}
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

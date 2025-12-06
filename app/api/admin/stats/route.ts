@@ -12,10 +12,12 @@ export async function GET() {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
         }
 
-        const totalUsers = await prisma.user.count();
-        const pendingUsers = await prisma.user.count({ where: { isApproved: false } });
-        const totalDocuments = await prisma.document.count();
-        const totalChats = await prisma.chatSession.count();
+        const [totalUsers, pendingUsers, totalDocuments, totalChats] = await Promise.all([
+            prisma.user.count(),
+            prisma.user.count({ where: { isApproved: false } }),
+            prisma.document.count(),
+            prisma.chatSession.count(),
+        ]);
 
         return NextResponse.json({
             totalUsers,
