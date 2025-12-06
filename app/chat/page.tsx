@@ -310,16 +310,27 @@ export default function ChatPage() {
         }
     };
 
-    const sampleQuestions = [
-        "How to apply for sabbatical leave?",
-        "Conference funding for students?",
-        "Internal grant deadlines?",
-        "Research ethics approval process?",
-        "What are the publication incentives?",
-        "Download membership application form",
-        "Travel claim submission guidelines",
-        "List of available research clusters",
-    ];
+    const [popularQuestions, setPopularQuestions] = useState<string[]>([]);
+
+    useEffect(() => {
+        const fetchPopularQuestions = async () => {
+            try {
+                const res = await fetch('/api/popular-questions');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.questions && Array.isArray(data.questions)) {
+                        setPopularQuestions(data.questions.map((q: any) => q.question));
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to fetch popular questions');
+            }
+        };
+
+        if (session) {
+            fetchPopularQuestions();
+        }
+    }, [session]);
 
     if (status === 'loading') {
         return (
@@ -533,15 +544,21 @@ export default function ChatPage() {
                             <div className="mt-8">
                                 <h3 className="text-sm font-semibold text-muted-foreground mb-4">Popular Questions</h3>
                                 <div className="grid grid-cols-2 gap-3">
-                                    {sampleQuestions.map((question, index) => (
-                                        <button
-                                            key={index}
-                                            onClick={() => setInput(question)}
-                                            className="p-4 text-left border border-border rounded-lg hover:bg-accent transition-colors"
-                                        >
-                                            <p className="text-sm text-muted-foreground">{question}</p>
-                                        </button>
-                                    ))}
+                                    {popularQuestions.length > 0 ? (
+                                        popularQuestions.map((question, index) => (
+                                            <button
+                                                key={index}
+                                                onClick={() => setInput(question)}
+                                                className="p-4 text-left border border-border rounded-lg hover:bg-accent transition-colors"
+                                            >
+                                                <p className="text-sm text-muted-foreground">{question}</p>
+                                            </button>
+                                        ))
+                                    ) : (
+                                        <div className="col-span-2 text-center text-sm text-muted-foreground italic">
+                                            No popular questions available for your role.
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
