@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 import { prisma } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
     try {
         const session = await getServerSession(authOptions);

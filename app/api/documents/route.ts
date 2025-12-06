@@ -10,6 +10,7 @@ import { storeDocumentChunks, deleteDocumentVectors } from '@/lib/rag/vectorStor
 
 
 export const maxDuration = 60; // Set max duration to 60 seconds for Vercel
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
     try {
