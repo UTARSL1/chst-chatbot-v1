@@ -19,15 +19,46 @@ const openai = new OpenAI({
  */
 export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
     try {
-        // 1. Generate embedding for the query
-        const queryEmbedding = await generateEmbedding(query.query);
+        // 1. Contextualize the query using chat history
+        let effectiveQuery = query.query;
+        let chatHistoryStr = '';
+
+        if (query.sessionId) {
+            // Fetch recent chat history
+            // We take 6 because the latest one is likely the current user message (already saved in DB)
+            const recentMessages = await prisma.message.findMany({
+                where: { sessionId: query.sessionId },
+                orderBy: { createdAt: 'desc' },
+                take: 6,
+            });
+
+            // Filter out the current message (if it exists in the history) to get just the *prior* context
+            // We assume the most recent message with role 'user' and matching content is the current one
+            // A simple heuristic is to skip the first message if it matches the current query
+            const historyMessages = recentMessages.filter((msg, index) => {
+                if (index === 0 && msg.role === 'user' && msg.content === query.query) return false;
+                return true;
+            }).reverse();
+
+            if (historyMessages.length > 0) {
+                effectiveQuery = await contextualizeQuery(query.query, historyMessages);
+
+                // Format history for the final prompts to maintain conversational flow
+                chatHistoryStr = historyMessages
+                    .map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`)
+                    .join('\n');
+            }
+        }
+
+        // 2. Generate embedding for the query (using the contextualized query)
+        const queryEmbedding = await generateEmbedding(effectiveQuery);
 
         // 2. Get accessible document levels based on user role
         const accessLevels = getAccessibleLevels(query.userRole);
 
         // 3. Search Priority Knowledge Base first
         const knowledgeNotes = await searchKnowledgeNotes(
-            query.query,
+            effectiveQuery,
             accessLevels,
             3 // Top 3 most relevant knowledge notes
         );
@@ -44,12 +75,13 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
         let userPrompt: string;
 
         // Check for inventory/metadata questions early (used later for download detection)
-        const isInventoryQuestion = /how many|list|inventory|what documents|count|uploaded/i.test(query.query);
+        // Check for inventory/metadata questions early (using original or effective query)
+        const isInventoryQuestion = /how many|list|inventory|what documents|count|uploaded/i.test(effectiveQuery);
 
         if (knowledgeNotes.length === 0 && relevantChunks.length === 0) {
             // No documents or knowledge notes found - allow general conversation
             systemPrompt = `You are a helpful assistant for the CHST research centre at UTAR. 
-
+            
 You help users with questions about university and centre-level research policies and forms.
 
 Important:
@@ -59,7 +91,7 @@ Important:
 - Be friendly, professional, and helpful
 - If asked about specific policies, suggest they contact the administrator or wait for documents to be uploaded`;
 
-            userPrompt = query.query;
+            userPrompt = `Previous Conversation:\n${chatHistoryStr}\n\nUser Question: ${effectiveQuery}`;
         } else {
             // Build context from knowledge notes (higher priority) and documents
             let contextParts: string[] = [];
@@ -190,7 +222,10 @@ ${context}
 
 ---
 
-User Question: ${query.query}
+Previous Conversation:
+${chatHistoryStr}
+
+User Question: ${effectiveQuery}
 
 Please provide a helpful and accurate answer based on the context above. If the context doesn't contain the information needed to answer the question, please say so.`;
         }
@@ -227,7 +262,7 @@ Please provide a helpful and accurate answer based on the context above. If the 
         // [NEW] Detect if user is explicitly asking for a document download
         // and add that document to sources if found
         const downloadKeywords = /download|get|provide|give me|send me|show me|need|want/i;
-        const isDownloadRequest = downloadKeywords.test(query.query);
+        const isDownloadRequest = downloadKeywords.test(effectiveQuery);
 
         if (isDownloadRequest) {
             console.log('[RAG] Detected potential download request:', query.query);
@@ -434,34 +469,59 @@ async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<Doc
  */
 export async function* processRAGQueryStream(query: RAGQuery): AsyncGenerator<string> {
     try {
-        // 1. Generate embedding for the query
-        const queryEmbedding = await generateEmbedding(query.query);
+        // 1. Contextualize the query using chat history
+        let effectiveQuery = query.query;
+        let chatHistoryStr = '';
 
-        // 2. Get accessible document levels based on user role
+        if (query.sessionId) {
+            const recentMessages = await prisma.message.findMany({
+                where: { sessionId: query.sessionId },
+                orderBy: { createdAt: 'desc' },
+                take: 6,
+            });
+
+            // Filter out the current message (heuristic: skip first if it matches)
+            const historyMessages = recentMessages.filter((msg, index) => {
+                if (index === 0 && msg.role === 'user' && msg.content === query.query) return false;
+                return true;
+            }).reverse();
+
+            if (historyMessages.length > 0) {
+                effectiveQuery = await contextualizeQuery(query.query, historyMessages);
+                chatHistoryStr = historyMessages
+                    .map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`)
+                    .join('\n');
+            }
+        }
+
+        // 2. Generate embedding for the query (using contextualized query)
+        const queryEmbedding = await generateEmbedding(effectiveQuery);
+
+        // 3. Get accessible document levels based on user role
         const accessLevels = getAccessibleLevels(query.userRole);
 
-        // 3. Search Priority Knowledge Base first
+        // 4. Search Priority Knowledge Base first
         const knowledgeNotes = await searchKnowledgeNotes(
-            query.query,
+            effectiveQuery,
             accessLevels,
             3
         );
 
-        // 4. Search for similar documents
+        // 5. Search for similar documents
         const relevantChunks = await searchSimilarDocuments(
             queryEmbedding,
             accessLevels,
             5
         );
 
-        // 5. Prepare context and system prompt
+        // 6. Prepare context and system prompt
         let systemPrompt: string;
         let userPrompt: string;
 
         if (knowledgeNotes.length === 0 && relevantChunks.length === 0) {
             // No documents or knowledge notes found - allow general conversation
             systemPrompt = `You are a helpful assistant for the CHST research centre at UTAR. 
-
+            
 You help users with questions about university and centre-level research policies and forms.
 
 Important:
@@ -470,7 +530,7 @@ Important:
 - For policy-specific questions, politely explain that documents haven't been uploaded yet
 - Be friendly, professional, and helpful`;
 
-            userPrompt = query.query;
+            userPrompt = `Previous Conversation:\n${chatHistoryStr}\n\nUser Question: ${effectiveQuery}`;
         } else {
             // Build context from knowledge notes and documents
             let contextParts: string[] = [];
@@ -478,20 +538,20 @@ Important:
             // Add knowledge notes first (highest priority)
             if (knowledgeNotes.length > 0) {
                 const knowledgeContext = knowledgeNotes
-                    .map((note) => `[Priority Knowledge: ${note.title}]\\n${note.content}`)
-                    .join('\\n\\n---\\n\\n');
+                    .map((note) => `[Priority Knowledge: ${note.title}]\n${note.content}`)
+                    .join('\n\n---\n\n');
                 contextParts.push(knowledgeContext);
             }
 
             // Add document chunks
             if (relevantChunks.length > 0) {
                 const docContext = relevantChunks
-                    .map((chunk, index) => `[Document ${index + 1}: ${chunk.metadata.filename}]\\n${chunk.content}`)
-                    .join('\\n\\n---\\n\\n');
+                    .map((chunk, index) => `[Document ${index + 1}: ${chunk.metadata.filename}]\n${chunk.content}`)
+                    .join('\n\n---\n\n');
                 contextParts.push(docContext);
             }
 
-            const context = contextParts.join('\\n\\n=== === ===\\n\\n');
+            const context = contextParts.join('\n\n=== === ===\n\n');
 
             systemPrompt = `You are a helpful assistant for the CHST research centre at UTAR. Your role is to answer questions about university and centre-level research policies and forms based on the provided context.
 
@@ -528,12 +588,15 @@ ${context}
 
 ---
 
-User Question: ${query.query}
+Previous Conversation:
+${chatHistoryStr}
+
+User Question: ${effectiveQuery}
 
 Please provide a helpful and accurate answer based on the context above.`;
         }
 
-        // 6. Generate streaming response using GPT-4o
+        // 7. Generate streaming response using GPT-4o
         const stream = await openai.chat.completions.create({
             model: 'gpt-4o',
             messages: [
@@ -545,7 +608,7 @@ Please provide a helpful and accurate answer based on the context above.`;
             stream: true,
         });
 
-        // 7. Yield chunks as they arrive
+        // 8. Yield chunks as they arrive
         for await (const chunk of stream) {
             const content = chunk.choices[0]?.delta?.content || '';
             if (content) {
@@ -556,4 +619,39 @@ Please provide a helpful and accurate answer based on the context above.`;
         console.error('Error processing RAG query stream:', error);
         yield 'Sorry, an error occurred while processing your question.';
     }
+}
+
+/**
+ * Contextualize a query based on chat history
+ */
+async function contextualizeQuery(query: string, history: any[]): Promise<string> {
+    if (!history || history.length === 0) return query;
+
+    try {
+        const historyText = history
+            .map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`)
+            .join('\n');
+
+        const systemPrompt = `Given a chat history and the latest user question which might reference context in the chat history, formulate a standalone question which can be understood without the chat history. Do NOT answer the question, just reformulate it if needed and otherwise return it as is.`;
+
+        const completion = await openai.chat.completions.create({
+            model: 'gpt-4o',
+            messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: `Chat History:\n${historyText}\n\nLatest Question: ${query}` }
+            ],
+            temperature: 0.1,
+            max_tokens: 200,
+        });
+
+        const rewritten = completion.choices[0].message.content?.trim();
+        if (rewritten) {
+            console.log(`[RAG] Contextualized query: "${query}" -> "${rewritten}"`);
+            return rewritten;
+        }
+    } catch (error) {
+        console.error('Error contextualizing query:', error);
+    }
+
+    return query;
 }
