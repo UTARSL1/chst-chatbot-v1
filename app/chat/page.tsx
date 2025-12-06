@@ -311,19 +311,43 @@ export default function ChatPage() {
     };
 
     const [popularQuestions, setPopularQuestions] = useState<string[]>([]);
+    const [isLoadingQuestions, setIsLoadingQuestions] = useState(true);
 
     useEffect(() => {
         const fetchPopularQuestions = async () => {
+            // 1. Try Cache First to show instantly
+            if (typeof window !== 'undefined') {
+                const cached = sessionStorage.getItem('popular_questions_cache');
+                if (cached) {
+                    try {
+                        const parsed = JSON.parse(cached);
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                            setPopularQuestions(parsed);
+                            setIsLoadingQuestions(false);
+                        }
+                    } catch (e) {
+                        // Ignore cache error
+                    }
+                }
+            }
+
             try {
                 const res = await fetch('/api/popular-questions');
                 if (res.ok) {
                     const data = await res.json();
                     if (data.questions && Array.isArray(data.questions)) {
-                        setPopularQuestions(data.questions.map((q: any) => q.question));
+                        const questions = data.questions.map((q: any) => q.question);
+                        setPopularQuestions(questions);
+                        // Update cache
+                        if (typeof window !== 'undefined') {
+                            sessionStorage.setItem('popular_questions_cache', JSON.stringify(questions));
+                        }
                     }
                 }
             } catch (error) {
                 console.error('Failed to fetch popular questions');
+            } finally {
+                setIsLoadingQuestions(false);
             }
         };
 
@@ -554,11 +578,11 @@ export default function ChatPage() {
                                                 <p className="text-sm text-muted-foreground">{question}</p>
                                             </button>
                                         ))
-                                    ) : (
+                                    ) : !isLoadingQuestions ? (
                                         <div className="col-span-2 text-center text-sm text-muted-foreground italic">
                                             No popular questions available for your role.
                                         </div>
-                                    )}
+                                    ) : null}
                                 </div>
                             </div>
                         </div>
