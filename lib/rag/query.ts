@@ -162,7 +162,8 @@ ${docs.map(d => `- ${d.originalName} (${d.category} | ${d.department || 'General
                 }
             }
 
-            const context = contextParts.join('\n\n=== === ===\n\n');
+            const context = contextParts.join('\n\n=== === ===\n\n') +
+                `\n\n=== SYSTEM INFO ===\nCurrent Date: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}\nUse this date for answering questions about "today" or checking eligibility periods.`;
 
             // Fetch custom system prompt from database
             const dbPrompt = await prisma.systemPrompt.findUnique({
@@ -246,7 +247,7 @@ ${chatHistoryStr}
 
 User Question: ${effectiveQuery}
 
-Please provide a helpful and accurate answer based on the context above. If the context doesn't contain the information needed to answer the question, please say so.`;
+Please provide a helpful and accurate answer based on the context above (policy documents, priority knowledge, and system info). If you cannot answer based on any of this information, please say so.`;
         }
 
         // 5. Generate response using GPT-4o
@@ -572,7 +573,8 @@ Important:
                 contextParts.push(docContext);
             }
 
-            const context = contextParts.join('\n\n=== === ===\n\n');
+            const context = contextParts.join('\n\n=== === ===\n\n') +
+                `\n\n=== SYSTEM INFO ===\nCurrent Date: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}\nUse this date for answering questions about "today" or checking eligibility periods.`;
 
             systemPrompt = `You are a helpful assistant for the CHST research centre at UTAR. Your role is to answer questions about university and centre-level research policies and forms based on the provided context.
 
