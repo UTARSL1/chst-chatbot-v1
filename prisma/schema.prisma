@@ -50,6 +50,7 @@ model User {
   messages        Message[]
   documents       Document[]
   knowledgeNotes  KnowledgeNote[]
+  feedback        Feedback[]
   invitationCode  InvitationCode? @relation(fields: [invitationCodeId], references: [id])
   
   @@index([email])
@@ -225,5 +226,18 @@ model PopularQuestion {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+
   @@map("popular_questions")
+}
+
+// User Feedback model
+model Feedback {
+  id        String   @id @default(uuid())
+  content   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("feedback")
 }

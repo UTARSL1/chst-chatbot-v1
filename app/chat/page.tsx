@@ -9,7 +9,7 @@ import { Card } from '@/components/ui/card';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { TermsOfUseModal } from '@/components/TermsOfUseModal';
-import { Linkedin, Globe, FolderOpen, Users, ChevronDown, BookOpen, GraduationCap, Briefcase, FileText, DollarSign, TrendingUp, UserPlus, Plus, ExternalLink, Pencil, Trash2 } from 'lucide-react';
+import { Linkedin, Globe, FolderOpen, Users, ChevronDown, BookOpen, GraduationCap, Briefcase, FileText, DollarSign, TrendingUp, UserPlus, Plus, ExternalLink, Pencil, Trash2, MessageSquare } from 'lucide-react';
 
 interface QuickAccessLink {
     id: string;
@@ -53,6 +53,38 @@ export default function ChatPage() {
     const [showAddLinkModal, setShowAddLinkModal] = useState(false);
     const [editingLink, setEditingLink] = useState<QuickAccessLink | null>(null);
     const [newLink, setNewLink] = useState({ name: '', url: '', section: 'others', roles: ['public', 'student', 'member', 'chairperson'] });
+
+    // Feedback State
+    const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
+    const [feedbackContent, setFeedbackContent] = useState('');
+    const [sendingFeedback, setSendingFeedback] = useState(false);
+
+    const handleSendFeedback = async () => {
+        if (!feedbackContent.trim()) return;
+
+        setSendingFeedback(true);
+        try {
+            const res = await fetch('/api/feedback', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: feedbackContent })
+            });
+
+            if (res.ok) {
+                alert('Message sent successfully!');
+                setFeedbackContent('');
+                setFeedbackModalOpen(false);
+            } else {
+                alert('Failed to send message.');
+            }
+        } catch (error) {
+            console.error('Error sending feedback:', error);
+            alert('Error sending message');
+        } finally {
+            setSendingFeedback(false);
+        }
+    };
+
 
     useEffect(() => {
         if (status === 'unauthenticated') {
@@ -403,6 +435,17 @@ export default function ChatPage() {
                                 </button>
                             </div>
                         ))}
+                    </div>
+
+                    {/* Feedback to Admin - Fixed at bottom */}
+                    <div className="mt-4 pt-4 border-t border-border">
+                        <button
+                            onClick={() => setFeedbackModalOpen(true)}
+                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg bg-violet-600/10 hover:bg-violet-600/20 border border-violet-600/20 transition-all duration-200 group"
+                        >
+                            <MessageSquare className="w-4 h-4 text-violet-400 group-hover:text-violet-300" />
+                            <span className="text-sm text-violet-400 group-hover:text-violet-300">Message to Admin</span>
+                        </button>
                     </div>
 
                     {/* Quick Links - Fixed at bottom */}
@@ -945,6 +988,43 @@ export default function ChatPage() {
                     </div>
                 )
             }
-        </div >
+            {/* Feedback Modal */}
+            {feedbackModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                    <Card className="w-full max-w-md bg-gray-900 border-white/10">
+                        <div className="p-6">
+                            <h2 className="text-xl font-bold mb-4 text-white">Message to Admin</h2>
+                            <p className="text-sm text-gray-400 mb-4">
+                                Have a suggestion, request, or question? Send a direct message to the admin team.
+                            </p>
+                            <div className="space-y-4">
+                                <textarea
+                                    className="w-full h-32 bg-gray-950 border border-white/10 rounded-md p-3 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 text-white placeholder:text-gray-500"
+                                    placeholder="Type your message here..."
+                                    value={feedbackContent}
+                                    onChange={(e) => setFeedbackContent(e.target.value)}
+                                />
+                                <div className="flex justify-end gap-2">
+                                    <Button
+                                        variant="ghost"
+                                        onClick={() => setFeedbackModalOpen(false)}
+                                        disabled={sendingFeedback}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        onClick={handleSendFeedback}
+                                        variant="gradient"
+                                        disabled={!feedbackContent.trim() || sendingFeedback}
+                                    >
+                                        {sendingFeedback ? 'Sending...' : 'Send Message'}
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                    </Card>
+                </div>
+            )}
+        </div>
     );
 }

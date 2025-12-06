@@ -6,20 +6,21 @@ export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboard() {
     // Fetch stats directly on the server (parallelized)
-    const [totalUsers, pendingUsers, totalDocuments, totalChats, recentDocs] = await Promise.all([
+    const [totalUsers, pendingUsers, totalDocuments, totalChats, latestFeedback] = await Promise.all([
         prisma.user.count(),
         prisma.user.count({ where: { isApproved: false } }),
         prisma.document.count(),
         prisma.chatSession.count(),
-        prisma.document.findMany({
+        prisma.feedback.findMany({
             take: 5,
-            orderBy: { uploadedAt: 'desc' },
-            select: {
-                id: true,
-                originalName: true,
-                uploadedAt: true,
-                status: true,
-                accessLevel: true
+            orderBy: { createdAt: 'desc' },
+            include: {
+                user: {
+                    select: {
+                        name: true,
+                        role: true
+                    }
+                }
             }
         })
     ]);
@@ -121,28 +122,25 @@ export default async function AdminDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <Card className="bg-gray-900/50 border-white/10 backdrop-blur-xl">
                     <CardHeader>
-                        <CardTitle className="text-white">Recently Uploaded Documents</CardTitle>
+                        <CardTitle className="text-white">Latest User Messages</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {recentDocs.length === 0 ? (
+                        {latestFeedback.length === 0 ? (
                             <div className="text-gray-400 text-sm">
-                                No documents uploaded yet.
+                                No messages received yet.
                             </div>
                         ) : (
                             <div className="space-y-4">
-                                {recentDocs.map((doc) => (
-                                    <div key={doc.id} className="flex items-center justify-between border-b border-white/5 pb-2 last:border-0 last:pb-0">
-                                        <div className="min-w-0 flex-1 mr-4">
-                                            <p className="text-sm font-medium text-white truncate">{doc.originalName}</p>
-                                            <p className="text-xs text-gray-500">
-                                                {new Date(doc.uploadedAt).toLocaleDateString()} • {doc.accessLevel}
-                                            </p>
+                                {latestFeedback.map((msg) => (
+                                    <div key={msg.id} className="flex flex-col gap-1 border-b border-white/5 pb-3 last:border-0 last:pb-0">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm font-medium text-white">{msg.user.name || 'Unknown User'}</span>
+                                            <span className="text-xs text-gray-500">{new Date(msg.createdAt).toLocaleDateString()}</span>
                                         </div>
-                                        <div className={`px-2 py-1 rounded text-xs font-medium uppercase
-                                            ${doc.status === 'processed' ? 'bg-green-500/10 text-green-400' :
-                                                doc.status === 'failed' ? 'bg-red-500/10 text-red-400' : 'bg-yellow-500/10 text-yellow-400'}`}>
-                                            {doc.status}
-                                        </div>
+                                        <p className="text-sm text-gray-300 line-clamp-2">{msg.content}</p>
+                                        <span className="text-xs text-violet-400 bg-violet-500/10 px-2 py-0.5 rounded w-fit capitalize">
+                                            {msg.user.role}
+                                        </span>
                                     </div>
                                 ))}
                             </div>
