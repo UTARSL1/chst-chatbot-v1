@@ -441,10 +441,10 @@ export default function ChatPage() {
                     <div className="mt-4 pt-4 border-t border-border">
                         <button
                             onClick={() => setFeedbackModalOpen(true)}
-                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg bg-violet-600/10 hover:bg-violet-600/20 border border-violet-600/20 transition-all duration-200 group"
+                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg bg-green-600/10 hover:bg-green-600/20 border border-green-600/20 transition-all duration-200 group"
                         >
-                            <MessageSquare className="w-4 h-4 text-violet-400 group-hover:text-violet-300" />
-                            <span className="text-sm text-violet-400 group-hover:text-violet-300">Message to Admin</span>
+                            <MessageSquare className="w-4 h-4 text-green-400 group-hover:text-green-300" />
+                            <span className="text-sm text-green-400 group-hover:text-green-300">Message to Admin</span>
                         </button>
                     </div>
 
@@ -458,29 +458,29 @@ export default function ChatPage() {
                                     href="https://teams.microsoft.com/l/team/19%3A50c3f438061846c2809c8318fcf1ac17%40thread.tacv2/conversations?groupId=9795c98d-9bc0-4453-8150-0b2495001652&tenantId=4edf9354-0b3b-429a-bb8f-f21f957f1d1c"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20 transition-all duration-200 group"
+                                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-purple-600/10 hover:bg-purple-600/20 border border-purple-600/20 transition-all duration-200 group"
                                 >
-                                    <Users className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />
-                                    <span className="text-sm text-indigo-400 group-hover:text-indigo-300">CHST Teams Portal</span>
+                                    <Users className="w-4 h-4 text-purple-400 group-hover:text-purple-300" />
+                                    <span className="text-sm text-purple-400 group-hover:text-purple-300">CHST Teams Portal</span>
                                 </a>
                             )}
                             <a
                                 href="https://www.linkedin.com/company/hst-research-group/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20 transition-all duration-200 group"
+                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-purple-600/10 hover:bg-purple-600/20 border border-purple-600/20 transition-all duration-200 group"
                             >
-                                <Linkedin className="w-4 h-4 text-blue-400 group-hover:text-blue-300" />
-                                <span className="text-sm text-blue-400 group-hover:text-blue-300">CHST LinkedIn Community</span>
+                                <Linkedin className="w-4 h-4 text-purple-400 group-hover:text-purple-300" />
+                                <span className="text-sm text-purple-400 group-hover:text-purple-300">CHST LinkedIn Community</span>
                             </a>
                             <a
                                 href="http://chst.research.utar.edu.my/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-teal-600/10 hover:bg-teal-600/20 border border-teal-600/20 transition-all duration-200 group"
+                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-purple-600/10 hover:bg-purple-600/20 border border-purple-600/20 transition-all duration-200 group"
                             >
-                                <Globe className="w-4 h-4 text-teal-400 group-hover:text-teal-300" />
-                                <span className="text-sm text-teal-400 group-hover:text-teal-300">CHST Official Website</span>
+                                <Globe className="w-4 h-4 text-purple-400 group-hover:text-purple-300" />
+                                <span className="text-sm text-purple-400 group-hover:text-purple-300">CHST Official Website</span>
                             </a>
                             {!['student', 'public'].includes(session.user.role) && (
                                 <a

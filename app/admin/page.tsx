@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { prisma } from '@/lib/db';
+import { LatestMessagesList } from '@/components/admin/latest-messages';
 
 export const dynamic = 'force-dynamic';
 
@@ -125,26 +126,7 @@ export default async function AdminDashboard() {
                         <CardTitle className="text-white">Latest User Messages</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {latestFeedback.length === 0 ? (
-                            <div className="text-gray-400 text-sm">
-                                No messages received yet.
-                            </div>
-                        ) : (
-                            <div className="space-y-4">
-                                {latestFeedback.map((msg) => (
-                                    <div key={msg.id} className="flex flex-col gap-1 border-b border-white/5 pb-3 last:border-0 last:pb-0">
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-sm font-medium text-white">{msg.user.name || 'Unknown User'}</span>
-                                            <span className="text-xs text-gray-500">{new Date(msg.createdAt).toLocaleDateString()}</span>
-                                        </div>
-                                        <p className="text-sm text-gray-300 line-clamp-2">{msg.content}</p>
-                                        <span className="text-xs text-violet-400 bg-violet-500/10 px-2 py-0.5 rounded w-fit capitalize">
-                                            {msg.user.role}
-                                        </span>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                        <LatestMessagesList initialMessages={latestFeedback as any} />
                     </CardContent>
                 </Card>
 
