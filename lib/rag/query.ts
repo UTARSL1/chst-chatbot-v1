@@ -156,6 +156,13 @@ Guidelines:
 - NEVER refer to documents as "Document 1", "Document 2", etc. Always use the actual filename or title.
 - This ensures the correct documents are highlighted for the user.
 
+CRITICAL - POLICY & FORM RELATIONSHIPS:
+- Questions often involve a Policy that dictates a Procedure using a Form.
+- Always check if the context links a Policy to a specific Form (e.g., "Sabbatical Policy" mentions "Sabbatical Application Form").
+- Address the valid workflow: Policy -> Procedure -> Form.
+- Explicitly mention: "This is governed by [Policy Name], which requires completing [Form Name]."
+- If the policy mentions a required form, look for it in the context and provide a download link if available.
+
 CRITICAL - Form References:
 - ONLY mention forms that are explicitly stated in the provided context by name or form number
 - DO NOT suggest or mention forms that are not explicitly written in the policy text
@@ -496,6 +503,11 @@ Guidelines:
 - Provide step-by-step instructions when asked about procedures
 - If asked about deadlines or dates, be precise
 - Maintain a professional and helpful tone
+- **POLICY & FORM RELATIONSHIPS**:
+  - Questions often involve a Policy that dictates a Procedure using a Form.
+  - Always check if the context links a Policy to a specific Form.
+  - Address the valid workflow: Policy -> Procedure -> Form.
+  - Explicitly mention: "This is governed by [Policy Name], which requires completing [Form Name]."
 - **STRICT RULE**: If you want to provide a download link, use this EXACT format: [Download Display Name](download:ExactSourceFilename)
 - **CRITICAL**: The \`ExactSourceFilename\` inside the parentheses MUST be the exact filename listed in the \`[Source: ...]\` header of the context where you found the information.
 - Do NOT use a descriptive title for the link target; use the actual file name from the Source header.
