@@ -162,22 +162,25 @@ export default function PopularQuestionsAdmin() {
                     ) : (
                         <div className="space-y-3">
                             {questions.map((q) => (
-                                <div key={q.id} className="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-lg group">
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-2">
-                                            <p className="font-medium text-white text-lg">{q.question}</p>
+                                <div key={q.id} className="flex items-center justify-between p-4 rounded-lg bg-white/5 border border-white/10">
+                                    <div className="flex items-center gap-4">
+                                        <div className="p-2 rounded-full bg-violet-500/20 text-violet-400">
+                                            <HelpCircle className="w-5 h-5" />
                                         </div>
-                                        <div className="flex gap-2 mt-2">
-                                            {q.roles.map(role => (
-                                                <span key={role} className="text-xs px-2 py-0.5 rounded-full bg-gray-800 text-gray-300 capitalize">
-                                                    {role}
-                                                </span>
-                                            ))}
-                                            {!q.isActive && (
-                                                <span className="text-xs px-2 py-0.5 rounded bg-red-500/10 text-red-500 border border-red-500/20">
-                                                    Inactive
-                                                </span>
-                                            )}
+                                        <div>
+                                            <h3 className="font-medium text-white">{q.question}</h3>
+                                            <div className="flex gap-2 mt-2">
+                                                {q.roles.map(role => (
+                                                    <span key={role} className="text-xs px-2 py-0.5 rounded-full bg-gray-800 text-gray-300 capitalize">
+                                                        {role}
+                                                    </span>
+                                                ))}
+                                                {!q.isActive && (
+                                                    <span className="text-xs px-2 py-0.5 rounded-full bg-red-500/10 text-red-500 border border-red-500/20">
+                                                        Inactive
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2">
