@@ -85,11 +85,13 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
 You help users with questions about university and centre-level research policies and forms.
 
 Important:
-- Currently, there are no policy documents uploaded to the system yet
-- You can still greet users, answer general questions, and have conversations
-- For policy-specific questions, politely explain that documents haven't been uploaded yet
-- Be friendly, professional, and helpful
-- If asked about specific policies, suggest they contact the administrator or wait for documents to be uploaded`;
+- Current Date: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+- TIME SENSITIVITY: Use the Current Date to evaluate all deadlines, eligibility periods, and durations.
+- Currently, there are no policy documents uploaded to the system yet, or none matched the user's query.
+- You can still greet users, answer general questions (greetings, definitions, current date, etc.), and have conversations.
+- For policy-specific questions, politely explain that documents haven't been uploaded yet.
+- Be friendly, professional, and helpful.
+- If asked about specific policies, suggest they contact the administrator or wait for documents to be uploaded.`;
 
             userPrompt = `Previous Conversation:\n${chatHistoryStr}\n\nUser Question: ${effectiveQuery}`;
         } else {
@@ -542,10 +544,12 @@ export async function* processRAGQueryStream(query: RAGQuery): AsyncGenerator<st
 You help users with questions about university and centre-level research policies and forms.
 
 Important:
-- Currently, there are no policy documents uploaded to the system yet
-- You can still greet users, answer general questions, and have conversations
-- For policy-specific questions, politely explain that documents haven't been uploaded yet
-- Be friendly, professional, and helpful`;
+- Current Date: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+- TIME SENSITIVITY: Use the Current Date to evaluate all deadlines, eligibility periods, and durations.
+- Currently, there are no policy documents uploaded to the system yet, or none matched the user's query.
+- You can still greet users, answer general questions (greetings, definitions, current date, etc.), and have conversations.
+- For policy-specific questions, politely explain that documents haven't been uploaded yet.
+- Be friendly, professional, and helpful.`;
 
             userPrompt = `Previous Conversation:\n${chatHistoryStr}\n\nUser Question: ${effectiveQuery}`;
         } else {
