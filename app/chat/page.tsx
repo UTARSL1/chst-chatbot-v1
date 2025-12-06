@@ -736,14 +736,8 @@ export default function ChatPage() {
                                             const originalName = (doc.originalName || '').toLowerCase();
 
                                             // Check for exact filename match or significant part of original name
-                                            // Also check for "meeting minute" if it's a meeting minute doc
-                                            const isMeetingMinute = doc.category === 'Meeting Minute' || originalName.includes('meeting minute');
-
-                                            if (isMeetingMinute && content.includes('meeting minute')) {
-                                                return true;
-                                            }
-
-                                            return content.includes(filename) || content.includes(originalName);
+                                            const nameWithoutExt = originalName.replace(/\.[^/.]+$/, "");
+                                            return content.includes(filename) || content.includes(originalName) || content.includes(nameWithoutExt);
                                         });
 
                                         return relevantDocs.length > 0 && (
