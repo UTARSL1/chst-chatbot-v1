@@ -9,7 +9,7 @@ import { Card } from '@/components/ui/card';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { TermsOfUseModal } from '@/components/TermsOfUseModal';
-import { Linkedin, Globe, FolderOpen, Users, ChevronDown, BookOpen, GraduationCap, Briefcase, FileText, DollarSign, TrendingUp, UserPlus, Plus, ExternalLink, Pencil, Trash2, MessageSquare } from 'lucide-react';
+import { Linkedin, Globe, FolderOpen, Users, ChevronDown, BookOpen, GraduationCap, Briefcase, FileText, DollarSign, TrendingUp, UserPlus, Plus, ExternalLink, Pencil, Trash2, MessageSquare, MoreVertical, Check, X } from 'lucide-react';
 
 interface QuickAccessLink {
     id: string;
@@ -53,6 +53,13 @@ export default function ChatPage() {
     const [showAddLinkModal, setShowAddLinkModal] = useState(false);
     const [editingLink, setEditingLink] = useState<QuickAccessLink | null>(null);
     const [newLink, setNewLink] = useState({ name: '', url: '', section: 'others', roles: ['public', 'student', 'member', 'chairperson'] });
+
+    // Session Management State
+    const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
+    const [editTitle, setEditTitle] = useState('');
+    const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
+
+    // Feedback State
 
     // Feedback State
     const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
@@ -305,6 +312,28 @@ export default function ChatPage() {
         }
     };
 
+    const handleRenameSession = async (sid: string) => {
+        if (!editTitle.trim()) return;
+
+        try {
+            const res = await fetch(`/api/chat-sessions/${sid}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title: editTitle.trim() })
+            });
+
+            if (res.ok) {
+                setChatSessions((prev) => prev.map((s) => s.id === sid ? { ...s, title: editTitle.trim() } : s));
+                setEditingSessionId(null);
+            } else {
+                alert('Failed to rename session');
+            }
+        } catch (error) {
+            console.error('Error renaming session:', error);
+            alert('Error renaming session');
+        }
+    };
+
     const handleDeleteSession = async (sid: string) => {
         if (!confirm('Delete this chat?')) return;
 
@@ -415,24 +444,96 @@ export default function ChatPage() {
                     <div className="flex-1 overflow-y-auto space-y-2">
                         <h3 className="text-sm font-semibold text-muted-foreground mb-2">Chat History</h3>
                         {chatSessions.map((s) => (
-                            <div key={s.id} className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm hover:bg-accent transition-colors ${sessionId === s.id ? 'bg-accent' : ''}`}>
-                                <button
-                                    onClick={() => loadMessages(s.id)}
-                                    className="flex-1 text-left min-w-0 pointer-events-auto"
-                                >
-                                    <p className="truncate">{s.title}</p>
-                                    <p className="text-xs text-muted-foreground">
-                                        {new Date(s.updatedAt).toLocaleDateString()}
-                                    </p>
-                                </button>
-                                <button
-                                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleDeleteSession(s.id); }}
-                                    className="text-red-500 hover:text-red-600 hover:bg-red-50 text-xl font-bold px-2 py-1 rounded pointer-events-auto"
-                                    title="Delete chat"
-                                    type="button"
-                                >
-                                    ×
-                                </button>
+                            <div key={s.id} className={`group relative flex items-center gap-2 px-3 py-2 rounded-md text-sm hover:bg-accent transition-colors ${sessionId === s.id ? 'bg-accent' : ''}`}>
+                                {editingSessionId === s.id ? (
+                                    <div className="flex items-center w-full gap-1">
+                                        <input
+                                            value={editTitle}
+                                            onChange={(e) => setEditTitle(e.target.value)}
+                                            className="flex-1 bg-background border border-input rounded px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                                            autoFocus
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') handleRenameSession(s.id);
+                                                if (e.key === 'Escape') setEditingSessionId(null);
+                                            }}
+                                            onClick={(e) => e.stopPropagation()}
+                                        />
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); handleRenameSession(s.id); }}
+                                            className="p-1 hover:bg-green-500/10 text-green-500 rounded transition-colors"
+                                            title="Save"
+                                        >
+                                            <Check className="w-3 h-3" />
+                                        </button>
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); setEditingSessionId(null); }}
+                                            className="p-1 hover:bg-red-500/10 text-red-500 rounded transition-colors"
+                                            title="Cancel"
+                                        >
+                                            <X className="w-3 h-3" />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <button
+                                            onClick={() => loadMessages(s.id)}
+                                            className="flex-1 text-left min-w-0 pointer-events-auto"
+                                        >
+                                            <p className="truncate">{s.title}</p>
+                                            <p className="text-xs text-muted-foreground">
+                                                {new Date(s.updatedAt).toLocaleDateString()}
+                                            </p>
+                                        </button>
+
+                                        {/* Menu Button - Visible on Hover or when Menu Open */}
+                                        <div className="relative">
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setMenuOpenId(menuOpenId === s.id ? null : s.id);
+                                                }}
+                                                className={`p-1.5 rounded-md hover:bg-background transition-opacity ${menuOpenId === s.id ? 'opacity-100 bg-background' : 'opacity-0 group-hover:opacity-100'}`}
+                                            >
+                                                <MoreVertical className="w-4 h-4 text-muted-foreground" />
+                                            </button>
+
+                                            {/* Dropdown Menu */}
+                                            {menuOpenId === s.id && (
+                                                <>
+                                                    <div
+                                                        className="fixed inset-0 z-40"
+                                                        onClick={(e) => { e.stopPropagation(); setMenuOpenId(null); }}
+                                                    />
+                                                    <div className="absolute right-0 top-8 w-32 bg-popover border border-border rounded-md shadow-md z-50 py-1 bg-card">
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setEditingSessionId(s.id);
+                                                                setEditTitle(s.title);
+                                                                setMenuOpenId(null);
+                                                            }}
+                                                            className="w-full text-left px-3 py-2 text-xs hover:bg-accent flex items-center gap-2"
+                                                        >
+                                                            <Pencil className="w-3 h-3" />
+                                                            Rename
+                                                        </button>
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setMenuOpenId(null);
+                                                                handleDeleteSession(s.id);
+                                                            }}
+                                                            className="w-full text-left px-3 py-2 text-xs hover:bg-red-500/10 text-red-500 flex items-center gap-2"
+                                                        >
+                                                            <Trash2 className="w-3 h-3" />
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         ))}
                     </div>
