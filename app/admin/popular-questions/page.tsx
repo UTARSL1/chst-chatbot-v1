@@ -143,7 +143,7 @@ export default function PopularQuestionsAdmin() {
                     <h1 className="text-3xl font-bold text-white mb-2">Popular Questions</h1>
                     <p className="text-gray-400">Manage common questions displayed to users based on their role.</p>
                 </div>
-                <Button onClick={() => setShowAddModal(true)} className="bg-violet-600 hover:bg-violet-700">
+                <Button onClick={() => setShowAddModal(true)} variant="gradient">
                     + Add Question
                 </Button>
             </div>
