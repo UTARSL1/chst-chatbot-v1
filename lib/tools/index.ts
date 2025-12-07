@@ -145,12 +145,6 @@ export async function searchStaff(
                 }
 
                 try {
-                    // DEBUG: Save HTML to file for inspection
-                    const fs = require('fs');
-                    const debugHtml = html.substring(0, 5000);
-                    fs.writeFileSync('/tmp/utar_search_debug.html', debugHtml, 'utf8');
-                    log(`DEBUG: Wrote HTML sample to /tmp/utar_search_debug.html`);
-
                     const $ = cheerio.load(html);
                     const results: StaffResult[] = [];
                     const seenEmails = new Set<string>();
@@ -158,49 +152,47 @@ export async function searchStaff(
                     const pageTitle = $('title').text().trim();
                     log(`Page Title: "${pageTitle}"`);
 
-                    const allTables = $('table');
-                    log(`Total tables found: ${allTables.length}`);
+                    // UTAR uses DIVs, not TABLEs for staff cards!
+                    let cardIndex = 0;
+                    $('div').each((_, div) => {
+                        const divText = $(div).text().trim();
 
-                    let tableIndex = 0;
-                    $('table').each((_, table) => {
-                        tableIndex++;
-                        const tableText = $(table).text().trim();
-
-                        if (!tableText) {
-                            log(`Table ${tableIndex}: Skipped - empty`);
+                        // Skip divs without email
+                        if (!divText.includes('@utar.edu.my')) {
                             return;
                         }
 
-                        // FLEXIBLE PARSING: Find email first (most reliable)
+                        cardIndex++;
+                        log(`Card ${cardIndex}: Found div with @utar.edu.my`);
+
+                        // Extract email
                         let email = "";
-                        const emailLink = $(table).find('a[href^="mailto:"]');
+                        const emailLink = $(div).find('a[href^="mailto:"]');
                         if (emailLink.length > 0) {
                             email = emailLink.attr('href')?.replace('mailto:', '').trim() || "";
                         }
                         if (!email) {
-                            const emailMatch = tableText.match(/[\w.-]+@utar\.edu\.my/i);
+                            const emailMatch = divText.match(/[\w.-]+@utar\.edu\.my/i);
                             if (emailMatch) email = emailMatch[0];
                         }
 
                         if (!email) {
-                            log(`Table ${tableIndex}: Skipped - no email`);
                             return;
                         }
 
-                        // FLEXIBLE NAME EXTRACTION
+                        // Extract name
                         let name = "";
 
-                        // Method 1: Bold tag (works for some layouts like CCSN)
-                        const firstBold = $(table).find('b').first().text().trim();
+                        // Method 1: Bold tag
+                        const firstBold = $(div).find('b').first().text().trim();
                         if (firstBold && firstBold.length > 3 && !firstBold.includes(':')) {
                             name = firstBold;
                         }
 
-                        // Method 2: Split text by lines and find name pattern
+                        // Method 2: Pattern match
                         if (!name) {
-                            const lines = tableText.split('\n').map(l => l.trim()).filter(l => l);
+                            const lines = divText.split('\n').map(l => l.trim()).filter(l => l);
                             for (const line of lines) {
-                                // Match patterns like "Ir Dr Ng Law Yong" or "Prof Ts Dr Name"
                                 if (/^(Ir\s+)?(Ts\s+)?(Prof\s+|Dr\s+|Ap\s+)*[A-Z][a-z]+(\s+[A-Z][a-z]+)+$/i.test(line) && line.length < 60) {
                                     name = line;
                                     break;
@@ -209,17 +201,16 @@ export async function searchStaff(
                         }
 
                         if (!name) {
-                            log(`Table ${tableIndex}: Skipped - could not extract name (email: ${email})`);
+                            log(`Card ${cardIndex}: Skipped - no name (email: ${email})`);
                             return;
                         }
 
-                        log(`Table ${tableIndex}: Found "${name}" with email ${email}`);
+                        log(`Card ${cardIndex}: "${name}" <${email}>`);
 
                         // Extract positions
-                        const academicPos = $(table).find('i').first().text().trim();
-
+                        const academicPos = $(div).find('i').first().text().trim();
                         let adminPos = "";
-                        $(table).find('*').each((_, el) => {
+                        $(div).find('*').each((_, el) => {
                             const text = $(el).text().trim();
                             if (/^(Head of Department|Chairperson|Director|Dean|President|Deputy)/i.test(text) && text.length < 100) {
                                 adminPos = text;
@@ -235,26 +226,18 @@ export async function searchStaff(
                         if (!position) position = "Staff";
 
                         // Deduplication
-                        if (seenEmails.has(email)) {
-                            log(`Table ${tableIndex}: Skipped "${name}" - duplicate email`);
-                            return;
-                        }
+                        if (seenEmails.has(email)) return;
                         seenEmails.add(email);
+                        if (results.some(r => r.name === name)) return;
 
-                        const isDuplicate = results.some(r => r.name === name);
-                        if (isDuplicate) {
-                            log(`Table ${tableIndex}: Skipped "${name}" - duplicate name`);
-                            return;
-                        }
-
-                        log(`Table ${tableIndex}: ✓ Added "${name}" - ${position}`);
+                        log(`Card ${cardIndex}: ✓ ADDED`);
                         results.push({
                             name,
                             position,
                             email,
                             faculty: facultyAcronym,
                             department: params.department || "Unknown",
-                            extra: tableText.replace(/\s+/g, ' ').trim()
+                            extra: divText.replace(/\s+/g, ' ').trim()
                         });
                     });
 
