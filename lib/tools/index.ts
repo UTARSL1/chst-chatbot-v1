@@ -149,10 +149,18 @@ export async function searchStaff(
                     const results: StaffResult[] = [];
                     const seenEmails = new Set<string>();
 
+                    // DEBUG: Log HTML sample
+                    log(`HTML sample (first 500 chars): ${html.substring(0, 500)}`);
+                    log(`HTML contains 'lyng': ${html.includes('lyng')}`);
+                    log(`HTML contains '@utar.edu.my': ${html.includes('@utar.edu.my')}`);
+
                     // Find all email addresses in the HTML
                     const emailRegex = /([\w.-]+@utar\.edu\.my)/gi;
                     const emailMatches = html.match(emailRegex) || [];
                     log(`Found ${emailMatches.length} email addresses in HTML`);
+                    if (emailMatches.length > 0) {
+                        log(`Emails found: ${emailMatches.join(', ')}`);
+                    }
 
                     // For each unique email, find its container and extract staff info
                     const uniqueEmails = [...new Set(emailMatches.map(e => e.toLowerCase()))];
