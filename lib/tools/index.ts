@@ -107,136 +107,134 @@ export async function searchStaff(
     queryParams.append('searchExpertise', params.expertise || '');
     queryParams.append('searchResult', 'Y');
 
-    log(`POST Request to: ${baseUrl} with body: ${queryParams.toString()}`);
+    const postData = queryParams.toString();
+    log(`POST Request to: ${baseUrl} with body: ${postData}`);
 
-    // Add timeout using AbortController
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    return new Promise((resolve) => {
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': Buffer.byteLength(postData),
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                'Referer': 'https://www2.utar.edu.my/staffListSearchV2.jsp',
+                'Origin': 'https://www2.utar.edu.my',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Connection': 'keep-alive'
+            },
+            // Bypass SSL certificate verification for UTAR's incomplete cert chain
+            rejectUnauthorized: false,
+            timeout: 10000
+        };
 
-    // Custom HTTPS agent to bypass SSL verification for UTAR server
-    // The UTAR server has an incomplete certificate chain
-    const httpsAgent = new https.Agent({
-        rejectUnauthorized: false
-    });
+        const req = https.request(baseUrl, options, (res) => {
+            let html = '';
 
-    try {
-        try {
-            const response = await fetch(baseUrl, {
-                method: 'POST',
-                headers: {
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-                    "Referer": baseUrl,
-                    "Origin": "https://www2.utar.edu.my",
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-                    "Accept-Language": "en-US,en;q=0.9",
-                    "Connection": "keep-alive"
-                },
-                body: queryParams,
-                signal: controller.signal,
-                // @ts-ignore - agent is not in TypeScript types for fetch but works in Node.js
-                agent: httpsAgent,
-                next: { revalidate: 0 }
+            res.on('data', (chunk) => {
+                html += chunk;
             });
 
-            clearTimeout(timeoutId);
-
-            if (!response.ok) {
-                log(`Failed to fetch staff directory: HTTP ${response.status}`);
-                return [];
-            }
-
-            const html = await response.text();
-            const $ = cheerio.load(html);
-            const results: StaffResult[] = [];
-            const seenEmails = new Set<string>();
-
-            const pageTitle = $('title').text().trim();
-            log(`Page Title: ${pageTitle}`);
-
-            $('table').each((_, table) => {
-                const tableText = $(table).text().trim();
-                if (!tableText) return;
-
-                const nameEl = $(table).find('b').first();
-                const name = nameEl.text().trim();
-                if (!name) return;
-
-                let email = "";
-                const emailLink = $(table).find('a[href^="mailto:"]');
-                if (emailLink.length > 0) {
-                    email = emailLink.attr('href')?.replace('mailto:', '').trim() || "";
-                }
-                if (!email) {
-                    const emailMatch = tableText.match(/[\w.-]+@utar\.edu\.my/i);
-                    if (emailMatch) email = emailMatch[0];
-                }
-
-                if (!email && !tableText.includes('@utar.edu.my')) {
+            res.on('end', () => {
+                if (res.statusCode !== 200) {
+                    log(`Failed to fetch staff directory: HTTP ${res.statusCode}`);
+                    resolve([]);
                     return;
                 }
 
-                const academicPos = $(table).find('i').first().text().trim();
+                try {
+                    const $ = cheerio.load(html);
+                    const results: StaffResult[] = [];
+                    const seenEmails = new Set<string>();
 
-                let adminPos = "";
-                $(table).find('b').each((i, el) => {
-                    if (i === 0) return;
-                    const text = $(el).text().trim();
-                    if (/Chairperson|Director|Dean|Head|President|Deputy/i.test(text)) {
-                        adminPos = text;
-                    }
-                });
+                    const pageTitle = $('title').text().trim();
+                    log(`Page Title: ${pageTitle}`);
 
-                let position = adminPos;
-                if (academicPos) {
-                    if (position) position += ` (${academicPos})`;
-                    else position = academicPos;
+                    $('table').each((_, table) => {
+                        const tableText = $(table).text().trim();
+                        if (!tableText) return;
+
+                        const nameEl = $(table).find('b').first();
+                        const name = nameEl.text().trim();
+                        if (!name) return;
+
+                        let email = "";
+                        const emailLink = $(table).find('a[href^="mailto:"]');
+                        if (emailLink.length > 0) {
+                            email = emailLink.attr('href')?.replace('mailto:', '').trim() || "";
+                        }
+                        if (!email) {
+                            const emailMatch = tableText.match(/[\w.-]+@utar\.edu\.my/i);
+                            if (emailMatch) email = emailMatch[0];
+                        }
+
+                        if (!email && !tableText.includes('@utar.edu.my')) {
+                            return;
+                        }
+
+                        const academicPos = $(table).find('i').first().text().trim();
+
+                        let adminPos = "";
+                        $(table).find('b').each((i, el) => {
+                            if (i === 0) return;
+                            const text = $(el).text().trim();
+                            if (/Chairperson|Director|Dean|Head|President|Deputy/i.test(text)) {
+                                adminPos = text;
+                            }
+                        });
+
+                        let position = adminPos;
+                        if (academicPos) {
+                            if (position) position += ` (${academicPos})`;
+                            else position = academicPos;
+                        }
+                        if (!position) position = "Staff";
+
+                        if (email && seenEmails.has(email)) return;
+                        if (email) seenEmails.add(email);
+
+                        const isDuplicate = results.some(r => r.name === name);
+                        if (isDuplicate) return;
+
+                        results.push({
+                            name,
+                            position,
+                            email,
+                            faculty: facultyAcronym,
+                            department: params.department || "Unknown",
+                            extra: tableText.replace(/\s+/g, ' ').trim()
+                        });
+                    });
+
+                    log(`Found ${results.length} staff members.`);
+                    resolve(results);
+                } catch (parseError: any) {
+                    log(`Error parsing HTML: ${parseError.message}`);
+                    resolve([]);
                 }
-                if (!position) position = "Staff";
-
-                if (email && seenEmails.has(email)) return;
-                if (email) seenEmails.add(email);
-
-                const isDuplicate = results.some(r => r.name === name);
-                if (isDuplicate) return;
-
-                results.push({
-                    name,
-                    position,
-                    email,
-                    faculty: facultyAcronym,
-                    department: params.department || "Unknown",
-                    extra: tableText.replace(/\s+/g, ' ').trim()
-                });
             });
+        });
 
-            log(`Found ${results.length} staff members.`);
-            return results;
-
-        } catch (fetchError: any) {
-            clearTimeout(timeoutId);
-
-            // Detailed error logging
+        req.on('error', (error: any) => {
             const errorDetails: any = {
-                message: fetchError.message,
-                name: fetchError.name,
+                message: error.message,
+                name: error.name,
             };
 
-            if (fetchError.code) errorDetails.code = fetchError.code;
-            if (fetchError.cause) errorDetails.cause = String(fetchError.cause);
+            if (error.code) errorDetails.code = error.code;
+            if (error.cause) errorDetails.cause = String(error.cause);
 
-            if (fetchError.name === 'AbortError') {
-                log(`Request timeout: exceeded 10 seconds`);
-            }
+            log(`Request error: ${JSON.stringify(errorDetails)}`);
+            resolve([]);
+        });
 
-            log(`Fetch error details: ${JSON.stringify(errorDetails)}`);
+        req.on('timeout', () => {
+            log('Request timeout: exceeded 10 seconds');
+            req.destroy();
+            resolve([]);
+        });
 
-            // Re-throw to be caught by outer catch
-            throw fetchError;
-        }
-
-    } catch (error: any) {
-        log(`Error searching staff: ${error.message || 'Unknown error'}`);
-        return [];
-    }
+        req.write(postData);
+        req.end();
+    });
 }
