@@ -77,11 +77,11 @@ export async function searchStaff(params: { faculty?: string; department?: strin
     const baseUrl = "https://www2.utar.edu.my/staffListSearchV2.jsp";
 
     // Resolve Faculty Name -> Acronym (The form expects Acronyms for 'searchDept')
+    // We check against Canonical Name OR Acronym to ensure robust matching
     let facultyAcronym = params.faculty || 'All';
     if (facultyAcronym !== 'All') {
         const queryLower = facultyAcronym.toLowerCase().trim();
         // Try to find the unit in our DB
-        // Check canonical, acronym, or aliases
         const unit = unitsData.find(u =>
             u.canonical.toLowerCase() === queryLower ||
             (u.acronym && u.acronym.toLowerCase() === queryLower)
@@ -89,19 +89,24 @@ export async function searchStaff(params: { faculty?: string; department?: strin
         if (unit && unit.acronym) {
             facultyAcronym = unit.acronym;
             console.log(`[Tools] Mapped faculty '${params.faculty}' to acronym '${facultyAcronym}'`);
+        } else {
+            console.log(`[Tools] Could not resolve '${params.faculty}' to a known acronym. Using original value.`);
         }
     }
 
     // Construct Query Params
     const queryParams = new URLSearchParams();
     // Correct Mapping based on HTML form:
-    // searchDept = Faculty/Centre (Main dropdown)
+    // searchDept = Faculty/Centre (Main dropdown) - Must be Acronym
     queryParams.append('searchDept', facultyAcronym);
     // searchDiv = Department (Sub dropdown)
     queryParams.append('searchDiv', params.department && params.department !== 'All' ? params.department : 'All');
 
     queryParams.append('searchName', params.name || '');
     queryParams.append('searchExpertise', params.expertise || '');
+
+    // CRITICAL FIX: explicit toggle to show results
+    queryParams.append('searchResult', 'Y');
 
     const url = `${baseUrl}?${queryParams.toString()}`;
     console.log(`[Tools] Fetching: ${url}`);
