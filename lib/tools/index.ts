@@ -17,6 +17,12 @@ interface StaffResult {
     email: string;
     faculty: string;
     department: string;
+    designation?: string;
+    administrativePost?: string;
+    googleScholarUrl?: string;
+    scopusUrl?: string;
+    orcidUrl?: string;
+    homepageUrl?: string;
     extra?: string;
 }
 
@@ -72,6 +78,27 @@ export function resolveUnit(query: string, logger?: (msg: string) => void) {
     };
 }
 
+// Helper function to make HTTPS GET request
+function httpsGet(url: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const req = https.request(url, {
+            method: 'GET',
+            rejectUnauthorized: false,
+            timeout: 10000
+        }, (res) => {
+            let html = '';
+            res.on('data', (chunk) => { html += chunk; });
+            res.on('end', () => resolve(html));
+        });
+        req.on('error', reject);
+        req.on('timeout', () => {
+            req.destroy();
+            reject(new Error('Request timeout'));
+        });
+        req.end();
+    });
+}
+
 export async function searchStaff(
     params: { faculty?: string; department?: string; name?: string; expertise?: string },
     logger?: (msg: string) => void
@@ -83,7 +110,8 @@ export async function searchStaff(
 
     log(`Searching staff with params: ${JSON.stringify(params)}`);
 
-    const baseUrl = "https://www2.utar.edu.my/staffListSearchV2.jsp";
+    const baseUrl = "https://www2.utar.edu.my";
+    const searchUrl = `${baseUrl}/staffListSearchV2.jsp`;
 
     let facultyAcronym = params.faculty || 'All';
     if (facultyAcronym !== 'All') {
@@ -95,204 +123,145 @@ export async function searchStaff(
         if (unit && unit.acronym) {
             facultyAcronym = unit.acronym;
             log(`Mapped faculty '${params.faculty}' to acronym '${facultyAcronym}'`);
-        } else {
-            log(`Could not resolve '${params.faculty}' to a known acronym. Using original value.`);
         }
     }
 
-    // Build URL with query parameters (GET request, not POST!)
+    // Step 1: Search for staff
     const queryParams = new URLSearchParams();
-    queryParams.append('searchDept', facultyAcronym === 'All' ? 'ALL' : facultyAcronym); // Use ALL (uppercase)
+    queryParams.append('searchDept', facultyAcronym === 'All' ? 'ALL' : facultyAcronym);
     queryParams.append('searchDiv', params.department && params.department !== 'All' ? params.department : 'All');
     queryParams.append('searchName', params.name || '');
     queryParams.append('searchExpertise', params.expertise || '');
-    queryParams.append('submit', 'Search'); // Required parameter
+    queryParams.append('submit', 'Search');
     queryParams.append('searchResult', 'Y');
 
-    const url = `${baseUrl}?${queryParams.toString()}`;
+    const url = `${searchUrl}?${queryParams.toString()}`;
     log(`GET Request to: ${url}`);
 
-    return new Promise((resolve) => {
-        const options = {
-            method: 'GET', // Changed from POST
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36',
-                'Referer': 'https://www2.utar.edu.my/staffListSearchV2.jsp',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-                'Accept-Language': 'en-US,en;q=0.9',
-                'Connection': 'keep-alive'
-            },
-            rejectUnauthorized: false,
-            timeout: 10000
-        };
+    try {
+        const html = await httpsGet(url);
+        log(`Response HTML length: ${html.length} characters`);
 
-        const req = https.request(url, options, (res) => {
-            let html = '';
+        const $ = cheerio.load(html);
+        const results: StaffResult[] = [];
+        const seenIds = new Set<string>();
 
-            res.on('data', (chunk) => {
-                html += chunk;
-            });
+        // Find all staff card tables (they have onclick with staffListDetailV2.jsp)
+        const staffTables = $('table[onclick*="staffListDetailV2.jsp"]');
+        log(`Found ${staffTables.length} staff cards`);
 
-            res.on('end', () => {
-                log(`Response status: ${res.statusCode}`);
-                log(`HTML length: ${html.length} characters`);
+        // Step 2: For each staff card, extract detail page URL and fetch it
+        for (let i = 0; i < staffTables.length; i++) {
+            const table = staffTables[i];
+            const onclick = $(table).attr('onclick') || '';
 
-                if (res.statusCode !== 200) {
-                    log(`Failed to fetch staff directory: HTTP ${res.statusCode}`);
-                    resolve([]);
-                    return;
-                }
+            // Extract detail page URL from onclick="javascript:location='staffListDetailV2.jsp?searchId=16131';"
+            const match = onclick.match(/staffListDetailV2\.jsp\?searchId=(\d+)/);
+            if (!match) {
+                log(`Card ${i + 1}: No searchId found in onclick`);
+                continue;
+            }
 
-                try {
-                    const $ = cheerio.load(html);
-                    const results: StaffResult[] = [];
-                    const seenEmails = new Set<string>();
+            const searchId = match[1];
+            if (seenIds.has(searchId)) continue;
+            seenIds.add(searchId);
 
-                    // DEBUG: Log HTML sample
-                    log(`HTML sample (first 500 chars): ${html.substring(0, 500)}`);
-                    log(`HTML contains 'lyng': ${html.includes('lyng')}`);
-                    log(`HTML contains '@utar.edu.my': ${html.includes('@utar.edu.my')}`);
+            const detailUrl = `${baseUrl}/staffListDetailV2.jsp?searchId=${searchId}`;
+            log(`Card ${i + 1}: Fetching detail page: ${detailUrl}`);
 
-                    // Find all email addresses in the HTML
-                    const emailRegex = /([\w.-]+@utar\.edu\.my)/gi;
-                    const emailMatches = html.match(emailRegex) || [];
-                    log(`Found ${emailMatches.length} email addresses in HTML`);
-                    if (emailMatches.length > 0) {
-                        log(`Emails found: ${emailMatches.join(', ')}`);
+            try {
+                const detailHtml = await httpsGet(detailUrl);
+                const $detail = cheerio.load(detailHtml);
+
+                // Parse the clean, structured detail page
+                let name = "";
+                let email = "";
+                let faculty = "";
+                let department = "";
+                let designation = "";
+                let administrativePost = "";
+                let googleScholarUrl = "";
+                let scopusUrl = "";
+                let orcidUrl = "";
+                let homepageUrl = "";
+
+                // Extract data from the detail page's structured format
+                $detail('tr').each((_, row) => {
+                    const label = $detail(row).find('td').first().text().trim();
+                    const value = $detail(row).find('td').last();
+                    const valueText = value.text().trim();
+
+                    if (label.includes('Name')) name = valueText.replace(/^:\s*/, '');
+                    if (label.includes('Email')) email = valueText.replace(/^:\s*/, '');
+                    if (label.includes('Faculty') || label.includes('Division')) {
+                        faculty = valueText.replace(/^:\s*/, '');
                     }
+                    if (label.includes('Department') || label.includes('Unit')) {
+                        department = valueText.replace(/^:\s*/, '');
+                    }
+                    if (label.includes('Designation')) designation = valueText.replace(/^:\s*/, '');
+                    if (label.includes('Administrative Post')) {
+                        administrativePost = valueText.replace(/^:\s*/, '');
+                    }
+                    if (label.includes('Google Scholar')) {
+                        const link = value.find('a').attr('href');
+                        if (link) googleScholarUrl = link;
+                    }
+                    if (label.includes('Scopus')) {
+                        const link = value.find('a').attr('href');
+                        if (link) scopusUrl = link;
+                    }
+                    if (label.includes('Orcid')) {
+                        const link = value.find('a').attr('href');
+                        if (link) orcidUrl = link;
+                    }
+                    if (label.includes('Homepage URL')) {
+                        const link = value.find('a').attr('href');
+                        if (link) homepageUrl = link;
+                    }
+                });
 
-                    // For each unique email, find its container and extract staff info
-                    const uniqueEmails = [...new Set(emailMatches.map(e => e.toLowerCase()))];
-
-                    let cardIndex = 0;
-                    uniqueEmails.forEach(email => {
-                        cardIndex++;
-
-                        // Find element containing this email
-                        let container = $('*').filter((_, el) => {
-                            const text = $(el).text();
-                            return text.includes(email);
-                        }).first();
-
-                        // Try to get a more specific container (table with onclick)
-                        const staffTable = container.closest('table[onclick*="staffListDetail"]');
-                        if (staffTable.length > 0) {
-                            container = staffTable;
-                        }
-
-                        const containerText = container.text().trim();
-
-                        if (!containerText) {
-                            log(`Card ${cardIndex}: Empty container for ${email}`);
-                            return;
-                        }
-
-                        // Extract name
-                        let name = "";
-                        const firstBold = container.find('b').first().text().trim();
-                        if (firstBold && firstBold.length > 3 && !firstBold.includes(':')) {
-                            name = firstBold;
-                        }
-
-                        if (!name) {
-                            const lines = containerText.split('\n').map(l => l.trim()).filter(l => l);
-                            for (const line of lines) {
-                                if (/^(Ir\s+)?(Ts\s+)?(Prof\s+|Dr\s+|Ap\s+)*[A-Z][a-z]+(\s+[A-Z][a-z]+)+$/i.test(line) && line.length < 60) {
-                                    name = line;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (!name) {
-                            log(`Card ${cardIndex}: No name (email: ${email})`);
-                            return;
-                        }
-
-                        log(`Card ${cardIndex}: "${name}" <${email}>`);
-
-                        // Extract positions
-                        const academicPos = container.find('i').first().text().trim();
-                        let adminPos = "";
-                        container.find('*').each((_, el) => {
-                            const text = $(el).text().trim();
-                            if (/^(Head of Department|Chairperson|Director|Dean|President|Deputy)/i.test(text) && text.length < 100) {
-                                adminPos = text;
-                                return false;
-                            }
-                        });
-
-                        log(`Card ${cardIndex}: Academic position (italic): "${academicPos}"`);
-                        log(`Card ${cardIndex}: Admin position (regex match): "${adminPos}"`);
-
-                        let position = adminPos;
-                        if (academicPos) {
-                            if (position) position += ` (${academicPos})`;
-                            else position = academicPos;
-                        }
-                        if (!position) position = "Staff";
-
-                        // Extract faculty and department from container text
-                        let extractedFaculty = facultyAcronym;
-                        let extractedDept = params.department || "Unknown";
-
-                        const lines = containerText.split('\n').map(l => l.trim()).filter(l => l);
-                        for (const line of lines) {
-                            if (line.includes('Faculty') && line.length < 100) {
-                                extractedFaculty = line;
-                            }
-                            if (line.startsWith('Department of') && line.length < 100) {
-                                extractedDept = line;
-                            }
-                        }
-
-                        log(`Card ${cardIndex}: Extracted faculty: "${extractedFaculty}"`);
-                        log(`Card ${cardIndex}: Extracted dept: "${extractedDept}"`);
-
-                        // Deduplication
-                        if (seenEmails.has(email)) return;
-                        seenEmails.add(email);
-                        if (results.some(r => r.name === name)) return;
-
-                        log(`Card ${cardIndex}: ✓ ADDED`);
-                        results.push({
-                            name,
-                            position,
-                            email,
-                            faculty: extractedFaculty,
-                            department: extractedDept,
-                            extra: containerText.replace(/\s+/g, ' ').substring(0, 500)
-                        });
-                    });
-
-                    log(`Found ${results.length} staff members.`);
-                    resolve(results);
-                } catch (parseError: any) {
-                    log(`Error parsing HTML: ${parseError.message}`);
-                    resolve([]);
+                if (!name || !email) {
+                    log(`Card ${i + 1}: Missing name or email`);
+                    continue;
                 }
-            });
-        });
 
-        req.on('error', (error: any) => {
-            const errorDetails: any = {
-                message: error.message,
-                name: error.name,
-            };
+                // Build position string
+                let position = "";
+                if (administrativePost) position = administrativePost;
+                if (designation) {
+                    if (position) position += ` (${designation})`;
+                    else position = designation;
+                }
+                if (!position) position = "Staff";
 
-            if (error.code) errorDetails.code = error.code;
-            if (error.cause) errorDetails.cause = String(error.cause);
+                log(`Card ${i + 1}: ✓ ${name} <${email}> - ${position}`);
 
-            log(`Request error: ${JSON.stringify(errorDetails)}`);
-            resolve([]);
-        });
+                results.push({
+                    name,
+                    position,
+                    email,
+                    faculty,
+                    department,
+                    designation,
+                    administrativePost,
+                    googleScholarUrl,
+                    scopusUrl,
+                    orcidUrl,
+                    homepageUrl,
+                    extra: `${faculty} | ${department}`
+                });
 
-        req.on('timeout', () => {
-            log('Request timeout: exceeded 10 seconds');
-            req.destroy();
-            resolve([]);
-        });
+            } catch (detailError: any) {
+                log(`Card ${i + 1}: Error fetching detail page: ${detailError.message}`);
+            }
+        }
 
-        req.end(); // No need to write POST data for GET request
-    });
+        log(`Found ${results.length} staff members.`);
+        return results;
+
+    } catch (error: any) {
+        log(`Error: ${error.message}`);
+        return [];
+    }
 }
