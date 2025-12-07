@@ -944,8 +944,8 @@ export default function ChatPage() {
                                         </div>
                                     )}
 
-                                    {/* Debug Logs Section */}
-                                    {message.logs && message.logs.length > 0 && (
+                                    {/* Debug Logs Section - Only for Chairperson */}
+                                    {session?.user?.role === 'chairperson' && message.logs && message.logs.length > 0 && (
                                         <details className="mt-3 group">
                                             <summary className="cursor-pointer text-xs font-mono text-slate-500 hover:text-slate-300 flex items-center gap-1 select-none">
                                                 <svg className="w-3 h-3 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
