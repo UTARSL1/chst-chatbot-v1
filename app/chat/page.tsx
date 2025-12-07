@@ -29,7 +29,6 @@ interface Message {
     content: string;
     sources?: any[];
     suggestions?: any[];
-    suggestions?: any[];
     logs?: string[];
     createdAt: Date;
 }
@@ -297,7 +296,6 @@ export default function ChatPage() {
                     role: 'assistant',
                     content: data.answer,
                     sources: data.sources,
-                    suggestions: data.suggestions,
                     suggestions: data.suggestions,
                     logs: data.logs,
                     createdAt: new Date(),
