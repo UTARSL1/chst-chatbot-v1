@@ -123,7 +123,6 @@ export async function searchStaff(
                 'Accept-Language': 'en-US,en;q=0.9',
                 'Connection': 'keep-alive'
             },
-            // Bypass SSL certificate verification for UTAR's incomplete cert chain
             rejectUnauthorized: false,
             timeout: 10000
         };
@@ -136,6 +135,10 @@ export async function searchStaff(
             });
 
             res.on('end', () => {
+                log(`Response status: ${res.statusCode}`);
+                log(`HTML length: ${html.length} characters`);
+                log(`HTML preview: ${html.substring(0, 200).replace(/\s+/g, ' ')}`);
+
                 if (res.statusCode !== 200) {
                     log(`Failed to fetch staff directory: HTTP ${res.statusCode}`);
                     resolve([]);
@@ -148,27 +151,46 @@ export async function searchStaff(
                     const seenEmails = new Set<string>();
 
                     const pageTitle = $('title').text().trim();
-                    log(`Page Title: ${pageTitle}`);
+                    log(`Page Title: "${pageTitle}"`);
 
+                    const allTables = $('table');
+                    log(`Total tables found: ${allTables.length}`);
+
+                    let tableIndex = 0;
                     $('table').each((_, table) => {
+                        tableIndex++;
                         const tableText = $(table).text().trim();
-                        if (!tableText) return;
+
+                        if (!tableText) {
+                            log(`Table ${tableIndex}: Skipped - empty`);
+                            return;
+                        }
 
                         const nameEl = $(table).find('b').first();
                         const name = nameEl.text().trim();
-                        if (!name) return;
+                        if (!name) {
+                            log(`Table ${tableIndex}: Skipped - no name in <b> tag`);
+                            return;
+                        }
+
+                        log(`Table ${tableIndex}: Found name "${name}"`);
 
                         let email = "";
                         const emailLink = $(table).find('a[href^="mailto:"]');
                         if (emailLink.length > 0) {
                             email = emailLink.attr('href')?.replace('mailto:', '').trim() || "";
+                            log(`Table ${tableIndex}: Email from mailto link: ${email}`);
                         }
                         if (!email) {
                             const emailMatch = tableText.match(/[\w.-]+@utar\.edu\.my/i);
-                            if (emailMatch) email = emailMatch[0];
+                            if (emailMatch) {
+                                email = emailMatch[0];
+                                log(`Table ${tableIndex}: Email from regex: ${email}`);
+                            }
                         }
 
                         if (!email && !tableText.includes('@utar.edu.my')) {
+                            log(`Table ${tableIndex}: Skipped "${name}" - no email found and no @utar.edu.my in text`);
                             return;
                         }
 
@@ -190,12 +212,19 @@ export async function searchStaff(
                         }
                         if (!position) position = "Staff";
 
-                        if (email && seenEmails.has(email)) return;
+                        if (email && seenEmails.has(email)) {
+                            log(`Table ${tableIndex}: Skipped "${name}" - duplicate email ${email}`);
+                            return;
+                        }
                         if (email) seenEmails.add(email);
 
                         const isDuplicate = results.some(r => r.name === name);
-                        if (isDuplicate) return;
+                        if (isDuplicate) {
+                            log(`Table ${tableIndex}: Skipped "${name}" - duplicate name`);
+                            return;
+                        }
 
+                        log(`Table ${tableIndex}: ✓ Added "${name}" - ${position} - ${email}`);
                         results.push({
                             name,
                             position,
