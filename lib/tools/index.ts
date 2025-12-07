@@ -145,6 +145,12 @@ export async function searchStaff(
                 }
 
                 try {
+                    // DEBUG: Save HTML to file for inspection
+                    const fs = require('fs');
+                    const debugHtml = html.substring(0, 5000);
+                    fs.writeFileSync('/tmp/utar_search_debug.html', debugHtml, 'utf8');
+                    log(`DEBUG: Wrote HTML sample to /tmp/utar_search_debug.html`);
+
                     const $ = cheerio.load(html);
                     const results: StaffResult[] = [];
                     const seenEmails = new Set<string>();
