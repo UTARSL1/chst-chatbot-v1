@@ -78,19 +78,20 @@ AFTER RESULT:
 
 /**
  * Execute a tool call locally (Ported for Vercel/Cloud Support)
+ * Now accepts a logger to push internal logs to the debug trace.
  */
-async function executeToolCall(name: string, args: any): Promise<any> {
-    console.log(`[RAG] Executing Internal Tool: ${name}`, args);
+async function executeToolCall(name: string, args: any, logger?: (msg: string) => void): Promise<any> {
     try {
         if (name === 'utar_resolve_unit') {
-            return resolveUnit(args.query);
+            return resolveUnit(args.query, logger);
         }
         if (name === 'utar_staff_search') {
-            return await searchStaff(args);
+            return await searchStaff(args, logger);
         }
         return { error: `Unknown tool: ${name}` };
     } catch (error: any) {
         console.error(`[RAG] Tool execution error (${name}):`, error);
+        if (logger) logger(`Error executing ${name}: ${error.message}`);
         return { error: error.message || 'Internal tool error' };
     }
 }
@@ -269,7 +270,7 @@ ${chatHistoryStr}
 
                     log(`Executing Tool: ${toolName} with args: ${JSON.stringify(toolArgs)}`);
 
-                    const result = await executeToolCall(toolName, toolArgs);
+                    const result = await executeToolCall(toolName, toolArgs, log); // Pass logger
 
                     log(`Tool Result (${toolName}): ${JSON.stringify(result).substring(0, 100)}...`);
 
@@ -288,7 +289,6 @@ ${chatHistoryStr}
         }
 
         // 9. Suggestions
-        // Corrected format: Pass object params
         const referencedDocIds = relevantChunks.map(c => c.metadata.documentId).filter(Boolean);
         const relatedDocs = await getRelatedDocuments({
             referencedDocIds,
@@ -297,7 +297,6 @@ ${chatHistoryStr}
         });
 
         // 10. Enrich sources
-        // Corrected format: Map to DocumentSource interface
         const sourcesToEnrich: DocumentSource[] = relevantChunks.map(chunk => ({
             filename: chunk.metadata.filename,
             accessLevel: chunk.metadata.accessLevel,
@@ -325,14 +324,11 @@ ${chatHistoryStr}
 
 /**
  * Generate a streaming response for RAG query
- * For now, we wrap the non-streaming tool-enabled function.
  */
 export async function* processRAGQueryStream(query: RAGQuery): AsyncGenerator<string> {
     try {
         const response = await processRAGQuery(query);
         yield response.answer;
-        // Optionally yield debug logs if frontend supports stream metadata?
-        // Current simplified stream only yields text.
     } catch (error) {
         console.error('Error in stream wrapper:', error);
         yield 'Sorry, an error occurred.';
@@ -402,7 +398,7 @@ async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<Doc
         const docMap = new Map();
         documents.forEach(doc => {
             docMap.set(doc.filename, doc);
-            docMap.set(doc.originalName, doc); // Mapping for both cases
+            docMap.set(doc.originalName, doc);
         });
 
         const enriched = sources.map(source => {

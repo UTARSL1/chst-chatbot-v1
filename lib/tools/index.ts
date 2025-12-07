@@ -2,6 +2,7 @@ import Fuse from 'fuse.js';
 import * as cheerio from 'cheerio';
 import unitsData from './units.json';
 
+// --- Types ---
 interface UnitMapping {
     acronym: string | null;
     canonical: string;
@@ -18,20 +19,27 @@ interface StaffResult {
     extra?: string;
 }
 
+// --- Tool 1: Resolve Unit ---
 const fuseOptions = {
     includeScore: true,
     keys: ['canonical', 'acronym', 'aliases'],
-    threshold: 0.4,
+    threshold: 0.4, // Lower is stricter (0.0 is exact match)
 };
 
 const fuse = new Fuse(unitsData, fuseOptions);
 
-export function resolveUnit(query: string) {
-    console.log(`[Tools] Resolving unit: ${query}`);
+export function resolveUnit(query: string, logger?: (msg: string) => void) {
+    const log = (msg: string) => {
+        console.log(`[Tools] ${msg}`);
+        if (logger) logger(`[Tools] ${msg}`);
+    };
+
+    log(`Resolving unit: ${query}`);
     if (!query) return { canonical: "", acronym: null, type: null, error: "Empty query" };
 
     const queryLower = query.toLowerCase().trim();
 
+    // 1. Exact canonical/acronym match
     const exact = unitsData.find(u =>
         u.canonical.toLowerCase() === queryLower ||
         (u.acronym && u.acronym.toLowerCase() === queryLower) ||
@@ -46,6 +54,7 @@ export function resolveUnit(query: string) {
         };
     }
 
+    // 2. Fuzzy match
     const searchResults = fuse.search(query);
     if (searchResults.length > 0) {
         const best = searchResults[0].item;
@@ -56,6 +65,7 @@ export function resolveUnit(query: string) {
         };
     }
 
+    // Fallback
     return {
         canonical: query,
         acronym: null,
@@ -64,34 +74,53 @@ export function resolveUnit(query: string) {
     };
 }
 
-export async function searchStaff(params: { faculty?: string; department?: string; name?: string; expertise?: string }): Promise<StaffResult[]> {
-    console.log(`[Tools] Searching staff with params:`, params);
+// --- Tool 2: Staff Search ---
+export async function searchStaff(
+    params: { faculty?: string; department?: string; name?: string; expertise?: string },
+    logger?: (msg: string) => void
+): Promise<StaffResult[]> {
+    const log = (msg: string) => {
+        console.log(`[Tools] ${msg}`);
+        if (logger) logger(`[Tools] ${msg}`);
+    };
 
+    log(`Searching staff with params: ${JSON.stringify(params)}`);
+
+    // Default URL
     const baseUrl = "https://www2.utar.edu.my/staffListSearchV2.jsp";
 
+    // Resolve Faculty Name -> Acronym (The form expects Acronyms for 'searchDept')
     let facultyAcronym = params.faculty || 'All';
     if (facultyAcronym !== 'All') {
         const queryLower = facultyAcronym.toLowerCase().trim();
+        // Try to find the unit in our DB
         const unit = unitsData.find(u =>
             u.canonical.toLowerCase() === queryLower ||
             (u.acronym && u.acronym.toLowerCase() === queryLower)
         );
         if (unit && unit.acronym) {
             facultyAcronym = unit.acronym;
-            console.log(`[Tools] Mapped faculty '${params.faculty}' to acronym '${facultyAcronym}'`);
+            log(`Mapped faculty '${params.faculty}' to acronym '${facultyAcronym}'`);
         } else {
-            console.log(`[Tools] Could not resolve '${params.faculty}' to a known acronym. Using original value.`);
+            log(`Could not resolve '${params.faculty}' to a known acronym. Using original value.`);
         }
     }
 
+    // Construct Query Params
     const queryParams = new URLSearchParams();
+    // Correct Mapping based on HTML form:
+    // searchDept = Faculty/Centre (Main dropdown)
     queryParams.append('searchDept', facultyAcronym);
+    // searchDiv = Department (Sub dropdown)
     queryParams.append('searchDiv', params.department && params.department !== 'All' ? params.department : 'All');
+
     queryParams.append('searchName', params.name || '');
     queryParams.append('searchExpertise', params.expertise || '');
+
+    // Crucial: This parameter tells the server to actually perform the search
     queryParams.append('searchResult', 'Y');
 
-    console.log(`[Tools] POST Request to: ${baseUrl} with body: ${queryParams.toString()}`);
+    log(`POST Request to: ${baseUrl} with body: ${queryParams.toString()}`);
 
     try {
         const response = await fetch(baseUrl, {
@@ -106,11 +135,11 @@ export async function searchStaff(params: { faculty?: string; department?: strin
                 "Connection": "keep-alive"
             },
             body: queryParams,
-            next: { revalidate: 0 }
+            next: { revalidate: 0 } // Don't cache for server actions usually
         });
 
         if (!response.ok) {
-            console.error(`[Tools] Failed to fetch staff directory: ${response.status}`);
+            log(`Failed to fetch staff directory: ${response.status}`);
             return [];
         }
 
@@ -119,41 +148,56 @@ export async function searchStaff(params: { faculty?: string; department?: strin
         const results: StaffResult[] = [];
         const seenEmails = new Set<string>();
 
+        // Debug: Check title to catch Access Denied
         const pageTitle = $('title').text().trim();
-        console.log(`[Tools] Page Title: ${pageTitle}`);
+        log(`Page Title: ${pageTitle}`);
 
+        // Parsing logic updated based on investigation
+        // We iterate ALL tables and use deduplication to handle nesting.
         $('table').each((_, table) => {
             const tableText = $(table).text().trim();
+            // Basic heuristic to identify a staff card row
             if (!tableText) return;
 
+            // Name: Usually the first bold text
             const nameEl = $(table).find('b').first();
             const name = nameEl.text().trim();
-            if (!name) return;
+            if (!name) return; // Must have name
 
+            // Email: Try mailto link first, then regex search in text
             let email = "";
             const emailLink = $(table).find('a[href^="mailto:"]');
             if (emailLink.length > 0) {
                 email = emailLink.attr('href')?.replace('mailto:', '').trim() || "";
             }
             if (!email) {
+                // Regex for email in text (e.g. limeh@utar.edu.my inside a span)
                 const emailMatch = tableText.match(/[\w.-]+@utar\.edu\.my/i);
                 if (emailMatch) email = emailMatch[0];
             }
 
+            // Relaxed filter: If we have Name AND (Email OR @utar in text), keep it.
+            // Removed strict 'Position' check which causes issues for cards without explicit titles labels.
             if (!email && !tableText.includes('@utar.edu.my')) {
                 return;
             }
 
+            // Position: 
+            // 1. Look for <i> tag (Academic position)
+            // 2. Look for administrative titles in <b> tags (excluding the name)
             const academicPos = $(table).find('i').first().text().trim();
+
             let adminPos = "";
             $(table).find('b').each((i, el) => {
-                if (i === 0) return;
+                if (i === 0) return; // Skip name at index 0
                 const text = $(el).text().trim();
+                // Check for common admin titles
                 if (/Chairperson|Director|Dean|Head|President|Deputy/i.test(text)) {
                     adminPos = text;
                 }
             });
 
+            // Combine positions: Admin > Academic
             let position = adminPos;
             if (academicPos) {
                 if (position) position += ` (${academicPos})`;
@@ -161,6 +205,7 @@ export async function searchStaff(params: { faculty?: string; department?: strin
             }
             if (!position) position = "Staff";
 
+            // Deduplication
             if (email && seenEmails.has(email)) return;
             if (email) seenEmails.add(email);
 
@@ -177,11 +222,11 @@ export async function searchStaff(params: { faculty?: string; department?: strin
             });
         });
 
-        console.log(`[Tools] Found ${results.length} staff members.`);
+        log(`Found ${results.length} staff members.`);
         return results;
 
-    } catch (error) {
-        console.error(`[Tools] Error searching staff:`, error);
+    } catch (error: any) {
+        log(`Error searching staff: ${error.message}`);
         return [];
     }
 }
