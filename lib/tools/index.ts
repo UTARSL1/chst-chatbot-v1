@@ -77,7 +77,6 @@ export async function searchStaff(params: { faculty?: string; department?: strin
     const baseUrl = "https://www2.utar.edu.my/staffListSearchV2.jsp";
 
     // Resolve Faculty Name -> Acronym (The form expects Acronyms for 'searchDept')
-    // We check against Canonical Name OR Acronym to ensure robust matching
     let facultyAcronym = params.faculty || 'All';
     if (facultyAcronym !== 'All') {
         const queryLower = facultyAcronym.toLowerCase().trim();
@@ -97,7 +96,7 @@ export async function searchStaff(params: { faculty?: string; department?: strin
     // Construct Query Params
     const queryParams = new URLSearchParams();
     // Correct Mapping based on HTML form:
-    // searchDept = Faculty/Centre (Main dropdown) - Must be Acronym
+    // searchDept = Faculty/Centre (Main dropdown)
     queryParams.append('searchDept', facultyAcronym);
     // searchDiv = Department (Sub dropdown)
     queryParams.append('searchDiv', params.department && params.department !== 'All' ? params.department : 'All');
@@ -105,7 +104,7 @@ export async function searchStaff(params: { faculty?: string; department?: strin
     queryParams.append('searchName', params.name || '');
     queryParams.append('searchExpertise', params.expertise || '');
 
-    // CRITICAL FIX: explicit toggle to show results
+    // Crucial: This parameter tells the server to actually perform the search
     queryParams.append('searchResult', 'Y');
 
     const url = `${baseUrl}?${queryParams.toString()}`;
@@ -127,29 +126,70 @@ export async function searchStaff(params: { faculty?: string; department?: strin
         const html = await response.text();
         const $ = cheerio.load(html);
         const results: StaffResult[] = [];
+        const seenEmails = new Set<string>();
 
-        // Parsing logic ported from Python/Analysis
-        // Strategy: Iterate over tables that contain staff info
-        // Heuristic: Look for tables with specific style or content patterns
-        $('table').each((_, table) => {
-            const tableText = $(table).text();
-            if (!tableText.includes('@utar.edu.my') && !$(table).html()?.includes('mailto:')) {
-                return;
-            }
+        // Parsing logic updated based on investigation
+        // We select 'leaf' tables to avoid duplication (nested tables)
+        $('table:not(:has(table))').each((_, table) => {
+            const tableText = $(table).text().trim();
+            // Basic heuristic to identify a staff card row
+            if (!tableText) return;
 
+            // Name: Usually the first bold text
             const nameEl = $(table).find('b').first();
             const name = nameEl.text().trim();
-            if (!name) return;
+            if (!name) return; // Must have name
 
-            const positionEl = $(table).find('i').first();
-            const position = positionEl.text().trim();
-
-            const emailEl = $(table).find('a[href^="mailto:"]').first();
-            let email = emailEl.text().trim();
-            if (!email) {
-                const href = emailEl.attr('href') || '';
-                email = href.replace('mailto:', '');
+            // Email: Try mailto link first, then regex search in text
+            let email = "";
+            const emailLink = $(table).find('a[href^="mailto:"]');
+            if (emailLink.length > 0) {
+                email = emailLink.attr('href')?.replace('mailto:', '').trim() || "";
             }
+            if (!email) {
+                // Regex for email in text (e.g. limeh@utar.edu.my inside a span)
+                const emailMatch = tableText.match(/[\w.-]+@utar\.edu\.my/i);
+                if (emailMatch) email = emailMatch[0];
+            }
+
+            // Skip non-staff tables (headers/footers) if no email is found
+            // But sometimes email is missing? If name and position exist, we keep it.
+            // Let's filter some obvious noise:
+            if (!email && !tableText.includes('Position')) {
+                // Determine if it's likely a staff card by "Department" or phone number pattern?
+                // Looking for @utar.edu.my is the safest signal for valid staff card.
+                if (!tableText.includes('@utar.edu.my')) return;
+            }
+
+            // Position: 
+            // 1. Look for <i> tag (Academic position)
+            // 2. Look for administrative titles in <b> tags (excluding the name)
+            const academicPos = $(table).find('i').first().text().trim();
+
+            let adminPos = "";
+            $(table).find('b').each((i, el) => {
+                if (i === 0) return; // Skip name at index 0
+                const text = $(el).text().trim();
+                // Check for common admin titles
+                if (/Chairperson|Director|Dean|Head|President|Deputy/i.test(text)) {
+                    adminPos = text;
+                }
+            });
+
+            // Combine positions: Admin > Academic
+            let position = adminPos;
+            if (academicPos) {
+                if (position) position += ` (${academicPos})`;
+                else position = academicPos;
+            }
+            if (!position) position = "Staff";
+
+            // Deduplication
+            if (email && seenEmails.has(email)) return;
+            if (email) seenEmails.add(email);
+            // If no email, check if we already have this name?
+            const isDuplicate = results.some(r => r.name === name && r.position === position);
+            if (isDuplicate) return;
 
             results.push({
                 name,

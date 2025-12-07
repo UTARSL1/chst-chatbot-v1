@@ -1,0 +1,38 @@
+<table width="100%" onclick="javascript:location='staffListDetailV2.jsp?searchId=08056';" onmouseover="this.style.backgroundColor = '#E8F2FD'" onmouseout="this.style.backgroundColor = '#FFE7D5'" style="border-collapse:collapse; min-height:130px;" title=" Click to view staff's information in details " bgcolor="#FFE7D5">
+              <tbody><tr style="box-shadow: 1px 2px 5px 0px #afafaf;">
+                <td width="90" valign="top "><div style=" margin-top:5px; margin-bottom:5px; padding:0px 5px 0px 5px;  min-height:130px"><img style="width : 134px; height : 200px" align="top" src="/getPicV2.jsp?fkey=08056" alt="Lim Eng Hock" width="80" height="97"></div></td>
+                <td valign="top">
+				<div style="margin:0.2em 0.3em 0.2em 0.3em ; font-family:Helvetica, sans-serif; font-size:13px;  
+                padding:3px; line-height:140%; min-height:130px; text-align:left">
+						<b>Prof Ts Dr Lim Eng Hock</b><br><br style="line-height: 50%;">
+                        
+					<span style=" color:#993300"> 
+					  
+                    
+					<b>Chairperson  (Centre for Communication Systems and Networks)<br></b>
+					
+                      	
+                      	<i>Senior Professor<br><br style="line-height: 50%;"></i></span>
+					  Lee Kong Chian Faculty of Engineering and Science<br>
+                      <br><br style="line-height: 50%;">
+					 
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      03-90860288 <br> 
+                      <span style="color:#333399">limeh@utar.edu.my</span></div>
+                 </td>
+              </tr>
+          </tbody></table>
