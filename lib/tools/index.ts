@@ -149,43 +149,34 @@ export async function searchStaff(
                     const results: StaffResult[] = [];
                     const seenEmails = new Set<string>();
 
-                    const pageTitle = $('title').text().trim();
-                    log(`Page Title: "${pageTitle}"`);
+                    // Find all email addresses in the HTML
+                    const emailRegex = /([\w.-]+@utar\.edu\.my)/gi;
+                    const emailMatches = html.match(emailRegex) || [];
+                    log(`Found ${emailMatches.length} email addresses in HTML`);
 
-                    // NEW STRATEGY: Find all links with @utar.edu.my, then get containers
-                    const emailLinks = $('a').filter((_, el) => {
-                        const href = $(el).attr('href') || '';
-                        const text = $(el).text() || '';
-                        return href.includes('@utar.edu.my') || text.includes('@utar.edu.my');
-                    });
-
-                    log(`Found ${emailLinks.length} email links`);
+                    // For each unique email, find its container and extract staff info
+                    const uniqueEmails = [...new Set(emailMatches.map(e => e.toLowerCase()))];
 
                     let cardIndex = 0;
-                    emailLinks.each((_, link) => {
+                    uniqueEmails.forEach(email => {
                         cardIndex++;
 
-                        // Get closest container (table or styled div)
-                        const container = $(link).closest('table[onclick], div[style*="margin"]');
+                        // Find element containing this email
+                        let container = $('*').filter((_, el) => {
+                            const text = $(el).text();
+                            return text.includes(email);
+                        }).first();
+
+                        // Try to get a more specific container (table with onclick)
+                        const staffTable = container.closest('table[onclick*="staffListDetail"]');
+                        if (staffTable.length > 0) {
+                            container = staffTable;
+                        }
+
                         const containerText = container.text().trim();
 
-                        // Extract email
-                        let email = "";
-                        const href = $(link).attr('href') || '';
-                        if (href.includes('mailto:')) {
-                            email = href.replace('mailto:', '').trim();
-                        } else {
-                            const linkText = $(link).text().trim();
-                            if (linkText.includes('@')) email = linkText;
-                        }
-
-                        if (!email) {
-                            const emailMatch = containerText.match(/[\w.-]+@utar\.edu\.my/i);
-                            if (emailMatch) email = emailMatch[0];
-                        }
-
-                        if (!email) {
-                            log(`Card ${cardIndex}: No email`);
+                        if (!containerText) {
+                            log(`Card ${cardIndex}: Empty container for ${email}`);
                             return;
                         }
 
@@ -243,7 +234,7 @@ export async function searchStaff(
                             email,
                             faculty: facultyAcronym,
                             department: params.department || "Unknown",
-                            extra: containerText.replace(/\s+/g, ' ').trim()
+                            extra: containerText.replace(/\s+/g, ' ').substring(0, 500)
                         });
                     });
 
