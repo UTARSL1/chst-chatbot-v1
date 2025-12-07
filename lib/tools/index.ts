@@ -113,7 +113,11 @@ export async function searchStaff(params: { faculty?: string; department?: strin
     try {
         const response = await fetch(url, {
             headers: {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+                "Referer": baseUrl,
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Connection": "keep-alive"
             },
             next: { revalidate: 0 } // Don't cache for server actions usually
         });
@@ -128,9 +132,12 @@ export async function searchStaff(params: { faculty?: string; department?: strin
         const results: StaffResult[] = [];
         const seenEmails = new Set<string>();
 
+        // Debug: Check title to catch Access Denied
+        const pageTitle = $('title').text().trim();
+        console.log(`[Tools] Page Title: ${pageTitle}`);
+
         // Parsing logic updated based on investigation
-        // We iterate ALL tables and use deduplication to handle nesting.
-        // The :not(:has(table)) selector might be too strict if there are layout tables nested inside the staff card.
+        // We iterate ALL tables and use deduplication to handle nesting
         $('table').each((_, table) => {
             const tableText = $(table).text().trim();
             // Basic heuristic to identify a staff card row
@@ -153,10 +160,10 @@ export async function searchStaff(params: { faculty?: string; department?: strin
                 if (emailMatch) email = emailMatch[0];
             }
 
-            // Skip non-staff tables (headers/footers) if no email is found
-            if (!email && !tableText.includes('Position')) {
-                // Looking for @utar.edu.my is the safest signal for valid staff card.
-                if (!tableText.includes('@utar.edu.my')) return;
+            // Relaxed filter: If we have Name AND (Email OR @utar in text), keep it.
+            // Removed strict 'Position' check which causes issues for cards without explicit titles labels.
+            if (!email && !tableText.includes('@utar.edu.my')) {
+                return;
             }
 
             // Position: 
@@ -185,11 +192,8 @@ export async function searchStaff(params: { faculty?: string; department?: strin
             // Deduplication
             if (email && seenEmails.has(email)) return;
             if (email) seenEmails.add(email);
-            // If no email, check if we already have this name?
-            // Note: If we found this person before (outer table), and this is inner table, 
-            // the Logic ensures we captured the BEST data already? 
-            // Actually, inner table usually has the same data.
-            const isDuplicate = results.some(r => r.name === name); // Strict name check is robust enough for this page
+
+            const isDuplicate = results.some(r => r.name === name);
             if (isDuplicate) return;
 
             results.push({

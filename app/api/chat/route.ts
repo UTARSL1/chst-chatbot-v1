@@ -77,6 +77,7 @@ export async function POST(req: NextRequest) {
                 answer: ragResponse.answer,
                 sources: ragResponse.sources,
                 suggestions: ragResponse.suggestions,
+                logs: ragResponse.logs,
             },
             { status: 200 }
         );

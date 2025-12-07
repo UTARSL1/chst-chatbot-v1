@@ -78,7 +78,6 @@ AFTER RESULT:
 
 /**
  * Execute a tool call locally (Ported for Vercel/Cloud Support)
- * Replaces external MCP server HTTP calls with direct internal function calls.
  */
 async function executeToolCall(name: string, args: any): Promise<any> {
     console.log(`[RAG] Executing Internal Tool: ${name}`, args);
@@ -98,12 +97,18 @@ async function executeToolCall(name: string, args: any): Promise<any> {
 
 /**
  * Process a RAG query and generate a response
- * @param query - User query with role information
- * @returns RAG response with answer and sources
  */
 export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
+    const debugLogs: string[] = []; // Capture activity for debugging
+    const log = (msg: string) => {
+        console.log(`[RAG] ${msg}`);
+        debugLogs.push(msg);
+    };
+
     try {
-        // 1. Contextualize the query using chat history
+        log(`Processing query: "${query.query}" for role: ${query.userRole}`);
+
+        // 1. Contextualize the query
         let effectiveQuery = query.query;
         let chatHistoryStr = '';
 
@@ -123,23 +128,28 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
             chatHistoryStr = history.map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n');
 
             if (history.length > 0) {
-                effectiveQuery = await contextualizeQuery(query.query, history);
+                const rewritten = await contextualizeQuery(query.query, history);
+                if (rewritten && rewritten !== query.query) {
+                    effectiveQuery = rewritten;
+                    log(`Contextualized query: "${effectiveQuery}"`);
+                }
             }
         }
 
-        console.log(`[RAG] Processing query: "${effectiveQuery}" for role: ${query.userRole}`);
-
-        // 2. Generate embedding for relevance search
+        // 2. Generate embedding
         const embedding = await generateEmbedding(effectiveQuery);
+        log('Generated query embedding.');
 
         // 3. Define access levels
         const accessLevels = getAccessibleLevels(query.userRole);
 
         // 4. Retrieve Priority Knowledge Notes
         const knowledgeNotes = await searchKnowledgeNotes(effectiveQuery, accessLevels, 3);
+        log(`Found ${knowledgeNotes.length} knowledge notes.`);
 
         // 5. Retrieve Document Chunks
         const relevantChunks = await searchSimilarDocuments(embedding, accessLevels, 5);
+        log(`Found ${relevantChunks.length} relevant document chunks.`);
 
         // 6. Prepare context
         let baseContextStrings: string[] = [];
@@ -172,12 +182,13 @@ Full List:
 ${docs.map(d => `- ${d.originalName} (${d.category})`).join('\n')}
 `;
                 baseContextStrings.push(inventoryInfo);
+                log('Added inventory info to context.');
             } catch (err) { console.error(err); }
         }
 
         const dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
-        // Retrieve System Prompt from DB (Single Source of Truth)
+        // Retrieve System Prompt from DB
         let baseSystemPrompt = '';
         try {
             const dbPrompt = await prisma.systemPrompt.findUnique({
@@ -185,12 +196,12 @@ ${docs.map(d => `- ${d.originalName} (${d.category})`).join('\n')}
             });
             if (dbPrompt?.content) {
                 baseSystemPrompt = dbPrompt.content;
+                log('Loaded system prompt from database.');
             }
         } catch (e) {
-            console.error('Failed to fetch system prompt from DB, using fallback', e);
+            log('Failed to fetch system prompt from DB, using fallback.');
         }
 
-        // Fallback if DB is empty or failed
         if (!baseSystemPrompt) {
             baseSystemPrompt = `You are a helpful assistant for the CHST research centre at UTAR.
 Guidelines:
@@ -202,13 +213,12 @@ Guidelines:
 `;
         }
 
-        // Ensure Tool Instructions are present (Append if missing from DB prompt)
-        // This allows Admin to edit the persona without breaking the tool logic
+        // Ensure Tool Instructions are present
         if (!baseSystemPrompt.includes('utar_staff_search')) {
             baseSystemPrompt += `\n\n${STAFF_SEARCH_SYSTEM_PROMPT}`;
+            log('Appended staff search tool instructions.');
         }
 
-        // Construct System Prompt
         const systemPrompt = `${baseSystemPrompt}
 
 Guidelines (Dynamic):
@@ -221,24 +231,25 @@ Previous Conversation:
 ${chatHistoryStr}
 `;
 
-        // 7. Initialize OpenAI Messages including Tool Definitions
         const messages: any[] = [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: effectiveQuery }
         ];
 
-        // 8. Execution Loop (to handle multiple tool calls)
+        // 8. Execution Loop
         let runLoop = true;
         let loopCount = 0;
         let finalResponse = '';
         let totalTokens = 0;
+
+        log('Starting LLM inference loop...');
 
         while (runLoop && loopCount < 5) {
             const completion = await openai.chat.completions.create({
                 model: 'gpt-4o',
                 messages: messages,
                 tools: STAFF_SEARCH_TOOLS,
-                tool_choice: 'auto', // Let model decide
+                tool_choice: 'auto',
                 temperature: 0.7,
                 max_tokens: 1000,
             });
@@ -246,19 +257,21 @@ ${chatHistoryStr}
             totalTokens += completion.usage?.total_tokens || 0;
             const message = completion.choices[0].message;
 
-            // Add the assistant's response (or tool call request) to the conversation
             messages.push(message);
 
             if (message.tool_calls && message.tool_calls.length > 0) {
-                console.log(`[RAG] Model requested ${message.tool_calls.length} tool calls.`);
+                log(`Model requested ${message.tool_calls.length} tool calls.`);
 
-                // Execute tools
                 for (const toolCall of message.tool_calls) {
                     const call = toolCall as any;
                     const toolName = call.function.name;
                     const toolArgs = JSON.parse(call.function.arguments);
 
+                    log(`Executing Tool: ${toolName} with args: ${JSON.stringify(toolArgs)}`);
+
                     const result = await executeToolCall(toolName, toolArgs);
+
+                    log(`Tool Result (${toolName}): ${JSON.stringify(result).substring(0, 100)}...`);
 
                     messages.push({
                         role: 'tool',
@@ -266,16 +279,16 @@ ${chatHistoryStr}
                         content: JSON.stringify(result)
                     });
                 }
-                // Loop continues to generate the next response with the tool outputs
             } else {
                 finalResponse = message.content || '';
                 runLoop = false;
+                log('Received final response from LLM.');
             }
             loopCount++;
         }
 
-        // 9. Suggestions (re-using old logic or simplifying)
         // 9. Suggestions
+        // Corrected format: Pass object params
         const referencedDocIds = relevantChunks.map(c => c.metadata.documentId).filter(Boolean);
         const relatedDocs = await getRelatedDocuments({
             referencedDocIds,
@@ -284,6 +297,7 @@ ${chatHistoryStr}
         });
 
         // 10. Enrich sources
+        // Corrected format: Map to DocumentSource interface
         const sourcesToEnrich: DocumentSource[] = relevantChunks.map(chunk => ({
             filename: chunk.metadata.filename,
             accessLevel: chunk.metadata.accessLevel,
@@ -298,10 +312,12 @@ ${chatHistoryStr}
         return {
             answer: finalResponse,
             sources: enrichedSources,
-            suggestions: relatedDocs
+            suggestions: relatedDocs,
+            logs: debugLogs
         };
 
-    } catch (error) {
+    } catch (error: any) {
+        log(`Error processing RAG query: ${error.message}`);
         console.error('Error processing RAG query:', error);
         throw error;
     }
@@ -315,6 +331,8 @@ export async function* processRAGQueryStream(query: RAGQuery): AsyncGenerator<st
     try {
         const response = await processRAGQuery(query);
         yield response.answer;
+        // Optionally yield debug logs if frontend supports stream metadata?
+        // Current simplified stream only yields text.
     } catch (error) {
         console.error('Error in stream wrapper:', error);
         yield 'Sorry, an error occurred.';
@@ -348,7 +366,6 @@ Check for pronouns (it, they, he, she) and replace them with the entities they r
 
         const rewritten = completion.choices[0].message.content?.trim();
         if (rewritten) {
-            console.log(`[RAG] Contextualized query: "${query}" -> "${rewritten}"`);
             return rewritten;
         }
     } catch (error) {

@@ -93,6 +93,7 @@ export interface RAGResponse {
     sources: DocumentSource[];
     suggestions?: DocumentSource[];
     tokensUsed?: number;
+    logs?: string[];
 }
 
 export interface DocumentChunk {
