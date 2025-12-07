@@ -100,25 +100,24 @@ export async function searchStaff(
         }
     }
 
+    // Build URL with query parameters (GET request, not POST!)
     const queryParams = new URLSearchParams();
-    queryParams.append('searchDept', facultyAcronym);
+    queryParams.append('searchDept', facultyAcronym === 'All' ? 'ALL' : facultyAcronym); // Use ALL (uppercase)
     queryParams.append('searchDiv', params.department && params.department !== 'All' ? params.department : 'All');
     queryParams.append('searchName', params.name || '');
     queryParams.append('searchExpertise', params.expertise || '');
+    queryParams.append('submit', 'Search'); // Required parameter
     queryParams.append('searchResult', 'Y');
 
-    const postData = queryParams.toString();
-    log(`POST Request to: ${baseUrl} with body: ${postData}`);
+    const url = `${baseUrl}?${queryParams.toString()}`;
+    log(`GET Request to: ${url}`);
 
     return new Promise((resolve) => {
         const options = {
-            method: 'POST',
+            method: 'GET', // Changed from POST
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': Buffer.byteLength(postData),
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36',
                 'Referer': 'https://www2.utar.edu.my/staffListSearchV2.jsp',
-                'Origin': 'https://www2.utar.edu.my',
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
                 'Accept-Language': 'en-US,en;q=0.9',
                 'Connection': 'keep-alive'
@@ -127,7 +126,7 @@ export async function searchStaff(
             timeout: 10000
         };
 
-        const req = https.request(baseUrl, options, (res) => {
+        const req = https.request(url, options, (res) => {
             let html = '';
 
             res.on('data', (chunk) => {
@@ -274,7 +273,6 @@ export async function searchStaff(
             resolve([]);
         });
 
-        req.write(postData);
-        req.end();
+        req.end(); // No need to write POST data for GET request
     });
 }
