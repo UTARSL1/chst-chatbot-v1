@@ -275,17 +275,25 @@ ${chatHistoryStr}
         }
 
         // 9. Suggestions (re-using old logic or simplifying)
-        const relatedDocs = await getRelatedDocuments(finalResponse, relevantChunks);
+        // 9. Suggestions
+        const referencedDocIds = relevantChunks.map(c => c.metadata.documentId).filter(Boolean);
+        const relatedDocs = await getRelatedDocuments({
+            referencedDocIds,
+            userRole: query.userRole,
+            referencedChunks: relevantChunks
+        });
 
         // 10. Enrich sources
-        const enrichedSources = await enrichSourcesWithMetadata(
-            relevantChunks.map(chunk => ({
-                id: chunk.metadata.id || 'unknown',
-                filename: chunk.metadata.filename,
-                content: chunk.content,
-                score: chunk.score
-            }))
-        );
+        const sourcesToEnrich: DocumentSource[] = relevantChunks.map(chunk => ({
+            filename: chunk.metadata.filename,
+            accessLevel: chunk.metadata.accessLevel,
+            documentId: chunk.metadata.documentId,
+            originalName: chunk.metadata.originalName,
+            pageNumber: chunk.metadata.pageNumber,
+            relevanceScore: (chunk as any).score
+        }));
+
+        const enrichedSources = await enrichSourcesWithMetadata(sourcesToEnrich);
 
         return {
             answer: finalResponse,
