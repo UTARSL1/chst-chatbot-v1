@@ -152,46 +152,52 @@ export async function searchStaff(
                     const pageTitle = $('title').text().trim();
                     log(`Page Title: "${pageTitle}"`);
 
-                    // UTAR uses DIVs, not TABLEs for staff cards!
+                    // NEW STRATEGY: Find all links with @utar.edu.my, then get containers
+                    const emailLinks = $('a').filter((_, el) => {
+                        const href = $(el).attr('href') || '';
+                        const text = $(el).text() || '';
+                        return href.includes('@utar.edu.my') || text.includes('@utar.edu.my');
+                    });
+
+                    log(`Found ${emailLinks.length} email links`);
+
                     let cardIndex = 0;
-                    $('div').each((_, div) => {
-                        const divText = $(div).text().trim();
-
-                        // Skip divs without email
-                        if (!divText.includes('@utar.edu.my')) {
-                            return;
-                        }
-
+                    emailLinks.each((_, link) => {
                         cardIndex++;
-                        log(`Card ${cardIndex}: Found div with @utar.edu.my`);
+
+                        // Get closest container (table or styled div)
+                        const container = $(link).closest('table[onclick], div[style*="margin"]');
+                        const containerText = container.text().trim();
 
                         // Extract email
                         let email = "";
-                        const emailLink = $(div).find('a[href^="mailto:"]');
-                        if (emailLink.length > 0) {
-                            email = emailLink.attr('href')?.replace('mailto:', '').trim() || "";
+                        const href = $(link).attr('href') || '';
+                        if (href.includes('mailto:')) {
+                            email = href.replace('mailto:', '').trim();
+                        } else {
+                            const linkText = $(link).text().trim();
+                            if (linkText.includes('@')) email = linkText;
                         }
+
                         if (!email) {
-                            const emailMatch = divText.match(/[\w.-]+@utar\.edu\.my/i);
+                            const emailMatch = containerText.match(/[\w.-]+@utar\.edu\.my/i);
                             if (emailMatch) email = emailMatch[0];
                         }
 
                         if (!email) {
+                            log(`Card ${cardIndex}: No email`);
                             return;
                         }
 
                         // Extract name
                         let name = "";
-
-                        // Method 1: Bold tag
-                        const firstBold = $(div).find('b').first().text().trim();
+                        const firstBold = container.find('b').first().text().trim();
                         if (firstBold && firstBold.length > 3 && !firstBold.includes(':')) {
                             name = firstBold;
                         }
 
-                        // Method 2: Pattern match
                         if (!name) {
-                            const lines = divText.split('\n').map(l => l.trim()).filter(l => l);
+                            const lines = containerText.split('\n').map(l => l.trim()).filter(l => l);
                             for (const line of lines) {
                                 if (/^(Ir\s+)?(Ts\s+)?(Prof\s+|Dr\s+|Ap\s+)*[A-Z][a-z]+(\s+[A-Z][a-z]+)+$/i.test(line) && line.length < 60) {
                                     name = line;
@@ -201,16 +207,16 @@ export async function searchStaff(
                         }
 
                         if (!name) {
-                            log(`Card ${cardIndex}: Skipped - no name (email: ${email})`);
+                            log(`Card ${cardIndex}: No name (email: ${email})`);
                             return;
                         }
 
                         log(`Card ${cardIndex}: "${name}" <${email}>`);
 
                         // Extract positions
-                        const academicPos = $(div).find('i').first().text().trim();
+                        const academicPos = container.find('i').first().text().trim();
                         let adminPos = "";
-                        $(div).find('*').each((_, el) => {
+                        container.find('*').each((_, el) => {
                             const text = $(el).text().trim();
                             if (/^(Head of Department|Chairperson|Director|Dean|President|Deputy)/i.test(text) && text.length < 100) {
                                 adminPos = text;
@@ -237,7 +243,7 @@ export async function searchStaff(
                             email,
                             faculty: facultyAcronym,
                             department: params.department || "Unknown",
-                            extra: divText.replace(/\s+/g, ' ').trim()
+                            extra: containerText.replace(/\s+/g, ' ').trim()
                         });
                     });
 
