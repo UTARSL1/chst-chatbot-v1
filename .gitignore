@@ -44,3 +44,6 @@ next-env.d.ts
 !/documents/.gitkeep
 
 /generated/prisma
+
+# backups
+V1.9_before_MCP_integration/

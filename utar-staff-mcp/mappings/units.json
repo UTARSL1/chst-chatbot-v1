@@ -1,0 +1,949 @@
+[
+    {
+        "acronym": "PO",
+        "canonical": "President's Office",
+        "type": "University Administration",
+        "aliases": [
+            "President's Office"
+        ]
+    },
+    {
+        "acronym": "VP IAD Office",
+        "canonical": "Office of Vice President (Internationalisation and Academic Development)",
+        "type": "University Administration",
+        "aliases": [
+            "Office of Vice President (Internationalisation and Academic Development)",
+            "Vice President Internationalisation and Academic Development Office",
+            "VP IAD Office"
+        ]
+    },
+    {
+        "acronym": "VP RDC Office",
+        "canonical": "Office of Vice President (R & D and Commercialisation)",
+        "type": "University Administration",
+        "aliases": [
+            "Office of Vice President (R & D and Commercialisation)",
+            "Vice President R & D and Commercialisation Office",
+            "VP RDC Office"
+        ]
+    },
+    {
+        "acronym": "VP SDAR Office",
+        "canonical": "Office of Vice President (Student Development and Alumni Relations)",
+        "type": "University Administration",
+        "aliases": [
+            "Office of Vice President (Student Development and Alumni Relations)",
+            "Vice President Student Development and Alumni Relations Office",
+            "VP SDAR Office"
+        ]
+    },
+    {
+        "acronym": "RGO",
+        "canonical": "Registrar's Office",
+        "type": "University Administration",
+        "aliases": [
+            "Registrar's Office"
+        ]
+    },
+    {
+        "acronym": "DHR",
+        "canonical": "Division of Human Resource",
+        "type": "Administrative Division",
+        "aliases": [
+            "Division of Human Resource",
+            "Human Resource"
+        ]
+    },
+    {
+        "acronym": "DFN",
+        "canonical": "Division of Finance",
+        "type": "Administrative Division",
+        "aliases": [
+            "Division of Finance",
+            "Finance Division"
+        ]
+    },
+    {
+        "acronym": "DQAA",
+        "canonical": "Division of Quality Assurance and Audit",
+        "type": "Administrative Division",
+        "aliases": [
+            "Division of Quality Assurance and Audit"
+        ]
+    },
+    {
+        "acronym": "DIA",
+        "canonical": "Department of Internal Audit",
+        "type": "Administrative Department",
+        "aliases": [
+            "Department of Internal Audit",
+            "Internal Audit"
+        ]
+    },
+    {
+        "acronym": "DQA",
+        "canonical": "Department of Quality Assurance",
+        "type": "Administrative Department",
+        "aliases": [
+            "Department of Quality Assurance",
+            "Quality Assurance"
+        ]
+    },
+    {
+        "acronym": "FAM",
+        "canonical": "Faculty of Accountancy and Management",
+        "type": "Faculty",
+        "aliases": [
+            "Faculty of Accountancy and Management",
+            "Accountancy and Management Faculty"
+        ]
+    },
+    {
+        "acronym": "FAS",
+        "canonical": "Faculty of Arts and Social Science",
+        "type": "Faculty",
+        "aliases": [
+            "Faculty of Arts and Social Science",
+            "Arts and Social Science Faculty",
+            "FASS"
+        ]
+    },
+    {
+        "acronym": "FCS",
+        "canonical": "Faculty of Chinese Studies",
+        "type": "Faculty",
+        "aliases": [
+            "Faculty of Chinese Studies",
+            "Chinese Studies Faculty"
+        ]
+    },
+    {
+        "acronym": "FCI",
+        "canonical": "Faculty of Creative Industries",
+        "type": "Faculty",
+        "aliases": [
+            "Faculty of Creative Industries",
+            "Creative Industries Faculty"
+        ]
+    },
+    {
+        "acronym": "FEd",
+        "canonical": "Faculty of Education",
+        "type": "Faculty",
+        "aliases": [
+            "Faculty of Education",
+            "Education Faculty"
+        ]
+    },
+    {
+        "acronym": "FEGT",
+        "canonical": "Faculty of Engineering and Green Technology",
+        "type": "Faculty",
+        "aliases": [
+            "Faculty of Engineering and Green Technology",
+            "Engineering and Green Technology Faculty"
+        ]
+    },
+    {
+        "acronym": "FICT",
+        "canonical": "Faculty of Information and Communication Technology",
+        "type": "Faculty",
+        "aliases": [
+            "Faculty of Information and Communication Technology",
+            "Information and Communication Technology Faculty",
+            "ICT Faculty"
+        ]
+    },
+    {
+        "acronym": "FSc",
+        "canonical": "Faculty of Science",
+        "type": "Faculty",
+        "aliases": [
+            "Faculty of Science",
+            "Science Faculty"
+        ]
+    },
+    {
+        "acronym": "LKC FES",
+        "canonical": "Lee Kong Chian Faculty of Engineering and Science",
+        "type": "Faculty",
+        "aliases": [
+            "Lee Kong Chian Faculty of Engineering and Science",
+            "Lee Kong Chian Engineering and Science Faculty",
+            "LKC FES",
+            "LKC FES UTAR"
+        ]
+    },
+    {
+        "acronym": "MK FMHS",
+        "canonical": "M. Kandiah Faculty of Medicine and Health Sciences",
+        "type": "Faculty",
+        "aliases": [
+            "M. Kandiah Faculty of Medicine and Health Sciences",
+            "M Kandiah Faculty of Medicine and Health Sciences",
+            "Medicine and Health Sciences Faculty",
+            "MK FMHS"
+        ]
+    },
+    {
+        "acronym": "THP FBF",
+        "canonical": "Teh Hong Piow Faculty of Business and Finance",
+        "type": "Faculty",
+        "aliases": [
+            "Teh Hong Piow Faculty of Business and Finance",
+            "Faculty of Business and Finance",
+            "Business and Finance Faculty",
+            "THP FBF"
+        ]
+    },
+    {
+        "acronym": "IMLD",
+        "canonical": "Institute of Management and Leadership Development",
+        "type": "Institute",
+        "aliases": [
+            "Institute of Management and Leadership Development",
+            "IMLD"
+        ]
+    },
+    {
+        "acronym": "IPSR",
+        "canonical": "Institute of Postgraduate Studies and Research",
+        "type": "Institute",
+        "aliases": [
+            "Institute of Postgraduate Studies and Research",
+            "Postgraduate Studies and Research Institute",
+            "IPSR"
+        ]
+    },
+    {
+        "acronym": "CEE",
+        "canonical": "Centre for Extension Education",
+        "type": "Centre",
+        "aliases": [
+            "Centre for Extension Education",
+            "Extension Education Centre",
+            "CEE"
+        ]
+    },
+    {
+        "acronym": "CFS-KPR",
+        "canonical": "Centre for Foundation Studies (Kampar Campus)",
+        "type": "Centre",
+        "aliases": [
+            "Centre for Foundation Studies (Kampar Campus)",
+            "Kampar Foundation Centre",
+            "CFS Kampar",
+            "CFS-KPR"
+        ]
+    },
+    {
+        "acronym": "CFS-SL",
+        "canonical": "Centre for Foundation Studies (Sungai Long Campus)",
+        "type": "Centre",
+        "aliases": [
+            "Centre for Foundation Studies (Sungai Long Campus)",
+            "Sungai Long Foundation Centre",
+            "CFS Sungai Long",
+            "CFS-SL"
+        ]
+    },
+    {
+        "acronym": "LIB",
+        "canonical": "Library",
+        "type": "Administrative Division",
+        "aliases": [
+            "Library",
+            "UTAR Library"
+        ]
+    },
+    {
+        "acronym": "DACE",
+        "canonical": "Division of Admissions and Credit Evaluation",
+        "type": "Administrative Division",
+        "aliases": [
+            "Division of Admissions and Credit Evaluation",
+            "Admissions and Credit Evaluation"
+        ]
+    },
+    {
+        "acronym": "DCCPR",
+        "canonical": "Division of Corporate Communication and Public Relations",
+        "type": "Administrative Division",
+        "aliases": [
+            "Division of Corporate Communication and Public Relations",
+            "Corporate Communication and Public Relations"
+        ]
+    },
+    {
+        "acronym": "DEAS",
+        "canonical": "Division of Examination and Awards",
+        "type": "Administrative Division",
+        "aliases": [
+            "Division of Examination and Awards",
+            "Examination and Awards Division"
+        ]
+    },
+    {
+        "acronym": "DPP",
+        "canonical": "Division of Programme Promotion",
+        "type": "Administrative Division",
+        "aliases": [
+            "Division of Programme Promotion",
+            "Programme Promotion Division"
+        ]
+    },
+    {
+        "acronym": "DSSM",
+        "canonical": "Division of Sustainability and Strategic Management",
+        "type": "Administrative Division",
+        "aliases": [
+            "Division of Sustainability and Strategic Management",
+            "Sustainability and Strategic Management Division"
+        ]
+    },
+    {
+        "acronym": "CCCD",
+        "canonical": "Centre for Corporate and Community Development",
+        "type": "Centre",
+        "aliases": [
+            "Centre for Corporate and Community Development",
+            "Corporate and Community Development Centre",
+            "CCCD"
+        ]
+    },
+    {
+        "acronym": "CCDI",
+        "canonical": "Centre for Curriculum Development and Innovation",
+        "type": "Centre",
+        "aliases": [
+            "Centre for Curriculum Development and Innovation",
+            "Curriculum Development and Innovation Centre",
+            "CCDI"
+        ]
+    },
+    {
+        "acronym": "CISREC",
+        "canonical": "Centre for International Student Recruitment and Education Collaboration",
+        "type": "Centre",
+        "aliases": [
+            "Centre for International Student Recruitment and Education Collaboration",
+            "International Student Recruitment and Education Collaboration Centre",
+            "CISREC"
+        ]
+    },
+    {
+        "acronym": "CMPS",
+        "canonical": "Centre for Multimedia Production and Services",
+        "type": "Centre",
+        "aliases": [
+            "Centre for Multimedia Production and Services",
+            "Multimedia Production and Services Centre",
+            "CMPS"
+        ]
+    },
+    {
+        "acronym": "CSDS",
+        "canonical": "Centre for Software Development and Support",
+        "type": "Centre",
+        "aliases": [
+            "Centre for Software Development and Support",
+            "Software Development and Support Centre",
+            "CSDS"
+        ]
+    },
+    {
+        "acronym": "ITISC",
+        "canonical": "IT Infrastructure and Support Centre",
+        "type": "Centre",
+        "aliases": [
+            "IT Infrastructure and Support Centre",
+            "IT Infrastructure Centre",
+            "ITISC"
+        ]
+    },
+    {
+        "acronym": "UC",
+        "canonical": "Unovate Centre",
+        "type": "Centre",
+        "aliases": [
+            "Unovate Centre",
+            "UC"
+        ]
+    },
+    {
+        "acronym": "OIA",
+        "canonical": "Office of International Affairs",
+        "type": "Administrative Division",
+        "aliases": [
+            "Office of International Affairs",
+            "International Affairs Office",
+            "OIA"
+        ]
+    },
+    {
+        "acronym": "SL CAD Office",
+        "canonical": "Sungai Long Campus Administration Director's Office",
+        "type": "Administrative Division",
+        "aliases": [
+            "Sungai Long Campus Administration Director's Office",
+            "SL Campus Administration Director's Office",
+            "SL CAD Office"
+        ]
+    },
+    {
+        "acronym": "DARP",
+        "canonical": "Department of Alumni Relations and Placement",
+        "type": "Administrative Department",
+        "aliases": [
+            "Department of Alumni Relations and Placement",
+            "Alumni Relations and Placement Department",
+            "DARP"
+        ]
+    },
+    {
+        "acronym": "DCC",
+        "canonical": "Department of Consultancy and Commercialisation",
+        "type": "Administrative Department",
+        "aliases": [
+            "Department of Consultancy and Commercialisation",
+            "Consultancy and Commercialisation Department",
+            "DCC"
+        ]
+    },
+    {
+        "acronym": "DEF-KPR",
+        "canonical": "Department of Estate and Facilities (Kampar Campus)",
+        "type": "Administrative Department",
+        "aliases": [
+            "Department of Estate and Facilities (Kampar Campus)",
+            "Estate and Facilities Kampar",
+            "DEF-KPR"
+        ]
+    },
+    {
+        "acronym": "DEF-SL",
+        "canonical": "Department of Estates and Facilities (Sungai Long Campus)",
+        "type": "Administrative Department",
+        "aliases": [
+            "Department of Estates and Facilities (Sungai Long Campus)",
+            "Estate and Facilities Sungai Long",
+            "DEF-SL"
+        ]
+    },
+    {
+        "acronym": "DGS-KPR",
+        "canonical": "Department of General Services (Kampar Campus)",
+        "type": "Administrative Department",
+        "aliases": [
+            "Department of General Services (Kampar Campus)",
+            "General Services Kampar",
+            "DGS-KPR"
+        ]
+    },
+    {
+        "acronym": "DGS-SL",
+        "canonical": "Department of General Services (Sungai Long Campus)",
+        "type": "Administrative Department",
+        "aliases": [
+            "Department of General Services (Sungai Long Campus)",
+            "General Services Sungai Long",
+            "DGS-SL"
+        ]
+    },
+    {
+        "acronym": "DISS-KPR",
+        "canonical": "Department of International Student Services (Kampar Campus)",
+        "type": "Administrative Department",
+        "aliases": [
+            "Department of International Student Services (Kampar Campus)",
+            "International Student Services Kampar",
+            "DISS-KPR"
+        ]
+    },
+    {
+        "acronym": "DISS-SL",
+        "canonical": "Department of International Student Services (Sungai Long Campus)",
+        "type": "Administrative Department",
+        "aliases": [
+            "Department of International Student Services (Sungai Long Campus)",
+            "International Student Services Sungai Long",
+            "DISS-SL"
+        ]
+    },
+    {
+        "acronym": "DSA-KPR",
+        "canonical": "Department of Student Affairs (Kampar Campus)",
+        "type": "Administrative Department",
+        "aliases": [
+            "Department of Student Affairs (Kampar Campus)",
+            "Student Affairs Kampar",
+            "DSA-KPR"
+        ]
+    },
+    {
+        "acronym": "DSA-SL",
+        "canonical": "Department of Student Affairs (Sungai Long Campus)",
+        "type": "Administrative Department",
+        "aliases": [
+            "Department of Student Affairs (Sungai Long Campus)",
+            "Student Affairs Sungai Long",
+            "DSA-SL"
+        ]
+    },
+    {
+        "acronym": "DSFA",
+        "canonical": "Department of Scholarships and Financial Aid",
+        "type": "Administrative Department",
+        "aliases": [
+            "Department of Scholarships and Financial Aid",
+            "Scholarships and Financial Aid Department",
+            "DSFA"
+        ]
+    },
+    {
+        "acronym": "DSS-KPR",
+        "canonical": "Department of Safety and Security (Kampar Campus)",
+        "type": "Administrative Department",
+        "aliases": [
+            "Department of Safety and Security (Kampar Campus)",
+            "Safety and Security Kampar",
+            "DSS-KPR"
+        ]
+    },
+    {
+        "acronym": "DSS-SL",
+        "canonical": "Department of Safety and Security (Sungai Long Campus)",
+        "type": "Administrative Department",
+        "aliases": [
+            "Department of Safety and Security (Sungai Long Campus)",
+            "Safety and Security Sungai Long",
+            "DSS-SL"
+        ]
+    },
+    {
+        "acronym": "DSSC-KPR",
+        "canonical": "Department of Soft Skills Competency (Kampar Campus)",
+        "type": "Administrative Department",
+        "aliases": [
+            "Department of Soft Skills Competency (Kampar Campus)",
+            "Soft Skills Competency Kampar",
+            "DSSC-KPR"
+        ]
+    },
+    {
+        "acronym": "DSSC-SL",
+        "canonical": "Department of Soft Skills Competency (Sungai Long Campus)",
+        "type": "Administrative Department",
+        "aliases": [
+            "Department of Soft Skills Competency (Sungai Long Campus)",
+            "Soft Skills Competency Sungai Long",
+            "DSSC-SL"
+        ]
+    },
+    {
+        "acronym": "ACSF",
+        "canonical": "ASEAN Research Centre for A Community with Shared Future",
+        "type": "Research Centre",
+        "aliases": [
+            "ASEAN Research Centre for A Community with Shared Future",
+            "ASEAN Community with Shared Future Research Centre",
+            "ACSF"
+        ]
+    },
+    {
+        "acronym": "BRSRC",
+        "canonical": "Belt and Road Strategic Research Centre",
+        "type": "Research Centre",
+        "aliases": [
+            "Belt and Road Strategic Research Centre",
+            "Belt and Road Research Centre",
+            "BRSRC"
+        ]
+    },
+    {
+        "acronym": "CABF",
+        "canonical": "Centre for Accounting, Banking and Finance",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Accounting, Banking and Finance",
+            "Accounting, Banking and Finance Centre",
+            "CABF"
+        ]
+    },
+    {
+        "acronym": "CASMR",
+        "canonical": "Centre for Advanced and Sustainable Materials Research",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Advanced and Sustainable Materials Research",
+            "Advanced and Sustainable Materials Research Centre",
+            "CASMR"
+        ]
+    },
+    {
+        "acronym": "CAFR",
+        "canonical": "Centre for Agriculture and Food Research",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Agriculture and Food Research",
+            "Agriculture and Food Research Centre",
+            "CAFR"
+        ]
+    },
+    {
+        "acronym": "CAPCN",
+        "canonical": "Centre for Applied Psychology and Cognitive Neuroscience",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Applied Psychology and Cognitive Neuroscience",
+            "Applied Psychology and Cognitive Neuroscience Centre",
+            "CAPCN"
+        ]
+    },
+    {
+        "acronym": "CAICA",
+        "canonical": "Centre for Artificial Intelligence and Computing Applications",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Artificial Intelligence and Computing Applications",
+            "Artificial Intelligence and Computing Applications Centre",
+            "CAICA"
+        ]
+    },
+    {
+        "acronym": "CFAR",
+        "canonical": "Centre for Artistic Research",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Artistic Research",
+            "Artistic Research Centre",
+            "CFAR"
+        ]
+    },
+    {
+        "acronym": "CBNR",
+        "canonical": "Centre for Biomedical and Nutrition Research",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Biomedical and Nutrition Research",
+            "Biomedical and Nutrition Research Centre",
+            "CBNR"
+        ]
+    },
+    {
+        "acronym": "CBM",
+        "canonical": "Centre for Business and Management",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Business and Management",
+            "Business and Management Research Centre",
+            "CBM"
+        ]
+    },
+    {
+        "acronym": "CCR",
+        "canonical": "Centre for Cancer Research",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Cancer Research",
+            "Cancer Research Centre",
+            "CCR"
+        ]
+    },
+    {
+        "acronym": "3CDRR",
+        "canonical": "Centre for Climate Change and Disaster Risk Reduction",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Climate Change and Disaster Risk Reduction",
+            "Climate Change and Disaster Risk Reduction Centre",
+            "3CDRR"
+        ]
+    },
+    {
+        "acronym": "CCSN",
+        "canonical": "Centre for Communication Systems and Networks",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Communication Systems and Networks",
+            "Communication Systems and Networks Centre",
+            "CCSN"
+        ]
+    },
+    {
+        "acronym": "CCS",
+        "canonical": "Centre for Cyber Security",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Cyber Security",
+            "Cyber Security Centre",
+            "CCS"
+        ]
+    },
+    {
+        "acronym": "CES",
+        "canonical": "Centre for Economic Studies",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Economic Studies",
+            "Economic Studies Centre",
+            "CES"
+        ]
+    },
+    {
+        "acronym": "CESD",
+        "canonical": "Centre of Electronic System Design",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre of Electronic System Design",
+            "Electronic System Design Centre",
+            "CESD"
+        ]
+    },
+    {
+        "acronym": "CENTS",
+        "canonical": "Centre for Entrepreneurial Sustainability",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Entrepreneurial Sustainability",
+            "Entrepreneurial Sustainability Centre",
+            "CENTS"
+        ]
+    },
+    {
+        "acronym": "CEGT",
+        "canonical": "Centre for Environment and Green Technology",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Environment and Green Technology",
+            "Environment and Green Technology Centre",
+            "CEGT"
+        ]
+    },
+    {
+        "acronym": "CHST",
+        "canonical": "Centre for Healthcare Science and Technology",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Healthcare Science and Technology",
+            "Healthcare Science and Technology Centre",
+            "CHST"
+        ]
+    },
+    {
+        "acronym": "CITC",
+        "canonical": "Centre for Immersive Technology and Creativity",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Immersive Technology and Creativity",
+            "Immersive Technology and Creativity Centre",
+            "CITC"
+        ]
+    },
+    {
+        "acronym": "CIoTBD",
+        "canonical": "Centre for Internet of Things and Big Data",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Internet of Things and Big Data",
+            "Internet of Things and Big Data Centre",
+            "CIoTBD"
+        ]
+    },
+    {
+        "acronym": "CLT",
+        "canonical": "Centre for Learning and Teaching",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Learning and Teaching",
+            "Learning and Teaching Centre",
+            "CLT"
+        ]
+    },
+    {
+        "acronym": "CMS",
+        "canonical": "Centre for Mathematical Sciences",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Mathematical Sciences",
+            "Mathematical Sciences Centre",
+            "CMS"
+        ]
+    },
+    {
+        "acronym": "CMCR",
+        "canonical": "Centre for Media and Communication Research",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Media and Communication Research",
+            "Media and Communication Research Centre",
+            "CMCR"
+        ]
+    },
+    {
+        "acronym": "CMLL",
+        "canonical": "Centre for Modern Languages and Literature",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Modern Languages and Literature",
+            "Modern Languages and Literature Centre",
+            "CMLL"
+        ]
+    },
+    {
+        "acronym": "CPSE",
+        "canonical": "Centre for Power Systems and Electricity",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Power Systems and Electricity",
+            "Power Systems and Electricity Centre",
+            "CPSE"
+        ]
+    },
+    {
+        "acronym": "CRIE",
+        "canonical": "Centre for Railway Infrastructure and Engineering",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Railway Infrastructure and Engineering",
+            "Railway Infrastructure and Engineering Centre",
+            "CRIE"
+        ]
+    },
+    {
+        "acronym": "CRNCD",
+        "canonical": "Centre for Research on Non-communicable Diseases",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Research on Non-communicable Diseases",
+            "Non-communicable Diseases Research Centre",
+            "CRNCD"
+        ]
+    },
+    {
+        "acronym": "CRTCM",
+        "canonical": "Centre for Research in Traditional Chinese Medicine",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Research in Traditional Chinese Medicine",
+            "Traditional Chinese Medicine Research Centre",
+            "CRTCM"
+        ]
+    },
+    {
+        "acronym": "CSCR",
+        "canonical": "Centre for Stem Cell Research",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Stem Cell Research",
+            "Stem Cell Research Centre",
+            "CSCR"
+        ]
+    },
+    {
+        "acronym": "COSBE",
+        "canonical": "Centre of Sustainable Design and Built Environment",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre of Sustainable Design and Built Environment",
+            "Sustainable Design and Built Environment Centre",
+            "COSBE"
+        ]
+    },
+    {
+        "acronym": "CSMT",
+        "canonical": "Centre for Sustainable Mobility Technologies",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Sustainable Mobility Technologies",
+            "Sustainable Mobility Technologies Centre",
+            "CSMT"
+        ]
+    },
+    {
+        "acronym": "CSPS",
+        "canonical": "Centre for Social and Policy Studies",
+        "type": "Research Centre",
+        "aliases": [
+            "Centre for Social and Policy Studies",
+            "Social and Policy Studies Centre",
+            "CSPS"
+        ]
+    },
+    {
+        "acronym": "CRCD",
+        "canonical": "Dr Wu Lien-Teh Centre for Research on Communicable Diseases",
+        "type": "Research Centre",
+        "aliases": [
+            "Dr Wu Lien-Teh Centre for Research on Communicable Diseases",
+            "Communicable Diseases Research Centre",
+            "CRCD"
+        ]
+    },
+    {
+        "acronym": "TCLI",
+        "canonical": "Tun Tan Cheng Lock Institute of Social Studies",
+        "type": "Institute",
+        "aliases": [
+            "Tun Tan Cheng Lock Institute of Social Studies",
+            "TCLI"
+        ]
+    },
+    {
+        "acronym": "UBRC",
+        "canonical": "UTAR Buddhist Research Centre",
+        "type": "Research Centre",
+        "aliases": [
+            "UTAR Buddhist Research Centre",
+            "Buddhist Research Centre",
+            "UBRC"
+        ]
+    },
+    {
+        "acronym": "XDU-UTAR",
+        "canonical": "XDU-UTAR Institute of Science, Technology and Innovation",
+        "type": "Institute",
+        "aliases": [
+            "XDU-UTAR Institute of Science, Technology and Innovation",
+            "XDU UTAR Institute of Science, Technology and Innovation",
+            "XDU-UTAR"
+        ]
+    },
+    {
+        "acronym": "YCF CChS",
+        "canonical": "Yu Cai Foundation Centre for Chinese Studies",
+        "type": "Centre",
+        "aliases": [
+            "Yu Cai Foundation Centre for Chinese Studies",
+            "YCF Centre for Chinese Studies",
+            "YCF CChS"
+        ]
+    },
+    {
+        "acronym": "CI",
+        "canonical": "Confucius Institute",
+        "type": "Joint Research Institute",
+        "aliases": [
+            "Confucius Institute",
+            "CI"
+        ]
+    },
+    {
+        "acronym": "MI",
+        "canonical": "Mencius Institute",
+        "type": "Joint Research Institute",
+        "aliases": [
+            "Mencius Institute",
+            "MI"
+        ]
+    },
+    {
+        "acronym": "IIM",
+        "canonical": "International Institute of Media",
+        "type": "Institute",
+        "aliases": [
+            "International Institute of Media",
+            "IIM"
+        ]
+    }
+]
