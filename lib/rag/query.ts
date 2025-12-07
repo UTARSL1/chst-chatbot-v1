@@ -234,14 +234,15 @@ ${chatHistoryStr}
 
                 // Execute tools
                 for (const toolCall of message.tool_calls) {
-                    const toolName = toolCall.function.name;
-                    const toolArgs = JSON.parse(toolCall.function.arguments);
+                    const call = toolCall as any;
+                    const toolName = call.function.name;
+                    const toolArgs = JSON.parse(call.function.arguments);
 
                     const result = await executeToolCall(toolName, toolArgs);
 
                     messages.push({
                         role: 'tool',
-                        tool_call_id: toolCall.id,
+                        tool_call_id: call.id,
                         content: JSON.stringify(result)
                     });
                 }
