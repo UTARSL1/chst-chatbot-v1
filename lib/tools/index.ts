@@ -222,12 +222,32 @@ export async function searchStaff(
                             }
                         });
 
+                        log(`Card ${cardIndex}: Academic position (italic): "${academicPos}"`);
+                        log(`Card ${cardIndex}: Admin position (regex match): "${adminPos}"`);
+
                         let position = adminPos;
                         if (academicPos) {
                             if (position) position += ` (${academicPos})`;
                             else position = academicPos;
                         }
                         if (!position) position = "Staff";
+
+                        // Extract faculty and department from container text
+                        let extractedFaculty = facultyAcronym;
+                        let extractedDept = params.department || "Unknown";
+
+                        const lines = containerText.split('\n').map(l => l.trim()).filter(l => l);
+                        for (const line of lines) {
+                            if (line.includes('Faculty') && line.length < 100) {
+                                extractedFaculty = line;
+                            }
+                            if (line.startsWith('Department of') && line.length < 100) {
+                                extractedDept = line;
+                            }
+                        }
+
+                        log(`Card ${cardIndex}: Extracted faculty: "${extractedFaculty}"`);
+                        log(`Card ${cardIndex}: Extracted dept: "${extractedDept}"`);
 
                         // Deduplication
                         if (seenEmails.has(email)) return;
@@ -239,8 +259,8 @@ export async function searchStaff(
                             name,
                             position,
                             email,
-                            faculty: facultyAcronym,
-                            department: params.department || "Unknown",
+                            faculty: extractedFaculty,
+                            department: extractedDept,
                             extra: containerText.replace(/\s+/g, ' ').substring(0, 500)
                         });
                     });
