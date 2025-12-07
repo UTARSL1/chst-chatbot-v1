@@ -85,7 +85,7 @@ export async function searchStaff(
     const baseUrl = "https://www2.utar.edu.my/staffListSearchV2.jsp";
 
     let facultyAcronym = params.faculty || 'All';
-    if (faculty Acronym !== 'All') {
+    if (facultyAcronym !== 'All') {
         const queryLower = facultyAcronym.toLowerCase().trim();
         const unit = unitsData.find(u =>
             u.canonical.toLowerCase() === queryLower ||
