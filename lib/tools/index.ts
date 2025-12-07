@@ -76,12 +76,32 @@ export async function searchStaff(params: { faculty?: string; department?: strin
     // Default URL
     const baseUrl = "https://www2.utar.edu.my/staffListSearchV2.jsp";
 
+    // Resolve Faculty Name -> Acronym (The form expects Acronyms for 'searchDept')
+    let facultyAcronym = params.faculty || 'All';
+    if (facultyAcronym !== 'All') {
+        const queryLower = facultyAcronym.toLowerCase().trim();
+        // Try to find the unit in our DB
+        // Check canonical, acronym, or aliases
+        const unit = unitsData.find(u =>
+            u.canonical.toLowerCase() === queryLower ||
+            (u.acronym && u.acronym.toLowerCase() === queryLower)
+        );
+        if (unit && unit.acronym) {
+            facultyAcronym = unit.acronym;
+            console.log(`[Tools] Mapped faculty '${params.faculty}' to acronym '${facultyAcronym}'`);
+        }
+    }
+
     // Construct Query Params
     const queryParams = new URLSearchParams();
-    queryParams.append('searchDiv', params.faculty && params.faculty !== 'All' ? params.faculty : 'All');
-    queryParams.append('searchDept', params.department && params.department !== 'All' ? params.department : 'All');
+    // Correct Mapping based on HTML form:
+    // searchDept = Faculty/Centre (Main dropdown)
+    queryParams.append('searchDept', facultyAcronym);
+    // searchDiv = Department (Sub dropdown)
+    queryParams.append('searchDiv', params.department && params.department !== 'All' ? params.department : 'All');
+
     queryParams.append('searchName', params.name || '');
-    queryParams.append('searchName', params.expertise || ''); // UTAR form quirk: expertise is the second 'searchName' often
+    queryParams.append('searchExpertise', params.expertise || '');
 
     const url = `${baseUrl}?${queryParams.toString()}`;
     console.log(`[Tools] Fetching: ${url}`);
@@ -126,20 +146,17 @@ export async function searchStaff(params: { faculty?: string; department?: strin
                 email = href.replace('mailto:', '');
             }
 
-            // Extract Faculty/Dept is tricky as they are text nodes. 
-            // We'll dump the context into 'extra' if needed or try to parse split lines.
-            // Simplified for reliability: Return what we definitely used to get.
-
             results.push({
                 name,
                 position,
                 email,
-                faculty: "Parsed from directory",
-                department: "Parsed from directory",
+                faculty: facultyAcronym,
+                department: params.department || "Unknown",
                 extra: tableText.replace(/\s+/g, ' ').trim()
             });
         });
 
+        console.log(`[Tools] Found ${results.length} staff members.`);
         return results;
 
     } catch (error) {
