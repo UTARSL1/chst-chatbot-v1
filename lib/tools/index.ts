@@ -129,8 +129,9 @@ export async function searchStaff(params: { faculty?: string; department?: strin
         const seenEmails = new Set<string>();
 
         // Parsing logic updated based on investigation
-        // We select 'leaf' tables to avoid duplication (nested tables)
-        $('table:not(:has(table))').each((_, table) => {
+        // We iterate ALL tables and use deduplication to handle nesting.
+        // The :not(:has(table)) selector might be too strict if there are layout tables nested inside the staff card.
+        $('table').each((_, table) => {
             const tableText = $(table).text().trim();
             // Basic heuristic to identify a staff card row
             if (!tableText) return;
@@ -153,10 +154,7 @@ export async function searchStaff(params: { faculty?: string; department?: strin
             }
 
             // Skip non-staff tables (headers/footers) if no email is found
-            // But sometimes email is missing? If name and position exist, we keep it.
-            // Let's filter some obvious noise:
             if (!email && !tableText.includes('Position')) {
-                // Determine if it's likely a staff card by "Department" or phone number pattern?
                 // Looking for @utar.edu.my is the safest signal for valid staff card.
                 if (!tableText.includes('@utar.edu.my')) return;
             }
@@ -188,7 +186,10 @@ export async function searchStaff(params: { faculty?: string; department?: strin
             if (email && seenEmails.has(email)) return;
             if (email) seenEmails.add(email);
             // If no email, check if we already have this name?
-            const isDuplicate = results.some(r => r.name === name && r.position === position);
+            // Note: If we found this person before (outer table), and this is inner table, 
+            // the Logic ensures we captured the BEST data already? 
+            // Actually, inner table usually has the same data.
+            const isDuplicate = results.some(r => r.name === name); // Strict name check is robust enough for this page
             if (isDuplicate) return;
 
             results.push({

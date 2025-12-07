@@ -114,38 +114,32 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
                 take: 6,
             });
 
-            const filteredHistory = recentMessages.filter((msg, index) => {
-                if (index === 0 && msg.role === 'user' && msg.content === query.query) return false;
-                return true;
-            }).reverse();
+            // Convert and reverse for context
+            const history = recentMessages.reverse().map(m => ({
+                role: m.role,
+                content: m.content
+            }));
 
-            if (filteredHistory.length > 0) {
-                effectiveQuery = await contextualizeQuery(query.query, filteredHistory);
-                chatHistoryStr = filteredHistory
-                    .map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`)
-                    .join('\n');
+            chatHistoryStr = history.map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n');
+
+            if (history.length > 0) {
+                effectiveQuery = await contextualizeQuery(query.query, history);
             }
         }
 
-        // 2. Generate embedding for the query
-        const queryEmbedding = await generateEmbedding(effectiveQuery);
+        console.log(`[RAG] Processing query: "${effectiveQuery}" for role: ${query.userRole}`);
 
-        // 3. Get accessible document levels based on user role
+        // 2. Generate embedding for relevance search
+        const embedding = await generateEmbedding(effectiveQuery);
+
+        // 3. Define access levels
         const accessLevels = getAccessibleLevels(query.userRole);
 
-        // 4. Search Priority Knowledge Base first
-        const knowledgeNotes = await searchKnowledgeNotes(
-            effectiveQuery,
-            accessLevels,
-            3
-        );
+        // 4. Retrieve Priority Knowledge Notes
+        const knowledgeNotes = await searchKnowledgeNotes(effectiveQuery, accessLevels, 3);
 
-        // 5. Search for similar documents
-        const relevantChunks = await searchSimilarDocuments(
-            queryEmbedding,
-            accessLevels,
-            5
-        );
+        // 5. Retrieve Document Chunks
+        const relevantChunks = await searchSimilarDocuments(embedding, accessLevels, 5);
 
         // 6. Prepare context
         let baseContextStrings: string[] = [];
@@ -183,16 +177,42 @@ ${docs.map(d => `- ${d.originalName} (${d.category})`).join('\n')}
 
         const dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
-        // Construct System Prompt
-        const systemPrompt = `You are a helpful assistant for the CHST research centre at UTAR.
-        
+        // Retrieve System Prompt from DB (Single Source of Truth)
+        let baseSystemPrompt = '';
+        try {
+            const dbPrompt = await prisma.systemPrompt.findUnique({
+                where: { name: 'default_rag' }
+            });
+            if (dbPrompt?.content) {
+                baseSystemPrompt = dbPrompt.content;
+            }
+        } catch (e) {
+            console.error('Failed to fetch system prompt from DB, using fallback', e);
+        }
+
+        // Fallback if DB is empty or failed
+        if (!baseSystemPrompt) {
+            baseSystemPrompt = `You are a helpful assistant for the CHST research centre at UTAR.
 Guidelines:
 - Current Date: ${dateStr}
 - Use this date for deadlines/eligibility.
 - Answer in the same language as the user.
 - **General Questions**: Answer directly.
-- **Policies/Forms**: Base answers on the "Context" provided below.
-${STAFF_SEARCH_SYSTEM_PROMPT}
+- **Policies/Forms**: Base answers on the "Context" provided.
+`;
+        }
+
+        // Ensure Tool Instructions are present (Append if missing from DB prompt)
+        // This allows Admin to edit the persona without breaking the tool logic
+        if (!baseSystemPrompt.includes('utar_staff_search')) {
+            baseSystemPrompt += `\n\n${STAFF_SEARCH_SYSTEM_PROMPT}`;
+        }
+
+        // Construct System Prompt
+        const systemPrompt = `${baseSystemPrompt}
+
+Guidelines (Dynamic):
+- Current Date: ${dateStr}
 
 Context from CHST policies and forms:
 ${baseContext.length > 0 ? baseContext : "No relevant policy documents found."}
@@ -248,43 +268,34 @@ ${chatHistoryStr}
                 }
                 // Loop continues to generate the next response with the tool outputs
             } else {
-                // No tool calls, we have the final text answer
-                finalResponse = message.content || "Sorry, I could not generate a response.";
+                finalResponse = message.content || '';
                 runLoop = false;
             }
             loopCount++;
         }
 
-        // 9. Prepare sources for frontend (Standard RAG)
-        const sources: DocumentSource[] = relevantChunks.map((chunk) => ({
-            filename: chunk.metadata.filename,
-            originalName: chunk.metadata.originalName,
-            accessLevel: chunk.metadata.accessLevel,
-        }));
-        const uniqueSources = sources.filter(
-            (source, index, self) => index === self.findIndex((s) => s.filename === source.filename)
-        );
-        const enrichedSources = await enrichSourcesWithMetadata(uniqueSources);
+        // 9. Suggestions (re-using old logic or simplifying)
+        const relatedDocs = await getRelatedDocuments(finalResponse, relevantChunks);
 
-        // Related documents
-        const referencedDocIds = enrichedSources.filter(s => s.documentId).map(s => s.documentId!);
-        const suggestions = await getRelatedDocuments({
-            referencedDocIds,
-            userRole: query.userRole,
-            referencedChunks: relevantChunks,
-            limit: 5,
-        });
+        // 10. Enrich sources
+        const enrichedSources = await enrichSourcesWithMetadata(
+            relevantChunks.map(chunk => ({
+                id: chunk.metadata.id || 'unknown',
+                filename: chunk.metadata.filename,
+                content: chunk.content,
+                score: chunk.score
+            }))
+        );
 
         return {
             answer: finalResponse,
             sources: enrichedSources,
-            suggestions,
-            tokensUsed: totalTokens,
+            suggestions: relatedDocs
         };
 
     } catch (error) {
         console.error('Error processing RAG query:', error);
-        throw new Error('Failed to process query');
+        throw error;
     }
 }
 
@@ -313,10 +324,12 @@ async function contextualizeQuery(query: string, history: any[]): Promise<string
             .map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`)
             .join('\n');
 
-        const systemPrompt = `Given a chat history and the latest user question which might reference context in the chat history, formulate a standalone question which can be understood without the chat history. Do NOT answer the question, just reformulate it if needed and otherwise return it as is.`;
+        const systemPrompt = `Given the following conversation and a follow-up question, rephrase the follow-up question to be a standalone question.
+If the follow-up question is already standalone, return it as is.
+Check for pronouns (it, they, he, she) and replace them with the entities they refer to.`;
 
         const completion = await openai.chat.completions.create({
-            model: 'gpt-4o',
+            model: 'gpt-3.5-turbo',
             messages: [
                 { role: 'system', content: systemPrompt },
                 { role: 'user', content: `Chat History:\n${historyText}\n\nLatest Question: ${query}` }
@@ -357,14 +370,14 @@ async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<Doc
                 filename: true,
                 originalName: true,
                 category: true,
-                department: true,
-            },
+                department: true
+            }
         });
 
         const docMap = new Map();
         documents.forEach(doc => {
             docMap.set(doc.filename, doc);
-            docMap.set(doc.originalName, doc);
+            docMap.set(doc.originalName, doc); // Mapping for both cases
         });
 
         const enriched = sources.map(source => {
