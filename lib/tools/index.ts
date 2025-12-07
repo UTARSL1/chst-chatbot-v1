@@ -1,6 +1,7 @@
 import Fuse from 'fuse.js';
 import * as cheerio from 'cheerio';
 import unitsData from './units.json';
+import https from 'https';
 
 // --- Types ---
 interface UnitMapping {
@@ -112,6 +113,12 @@ export async function searchStaff(
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
 
+    // Custom HTTPS agent to bypass SSL verification for UTAR server
+    // The UTAR server has an incomplete certificate chain
+    const httpsAgent = new https.Agent({
+        rejectUnauthorized: false
+    });
+
     try {
         try {
             const response = await fetch(baseUrl, {
@@ -127,6 +134,8 @@ export async function searchStaff(
                 },
                 body: queryParams,
                 signal: controller.signal,
+                // @ts-ignore - agent is not in TypeScript types for fetch but works in Node.js
+                agent: httpsAgent,
                 next: { revalidate: 0 }
             });
 
