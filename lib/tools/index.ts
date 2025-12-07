@@ -137,7 +137,6 @@ export async function searchStaff(
             res.on('end', () => {
                 log(`Response status: ${res.statusCode}`);
                 log(`HTML length: ${html.length} characters`);
-                log(`HTML preview: ${html.substring(0, 200).replace(/\s+/g, ' ')}`);
 
                 if (res.statusCode !== 200) {
                     log(`Failed to fetch staff directory: HTTP ${res.statusCode}`);
@@ -166,42 +165,59 @@ export async function searchStaff(
                             return;
                         }
 
-                        const nameEl = $(table).find('b').first();
-                        const name = nameEl.text().trim();
-                        if (!name) {
-                            log(`Table ${tableIndex}: Skipped - no name in <b> tag`);
-                            return;
-                        }
-
-                        log(`Table ${tableIndex}: Found name "${name}"`);
-
+                        // FLEXIBLE PARSING: Find email first (most reliable)
                         let email = "";
                         const emailLink = $(table).find('a[href^="mailto:"]');
                         if (emailLink.length > 0) {
                             email = emailLink.attr('href')?.replace('mailto:', '').trim() || "";
-                            log(`Table ${tableIndex}: Email from mailto link: ${email}`);
                         }
                         if (!email) {
                             const emailMatch = tableText.match(/[\w.-]+@utar\.edu\.my/i);
-                            if (emailMatch) {
-                                email = emailMatch[0];
-                                log(`Table ${tableIndex}: Email from regex: ${email}`);
-                            }
+                            if (emailMatch) email = emailMatch[0];
                         }
 
-                        if (!email && !tableText.includes('@utar.edu.my')) {
-                            log(`Table ${tableIndex}: Skipped "${name}" - no email found and no @utar.edu.my in text`);
+                        if (!email) {
+                            log(`Table ${tableIndex}: Skipped - no email`);
                             return;
                         }
 
+                        // FLEXIBLE NAME EXTRACTION
+                        let name = "";
+
+                        // Method 1: Bold tag (works for some layouts like CCSN)
+                        const firstBold = $(table).find('b').first().text().trim();
+                        if (firstBold && firstBold.length > 3 && !firstBold.includes(':')) {
+                            name = firstBold;
+                        }
+
+                        // Method 2: Split text by lines and find name pattern
+                        if (!name) {
+                            const lines = tableText.split('\n').map(l => l.trim()).filter(l => l);
+                            for (const line of lines) {
+                                // Match patterns like "Ir Dr Ng Law Yong" or "Prof Ts Dr Name"
+                                if (/^(Ir\s+)?(Ts\s+)?(Prof\s+|Dr\s+|Ap\s+)*[A-Z][a-z]+(\s+[A-Z][a-z]+)+$/i.test(line) && line.length < 60) {
+                                    name = line;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!name) {
+                            log(`Table ${tableIndex}: Skipped - could not extract name (email: ${email})`);
+                            return;
+                        }
+
+                        log(`Table ${tableIndex}: Found "${name}" with email ${email}`);
+
+                        // Extract positions
                         const academicPos = $(table).find('i').first().text().trim();
 
                         let adminPos = "";
-                        $(table).find('b').each((i, el) => {
-                            if (i === 0) return;
+                        $(table).find('*').each((_, el) => {
                             const text = $(el).text().trim();
-                            if (/Chairperson|Director|Dean|Head|President|Deputy/i.test(text)) {
+                            if (/^(Head of Department|Chairperson|Director|Dean|President|Deputy)/i.test(text) && text.length < 100) {
                                 adminPos = text;
+                                return false;
                             }
                         });
 
@@ -212,11 +228,12 @@ export async function searchStaff(
                         }
                         if (!position) position = "Staff";
 
-                        if (email && seenEmails.has(email)) {
-                            log(`Table ${tableIndex}: Skipped "${name}" - duplicate email ${email}`);
+                        // Deduplication
+                        if (seenEmails.has(email)) {
+                            log(`Table ${tableIndex}: Skipped "${name}" - duplicate email`);
                             return;
                         }
-                        if (email) seenEmails.add(email);
+                        seenEmails.add(email);
 
                         const isDuplicate = results.some(r => r.name === name);
                         if (isDuplicate) {
@@ -224,7 +241,7 @@ export async function searchStaff(
                             return;
                         }
 
-                        log(`Table ${tableIndex}: ✓ Added "${name}" - ${position} - ${email}`);
+                        log(`Table ${tableIndex}: ✓ Added "${name}" - ${position}`);
                         results.push({
                             name,
                             position,
