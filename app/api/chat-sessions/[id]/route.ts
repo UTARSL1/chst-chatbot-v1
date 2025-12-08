@@ -28,12 +28,13 @@ export async function DELETE(
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
-        await prisma.chatSession.update({
+        // Hard delete: Delete messages first, then the session
+        await prisma.message.deleteMany({
+            where: { sessionId: id },
+        });
+
+        await prisma.chatSession.delete({
             where: { id },
-            data: {
-                deletedAt: new Date(),
-                deletedBy: session.user.id,
-            },
         });
 
         return NextResponse.json({ success: true });

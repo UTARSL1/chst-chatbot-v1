@@ -361,6 +361,10 @@ export default function AdminUsersPage() {
                     userName={selectedUser.name}
                     open={showChatHistory}
                     onOpenChange={setShowChatHistory}
+                    onHistoryChange={() => {
+                        // Refresh can be triggered here if needed
+                        console.log('Chat history changed for user:', selectedUser.id);
+                    }}
                 />
             )}
         </div>

@@ -39,9 +39,10 @@ interface ChatHistoryModalProps {
     userName: string;
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    onHistoryChange?: () => void;
 }
 
-export function ChatHistoryModal({ userId, userName, open, onOpenChange }: ChatHistoryModalProps) {
+export function ChatHistoryModal({ userId, userName, open, onOpenChange, onHistoryChange }: ChatHistoryModalProps) {
     const [sessions, setSessions] = useState<ChatSession[]>([]);
     const [loading, setLoading] = useState(false);
 
@@ -76,6 +77,7 @@ export function ChatHistoryModal({ userId, userName, open, onOpenChange }: ChatH
 
             if (response.ok) {
                 setSessions(prev => prev.filter(s => s.id !== sessionId));
+                onHistoryChange?.(); // Notify parent to refresh
                 alert('Chat session deleted successfully');
             } else {
                 alert('Failed to delete chat session');
@@ -98,6 +100,7 @@ export function ChatHistoryModal({ userId, userName, open, onOpenChange }: ChatH
 
             await Promise.all(deletePromises);
             setSessions([]);
+            onHistoryChange?.(); // Notify parent to refresh
             alert('All chat history deleted successfully');
         } catch (error) {
             console.error('Error deleting all history:', error);
