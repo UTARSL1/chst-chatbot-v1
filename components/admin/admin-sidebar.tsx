@@ -2,9 +2,11 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useCurrentVersion } from '@/hooks/useCurrentVersion';
 
 export function AdminSidebar() {
     const pathname = usePathname();
+    const currentVersion = useCurrentVersion();
 
     const links = [
         {
@@ -130,7 +132,7 @@ export function AdminSidebar() {
 
             <div className="p-4 border-t border-gray-800">
                 <div className="text-xs text-gray-500 text-center">
-                    CHST Chatbot v1.5
+                    CHST Chatbot {currentVersion}
                 </div>
             </div>
         </div>

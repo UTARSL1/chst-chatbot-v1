@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -10,6 +10,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { TermsOfUseModal } from '@/components/TermsOfUseModal';
 import { Linkedin, Globe, FolderOpen, Users, ChevronDown, BookOpen, GraduationCap, Briefcase, FileText, DollarSign, TrendingUp, UserPlus, Plus, ExternalLink, Pencil, Trash2, MessageSquare, MoreVertical, Check, X } from 'lucide-react';
+import { useCurrentVersion } from '@/hooks/useCurrentVersion';
 
 interface QuickAccessLink {
     id: string;
@@ -67,6 +68,9 @@ export default function ChatPage() {
     const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
     const [feedbackContent, setFeedbackContent] = useState('');
     const [sendingFeedback, setSendingFeedback] = useState(false);
+
+    // Get current version
+    const currentVersion = useCurrentVersion();
 
     const handleSendFeedback = async () => {
         if (!feedbackContent.trim()) return;
@@ -736,7 +740,7 @@ export default function ChatPage() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
-                        <h1 className="text-xl font-bold">Version 1.9</h1>
+                        <h1 className="text-xl font-bold">{currentVersion}</h1>
                     </div>
 
                     <div className="flex items-center gap-4">
@@ -956,7 +960,7 @@ export default function ChatPage() {
                                         return relevantDocs.length > 0 && (
                                             <div className="mt-4 p-3 bg-slate-800/50 rounded-lg border border-slate-700">
                                                 <p className="text-sm font-semibold text-slate-300 mb-2">
-                                                    📎 Referenced Documents:
+                                                    ?? Referenced Documents:
                                                 </p>
                                                 <div className="space-y-2">
                                                     {relevantDocs.map((doc, idx) => (
@@ -986,7 +990,7 @@ export default function ChatPage() {
                                     {message.suggestions && message.suggestions.length > 0 && (
                                         <div className="mt-3 p-3 bg-purple-900/20 rounded-lg border border-purple-700">
                                             <p className="text-sm font-semibold text-purple-300 mb-2">
-                                                💡 You might also need:
+                                                ?? You might also need:
                                             </p>
                                             <div className="space-y-2">
                                                 {message.suggestions.map((doc: any, idx: number) => (

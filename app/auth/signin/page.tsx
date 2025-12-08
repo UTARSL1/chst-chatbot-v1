@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-
+import { useCurrentVersion } from '@/hooks/useCurrentVersion';
 import { Suspense } from 'react';
 
 function SignInContent() {
@@ -20,6 +20,7 @@ function SignInContent() {
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const currentVersion = useCurrentVersion();
 
     const searchParams = useSearchParams();
     const verified = searchParams.get('verified');
@@ -73,7 +74,7 @@ function SignInContent() {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
                 </div>
-                <CardTitle className="text-2xl font-bold">Welcome to CHST-Chatbot V1.9</CardTitle>
+                <CardTitle className="text-2xl font-bold">Welcome to CHST-Chatbot {currentVersion}</CardTitle>
                 <CardDescription>Sign in to continue</CardDescription>
             </CardHeader>
             <form onSubmit={handleSubmit}>

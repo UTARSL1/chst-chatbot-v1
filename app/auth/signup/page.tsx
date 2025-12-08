@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { useCurrentVersion } from '@/hooks/useCurrentVersion';
 
 export default function SignUpPage() {
     const router = useRouter();
@@ -24,6 +25,7 @@ export default function SignUpPage() {
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const currentVersion = useCurrentVersion();
 
     // Detect email type
     useEffect(() => {
@@ -144,7 +146,7 @@ export default function SignUpPage() {
                         </svg>
                     </div>
                     <CardTitle className="text-2xl font-bold">Create an Account</CardTitle>
-                    <CardDescription>Join CHST-Chatbot V1.9</CardDescription>
+                    <CardDescription>Join CHST-Chatbot {currentVersion}</CardDescription>
                 </CardHeader>
 
                 <CardContent className="space-y-4">
