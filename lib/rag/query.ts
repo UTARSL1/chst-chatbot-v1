@@ -7,14 +7,16 @@ import { prisma } from '@/lib/db';
 import { getRelatedDocuments } from './suggestions';
 import { searchKnowledgeNotes } from './knowledgeSearch';
 import { resolveUnit, searchStaff } from '@/lib/tools';
+import { getJournalMetricsByTitle, getJournalMetricsByIssn, ensureJcrCacheLoaded } from '@/lib/jcrCache';
 
 // Initialize OpenAI client
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
-// --- UTAR Staff Search Tool Definitions ---
-const STAFF_SEARCH_TOOLS = [
+// --- TOOL DEFINITIONS ---
+
+const UTAR_STAFF_TOOLS = [
     {
         type: 'function' as const,
         function: {
@@ -51,6 +53,28 @@ const STAFF_SEARCH_TOOLS = [
     }
 ];
 
+const JCR_TOOL = {
+    type: 'function' as const,
+    function: {
+        name: 'jcr_journal_metric',
+        description: 'Look up Journal Citation Report (JCR) metrics, specifically Journal Impact Factor (JIF) and JIF Quartile (Q1-Q4) for journals.',
+        parameters: {
+            type: 'object',
+            properties: {
+                query: { type: 'string', description: 'Journal title (e.g. "Nature", "IEEE Transactions"). Partial matches supported.' },
+                issn: { type: 'string', description: 'ISSN (Print or Electronic). Prioritized if provided.' },
+                years: {
+                    type: 'array',
+                    items: { type: 'integer' },
+                    description: 'List of years to retrieve (e.g. [2023, 2024]). Omit to get all available years.'
+                }
+            }
+        }
+    }
+};
+
+const AVAILABLE_TOOLS = [...UTAR_STAFF_TOOLS, JCR_TOOL];
+
 const STAFF_SEARCH_SYSTEM_PROMPT = `
 === UTAR STAFF SEARCH TOOLS ===
 You have access to two MCP tools:
@@ -79,43 +103,97 @@ LOGIC:
   - Administrative title (Dean, Head, Chair) -> **DO NOT use in "name" field, search by faculty/dept only**
   - Research area -> expertise
 - Leave unmentioned fields as empty string.
+`;
 
-EXAMPLES:
-❌ WRONG: "who is the Dean for LKCFES" -> {faculty: "Lee Kong Chian Faculty of Engineering and Science", name: "Dean"}
-✅ CORRECT: "who is the Dean for LKCFES" -> {faculty: "Lee Kong Chian Faculty of Engineering and Science"}
-  Then from results, select the person with administrativePost containing "Dean"
+const JCR_SYSTEM_PROMPT = `
+=== JCR JOURNAL METRICS TOOL ===
+You have access to a tool named \`jcr_journal_metric\` which queries Impact Factor (JIF) and Quartile (Q1-Q4).
 
-❌ WRONG: "chairperson for CCSN" -> {faculty: "CCSN", name: "chairperson"}
-✅ CORRECT: "chairperson for CCSN" -> {faculty: "Centre for Communication Systems and Networks"}  
-  Then from results, select person with administrativePost containing "Chairperson" or "Chair"
+### 🧠 LLM Behavioral Rules
 
-**PROCESSING TOOL RESULTS - STEP BY STEP:**
-When tool returns multiple staff members:
-1. **Look at each person's "administrativePost" field** (NOT just "position" or "designation")
-2. **Match the administrativePost to what user asked for:**
-   - User asked for "Dean" -> Find person where administrativePost contains "Dean"
-   - User asked for "Head" -> Find person where administrativePost contains "Head" 
-   - User asked for "Chairperson" or "Chair" -> Find person where administrativePost contains "Chairperson" or "Chair"
-   - User asked for "Director" -> Find person where administrativePost contains "Director"
-3. **If you find a match, present that person's information immediately**
-4. **DO NOT say "could not find" if the administrativePost field has the title** - the data IS there, you just need to filter it
+1.  **Always Call the Tool**: When a query involves factual journal metrics (e.g., "Impact Factor", "Quartile", "Tier", "JIF"), you MUST call the \`jcr_journal_metric\` tool.
+2.  **No Fabrication**: Never fabricate, guess, or estimate JIF or quartile values. Only report what the tool returns.
+3.  **Strict Adherence**: Base your final answer exactly on the JSON data returned by the tool.
+4.  **Handling Missing Years**: If the user does not specify a year, return results for **all available years** provided by the tool.
+5.  **Handling "Not Found"**: If the tool returns \`"found": false\`, clearly state: "The journal does not exist in the dataset." Do not apologize excessively, just state the fact.
+6.  **Best Quartile**: If a journal has multiple categories, the tool provides a \`bestQuartile\` field. Use this as the primary answer for "What quartile is this journal?".
 
-Example: If tool returns 29 people and user asked "who is the dean for LKCFES":
-- Check each person's administrativePost field
-- Find the one with administrativePost = "Dean" 
-- Present THAT person's full details
-- DO NOT say "could not find the Dean"
+### 🧩 MCP Tool Call Format
+{
+  "issn": "optional string",
+  "query": "journal title",
+  "years": [2023, 2024] 
+}
 
-AFTER RESULT:
-- Choose the most relevant person, especially matching titles (Chairperson, Head, Dean, Director, Deputy Dean).
-- **CRITICAL**: When presenting staff information, include ALL relevant details from the tool result:
-  * Name and designation (e.g., Associate Professor)
-  * **Administrative Post** (e.g., "Head of Department", "Dean") - THIS IS CRUCIAL
-  * Department/Faculty
-  * Email address
-  * Academic profile links (Google Scholar, Scopus, ORCID, personal homepage) if available
-- Present this information in a natural, structured format.
-- Do NOT omit the administrative post or profile links if they are present in the tool response.
+### 🎯 Few-Shot Workflow Examples
+
+**🟦 Example 1 — Single-year Quartile Query**
+*User*: "Is CA-A Cancer Journal for Clinicians a Q1 journal in 2024?"
+*Tool Call*: \`jcr_journal_metric(query="CA-A Cancer Journal for Clinicians", years=[2024])\`
+*Tool Output*:
+\`\`\`json
+{
+  "found": true,
+  "journal": { "fullTitle": "CA-A CANCER JOURNAL FOR CLINICIANS" },
+  "metrics": [
+    { "year": 2024, "bestQuartile": "Q1", "jifValue": 232.4 }
+  ]
+}
+\`\`\`
+*Assistant Answer*: "Yes. CA-A Cancer Journal for Clinicians is Q1 in 2024, with a JIF of 232.4."
+
+**🟩 Example 2 — JIF Value Query**
+*User*: "What is the 2024 JIF for Scientific Reports?"
+*Tool Call*: \`jcr_journal_metric(query="Scientific Reports", years=[2024])\`
+*Tool Output*: 
+\`\`\`json
+{
+  "found": true,
+  "metrics": [{ "year": 2024, "jifValue": 8.5, "bestQuartile": "Q1" }]
+}
+\`\`\`
+*Assistant Answer*: "In 2024, Scientific Reports has a JIF of 8.5 and is classified as Q1."
+
+**🟨 Example 3 — Multi-Year JIF Comparison**
+*User*: "Compare the JIF between 2023 and 2024 for Scientific Reports."
+*Tool Call*: \`jcr_journal_metric(query="Scientific Reports", years=[2023, 2024])\`
+*Tool Output*:
+\`\`\`json
+{
+  "metrics": [
+    { "year": 2023, "jifValue": 9.4, "bestQuartile": "Q1" },
+    { "year": 2024, "jifValue": 8.5, "bestQuartile": "Q1" }
+  ]
+}
+\`\`\`
+*Assistant Answer*:
+"Here is the JIF comparison for Scientific Reports:
+
+| Year | JIF | Quartile |
+| :--- | :--- | :--- |
+| 2023 | 9.4 | Q1 |
+| 2024 | 8.5 | Q1 |
+
+The JIF decreased from 9.4 → 8.5, but the journal remained in Q1."
+
+**🟧 Example 4 — ISSN-based lookup**
+*User*: "What is the quartile of ISSN 0007-9235 in 2024?"
+*Tool Call*: \`jcr_journal_metric(issn="0007-9235", years=[2024])\`
+*Tool Output*:
+\`\`\`json
+{
+  "found": true,
+  "journal": { "fullTitle": "CA-A CANCER JOURNAL FOR CLINICIANS" },
+  "metrics": [{ "year": 2024, "bestQuartile": "Q1", "jifValue": 232.4 }]
+}
+\`\`\`
+*Assistant Answer*: "ISSN 0007-9235 corresponds to CA-A Cancer Journal for Clinicians, which is Q1 in 2024."
+
+**🟥 Example 5 — Journal not found**
+*User*: "Give me the JIF for Nonexistent Journal of Fictional Research."
+*Tool Call*: \`jcr_journal_metric(query="Nonexistent Journal of Fictional Research")\`
+*Tool Output*: \`{"found": false}\`
+*Assistant Answer*: "I cannot find this journal in the JCR dataset for any available year."
 `;
 
 /**
@@ -129,6 +207,22 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
         }
         if (name === 'utar_staff_search') {
             return await searchStaff(args, logger);
+        }
+        if (name === 'jcr_journal_metric') {
+            // Ensure data is loaded
+            await ensureJcrCacheLoaded();
+
+            // Prioritize ISSN if present
+            if (args.issn) {
+                return getJournalMetricsByIssn(args.issn, args.years);
+            }
+
+            // Fallback to title query
+            if (args.query) {
+                return getJournalMetricsByTitle(args.query, args.years);
+            }
+
+            return { found: false, error: 'No query or ISSN provided' };
         }
         return { error: `Unknown tool: ${name}` };
     } catch (error: any) {
@@ -256,14 +350,14 @@ Guidelines:
 `;
         }
 
-        // Ensure Tool Instructions are present
         if (!baseSystemPrompt.includes('utar_staff_search')) {
             baseSystemPrompt += `\n\n${STAFF_SEARCH_SYSTEM_PROMPT}`;
-            log('Appended staff search tool instructions.');
+            baseSystemPrompt += `\n\n${JCR_SYSTEM_PROMPT}`; // Add JCR prompt
+            log('Appended staff search and JCR tool instructions.');
         }
 
         const systemPrompt = `${baseSystemPrompt}
-
+        
 Guidelines (Dynamic):
 - Current Date: ${dateStr}
 
@@ -291,7 +385,7 @@ ${chatHistoryStr}
             const completion = await openai.chat.completions.create({
                 model: 'gpt-4o',
                 messages: messages,
-                tools: STAFF_SEARCH_TOOLS,
+                tools: AVAILABLE_TOOLS, // UPDATED
                 tool_choice: 'auto',
                 temperature: 0.7,
                 max_tokens: 1000,
