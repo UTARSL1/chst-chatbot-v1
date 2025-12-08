@@ -7,10 +7,10 @@ async function main() {
     console.log("Cache loaded.");
 
     // Test a known journal
-    const metrics = getJournalMetricsByTitle('nature');
-    console.log("Metrics for 'nature':", JSON.stringify(metrics, null, 2));
+    const result = getJournalMetricsByTitle('nature');
+    console.log("Metrics for 'nature':", JSON.stringify(result, null, 2));
 
-    if (metrics.length > 0) {
+    if (result.found) {
         console.log("SUCCESS: Data verification passed.");
     } else {
         console.error("FAILURE: No metrics found for 'nature' despite expected data.");
