@@ -36,14 +36,14 @@ const STAFF_SEARCH_TOOLS = [
         type: 'function' as const,
         function: {
             name: 'utar_staff_search',
-            description: 'Performs live staff lookups from the UTAR Staff Directory.',
+            description: 'Performs live staff lookups from the UTAR Staff Directory. Search by faculty, department, name, or expertise.',
             parameters: {
                 type: 'object',
                 properties: {
                     faculty: { type: 'string', description: 'Canonical faculty name from utar_resolve_unit (or "All").' },
                     department: { type: 'string', description: 'Department name (optional).' },
-                    name: { type: 'string', description: 'Staff name.' },
-                    expertise: { type: 'string', description: 'Research area/expertise.' }
+                    name: { type: 'string', description: 'Staff member\'s actual name (e.g., "John Smith"). DO NOT use administrative titles like Dean, Head, Director, Chairperson as names.' },
+                    expertise: { type: 'string', description: 'Research area/expertise (optional).' }
                 },
                 required: ['faculty']
             }
@@ -60,6 +60,14 @@ You have access to two MCP tools:
 WHEN TO USE:
 - When the user asks about UTAR staff (names, positions, chairs, heads, deans, emails), ALWAYS use the tools.
 
+**CRITICAL: ADMINISTRATIVE TITLES ARE NOT NAMES**
+- Words like "Dean", "Deputy Dean", "Head", "Director", "Chairperson", "Chair" are ADMINISTRATIVE POSITIONS, NOT people's names.
+- When user asks "who is the Dean of LKCFES" or "who is the Chairperson of CCSN":
+  * DO NOT pass "Dean" or "Chairperson" as the "name" parameter
+  * Instead, search by faculty/department only (leave name empty)
+  * The tool will return staff with their administrative posts
+  * Then YOU filter/select the person whose administrativePost matches what user asked for
+
 LOGIC:
 - If the query includes an acronym or unit name:
   1. FIRST call \`utar_resolve_unit\`.
@@ -67,15 +75,25 @@ LOGIC:
 - Parameter mapping:
   - Unit mentioned -> faculty
   - Department mentioned -> department
-  - Person name -> name
+  - **Actual person name** (e.g., "Dr. John Smith") -> name
+  - Administrative title (Dean, Head, Chair) -> **DO NOT use in "name" field, search by faculty/dept only**
   - Research area -> expertise
-- Leave unmentioned fields empty string.
+- Leave unmentioned fields as empty string.
+
+EXAMPLES:
+❌ WRONG: "who is the Dean for LKCFES" -> {faculty: "Lee Kong Chian Faculty of Engineering and Science", name: "Dean"}
+✅ CORRECT: "who is the Dean for LKCFES" -> {faculty: "Lee Kong Chian Faculty of Engineering and Science"}
+  Then from results, select the person with administrativePost containing "Dean"
+
+❌ WRONG: "chairperson for CCSN" -> {faculty: "CCSN", name: "chairperson"}
+✅ CORRECT: "chairperson for CCSN" -> {faculty: "Centre for Communication Systems and Networks"}  
+  Then from results, select person with administrativePost containing "Chairperson" or "Chair"
 
 AFTER RESULT:
-- Choose the most relevant person, especially matching titles (Chairperson, Head, Dean, Director).
+- Choose the most relevant person, especially matching titles (Chairperson, Head, Dean, Director, Deputy Dean).
 - **CRITICAL**: When presenting staff information, include ALL relevant details from the tool result:
   * Name and designation (e.g., Associate Professor)
-  * **Administrative Post** (e.g., "Head of Department") - THIS IS CRUCIAL
+  * **Administrative Post** (e.g., "Head of Department", "Dean") - THIS IS CRUCIAL
   * Department/Faculty
   * Email address
   * Academic profile links (Google Scholar, Scopus, ORCID, personal homepage) if available
