@@ -241,3 +241,20 @@ model Feedback {
 
   @@map("feedback")
 }
+
+// Version model (for version control management)
+model Version {
+  id            String   @id @default(uuid())
+  versionNumber String   // e.g., "v1.5", "v2.0"
+  commitHash    String   // Git commit hash
+  description   String   @db.Text // What's new in this version
+  isCurrent     Boolean  @default(false) // Only one should be true
+  createdBy     String   // Chairperson who created it
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([isCurrent])
+  @@index([createdAt])
+  @@map("versions")
+}
+
