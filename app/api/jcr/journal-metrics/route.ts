@@ -10,47 +10,23 @@ export async function POST(req: Request) {
         // Ensure cache is loaded
         await ensureJcrCacheLoaded();
 
-        let metrics: any[] = [];
-        let matchType = '';
-        let found = false;
-
         // 1. Try ISSN lookup
         if (issn) {
-            metrics = getJournalMetricsByIssn(issn, years);
-            if (metrics.length > 0) {
-                found = true;
-                matchType = 'issn';
+            const result = getJournalMetricsByIssn(issn, years);
+            if (result.found) {
+                return NextResponse.json(result);
             }
         }
 
-        // 2. Try Title lookup if not found
-        if (!found && query) {
-            metrics = getJournalMetricsByTitle(query, years);
-            if (metrics.length > 0) {
-                found = true;
-                matchType = 'title';
+        // 2. Try Title lookup if not found or skipped
+        if (query) {
+            const result = getJournalMetricsByTitle(query, years);
+            if (result.found) {
+                return NextResponse.json(result);
             }
         }
 
-        if (!found) {
-            return NextResponse.json({ found: false, reason: 'No matching journal for given ISSN or title' });
-        }
-
-        // Retrieve full journal metadata
-        // use the same input that yielded results to fetch metadata
-        let journalInfo = null;
-        if (matchType === 'issn') {
-            journalInfo = getJournalInfo(issn);
-        } else {
-            journalInfo = getJournalInfo(query);
-        }
-
-        return NextResponse.json({
-            found: true,
-            journal: journalInfo,
-            metrics,
-            matchType
-        });
+        return NextResponse.json({ found: false, reason: 'No matching journal found' });
 
     } catch (e) {
         console.error('JCR API Error:', e);
