@@ -46,4 +46,8 @@ next-env.d.ts
 /generated/prisma
 
 # backups
-V1.9_before_MCP_integration/
+
+# python
+__pycache__/
+*.pyc
+

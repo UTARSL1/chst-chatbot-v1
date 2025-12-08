@@ -4,12 +4,16 @@ from typing import Optional, List, Dict, Any
 import uvicorn
 import os
 import sys
+from dotenv import load_dotenv
+
+load_dotenv() # Load environment variables from .env file
 
 # Add current directory to path so we can import tools
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from tools.resolve_unit import UnitResolver
 from tools.staff_search import search_staff
+from tools.jcr_lookup import get_jcr_metrics
 
 app = FastAPI(title="UTAR Staff Directory MCP Server", version="1.0.0")
 
@@ -40,6 +44,11 @@ class StaffParamsResponse(BaseModel):
     # Although the tool performs the search, we can also just return parameters if needed.
     # But the prompt says "Return a clean list of staff entries".
     pass
+
+class JcrRequest(BaseModel):
+    query: Optional[str] = Field(None, description="Journal title or partial title to search for (e.g. 'Nature').")
+    issn: Optional[str] = Field(None, description="ISSN (Print or Electronic) to search for (e.g. '0007-9235').")
+    years: Optional[List[int]] = Field(None, description="Years to retrieve metrics for (e.g. [2023, 2024]). If empty, returns all.")
 
 # --- Endpoints ---
 
@@ -79,6 +88,13 @@ def staff_search_endpoint(request: StaffSearchRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/tools/jcr_journal_metric", response_model=Dict[str, Any])
+def jcr_endpoint(request: JcrRequest):
+    """
+    Retrieves JCR metrics including JIF (Impact Factor) and Quartile rankings for a given journal.
+    """
+    return get_jcr_metrics(query=request.query, issn=request.issn, years=request.years)
+
 @app.get("/mcp/manifest")
 def get_manifest():
     """
@@ -107,6 +123,22 @@ def get_manifest():
                         "department": {"type": "string", "description": "Department name (optional, default 'All')."},
                         "name": {"type": "string", "description": "Staff name query."},
                         "expertise": {"type": "string", "description": "Area of expertise query."}
+                    }
+                }
+            },
+            {
+                "name": "jcr_journal_metric",
+                "description": "Look up Journal Citation Report (JCR) metrics, specifically Journal Impact Factor (JIF) and JIF Quartile (Q1-Q4) for journals. Supports multi-year comparisons.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "query": {"type": "string", "description": "Journal title (e.g. 'Nature', 'IEEE Transactions'). Partial matches supported."},
+                        "issn": {"type": "string", "description": "ISSN (Print or Electronic). If provided, prioritized over title."},
+                        "years": {
+                            "type": "array", 
+                            "items": {"type": "integer"}, 
+                            "description": "List of years to retrieve (e.g. [2023, 2024]). Omit to get all available years."
+                        }
                     }
                 }
             }

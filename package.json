@@ -12,7 +12,8 @@
     "test:coverage": "jest --coverage",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
-    "db:generate": "prisma generate"
+    "db:generate": "prisma generate",
+    "import:jcr": "ts-node scripts/import_jcr_year.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -31,6 +32,7 @@
     "cheerio": "^1.1.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "csv-parse": "^6.1.0",
     "date-fns": "^4.1.0",
     "fuse.js": "^7.1.0",
     "langchain": "^1.1.1",
@@ -50,6 +52,7 @@
     "resend": "^6.5.2",
     "tailwind-merge": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
+    "ts-node": "^10.9.2",
     "uuid": "^13.0.0",
     "zod": "^3.23.8"
   },

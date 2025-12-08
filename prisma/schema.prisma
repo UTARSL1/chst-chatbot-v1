@@ -258,3 +258,27 @@ model Version {
   @@map("versions")
 }
 
+
+// JCR Journal Metric model
+model JcrJournalMetric {
+  id              Int      @id @default(autoincrement())
+  fullTitle       String   @map("full_title")
+  normalizedTitle String   @map("normalized_title")
+  issnPrint       String?  @map("issn_print")
+  issnElectronic  String?  @map("issn_electronic")
+  category        String
+  edition         String?
+  jifYear         Int      @map("jif_year")
+  jifValue        Decimal? @map("jif_value") @db.Decimal(10, 3) 
+  jifQuartile     String   @map("jif_quartile")
+  jciValue        Decimal? @map("jci_value") @db.Decimal(10, 3)
+  percentCitableOa Decimal? @map("percent_citable_oa") @db.Decimal(10, 2)
+  source          String?  @default("JCR")
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([issnPrint, jifYear])
+  @@index([issnElectronic, jifYear])
+  @@index([normalizedTitle, jifYear])
+  @@index([normalizedTitle, jifYear, category])
+  @@map("jcr_journal_metrics")
+}

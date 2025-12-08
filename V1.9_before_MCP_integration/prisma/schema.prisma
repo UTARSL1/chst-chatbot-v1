@@ -1,0 +1,243 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// User roles enum
+enum UserRole {
+  student
+  member
+  chairperson
+  public
+}
+
+// Document access level enum
+enum AccessLevel {
+  student
+  member
+  chairperson
+}
+
+// User model
+model User {
+  id            String        @id @default(uuid())
+  email         String        @unique
+  passwordHash  String
+  name          String
+  role          UserRole
+  isApproved    Boolean       @default(false) // For public users awaiting approval
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  resetToken       String?  @unique // For password reset
+  resetTokenExpiry DateTime? // Expiration time for reset token
+  recoveryEmail    String?    // Personal email for password recovery (for UTAR users)
+  invitationCodeId String?    // Invitation code used during signup
+  verificationToken String?   @unique // Token for email verification
+  verificationTokenExpiry DateTime? // Expiration time for verification token
+  isVerified       Boolean    @default(false) // Email verification status
+  lastLogin        DateTime?  // Last login timestamp
+  
+  // Relations
+  chatSessions    ChatSession[]
+  messages        Message[]
+  documents       Document[]
+  knowledgeNotes  KnowledgeNote[]
+  feedback        Feedback[]
+  invitationCode  InvitationCode? @relation(fields: [invitationCodeId], references: [id])
+  
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+// Knowledge Note model (Priority notes for RAG)
+model KnowledgeNote {
+  id          String   @id @default(uuid())
+  title       String
+  content     String   @db.Text
+  category    String?
+  priority    String   @default("standard") // standard, high, critical
+  accessLevel String[] @default(["public", "student", "member", "chairperson"]) // Array of roles
+  status      String   @default("active")   // processing, active, failed
+  isActive    Boolean  @default(true)
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  creator     User     @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  
+  @@index([isActive])
+  @@index([createdBy])
+  @@index([priority])
+  @@map("knowledge_notes")
+}
+
+// Chat session model
+model ChatSession {
+  id        String    @id @default(uuid())
+  userId    String
+  title     String?   // First question or custom title
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? // Soft delete timestamp
+  deletedBy String?   // User ID who deleted this session
+  
+  // Relations
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  Message[]
+  
+  @@index([userId])
+  @@index([createdAt])
+  @@index([deletedAt])
+  @@map("chat_sessions")
+}
+
+// Message model
+model Message {
+  id          String      @id @default(uuid())
+  sessionId   String
+  userId      String
+  role        String      // 'user' or 'assistant'
+  content     String      @db.Text
+  sources     Json?       // Array of document sources used for RAG
+  createdAt   DateTime    @default(now())
+  
+  // Relations
+  session     ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([sessionId])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("messages")
+}
+
+// Document model
+model Document {
+  id            String      @id @default(uuid())
+  filename      String
+  originalName  String
+  accessLevel   AccessLevel @default(student)
+  category      String      @default("policy") // policy, form
+  department    String      @default("General") // DHR, IPSR, etc.
+  filePath      String
+  fileSize      Int
+  status        String      @default("processing") // 'processing', 'processed', 'failed'
+  uploadedById  String
+  uploadedAt    DateTime    @default(now())
+  processedAt   DateTime?
+  
+  // Vector DB metadata
+  vectorIds     Json?       // Array of vector IDs in Pinecone
+  chunkCount    Int?        // Number of chunks created
+  
+  // Relations
+  uploadedBy    User        @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+  
+  @@index([accessLevel])
+  @@index([status])
+  @@index([uploadedById])
+  @@map("documents")
+}
+
+model SystemPrompt {
+  id          String   @id @default(uuid())
+  name        String   @unique // e.g., "default_rag"
+  content     String   @db.Text
+  isActive    Boolean  @default(true)
+  updatedBy   String?  // User ID of the editor
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+
+  @@map("system_prompts")
+}
+
+// Chairperson signup code model
+model SignupCode {
+  id          String    @id @default(uuid())
+  code        String    @unique
+  isUsed      Boolean   @default(false)
+  usedBy      String?   // Email of user who used it
+  createdAt   DateTime  @default(now())
+  usedAt      DateTime?
+  expiresAt   DateTime? // Optional expiration
+  
+  @@index([code])
+  @@index([isUsed])
+  @@map("signup_codes")
+}
+
+// Invitation code model (reusable codes for UTAR signups)
+model InvitationCode {
+  id         String    @id @default(uuid())
+  code       String    @unique
+  isActive   Boolean   @default(true)
+  createdBy  String    // Chairperson who created it
+  createdAt  DateTime  @default(now())
+  expiresAt  DateTime? // Optional expiration
+  usageCount Int       @default(0)
+  remark     String?   // Optional note/description (e.g., cohort, group)
+  
+  // Relations
+  users      User[]
+  
+  @@index([code])
+  @@index([isActive])
+  @@map("invitation_codes")
+}
+
+// Quick Access Link model (Custom links in sidebar)
+model QuickAccessLink {
+  id          String   @id @default(uuid())
+  name        String   // Display name of the link
+  url         String   // URL to navigate to
+  section     String   @default("others") // "chst" or "others"
+  icon        String?  // Optional icon name from lucide-react
+  roles       String[] @default(["public", "student", "member", "chairperson"]) // Roles that can see this link
+  order       Int      @default(0) // Display order
+  isActive    Boolean  @default(true)
+  isSystem    Boolean  @default(false) // True for admin-forced links, False for personal links
+  createdBy   String   // User ID who created it
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([section])
+  @@index([isActive])
+  @@index([order])
+  @@map("quick_access_links")
+}
+
+// Popular Question model
+model PopularQuestion {
+  id        String   @id @default(uuid())
+  question  String
+  roles     String[] @default(["public", "student", "member", "chairperson"])
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  @@map("popular_questions")
+}
+
+// User Feedback model
+model Feedback {
+  id        String   @id @default(uuid())
+  content   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("feedback")
+}
