@@ -148,7 +148,7 @@ export default function VersionManagementPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+            <div className="flex items-center justify-center py-12">
                 <p className="text-white">Loading...</p>
             </div>
         );
@@ -157,212 +157,204 @@ export default function VersionManagementPage() {
     if (!session) return null;
 
     return (
-        <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
-            <div className="container max-w-6xl mx-auto p-6">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-8">
-                    <div>
-                        <h1 className="text-4xl font-bold text-white mb-2">Version Management</h1>
-                        <p className="text-white/80">Manage application versions and commit history</p>
-                    </div>
-                    <Button
-                        onClick={() => router.push('/admin')}
-                        variant="outline"
-                        className="bg-white/10 backdrop-blur-sm text-white border-white/30 hover:bg-white/20"
-                    >
-                        ← Back to Dashboard
-                    </Button>
+        <div className="space-y-8">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-3xl font-bold text-white mb-2">Version Management</h1>
+                    <p className="text-gray-400">Manage application versions and commit history</p>
                 </div>
+            </div>
 
-                {/* Add Version Button */}
-                {!showAddForm && (
-                    <Button
-                        onClick={() => setShowAddForm(true)}
-                        className="mb-6 bg-white/20 backdrop-blur-sm text-white border-white/30 hover:bg-white/30"
-                    >
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add New Version
-                    </Button>
-                )}
+            {/* Add Version Button */}
+            {!showAddForm && (
+                <Button
+                    onClick={() => setShowAddForm(true)}
+                    variant="gradient"
+                    className="mb-6"
+                >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add New Version
+                </Button>
+            )}
 
-                {/* Add/Edit Form */}
-                {showAddForm && (
-                    <Card className="mb-6 p-6 bg-white/10 backdrop-blur-md border-white/20">
-                        <h3 className="text-xl font-semibold text-white mb-4">
-                            {editingId ? 'Edit Version' : 'Add New Version'}
-                        </h3>
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-white/90 mb-2">
-                                    Version Number *
-                                </label>
-                                <Input
-                                    value={formData.versionNumber}
-                                    onChange={(e) => setFormData({ ...formData, versionNumber: e.target.value })}
-                                    placeholder="e.g., v1.5, v2.0"
-                                    className="bg-white/10 border-white/30 text-white placeholder:text-white/50"
-                                />
-                            </div>
+            {/* Add/Edit Form */}
+            {showAddForm && (
+                <Card className="mb-6 p-6 bg-gray-900/50 border-white/10 backdrop-blur-xl">
+                    <h3 className="text-xl font-semibold text-white mb-4">
+                        {editingId ? 'Edit Version' : 'Add New Version'}
+                    </h3>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                                Version Number *
+                            </label>
+                            <Input
+                                value={formData.versionNumber}
+                                onChange={(e) => setFormData({ ...formData, versionNumber: e.target.value })}
+                                placeholder="e.g., v1.5, v2.0"
+                                className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
+                            />
+                        </div>
 
-                            <div>
-                                <label className="block text-sm font-medium text-white/90 mb-2">
-                                    Commit Hash *
-                                </label>
-                                <Input
-                                    value={formData.commitHash}
-                                    onChange={(e) => setFormData({ ...formData, commitHash: e.target.value })}
-                                    placeholder="e.g., a5654f9, 2c59253"
-                                    className="bg-white/10 border-white/30 text-white placeholder:text-white/50"
-                                />
-                            </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                                Commit Hash *
+                            </label>
+                            <Input
+                                value={formData.commitHash}
+                                onChange={(e) => setFormData({ ...formData, commitHash: e.target.value })}
+                                placeholder="e.g., a5654f9, 2c59253"
+                                className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
+                            />
+                        </div>
 
-                            <div>
-                                <label className="block text-sm font-medium text-white/90 mb-2">
-                                    Description *
-                                </label>
-                                <textarea
-                                    value={formData.description}
-                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    placeholder="What's new in this version..."
-                                    rows={4}
-                                    className="w-full px-3 py-2 rounded-md bg-white/10 border border-white/30 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-white/50"
-                                />
-                            </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                                Description *
+                            </label>
+                            <textarea
+                                value={formData.description}
+                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                placeholder="What's new in this version..."
+                                rows={4}
+                                className="w-full px-3 py-2 rounded-md bg-gray-800 border border-gray-700 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
+                            />
+                        </div>
 
-                            <div className="flex items-center gap-2">
-                                <input
-                                    type="checkbox"
-                                    id="isCurrent"
-                                    checked={formData.isCurrent}
-                                    onChange={(e) => setFormData({ ...formData, isCurrent: e.target.checked })}
-                                    className="w-4 h-4 rounded border-white/30 bg-white/10 checked:bg-white"
-                                />
-                                <label htmlFor="isCurrent" className="text-sm text-white/90 cursor-pointer">
-                                    Set as current version
-                                </label>
-                            </div>
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                id="isCurrent"
+                                checked={formData.isCurrent}
+                                onChange={(e) => setFormData({ ...formData, isCurrent: e.target.checked })}
+                                className="w-4 h-4 rounded border-gray-600 bg-gray-700 checked:bg-violet-600"
+                            />
+                            <label htmlFor="isCurrent" className="text-sm text-gray-300 cursor-pointer">
+                                Set as current version
+                            </label>
+                        </div>
 
-                            <div className="flex gap-3">
-                                <Button
-                                    type="submit"
-                                    className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30"
-                                >
-                                    {editingId ? 'Update Version' : 'Create Version'}
-                                </Button>
-                                <Button
-                                    type="button"
-                                    onClick={cancelEdit}
-                                    variant="outline"
-                                    className="bg-white/10 backdrop-blur-sm text-white border-white/30 hover:bg-white/20"
-                                >
-                                    Cancel
-                                </Button>
-                            </div>
-                        </form>
-                    </Card>
-                )}
+                        <div className="flex gap-3">
+                            <Button
+                                type="submit"
+                                variant="gradient"
+                            >
+                                {editingId ? 'Update Version' : 'Create Version'}
+                            </Button>
+                            <Button
+                                type="button"
+                                onClick={cancelEdit}
+                                variant="outline"
+                                className="border-gray-700 text-gray-300 hover:bg-gray-800"
+                            >
+                                Cancel
+                            </Button>
+                        </div>
+                    </form>
+                </Card>
+            )}
 
-                {/* Versions Table */}
-                <Card className="bg-white/10 backdrop-blur-md border-white/20 overflow-hidden">
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead className="bg-white/5">
+            {/* Versions Table */}
+            <Card className="bg-gray-900/50 border-white/10 backdrop-blur-xl overflow-hidden">
+                <div className="overflow-x-auto">
+                    <table className="w-full">
+                        <thead className="bg-white/5">
+                            <tr>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">
+                                    Version
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">
+                                    Commit
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">
+                                    Description
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">
+                                    Status
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">
+                                    Created
+                                </th>
+                                <th className="px-6 py-3 text-right text-xs font-medium text-white/90 uppercase tracking-wider">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-white/10">
+                            {versions.length === 0 ? (
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">
-                                        Version
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">
-                                        Commit
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">
-                                        Description
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">
-                                        Status
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">
-                                        Created
-                                    </th>
-                                    <th className="px-6 py-3 text-right text-xs font-medium text-white/90 uppercase tracking-wider">
-                                        Actions
-                                    </th>
+                                    <td colSpan={6} className="px-6 py-8 text-center text-white/60">
+                                        No versions found. Create your first version!
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody className="divide-y divide-white/10">
-                                {versions.length === 0 ? (
-                                    <tr>
-                                        <td colSpan={6} className="px-6 py-8 text-center text-white/60">
-                                            No versions found. Create your first version!
+                            ) : (
+                                versions.map((version) => (
+                                    <tr key={version.id} className="hover:bg-white/5 transition-colors">
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-sm font-medium text-white">
+                                                    {version.versionNumber}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="flex items-center gap-2 text-sm text-white/80">
+                                                <GitCommit className="w-4 h-4" />
+                                                <code className="bg-white/10 px-2 py-0.5 rounded text-xs">
+                                                    {version.commitHash}
+                                                </code>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <p className="text-sm text-white/80 line-clamp-2">
+                                                {version.description}
+                                            </p>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            {version.isCurrent ? (
+                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500/20 text-green-300 border border-green-500/30">
+                                                    <Check className="w-3 h-3 mr-1" />
+                                                    Current
+                                                </span>
+                                            ) : (
+                                                <button
+                                                    onClick={() => handleSetCurrent(version.id)}
+                                                    className="text-xs text-white/60 hover:text-white transition-colors underline"
+                                                >
+                                                    Set as current
+                                                </button>
+                                            )}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-white/60">
+                                            {new Date(version.createdAt).toLocaleDateString()}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <div className="flex items-center justify-end gap-2">
+                                                <button
+                                                    onClick={() => handleEdit(version)}
+                                                    className="text-white/60 hover:text-white transition-colors p-1"
+                                                    title="Edit"
+                                                >
+                                                    <Pencil className="w-4 h-4" />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(version.id)}
+                                                    disabled={version.isCurrent}
+                                                    className="text-white/60 hover:text-red-400 transition-colors p-1 disabled:opacity-30 disabled:cursor-not-allowed"
+                                                    title={version.isCurrent ? "Cannot delete current version" : "Delete"}
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
-                                ) : (
-                                    versions.map((version) => (
-                                        <tr key={version.id} className="hover:bg-white/5 transition-colors">
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex items-center gap-2">
-                                                    <span className="text-sm font-medium text-white">
-                                                        {version.versionNumber}
-                                                    </span>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex items-center gap-2 text-sm text-white/80">
-                                                    <GitCommit className="w-4 h-4" />
-                                                    <code className="bg-white/10 px-2 py-0.5 rounded text-xs">
-                                                        {version.commitHash}
-                                                    </code>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <p className="text-sm text-white/80 line-clamp-2">
-                                                    {version.description}
-                                                </p>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                {version.isCurrent ? (
-                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500/20 text-green-300 border border-green-500/30">
-                                                        <Check className="w-3 h-3 mr-1" />
-                                                        Current
-                                                    </span>
-                                                ) : (
-                                                    <button
-                                                        onClick={() => handleSetCurrent(version.id)}
-                                                        className="text-xs text-white/60 hover:text-white transition-colors underline"
-                                                    >
-                                                        Set as current
-                                                    </button>
-                                                )}
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-white/60">
-                                                {new Date(version.createdAt).toLocaleDateString()}
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <div className="flex items-center justify-end gap-2">
-                                                    <button
-                                                        onClick={() => handleEdit(version)}
-                                                        className="text-white/60 hover:text-white transition-colors p-1"
-                                                        title="Edit"
-                                                    >
-                                                        <Pencil className="w-4 h-4" />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleDelete(version.id)}
-                                                        disabled={version.isCurrent}
-                                                        className="text-white/60 hover:text-red-400 transition-colors p-1 disabled:opacity-30 disabled:cursor-not-allowed"
-                                                        title={version.isCurrent ? "Cannot delete current version" : "Delete"}
-                                                    >
-                                                        <Trash2 className="w-4 h-4" />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </Card>
-            </div>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </Card>
         </div>
     );
 }
