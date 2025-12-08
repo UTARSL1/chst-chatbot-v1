@@ -1078,15 +1078,14 @@ export default function ChatPage() {
             </div >
 
             {/* Floating Terms of Use Button */}
-            < button
-                onClick={() => setTermsModalOpen(true)
-                }
-                className="fixed bottom-6 right-6 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 z-40"
+            <button
+                onClick={() => setTermsModalOpen(true)}
+                className="fixed bottom-6 right-6 p-2 bg-background/50 hover:bg-accent border border-border/50 text-muted-foreground hover:text-foreground text-xs rounded-full shadow-sm transition-all duration-200 flex items-center gap-2 z-40 opacity-70 hover:opacity-100"
                 title="View Terms of Use"
             >
-                <FileText className="w-4 h-4" />
-                Terms of Use
-            </button >
+                <FileText className="w-3 h-3" />
+                <span className="hidden sm:inline">Terms</span>
+            </button>
 
             <TermsOfUseModal
                 open={termsModalOpen}
