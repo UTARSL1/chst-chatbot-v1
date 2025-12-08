@@ -89,6 +89,23 @@ EXAMPLES:
 ✅ CORRECT: "chairperson for CCSN" -> {faculty: "Centre for Communication Systems and Networks"}  
   Then from results, select person with administrativePost containing "Chairperson" or "Chair"
 
+**PROCESSING TOOL RESULTS - STEP BY STEP:**
+When tool returns multiple staff members:
+1. **Look at each person's "administrativePost" field** (NOT just "position" or "designation")
+2. **Match the administrativePost to what user asked for:**
+   - User asked for "Dean" -> Find person where administrativePost contains "Dean"
+   - User asked for "Head" -> Find person where administrativePost contains "Head" 
+   - User asked for "Chairperson" or "Chair" -> Find person where administrativePost contains "Chairperson" or "Chair"
+   - User asked for "Director" -> Find person where administrativePost contains "Director"
+3. **If you find a match, present that person's information immediately**
+4. **DO NOT say "could not find" if the administrativePost field has the title** - the data IS there, you just need to filter it
+
+Example: If tool returns 29 people and user asked "who is the dean for LKCFES":
+- Check each person's administrativePost field
+- Find the one with administrativePost = "Dean" 
+- Present THAT person's full details
+- DO NOT say "could not find the Dean"
+
 AFTER RESULT:
 - Choose the most relevant person, especially matching titles (Chairperson, Head, Dean, Director, Deputy Dean).
 - **CRITICAL**: When presenting staff information, include ALL relevant details from the tool result:
