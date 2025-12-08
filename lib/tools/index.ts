@@ -200,10 +200,18 @@ export async function searchStaff(
                         department = valueText.replace(/^:\s*/, '');
                     }
                     if (label.includes('Designation')) designation = valueText.replace(/^:\s*/, '');
-                    if (label.includes('Administrative Post')) {
-                        administrativePost = valueText.replace(/^:\s*/, '');
-                        log(`Card ${i + 1}: DOM found admin post: "${administrativePost}"`);
+
+                    // Enhanced Administrative Post extraction with case-insensitive matching
+                    const labelLower = label.toLowerCase();
+                    if (labelLower.includes('administrative') && labelLower.includes('post')) {
+                        const postValue = valueText.replace(/^:\s*/, '').trim();
+                        if (postValue && !administrativePost) {
+                            // Take the first non-empty administrative post (usually "Dean", not "Director (Xinwei)")
+                            administrativePost = postValue;
+                            log(`Card ${i + 1}: Found admin post: "${administrativePost}" (label: "${label}")`);
+                        }
                     }
+
                     if (label.includes('Google Scholar')) {
                         const link = value.find('a').attr('href');
                         if (link) googleScholarUrl = link;
