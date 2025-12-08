@@ -127,7 +127,7 @@ export default function SystemPromptPage() {
                         <RotateCcw className="w-4 h-4 mr-2" />
                         Reset to Default
                     </Button>
-                    <Button onClick={handleSave} disabled={saving}>
+                    <Button onClick={handleSave} disabled={saving} variant=" gradient\>
                         {saving ? (
                             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                         ) : (
