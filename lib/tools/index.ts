@@ -202,6 +202,7 @@ export async function searchStaff(
                     if (label.includes('Designation')) designation = valueText.replace(/^:\s*/, '');
                     if (label.includes('Administrative Post')) {
                         administrativePost = valueText.replace(/^:\s*/, '');
+                        log(`Card ${i + 1}: DOM found admin post: "${administrativePost}"`);
                     }
                     if (label.includes('Google Scholar')) {
                         const link = value.find('a').attr('href');

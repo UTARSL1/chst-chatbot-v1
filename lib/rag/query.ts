@@ -73,7 +73,14 @@ LOGIC:
 
 AFTER RESULT:
 - Choose the most relevant person, especially matching titles (Chairperson, Head, Dean, Director).
-- Answer in natural language.
+- **CRITICAL**: When presenting staff information, include ALL relevant details from the tool result:
+  * Name and designation (e.g., Associate Professor)
+  * **Administrative Post** (e.g., "Head of Department") - THIS IS CRUCIAL
+  * Department/Faculty
+  * Email address
+  * Academic profile links (Google Scholar, Scopus, ORCID, personal homepage) if available
+- Present this information in a natural, structured format.
+- Do NOT omit the administrative post or profile links if they are present in the tool response.
 `;
 
 /**
