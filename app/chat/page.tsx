@@ -70,7 +70,7 @@ export default function ChatPage() {
     const [sendingFeedback, setSendingFeedback] = useState(false);
 
     // Get current version
-    const currentVersion = useCurrentVersion();
+    const currentVersion = useCurrentVersion(true); // Enable title updates
 
     const handleSendFeedback = async () => {
         if (!feedbackContent.trim()) return;
