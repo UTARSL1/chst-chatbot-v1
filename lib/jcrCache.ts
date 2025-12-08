@@ -168,20 +168,86 @@ function processRecords(records: JcrMetricRecord[], years?: number[]): JcrMetric
     });
 }
 
-export function getJournalMetricsByIssn(issn: string, years?: number[]): JcrMetricByYear[] {
-    if (!issn) return [];
-    const iKey = issn.trim().toUpperCase();
-    const records = byIssnMap.get(iKey);
-    if (!records) return [];
-    return processRecords(records, years);
+// Helper for Levenshtein Distance (simple implementation)
+function levenshtein(a: string, b: string): number {
+    const matrix = [];
+    for (let i = 0; i <= b.length; i++) { matrix[i] = [i]; }
+    for (let j = 0; j <= a.length; j++) { matrix[0][j] = j; }
+    for (let i = 1; i <= b.length; i++) {
+        for (let j = 1; j <= a.length; j++) {
+            if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                matrix[i][j] = matrix[i - 1][j - 1];
+            } else {
+                matrix[i][j] = Math.min(
+                    matrix[i - 1][j - 1] + 1,
+                    Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1)
+                );
+            }
+        }
+    }
+    return matrix[b.length][a.length];
 }
 
-export function getJournalMetricsByTitle(title: string, years?: number[]): JcrMetricByYear[] {
-    if (!title) return [];
+// Helper to wrap results
+function wrapResult(records: JcrMetricRecord[], years?: number[], matchType?: 'issn' | 'title', reason?: string): JournalMatchResult {
+    if (!records || records.length === 0) {
+        return { found: false, reason: reason || 'No records found' };
+    }
+    const r = records[0];
+    const metrics = processRecords(records, years);
+    return {
+        found: true,
+        journal: {
+            fullTitle: r.fullTitle,
+            issnPrint: r.issnPrint,
+            issnElectronic: r.issnElectronic
+        },
+        metrics,
+        matchType
+    };
+}
+
+export function getJournalMetricsByIssn(issn: string, years?: number[]): JournalMatchResult {
+    if (!issn) return { found: false, reason: 'No ISSN provided' };
+    const iKey = issn.trim().toUpperCase();
+    const records = byIssnMap.get(iKey);
+    return wrapResult(records || [], years, 'issn');
+}
+
+export function getJournalMetricsByTitle(title: string, years?: number[]): JournalMatchResult {
+    if (!title) return { found: false, reason: 'No title provided' };
     const tKey = title.trim().toLowerCase().replace(/\s+/g, ' ');
-    const records = byTitleMap.get(tKey);
-    if (!records) return [];
-    return processRecords(records, years);
+
+    // 1. Exact match
+    if (byTitleMap.has(tKey)) {
+        return wrapResult(byTitleMap.get(tKey)!, years, 'title');
+    }
+
+    // 2. Fuzzy match (Find best close match)
+    // Only search if length > 3 to avoid noise
+    if (tKey.length > 3) {
+        let bestMatch: string | null = null;
+        let minDist = 999;
+        const threshold = Math.max(3, Math.floor(tKey.length * 0.2)); // Allow 20% typos
+
+        for (const knownTitle of byTitleMap.keys()) {
+            // Optimization: Skip if length diff is too big
+            if (Math.abs(knownTitle.length - tKey.length) > threshold) continue;
+
+            const dist = levenshtein(tKey, knownTitle);
+            if (dist < minDist && dist <= threshold) {
+                minDist = dist;
+                bestMatch = knownTitle;
+            }
+        }
+
+        if (bestMatch) {
+            console.log(`[JCR Cache] Fuzzy match: "${title}" -> "${bestMatch}"`);
+            return wrapResult(byTitleMap.get(bestMatch)!, years, 'title', `Fuzzy matched from "${title}"`);
+        }
+    }
+
+    return { found: false, reason: 'Journal not found' };
 }
 
 export function getJournalInfo(titleOrIssn: string): { fullTitle: string, issnPrint: string | null, issnElectronic: string | null } | null {
