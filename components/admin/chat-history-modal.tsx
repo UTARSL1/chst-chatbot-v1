@@ -15,6 +15,8 @@ import {
     AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Trash2 } from 'lucide-react';
 
 interface Message {
     id: string;
@@ -62,14 +64,70 @@ export function ChatHistoryModal({ userId, userName, open, onOpenChange }: ChatH
         }
     };
 
+    const handleDeleteSession = async (sessionId: string, sessionTitle: string) => {
+        if (!confirm(`Delete chat session "${sessionTitle}"? This action cannot be undone.`)) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/chat-sessions/${sessionId}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                setSessions(prev => prev.filter(s => s.id !== sessionId));
+                alert('Chat session deleted successfully');
+            } else {
+                alert('Failed to delete chat session');
+            }
+        } catch (error) {
+            console.error('Error deleting session:', error);
+            alert('Failed to delete chat session');
+        }
+    };
+
+    const handleDeleteAllHistory = async () => {
+        if (!confirm(`Delete ALL chat history for ${userName}? This will permanently delete ${sessions.length} conversation(s). This action cannot be undone.`)) {
+            return;
+        }
+
+        try {
+            const deletePromises = sessions.map(session =>
+                fetch(`/api/chat-sessions/${session.id}`, { method: 'DELETE' })
+            );
+
+            await Promise.all(deletePromises);
+            setSessions([]);
+            alert('All chat history deleted successfully');
+        } catch (error) {
+            console.error('Error deleting all history:', error);
+            alert('Failed to delete all chat history');
+        }
+    };
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle>Chat History - {userName}</DialogTitle>
-                    <DialogDescription>
-                        View all conversations and messages from this user
-                    </DialogDescription>
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <DialogTitle>Chat History - {userName}</DialogTitle>
+                            <DialogDescription>
+                                View all conversations and messages from this user
+                            </DialogDescription>
+                        </div>
+                        {sessions.length > 0 && (
+                            <Button
+                                onClick={handleDeleteAllHistory}
+                                variant="destructive"
+                                size="sm"
+                                className="ml-4"
+                            >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Delete All History
+                            </Button>
+                        )}
+                    </div>
                 </DialogHeader>
 
                 {loading ? (
@@ -85,13 +143,24 @@ export function ChatHistoryModal({ userId, userName, open, onOpenChange }: ChatH
                         {sessions.map((session) => (
                             <AccordionItem key={session.id} value={session.id}>
                                 <AccordionTrigger>
-                                    <div className="flex items-center gap-3 text-left">
+                                    <div className="flex items-center gap-3 text-left w-full">
                                         <div className="flex-1">
                                             <div className="font-medium">{session.title}</div>
                                             <div className="text-xs text-muted-foreground">
                                                 {new Date(session.createdAt).toLocaleString()} • {session.messages.length} messages
                                             </div>
                                         </div>
+                                        <Button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDeleteSession(session.id, session.title);
+                                            }}
+                                            variant="ghost"
+                                            size="sm"
+                                            className="text-red-500 hover:text-red-700 hover:bg-red-50 mr-2"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </Button>
                                     </div>
                                 </AccordionTrigger>
                                 <AccordionContent>
@@ -100,8 +169,8 @@ export function ChatHistoryModal({ userId, userName, open, onOpenChange }: ChatH
                                             <div
                                                 key={message.id}
                                                 className={`p-3 rounded-lg ${message.role === 'user'
-                                                        ? 'bg-blue-600/10 border border-blue-600/20'
-                                                        : 'bg-gray-800/50 border border-gray-700'
+                                                    ? 'bg-blue-600/10 border border-blue-600/20'
+                                                    : 'bg-gray-800/50 border border-gray-700'
                                                     }`}
                                             >
                                                 <div className="flex items-center gap-2 mb-2">
