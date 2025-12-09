@@ -136,9 +136,10 @@ You have access to a tool named \`jcr_journal_metric\` which retrieves Journal I
 
 7.  **No Document Suggestions**: When answering JCR queries, DO NOT suggest forms, policies, funding info, or administrative procedures unless the user specifically asks.
 
-8.  **Table Formatting**: If the user requests a "table", "comparison", or asks to compare multiple journals/years, you **MUST** present the data in a Markdown table.
-    *   **Columns**: Journal, Year, Category (Edition), JIF, Quartile.
-    *   **Format**: Use standard Markdown table syntax.
+8.  **Comparison Table**: If the user compares multiple journals, use a **Side-by-Side** table layout.
+    *   **Columns**: Metric (Year/Category), Journal A, Journal B...
+    *   **Rows**: List JIF and Quartiles for each year as separate rows.
+    *   **Format**: Merge JIF and Quartile into one cell (e.g., "5.2 (Q1)") or use adjacent rows.
 
 ### 🧩 MCP Tool Call Format
 {
@@ -215,14 +216,15 @@ You have access to a tool named \`jcr_journal_metric\` which retrieves Journal I
 *   JIF: 58.1
 *   Quartile: Q1"
 
-**🟪 Example 3 - Comparison Table Request**
-*User*: "Compare JIF of Journal A and Journal B in 2023 as a table."
+**🟪 Example 3 - Side-by-Side Comparison**
+*User*: "Compare JIF of Journal A and Journal B from 2022 to 2023."
 *Tool Call*: (Calls jcr_journal_metric for both)
 *Assistant Answer*:
-| Journal | Year | Category (Edition) | JIF | Quartile |
-| :--- | :--- | :--- | :--- | :--- |
-| Journal A | 2023 | MATH (SCIE) | 1.5 | Q2 |
-| Journal B | 2023 | PHYSICS (SCIE) | 3.2 | Q1 |
+| Metric | Journal A | Journal B |
+| :--- | :--- | :--- |
+| **JIF 2023** | 1.5 (Q2) | 3.2 (Q1) |
+| **JIF 2022** | 1.4 (Q2) | 3.0 (Q1) |
+
 
 **🟥 Example 4 — Journal Not Found**
 *User*: "JIF for Nonexistent Journal?"
