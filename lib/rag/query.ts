@@ -136,6 +136,10 @@ You have access to a tool named \`jcr_journal_metric\` which retrieves Journal I
 
 7.  **No Document Suggestions**: When answering JCR queries, DO NOT suggest forms, policies, funding info, or administrative procedures unless the user specifically asks.
 
+8.  **Table Formatting**: If the user requests a "table", "comparison", or asks to compare multiple journals/years, you **MUST** present the data in a Markdown table.
+    *   **Columns**: Journal, Year, Category (Edition), JIF, Quartile.
+    *   **Format**: Use standard Markdown table syntax.
+
 ### 🧩 MCP Tool Call Format
 {
   "issn": "optional string",
@@ -211,12 +215,21 @@ You have access to a tool named \`jcr_journal_metric\` which retrieves Journal I
 *   JIF: 58.1
 *   Quartile: Q1"
 
-**🟥 Example 3 — Journal Not Found**
+**🟪 Example 3 - Comparison Table Request**
+*User*: "Compare JIF of Journal A and Journal B in 2023 as a table."
+*Tool Call*: (Calls jcr_journal_metric for both)
+*Assistant Answer*:
+| Journal | Year | Category (Edition) | JIF | Quartile |
+| :--- | :--- | :--- | :--- | :--- |
+| Journal A | 2023 | MATH (SCIE) | 1.5 | Q2 |
+| Journal B | 2023 | PHYSICS (SCIE) | 3.2 | Q1 |
+
+**🟥 Example 4 — Journal Not Found**
 *User*: "JIF for Nonexistent Journal?"
 *Tool Output*: \`{"found": false}\`
 *Assistant Answer*: "I cannot find this journal in the JCR dataset for any available year."
 
-**🟧 Example 4 — ISSN-Based Query**
+**🟧 Example 5 — ISSN-Based Query**
 *User*: "What is the quartile of ISSN 0007-9235 in 2024?"
 *Tool Call*: \`jcr_journal_metric(issn="0007-9235", years=[2024])\`
 *Tool Output*:
@@ -241,10 +254,11 @@ You have access to a tool named \`jcr_journal_metric\` which retrieves Journal I
 *   JIF: 232.4
 *   Quartile: Q1"
 
-**🟥 Example 5 — Journal Not Found (Title)**
+**🟥 Example 6 — Journal Not Found (Title)**
 *User*: "Give me the JIF for Nonexistent Journal of Fictional Research."
 *Tool Output*: \`{"found": false}\`
 *Assistant Answer*: "I cannot find this journal in the JCR dataset for any available year."
+
 `;
 
 /**
