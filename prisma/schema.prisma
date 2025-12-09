@@ -1,3 +1,4 @@
+
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -258,6 +259,18 @@ model Version {
   @@map("versions")
 }
 
+// Tool Permissions model
+model ToolPermission {
+  id           String   @id @default(uuid())
+  toolName     String   @unique // e.g., "jcr_journal_metric"
+  description  String?
+  allowedRoles String[] @default(["chairperson"]) // Array of strings: "student", "member", "chairperson", "public"
+  updatedBy    String?
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+
+  @@map("tool_permissions")
+}
 
 // JCR Journal Metric model
 model JcrJournalMetric {

@@ -432,12 +432,33 @@ ${chatHistoryStr}
 
         log('Starting LLM inference loop...');
 
+
+        // --- TOOL PERMISSION CHECK ---
+        let localTools = AVAILABLE_TOOLS;
+        try {
+            const permissions = await prisma.toolPermission.findMany();
+            if (permissions.length > 0) {
+                const allowedToolNames = new Set(
+                    permissions
+                        .filter((p: any) => p.allowedRoles.includes(query.userRole))
+                        .map((p: any) => p.toolName)
+                );
+                localTools = AVAILABLE_TOOLS.filter(t => allowedToolNames.has(t.function.name));
+                log(`Tools allowed for role '${query.userRole}': ${localTools.map(t => t.function.name).join(', ') || 'None'}`);
+            } else {
+                log('No tool permissions configured. Defaulting to ALL tools.');
+            }
+        } catch (e) {
+            log(`Failed to fetch tool permissions, defaulting to ALL: ${e}`);
+        }
+
         while (runLoop && loopCount < 5) {
             const completion = await openai.chat.completions.create({
                 model: 'gpt-4o',
                 messages: messages,
-                tools: AVAILABLE_TOOLS, // UPDATED
-                tool_choice: 'auto',
+                tools: localTools.length > 0 ? localTools : undefined, // Only pass tools if any are allowed
+                tool_choice: localTools.length > 0 ? 'auto' : undefined,
+
                 temperature: 0.7,
                 max_tokens: 1000,
             });
