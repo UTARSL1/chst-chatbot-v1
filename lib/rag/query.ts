@@ -374,6 +374,26 @@ ${docs.map(d => `- ${d.originalName} (${d.category})`).join('\n')}
             } catch (err) { console.error(err); }
         }
 
+
+        // --- TOOL PERMISSION CHECK ---
+        let localTools = AVAILABLE_TOOLS;
+        try {
+            const permissions = await prisma.toolPermission.findMany();
+            if (permissions.length > 0) {
+                const allowedToolNames = new Set(
+                    permissions
+                        .filter((p: any) => p.allowedRoles.includes(query.userRole))
+                        .map((p: any) => p.toolName)
+                );
+                localTools = AVAILABLE_TOOLS.filter(t => allowedToolNames.has(t.function.name));
+                log(`Tools allowed for role '${query.userRole}': ${localTools.map(t => t.function.name).join(', ') || 'None'}`);
+            } else {
+                log('No tool permissions configured. Defaulting to ALL tools.');
+            }
+        } catch (e) {
+            log(`Failed to fetch tool permissions, defaulting to ALL: ${e}`);
+        }
+
         const dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
         // Retrieve System Prompt from DB
@@ -401,11 +421,18 @@ Guidelines:
 `;
         }
 
-        if (!baseSystemPrompt.includes('utar_staff_search')) {
+        // Conditionally append tool prompts
+        const hasStaffTool = localTools.some(t => t.function.name === 'utar_staff_search');
+        const hasJcrTool = localTools.some(t => t.function.name === 'jcr_journal_metric');
+
+        if (hasStaffTool && !baseSystemPrompt.includes('utar_staff_search')) {
             baseSystemPrompt += `\n\n${STAFF_SEARCH_SYSTEM_PROMPT}`;
-            baseSystemPrompt += `\n\n${JCR_SYSTEM_PROMPT}`; // Add JCR prompt
-            log('Appended staff search and JCR tool instructions.');
         }
+
+        if (hasJcrTool && !baseSystemPrompt.includes('jcr_journal_metric')) {
+            baseSystemPrompt += `\n\n${JCR_SYSTEM_PROMPT}`;
+        }
+        log(`System Prompt configured. Staff Tool: ${hasStaffTool}, JCR Tool: ${hasJcrTool}`);
 
         const systemPrompt = `${baseSystemPrompt}
         
@@ -433,24 +460,7 @@ ${chatHistoryStr}
         log('Starting LLM inference loop...');
 
 
-        // --- TOOL PERMISSION CHECK ---
-        let localTools = AVAILABLE_TOOLS;
-        try {
-            const permissions = await prisma.toolPermission.findMany();
-            if (permissions.length > 0) {
-                const allowedToolNames = new Set(
-                    permissions
-                        .filter((p: any) => p.allowedRoles.includes(query.userRole))
-                        .map((p: any) => p.toolName)
-                );
-                localTools = AVAILABLE_TOOLS.filter(t => allowedToolNames.has(t.function.name));
-                log(`Tools allowed for role '${query.userRole}': ${localTools.map(t => t.function.name).join(', ') || 'None'}`);
-            } else {
-                log('No tool permissions configured. Defaulting to ALL tools.');
-            }
-        } catch (e) {
-            log(`Failed to fetch tool permissions, defaulting to ALL: ${e}`);
-        }
+
 
         while (runLoop && loopCount < 5) {
             const completion = await openai.chat.completions.create({
@@ -515,6 +525,10 @@ ${chatHistoryStr}
         }));
 
         const enrichedSources = await enrichSourcesWithMetadata(sourcesToEnrich);
+
+        if (!finalResponse) {
+            finalResponse = "I apologize, but I was unable to generate a response. This may be because I do not have permission to access the necessary tools or data to answer your question.";
+        }
 
         return {
             answer: finalResponse,
