@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/card';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { TermsOfUseModal } from '@/components/TermsOfUseModal';
+import { CopyButton } from '@/components/CopyButton';
 import { Linkedin, Globe, FolderOpen, Users, ChevronDown, BookOpen, GraduationCap, Briefcase, FileText, DollarSign, TrendingUp, UserPlus, Plus, ExternalLink, Pencil, Trash2, MessageSquare, MoreVertical, Check, X } from 'lucide-react';
 import { useCurrentVersion } from '@/hooks/useCurrentVersion';
 
@@ -909,21 +910,69 @@ export default function ChatPage() {
                                                 ),
                                                 code: ({ node, className, children, ...props }: any) => {
                                                     const match = /language-(\w+)/.exec(className || '');
+                                                    const codeContent = String(children).replace(/\n$/, '');
+
                                                     return !match ? (
                                                         <code {...props} className="bg-slate-800/50 px-1.5 py-0.5 rounded text-sm font-mono text-pink-300">
                                                             {children}
                                                         </code>
                                                     ) : (
-                                                        <code {...props} className={className}>
-                                                            {children}
-                                                        </code>
+                                                        <div className="relative group my-4">
+                                                            <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                                                                <CopyButton content={codeContent} />
+                                                            </div>
+                                                            <pre className="bg-slate-900/50 rounded-lg p-4 overflow-x-auto border border-slate-700">
+                                                                <code {...props} className={className}>
+                                                                    {children}
+                                                                </code>
+                                                            </pre>
+                                                        </div>
                                                     );
                                                 },
-                                                table: ({ node, ...props }) => (
-                                                    <div className="overflow-x-auto my-4 rounded-lg border border-slate-700">
-                                                        <table {...props} className="w-full text-sm text-left" />
-                                                    </div>
-                                                ),
+                                                table: ({ node, children, ...props }) => {
+                                                    // Extract table content for copying
+                                                    const extractTableText = (node: any): string => {
+                                                        if (!node) return '';
+
+                                                        const rows: string[] = [];
+                                                        const processNode = (n: any) => {
+                                                            if (n.type === 'element') {
+                                                                if (n.tagName === 'tr') {
+                                                                    const cells: string[] = [];
+                                                                    n.children?.forEach((child: any) => {
+                                                                        if (child.type === 'element' && (child.tagName === 'th' || child.tagName === 'td')) {
+                                                                            const text = child.children?.map((c: any) =>
+                                                                                c.type === 'text' ? c.value : ''
+                                                                            ).join('').trim() || '';
+                                                                            cells.push(text);
+                                                                        }
+                                                                    });
+                                                                    if (cells.length > 0) {
+                                                                        rows.push(cells.join('\t'));
+                                                                    }
+                                                                }
+                                                                n.children?.forEach(processNode);
+                                                            }
+                                                        };
+                                                        processNode(node);
+                                                        return rows.join('\n');
+                                                    };
+
+                                                    const tableText = extractTableText(node);
+
+                                                    return (
+                                                        <div className="relative group my-4">
+                                                            <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                                                                <CopyButton content={tableText} />
+                                                            </div>
+                                                            <div className="overflow-x-auto rounded-lg border border-slate-700">
+                                                                <table {...props} className="w-full text-sm text-left">
+                                                                    {children}
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                },
                                                 thead: ({ node, ...props }) => (
                                                     <thead {...props} className="bg-slate-800/50 text-xs uppercase text-slate-400" />
                                                 ),
