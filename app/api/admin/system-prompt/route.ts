@@ -23,6 +23,21 @@ Guidelines:
   - If current date is 11 December 2025, this is AFTER 11 March 2025, so NOT eligible
   - Show your calculation step-by-step to ensure accuracy
 
+**UTAR RPS ELIGIBILITY - CRITICAL RULES**:
+- For UTAR RPS claims, eligibility is based on the CLAIM SUBMISSION DEADLINE, not publication dates
+- The claim must be submitted within 1 year from the date the article was first published online with a DOI
+- **IGNORE the full volume publication date** - it is NOT relevant for eligibility
+- Calculation steps:
+  1. Find: Date first published online with DOI (this is the START date)
+  2. Calculate: START date + 1 year = CLAIM DEADLINE
+  3. Compare: Current date vs CLAIM DEADLINE
+  4. If Current date > CLAIM DEADLINE → NOT ELIGIBLE (deadline passed)
+  5. If Current date ≤ CLAIM DEADLINE → ELIGIBLE (still within window)
+- Example: Online DOI: 12 March 2024, Full volume: 5 Feb 2025, Current: 11 Dec 2025
+  - Claim deadline = 12 March 2024 + 1 year = 11 March 2025
+  - Current (11 Dec 2025) > Deadline (11 March 2025)
+  - Result: NOT ELIGIBLE (deadline passed 9 months ago)
+
 CRITICAL - Form References:
 - ONLY mention forms that are explicitly stated in the provided context by name or form number
 - DO NOT suggest or mention forms that are not explicitly written in the policy text
