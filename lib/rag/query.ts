@@ -368,8 +368,6 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
             );
         }
 
-        const baseContext = baseContextStrings.join('\n\n=== === ===\n\n');
-
         // Check for inventory question
         const isInventoryQuestion = /how many|list|inventory|what documents|count|uploaded/i.test(effectiveQuery);
         if (isInventoryQuestion) {
@@ -389,6 +387,75 @@ ${docs.map(d => `- ${d.originalName} (${d.category})`).join('\n')}
                 log('Added inventory info to context.');
             } catch (err) { console.error(err); }
         }
+
+        // Check for recency-based query (latest, most recent, newest)
+        const isRecencyQuery = /latest|most recent|newest|last|current/i.test(effectiveQuery);
+        let latestDocumentId: string | null = null;
+
+        if (isRecencyQuery) {
+            try {
+                log('Detected recency query, searching for latest document...');
+
+                // Extract category if mentioned
+                const isMeetingMinute = /meeting\s*minute/i.test(effectiveQuery);
+                const isPolicy = /policy/i.test(effectiveQuery);
+                const isForm = /form/i.test(effectiveQuery);
+
+                const whereClause: any = {
+                    accessLevel: { in: accessLevels as any },
+                    status: 'processed'
+                };
+
+                if (isMeetingMinute) whereClause.category = 'Meeting Minute';
+                else if (isPolicy) whereClause.category = 'Policy';
+                else if (isForm) whereClause.category = 'Form';
+
+                const allDocs = await prisma.document.findMany({
+                    where: whereClause,
+                    select: { id: true, originalName: true, category: true, uploadedAt: true }
+                });
+
+                log(`Found ${allDocs.length} documents for recency check`);
+
+                // Parse dates from filenames (YYYYMMDD format) and sort by document date
+                const docsWithDates = allDocs
+                    .map(doc => {
+                        const dateMatch = doc.originalName.match(/(\d{8})/);
+                        if (dateMatch) {
+                            const dateStr = dateMatch[1];
+                            const year = parseInt(dateStr.substring(0, 4));
+                            const month = parseInt(dateStr.substring(4, 6));
+                            const day = parseInt(dateStr.substring(6, 8));
+                            const docDate = new Date(year, month - 1, day);
+                            return { ...doc, docDate, dateStr };
+                        }
+                        return { ...doc, docDate: doc.uploadedAt, dateStr: 'Unknown' };
+                    })
+                    .sort((a, b) => b.docDate.getTime() - a.docDate.getTime())
+                    .slice(0, 5);
+
+                if (docsWithDates.length > 0) {
+                    latestDocumentId = docsWithDates[0].id;
+                    const recencyInfo = `
+[MOST RECENT DOCUMENTS BY DATE]
+${docsWithDates.map((d, idx) => `${idx + 1}. ${d.originalName} (${d.category}) - Date: ${d.dateStr}`).join('\n')}
+
+**CRITICAL INSTRUCTION**: The user asked for the LATEST/MOST RECENT document. 
+The #1 document above is the most recent by date: "${docsWithDates[0].originalName}"
+You MUST provide a download link using this EXACT filename.
+Format: [Download ${docsWithDates[0].originalName.replace('.pdf', '')}](download:${docsWithDates[0].originalName})
+`;
+                    baseContextStrings.push(recencyInfo);
+                    log(`Latest document: ${docsWithDates[0].originalName}`);
+                }
+            } catch (err) {
+                console.error('Error in recency detection:', err);
+                log(`Error in recency detection: ${err}`);
+            }
+        }
+
+        // NOW create baseContext after all special checks
+        const baseContext = baseContextStrings.join('\n\n=== === ===\n\n');
 
 
         // --- TOOL PERMISSION CHECK ---
@@ -539,6 +606,36 @@ ${chatHistoryStr}
             pageNumber: chunk.metadata.pageNumber,
             relevanceScore: (chunk as any).score
         }));
+
+        // If this was a recency query, ensure the latest document is in sources
+        if (isRecencyQuery && latestDocumentId) {
+            try {
+                // Check if latest document is already in sources
+                const alreadyInSources = sourcesToEnrich.some(s => s.documentId === latestDocumentId);
+
+                if (!alreadyInSources) {
+                    // Fetch the latest document details
+                    const latestDoc = await prisma.document.findUnique({
+                        where: { id: latestDocumentId },
+                        select: { id: true, originalName: true, filename: true, accessLevel: true }
+                    });
+
+                    if (latestDoc) {
+                        sourcesToEnrich.push({
+                            filename: latestDoc.filename,
+                            accessLevel: latestDoc.accessLevel,
+                            documentId: latestDoc.id,
+                            originalName: latestDoc.originalName,
+                            relevanceScore: 1.0 // Highest relevance for recency queries
+                        });
+                        log(`Added latest document to sources: ${latestDoc.originalName}`);
+                    }
+                }
+            } catch (err) {
+                console.error('Error adding latest doc to sources:', err);
+                log(`Error adding latest doc to sources: ${err}`);
+            }
+        }
 
         const enrichedSources = await enrichSourcesWithMetadata(sourcesToEnrich);
 

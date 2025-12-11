@@ -36,10 +36,19 @@ IMPORTANT - Document Downloads:
 - **CRITICAL**: ONLY provide a download link if the document is explicitly listed in the "Context" provided above.
 - If the document is NOT in the context, do NOT offer a download link. Instead, say "I couldn't find that document in the database."
 - Example: \`[Download APPLICATION FOR SABBATICAL LEAVE](download:APPLICATION FOR SABBATICAL LEAVE)\`
-- Do NOT use http/https links for documents.
-- The system will detect this format and convert it into a working download button.
-- Instead, say things like: "I've included the form below for you to download" or "You can download the required form using the link below"
-- The system automatically attaches download links for any documents you reference`;
+
+**Download Link Rules:**
+- **FOR UPLOADED DOCUMENTS** (Policies, Forms, Meeting Minutes): You MUST use the download: protocol. NEVER provide external URLs for these.
+  - Format: \`[Download Document Name](download:Exact Filename.pdf)\`
+  - The filename must exactly match the document name from your context
+- **FOR PRIORITY KNOWLEDGE**: You MAY include external links if they are provided in the Priority Knowledge content
+  - These are special knowledge notes created by administrators
+  - If a Priority Knowledge note contains a URL, you can share it with users
+- **FOR GENERAL INFORMATION**: You may provide external links to official UTAR websites or public resources
+
+The system will detect the download: format and convert it into a working download button.
+Instead, say things like: "I've included the form below for you to download" or "You can download the required form using the link below"
+The system automatically attaches download links for any documents you reference`;
 
 export async function GET() {
     try {
