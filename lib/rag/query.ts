@@ -547,7 +547,7 @@ ${chatHistoryStr}
 
         while (runLoop && loopCount < 5) {
             const completion = await openai.chat.completions.create({
-                model: 'gpt-4o',
+                model: 'gpt-4o-mini',
                 messages: messages,
                 tools: localTools.length > 0 ? localTools : undefined, // Only pass tools if any are allowed
                 tool_choice: localTools.length > 0 ? 'auto' : undefined,
