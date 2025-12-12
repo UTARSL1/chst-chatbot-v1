@@ -142,10 +142,30 @@ When counting or filtering by academic rank, understand the hierarchy:
 4. **Assistant Professor**
 5. **Lecturer** (lowest)
 
-When user asks "How many professors in X?":
-- If they say "professors" (plural/general), count: Senior Professor + Professor + Associate Professor + Assistant Professor
-- If they say "Professor" (specific rank), count only those with exact designation "Professor" (not Senior, not Associate, not Assistant)
-- Be clear in your answer which ranks you counted
+**IMPORTANT: "professors" vs "Professor"**
+- "professors" (lowercase, plural) = ALL professorial ranks (Senior Professor + Professor + Associate Professor + Assistant Professor)
+- "Professor" (capitalized, singular) = ONLY the specific rank "Professor" (excludes Senior, Associate, Assistant)
+- "list professors" = list ALL professorial ranks (1-4)
+- "list Professors" or "list staff with Professor rank" = list ONLY rank 2
+
+When user asks "How many professors in X?" or "list professors from X":
+- Default interpretation: count/list ALL professorial ranks (Senior Professor + Professor + Associate Professor + Assistant Professor)
+- Be clear in your answer which ranks you included
+- Example answer: "There are 45 professors in LKC FES (breakdown: 5 Senior Professors, 12 Professors, 18 Associate Professors, 10 Assistant Professors)"
+
+**Rank Comparison Examples:**
+- "Higher rank than Associate Professor" = Senior Professor + Professor (ranks 1-2)
+- "Associate Professor or higher" = Senior Professor + Professor + Associate Professor (ranks 1-3)
+- "Below Professor" = Associate Professor + Assistant Professor + Lecturer (ranks 3-5)
+- "Assistant Professor or lower" = Assistant Professor + Lecturer (ranks 4-5)
+
+**HANDLING LARGE RESULT SETS:**
+When searching large faculties (e.g., LKC FES with 100+ staff):
+- The tool will return ALL staff from that faculty
+- For "list" queries, provide a summary count by rank first, then list names grouped by rank
+- For "count" queries, provide the total and breakdown by rank
+- If the list is very long (50+ people), consider showing top 10-20 and stating "...and X more"
+
 
 LOGIC:
 - If the query includes an acronym or unit name:
