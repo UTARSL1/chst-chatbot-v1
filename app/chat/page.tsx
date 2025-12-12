@@ -63,6 +63,9 @@ export default function ChatPage() {
     const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
     const [chatHistoryMenuOpen, setChatHistoryMenuOpen] = useState(false);
 
+    // Admin notification state
+    const [pendingUsersCount, setPendingUsersCount] = useState(0);
+
     // Feedback State
 
     // Feedback State
@@ -110,6 +113,18 @@ export default function ChatPage() {
         if (session) {
             loadChatSessions();
             loadCustomLinks();
+
+            // Load admin stats if chairperson
+            if (session.user.role === 'chairperson') {
+                fetch('/api/admin/stats')
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.pendingUsers) {
+                            setPendingUsersCount(data.pendingUsers);
+                        }
+                    })
+                    .catch(e => console.error('Failed to load stats', e));
+            }
         }
     }, [session]);
 
@@ -749,14 +764,35 @@ export default function ChatPage() {
                             {session.user.role === 'member' ? 'Member' : session.user.role.charAt(0).toUpperCase() + session.user.role.slice(1)}
                         </span>
                         {session.user.role === 'chairperson' && (
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => router.push('/admin')}
-                                className="border-violet-500 text-violet-400 hover:bg-violet-500/10"
-                            >
-                                Admin Dashboard
-                            </Button>
+                            <div className="relative">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => router.push('/admin')}
+                                    className="border-violet-500 text-violet-400 hover:bg-violet-500/10"
+                                >
+                                    Admin Dashboard
+                                </Button>
+                                {pendingUsersCount > 0 && (
+                                    <div className="absolute -bottom-2 -right-2 flex items-center justify-center">
+                                        <div className="relative w-5 h-5">
+                                            {/* Triangle */}
+                                            <svg
+                                                viewBox="0 0 24 24"
+                                                className="w-full h-full text-amber-500"
+                                                fill="currentColor"
+                                            >
+                                                <path d="M12 2L1 21h22L12 2zm0 3.5l8.5 15.5H3.5L12 5.5z" fillOpacity="0.2" />
+                                                <path d="M12 2L1 21h22L12 2z" />
+                                            </svg>
+                                            {/* Count Number on top of triangle */}
+                                            <span className="absolute inset-0 flex items-center justify-center text-[8px] font-bold text-black pt-1">
+                                                {pendingUsersCount}
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         )}
                         <span className="text-sm text-muted-foreground">{session.user.name}</span>
                         <Button
