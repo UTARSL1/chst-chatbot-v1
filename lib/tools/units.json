@@ -1006,7 +1006,7 @@
       "Department of Chemical Engineering",
       "DCL"
     ],
-    "departmentId": "101"
+    "departmentId": "3352"
   },
   {
     "acronym": "DCI",
@@ -1080,7 +1080,8 @@
     "aliases": [
       "Department of Accountancy",
       "DA"
-    ]
+    ],
+    "departmentId": "137"
   },
   {
     "acronym": "DBPM",
@@ -1100,7 +1101,8 @@
     "aliases": [
       "Department of Economics",
       "DE"
-    ]
+    ],
+    "departmentId": "6384"
   },
   {
     "acronym": "DIB",
@@ -1110,7 +1112,8 @@
     "aliases": [
       "Department of International Business",
       "DIB"
-    ]
+    ],
+    "departmentId": "138"
   },
   {
     "acronym": "DAD",
@@ -1120,7 +1123,8 @@
     "aliases": [
       "Department of Advertising",
       "DAD"
-    ]
+    ],
+    "departmentId": "160"
   },
   {
     "acronym": "DEng",
@@ -1140,7 +1144,8 @@
     "aliases": [
       "Department of Journalism",
       "DJ"
-    ]
+    ],
+    "departmentId": "161"
   },
   {
     "acronym": "DPC",
@@ -1150,7 +1155,8 @@
     "aliases": [
       "Department of Psychology and Counselling",
       "DPC"
-    ]
+    ],
+    "departmentId": "163"
   },
   {
     "acronym": "DPR",
@@ -1160,7 +1166,8 @@
     "aliases": [
       "Department of Public Relations",
       "DPR"
-    ]
+    ],
+    "departmentId": "159"
   },
   {
     "acronym": "DCCT",
@@ -1170,7 +1177,8 @@
     "aliases": [
       "Department of Computer and Communication Technology",
       "DCCT"
-    ]
+    ],
+    "departmentId": "186"
   },
   {
     "acronym": "DCS",
@@ -1180,7 +1188,8 @@
     "aliases": [
       "Department of Computer Science",
       "DCS"
-    ]
+    ],
+    "departmentId": "55"
   },
   {
     "acronym": "DIS",
@@ -1190,7 +1199,8 @@
     "aliases": [
       "Department of Information Systems",
       "DIS"
-    ]
+    ],
+    "departmentId": "252"
   },
   {
     "acronym": "DAFS",
@@ -1200,7 +1210,8 @@
     "aliases": [
       "Department of Agricultural and Food Science",
       "DAFS"
-    ]
+    ],
+    "departmentId": "269"
   },
   {
     "acronym": "DBS",
@@ -1210,7 +1221,8 @@
     "aliases": [
       "Department of Biological Science",
       "DBS"
-    ]
+    ],
+    "departmentId": "188"
   },
   {
     "acronym": "DCS",
@@ -1220,7 +1232,8 @@
     "aliases": [
       "Department of Chemical Science",
       "DCS"
-    ]
+    ],
+    "departmentId": "190"
   },
   {
     "acronym": "DAHS",
@@ -1230,7 +1243,8 @@
     "aliases": [
       "Department of Allied Health Sciences",
       "DAHS"
-    ]
+    ],
+    "departmentId": "1310"
   },
   {
     "acronym": "DCM",
@@ -1240,7 +1254,8 @@
     "aliases": [
       "Department of Construction Management",
       "DCM"
-    ]
+    ],
+    "departmentId": "184"
   },
   {
     "acronym": "DEE",
@@ -1250,7 +1265,8 @@
     "aliases": [
       "Department of Electronic Engineering",
       "DEE"
-    ]
+    ],
+    "departmentId": "185"
   },
   {
     "acronym": "DEvE",
@@ -1260,7 +1276,8 @@
     "aliases": [
       "Department of Environmental Engineering",
       "DEvE"
-    ]
+    ],
+    "departmentId": "232"
   },
   {
     "acronym": "DIE",
@@ -1270,7 +1287,8 @@
     "aliases": [
       "Department of Industrial Engineering",
       "DIE"
-    ]
+    ],
+    "departmentId": "253"
   },
   {
     "acronym": "DPE",
@@ -1290,7 +1308,8 @@
     "aliases": [
       "Department of Banking and Risk Management",
       "DBRM"
-    ]
+    ],
+    "departmentId": "6380"
   },
   {
     "acronym": "DB",
@@ -1310,7 +1329,8 @@
     "aliases": [
       "Department of Commerce and Accountancy",
       "DCA"
-    ]
+    ],
+    "departmentId": "6381"
   },
   {
     "acronym": "DE",
@@ -1320,7 +1340,8 @@
     "aliases": [
       "Department of Economics",
       "DE"
-    ]
+    ],
+    "departmentId": "6384"
   },
   {
     "acronym": "DES",
@@ -1330,7 +1351,8 @@
     "aliases": [
       "Department of Entrepreneurship and Supply Chain Management",
       "DES"
-    ]
+    ],
+    "departmentId": "6383"
   },
   {
     "acronym": "DF",
@@ -1340,7 +1362,8 @@
     "aliases": [
       "Department of Finance",
       "DF"
-    ]
+    ],
+    "departmentId": "6386"
   },
   {
     "acronym": "DM",
@@ -1350,7 +1373,8 @@
     "aliases": [
       "Department of Marketing",
       "DM"
-    ]
+    ],
+    "departmentId": "6387"
   },
   {
     "acronym": "DCM",
@@ -1360,7 +1384,8 @@
     "aliases": [
       "Department of Chinese Medicine",
       "DCM"
-    ]
+    ],
+    "departmentId": "2342"
   },
   {
     "acronym": "DM",
@@ -1370,7 +1395,8 @@
     "aliases": [
       "Department of Medicine",
       "DM"
-    ]
+    ],
+    "departmentId": "2338"
   },
   {
     "acronym": "DN",
@@ -1380,7 +1406,8 @@
     "aliases": [
       "Department of Nursing",
       "DN"
-    ]
+    ],
+    "departmentId": "2337"
   },
   {
     "acronym": "DP",
@@ -1390,7 +1417,8 @@
     "aliases": [
       "Department of Physiotherapy",
       "DP"
-    ]
+    ],
+    "departmentId": "2339"
   },
   {
     "acronym": "DPM",
@@ -1400,7 +1428,8 @@
     "aliases": [
       "Department of Population Medicine",
       "DPM"
-    ]
+    ],
+    "departmentId": "2340"
   },
   {
     "acronym": "DPS",
@@ -1410,7 +1439,8 @@
     "aliases": [
       "Department of Pre-clinical Sciences",
       "DPS"
-    ]
+    ],
+    "departmentId": "2341"
   },
   {
     "acronym": "DSurg",
@@ -1420,7 +1450,8 @@
     "aliases": [
       "Department of Surgery",
       "DSurg"
-    ]
+    ],
+    "departmentId": "2336"
   },
   {
     "acronym": "DGS",
@@ -1430,7 +1461,8 @@
     "aliases": [
       "Department of Game Studies",
       "DGS"
-    ]
+    ],
+    "departmentId": "276"
   },
   {
     "acronym": "DMC",
@@ -1440,7 +1472,8 @@
     "aliases": [
       "Department of Mass Communication",
       "DMC"
-    ]
+    ],
+    "departmentId": "127"
   },
   {
     "acronym": "DMedia",
@@ -1450,7 +1483,8 @@
     "aliases": [
       "Department of Media",
       "DMedia"
-    ]
+    ],
+    "departmentId": "254"
   },
   {
     "acronym": "DGenS",
@@ -1460,7 +1494,8 @@
     "aliases": [
       "Department of General Studies",
       "DGenS"
-    ]
+    ],
+    "departmentId": "125"
   },
   {
     "acronym": "DCS",

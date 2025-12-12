@@ -19,7 +19,7 @@ interface StaffResult {
     faculty: string;
     department: string;
     designation?: string;
-    administrativePost?: string;
+    administrativePosts?: string[]; // Changed to array to support multiple posts
     googleScholarUrl?: string;
     scopusUrl?: string;
     orcidUrl?: string;
@@ -198,7 +198,7 @@ export async function searchStaff(
                 let faculty = "";
                 let department = "";
                 let designation = "";
-                let administrativePost = "";
+                let administrativePosts: string[] = []; // Changed to array to capture ALL posts
                 let googleScholarUrl = "";
                 let scopusUrl = "";
                 let orcidUrl = "";
@@ -220,14 +220,13 @@ export async function searchStaff(
                     }
                     if (label.includes('Designation')) designation = valueText.replace(/^:\s*/, '');
 
-                    // Enhanced Administrative Post extraction with case-insensitive matching
+                    // Capture ALL Administrative Posts (not just the first one)
                     const labelLower = label.toLowerCase();
                     if (labelLower.includes('administrative') && labelLower.includes('post')) {
                         const postValue = valueText.replace(/^:\s*/, '').trim();
-                        if (postValue && !administrativePost) {
-                            // Take the first non-empty administrative post (usually "Dean", not "Director (Xinwei)")
-                            administrativePost = postValue;
-                            log(`Card ${i + 1}: Found admin post: "${administrativePost}" (label: "${label}")`);
+                        if (postValue) {
+                            administrativePosts.push(postValue);
+                            log(`Card ${i + 1}: Found admin post: "${postValue}" (label: "${label}")`);
                         }
                     }
 
@@ -254,9 +253,11 @@ export async function searchStaff(
                     continue;
                 }
 
-                // Build position string
+                // Build position string from all administrative posts
                 let position = "";
-                if (administrativePost) position = administrativePost;
+                if (administrativePosts.length > 0) {
+                    position = administrativePosts.join('; '); // Join multiple posts with semicolon
+                }
                 if (designation) {
                     if (position) position += ` (${designation})`;
                     else position = designation;
@@ -272,7 +273,7 @@ export async function searchStaff(
                     faculty,
                     department,
                     designation,
-                    administrativePost,
+                    administrativePosts, // Now an array of all posts
                     googleScholarUrl,
                     scopusUrl,
                     orcidUrl,

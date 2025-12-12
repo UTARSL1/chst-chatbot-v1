@@ -92,35 +92,47 @@ WHEN TO USE:
   * The tool will return staff with their administrative posts
   * Then YOU filter/select the person whose administrativePost EXACTLY matches what user asked for
 
-**MATCHING ADMINISTRATIVE POSTS:**
-When user asks for "Head of X" (e.g., "Head of Department"/"HoD", "Head of Programme"/"HoP"):
-- ONLY match administrativePost that contains EXACTLY "Head of [X]"
-- Examples for "Head of Department":
-  * "Head of Department (Department of X)" ✅ CORRECT
-  * "Acting Head of Programme (PhD)" ❌ WRONG - Different position
-  * "Acting Head of Department" ❌ WRONG - User wants non-acting role
-  * "Deputy Head (Consultancy)" ❌ WRONG - This is Deputy, not Head
-- Examples for "Head of Programme":
-  * "Head of Programme (BSc Computer Science)" ✅ CORRECT
-  * "Acting Head of Programme (PhD)" ❌ WRONG - User wants non-acting role
-  * "Head of Department" ❌ WRONG - Different position
-- If multiple people have the same "Head of X" title, choose the one WITHOUT "Acting" prefix
+**MATCHING ADMINISTRATIVE POSTS - CRITICAL RULES:**
 
-When user asks for "Dean":
-- "Dean" ✅ CORRECT
-- "Acting Dean" ⚠️ Only if no non-acting Dean exists
-- "Deputy Dean" ❌ WRONG - This is Deputy, not Dean
+**RULE 1: EXACT STRING MATCHING ONLY**
+When user asks for "Head of Department" or "HoD":
+- Search the administrativePost field for the EXACT substring "Head of Department"
+- ✅ CORRECT: "Head of Department (Department of Mechatronics and BioMedical Engineering)"
+- ❌ WRONG: "Chairperson (Centre for Healthcare Science and Technology)" - This is Chairperson, NOT Head of Department
+- ❌ WRONG: "Acting Head of Programme (PhD)" - This is Head of Programme, NOT Head of Department
+- ❌ WRONG: "Deputy Head (Consultancy)" - This is Deputy Head, NOT Head of Department
+- ❌ WRONG: "Acting Deputy Dean" - This is Deputy Dean, NOT Head of Department
 
-When user asks for "Chairperson":
-- "Chairperson (Centre for X)" ✅ CORRECT
-- "Acting Chairperson" ⚠️ Only if no non-acting Chairperson exists
+**RULE 2: ONE PERSON CAN HAVE MULTIPLE ROLES**
+Example: Ir Dr Goh Choon Hian has:
+1. "Acting Deputy Dean (Academic Development and Undergraduate Programmes)"
+2. "Deputy Director (Xinwei Institute)"
+3. "Head of Department (Department of Mechatronics and BioMedical Engineering)"
 
-**PRIORITY RULES:**
-1. Exact title match (e.g., "Head of Department") > Similar titles (e.g., "Acting Head of Programme")
-2. Non-acting roles > Acting roles
-3. If no exact match found, explicitly state "No current [position] found" - do NOT guess or use similar titles
+If user asks "who is Head of Department of DMBE?":
+- ✅ Answer: Ir Dr Goh Choon Hian (because role #3 matches exactly)
+- ❌ DO NOT answer with someone who only has "Chairperson" or "Deputy Dean" roles
 
-Be PRECISE with title matching. Do not confuse similar-sounding titles.
+**RULE 3: PREFER NON-ACTING ROLES**
+- "Head of Department" ✅ BEST
+- "Acting Head of Department" ⚠️ Only if no non-acting exists
+- If multiple people have "Head of Department", choose the one WITHOUT "Acting" prefix
+
+**RULE 4: IF NO EXACT MATCH, SAY "I DON'T KNOW"**
+If you cannot find someone with the EXACT title in their administrativePost:
+- ✅ Say: "I could not find a current [position] for [unit]. The search returned X staff members but none have the exact title '[position]' in their administrative posts."
+- ❌ DO NOT guess or pick someone with a similar-sounding title
+- ❌ DO NOT say someone is HoD if they are only Chairperson/Dean/Deputy
+
+**VALIDATION CHECKLIST (Use this before answering):**
+Before stating "X is the Head of Department":
+1. ☑ Does X's administrativePost contain the exact string "Head of Department"? 
+2. ☑ Is it for the correct department the user asked about?
+3. ☑ If there are multiple matches, did I choose the non-acting one?
+4. ☑ Am I NOT confusing "Chairperson" with "Head of Department"?
+5. ☑ Am I NOT confusing "Deputy Dean" with "Head of Department"?
+
+If ANY checkbox is unchecked, DO NOT claim X is the Head of Department.
 
 LOGIC:
 - If the query includes an acronym or unit name:
