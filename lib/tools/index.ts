@@ -158,135 +158,153 @@ export async function searchStaff(
     log(`GET Request to: ${url}`);
 
     try {
-        const html = await httpsGet(url);
-        log(`Response HTML length: ${html.length} characters`);
-
-        const $ = cheerio.load(html);
         const results: StaffResult[] = [];
         const seenIds = new Set<string>();
+        let currentPage = 1;
+        let hasMorePages = true;
 
-        // Find all staff card tables (they have onclick with staffListDetailV2.jsp)
-        const staffTables = $('table[onclick*="staffListDetailV2.jsp"]');
-        log(`Found ${staffTables.length} staff cards`);
+        // Pagination loop - fetch all pages
+        while (hasMorePages && currentPage <= 10) { // Max 10 pages as safety limit
+            const pageUrl = currentPage === 1 ? url : `${url}&page=${currentPage}`;
+            log(`Fetching page ${currentPage}: ${pageUrl}`);
 
-        // Step 2: For each staff card, extract detail page URL and fetch it
-        for (let i = 0; i < staffTables.length; i++) {
-            const table = staffTables[i];
-            const onclick = $(table).attr('onclick') || '';
+            const html = await httpsGet(pageUrl);
+            log(`Page ${currentPage} HTML length: ${html.length} characters`);
 
-            // Extract detail page URL from onclick="javascript:location='staffListDetailV2.jsp?searchId=16131';"
-            const match = onclick.match(/staffListDetailV2\.jsp\?searchId=(\d+)/);
-            if (!match) {
-                log(`Card ${i + 1}: No searchId found in onclick`);
-                continue;
+            const $ = cheerio.load(html);
+
+            // Find all staff card tables (they have onclick with staffListDetailV2.jsp)
+            const staffTables = $('table[onclick*="staffListDetailV2.jsp"]');
+            log(`Page ${currentPage}: Found ${staffTables.length} staff cards`);
+
+            if (staffTables.length === 0) {
+                // No more staff cards, stop pagination
+                hasMorePages = false;
+                break;
             }
 
-            const searchId = match[1];
-            if (seenIds.has(searchId)) continue;
-            seenIds.add(searchId);
+            // Step 2: For each staff card, extract detail page URL and fetch it
+            for (let i = 0; i < staffTables.length; i++) {
+                const table = staffTables[i];
+                const onclick = $(table).attr('onclick') || '';
 
-            const detailUrl = `${baseUrl}/staffListDetailV2.jsp?searchId=${searchId}`;
-            log(`Card ${i + 1}: Fetching detail page: ${detailUrl}`);
-
-            try {
-                const detailHtml = await httpsGet(detailUrl);
-                const $detail = cheerio.load(detailHtml);
-
-                // Parse the clean, structured detail page
-                let name = "";
-                let email = "";
-                let faculty = "";
-                let department = "";
-                let designation = "";
-                let administrativePosts: string[] = []; // Changed to array to capture ALL posts
-                let googleScholarUrl = "";
-                let scopusUrl = "";
-                let orcidUrl = "";
-                let homepageUrl = "";
-
-                // Extract data from the detail page's structured format
-                $detail('tr').each((_, row) => {
-                    const label = $detail(row).find('td').first().text().trim();
-                    const value = $detail(row).find('td').last();
-                    const valueText = value.text().trim();
-
-                    if (label.includes('Name')) name = valueText.replace(/^:\s*/, '');
-                    if (label.includes('Email')) email = valueText.replace(/^:\s*/, '');
-                    if (label.includes('Faculty') || label.includes('Division')) {
-                        faculty = valueText.replace(/^:\s*/, '');
-                    }
-                    if (label.includes('Department') || label.includes('Unit')) {
-                        department = valueText.replace(/^:\s*/, '');
-                    }
-                    if (label.includes('Designation')) designation = valueText.replace(/^:\s*/, '');
-
-                    // Capture ALL Administrative Posts (not just the first one)
-                    const labelLower = label.toLowerCase();
-                    if (labelLower.includes('administrative') && labelLower.includes('post')) {
-                        const postValue = valueText.replace(/^:\s*/, '').trim();
-                        if (postValue) {
-                            administrativePosts.push(postValue);
-                            log(`Card ${i + 1}: Found admin post: "${postValue}" (label: "${label}")`);
-                        }
-                    }
-
-                    if (label.includes('Google Scholar')) {
-                        const link = value.find('a').attr('href');
-                        if (link) googleScholarUrl = link;
-                    }
-                    if (label.includes('Scopus')) {
-                        const link = value.find('a').attr('href');
-                        if (link) scopusUrl = link;
-                    }
-                    if (label.includes('Orcid')) {
-                        const link = value.find('a').attr('href');
-                        if (link) orcidUrl = link;
-                    }
-                    if (label.includes('Homepage URL')) {
-                        const link = value.find('a').attr('href');
-                        if (link) homepageUrl = link;
-                    }
-                });
-
-                if (!name || !email) {
-                    log(`Card ${i + 1}: Missing name or email`);
+                // Extract detail page URL from onclick="javascript:location='staffListDetailV2.jsp?searchId=16131';"
+                const match = onclick.match(/staffListDetailV2\.jsp\?searchId=(\d+)/);
+                if (!match) {
+                    log(`Card ${i + 1}: No searchId found in onclick`);
                     continue;
                 }
 
-                // Build position string from all administrative posts
-                let position = "";
-                if (administrativePosts.length > 0) {
-                    position = administrativePosts.join('; '); // Join multiple posts with semicolon
+                const searchId = match[1];
+                if (seenIds.has(searchId)) continue;
+                seenIds.add(searchId);
+
+                const detailUrl = `${baseUrl}/staffListDetailV2.jsp?searchId=${searchId}`;
+                log(`Card ${i + 1}: Fetching detail page: ${detailUrl}`);
+
+                try {
+                    const detailHtml = await httpsGet(detailUrl);
+                    const $detail = cheerio.load(detailHtml);
+
+                    // Parse the clean, structured detail page
+                    let name = "";
+                    let email = "";
+                    let faculty = "";
+                    let department = "";
+                    let designation = "";
+                    let administrativePosts: string[] = []; // Changed to array to capture ALL posts
+                    let googleScholarUrl = "";
+                    let scopusUrl = "";
+                    let orcidUrl = "";
+                    let homepageUrl = "";
+
+                    // Extract data from the detail page's structured format
+                    $detail('tr').each((_, row) => {
+                        const label = $detail(row).find('td').first().text().trim();
+                        const value = $detail(row).find('td').last();
+                        const valueText = value.text().trim();
+
+                        if (label.includes('Name')) name = valueText.replace(/^:\s*/, '');
+                        if (label.includes('Email')) email = valueText.replace(/^:\s*/, '');
+                        if (label.includes('Faculty') || label.includes('Division')) {
+                            faculty = valueText.replace(/^:\s*/, '');
+                        }
+                        if (label.includes('Department') || label.includes('Unit')) {
+                            department = valueText.replace(/^:\s*/, '');
+                        }
+                        if (label.includes('Designation')) designation = valueText.replace(/^:\s*/, '');
+
+                        // Capture ALL Administrative Posts (not just the first one)
+                        const labelLower = label.toLowerCase();
+                        if (labelLower.includes('administrative') && labelLower.includes('post')) {
+                            const postValue = valueText.replace(/^:\s*/, '').trim();
+                            if (postValue) {
+                                administrativePosts.push(postValue);
+                                log(`Card ${i + 1}: Found admin post: "${postValue}" (label: "${label}")`);
+                            }
+                        }
+
+                        if (label.includes('Google Scholar')) {
+                            const link = value.find('a').attr('href');
+                            if (link) googleScholarUrl = link;
+                        }
+                        if (label.includes('Scopus')) {
+                            const link = value.find('a').attr('href');
+                            if (link) scopusUrl = link;
+                        }
+                        if (label.includes('Orcid')) {
+                            const link = value.find('a').attr('href');
+                            if (link) orcidUrl = link;
+                        }
+                        if (label.includes('Homepage URL')) {
+                            const link = value.find('a').attr('href');
+                            if (link) homepageUrl = link;
+                        }
+                    });
+
+                    if (!name || !email) {
+                        log(`Card ${i + 1}: Missing name or email`);
+                        continue;
+                    }
+
+                    // Build position string from all administrative posts
+                    let position = "";
+                    if (administrativePosts.length > 0) {
+                        position = administrativePosts.join('; '); // Join multiple posts with semicolon
+                    }
+                    if (designation) {
+                        if (position) position += ` (${designation})`;
+                        else position = designation;
+                    }
+                    if (!position) position = "Staff";
+
+                    log(`Card ${i + 1}: ✓ ${name} <${email}> - ${position}`);
+
+                    results.push({
+                        name,
+                        position,
+                        email,
+                        faculty,
+                        department,
+                        designation,
+                        administrativePosts, // Now an array of all posts
+                        googleScholarUrl,
+                        scopusUrl,
+                        orcidUrl,
+                        homepageUrl,
+                        extra: `${faculty} | ${department}`
+                    });
+
+                } catch (detailError: any) {
+                    log(`Card ${i + 1}: Error fetching detail page: ${detailError.message}`);
                 }
-                if (designation) {
-                    if (position) position += ` (${designation})`;
-                    else position = designation;
-                }
-                if (!position) position = "Staff";
-
-                log(`Card ${i + 1}: ✓ ${name} <${email}> - ${position}`);
-
-                results.push({
-                    name,
-                    position,
-                    email,
-                    faculty,
-                    department,
-                    designation,
-                    administrativePosts, // Now an array of all posts
-                    googleScholarUrl,
-                    scopusUrl,
-                    orcidUrl,
-                    homepageUrl,
-                    extra: `${faculty} | ${department}`
-                });
-
-            } catch (detailError: any) {
-                log(`Card ${i + 1}: Error fetching detail page: ${detailError.message}`);
             }
+
+            // Move to next page
+            currentPage++;
         }
 
-        log(`Found ${results.length} staff members.`);
+        log(`Found ${results.length} total staff members across ${currentPage - 1} pages.`);
         return results;
 
     } catch (error: any) {

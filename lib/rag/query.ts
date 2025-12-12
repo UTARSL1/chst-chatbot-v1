@@ -386,6 +386,22 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
             return resolveUnit(args.query, logger);
         }
         if (name === 'utar_staff_search') {
+            // HARD VALIDATION: Reject overly broad queries
+            const faculty = args.faculty || 'All';
+            const department = args.department || 'All';
+
+            // Reject if searching ALL of UTAR (no faculty specified)
+            if (faculty === 'All' || !faculty) {
+                const errorMsg = "Query too broad: Cannot search all staff across UTAR. Please specify a faculty (e.g., 'Lee Kong Chian Faculty of Engineering and Science') or department (e.g., 'Department of Mechatronics and Biomedical Engineering').";
+                if (logger) logger(`[VALIDATION REJECTED] ${errorMsg}`);
+                return {
+                    error: errorMsg,
+                    validationFailed: true,
+                    suggestion: "Please narrow your search to a specific faculty or department. Example: 'list professors in LKC FES' or 'who is the dean of Faculty of Science'"
+                };
+            }
+
+            // Proceed with search
             return await searchStaff(args, logger);
         }
         if (name === 'jcr_journal_metric') {
