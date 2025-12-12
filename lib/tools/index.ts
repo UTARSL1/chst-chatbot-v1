@@ -129,10 +129,26 @@ export async function searchStaff(
         }
     }
 
+    // Resolve department to ID if provided
+    let departmentId = 'All';
+    if (params.department && params.department !== 'All') {
+        const deptQueryLower = params.department.toLowerCase().trim();
+        const deptUnit = unitsData.find(u =>
+            u.canonical.toLowerCase() === deptQueryLower ||
+            (u.acronym && u.acronym.toLowerCase() === deptQueryLower)
+        );
+        if (deptUnit && (deptUnit as any).departmentId) {
+            departmentId = (deptUnit as any).departmentId;
+            log(`Mapped department '${params.department}' to ID '${departmentId}'`);
+        } else {
+            log(`Warning: No department ID found for '${params.department}', using 'All'`);
+        }
+    }
+
     // Step 1: Search for staff
     const queryParams = new URLSearchParams();
     queryParams.append('searchDept', facultyAcronym === 'All' ? 'ALL' : facultyAcronym);
-    queryParams.append('searchDiv', params.department && params.department !== 'All' ? params.department : 'All');
+    queryParams.append('searchDiv', departmentId);
     queryParams.append('searchName', params.name || '');
     queryParams.append('searchExpertise', params.expertise || '');
     queryParams.append('submit', 'Search');
