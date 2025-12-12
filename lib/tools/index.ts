@@ -8,6 +8,7 @@ interface UnitMapping {
     acronym: string | null;
     canonical: string;
     type: string | null;
+    parent?: string | null;
     aliases: string[];
 }
 
@@ -56,7 +57,8 @@ export function resolveUnit(query: string, logger?: (msg: string) => void) {
         return {
             canonical: exact.canonical,
             acronym: exact.acronym,
-            type: exact.type
+            type: exact.type,
+            parent: exact.parent
         };
     }
 
@@ -66,7 +68,8 @@ export function resolveUnit(query: string, logger?: (msg: string) => void) {
         return {
             canonical: best.canonical,
             acronym: best.acronym,
-            type: best.type
+            type: best.type,
+            parent: best.parent
         };
     }
 
