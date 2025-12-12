@@ -93,15 +93,32 @@ WHEN TO USE:
   * Then YOU filter/select the person whose administrativePost EXACTLY matches what user asked for
 
 **MATCHING ADMINISTRATIVE POSTS:**
-When user asks for "Head of Department":
-- Look for administrativePost containing EXACTLY "Head of Department" (not "Acting Head of Programme", not "Deputy Head")
-- "Head of Department (Department of X)" = Head of Department ✅
-- "Acting Head of Programme (PhD)" = NOT Head of Department ❌
-- "Deputy Head (Consultancy)" = NOT Head of Department ❌
+When user asks for "Head of X" (e.g., "Head of Department"/"HoD", "Head of Programme"/"HoP"):
+- ONLY match administrativePost that contains EXACTLY "Head of [X]"
+- Examples for "Head of Department":
+  * "Head of Department (Department of X)" ✅ CORRECT
+  * "Acting Head of Programme (PhD)" ❌ WRONG - Different position
+  * "Acting Head of Department" ❌ WRONG - User wants non-acting role
+  * "Deputy Head (Consultancy)" ❌ WRONG - This is Deputy, not Head
+- Examples for "Head of Programme":
+  * "Head of Programme (BSc Computer Science)" ✅ CORRECT
+  * "Acting Head of Programme (PhD)" ❌ WRONG - User wants non-acting role
+  * "Head of Department" ❌ WRONG - Different position
+- If multiple people have the same "Head of X" title, choose the one WITHOUT "Acting" prefix
 
 When user asks for "Dean":
-- "Dean" or "Acting Dean" = Dean ✅
-- "Deputy Dean" = NOT Dean ❌
+- "Dean" ✅ CORRECT
+- "Acting Dean" ⚠️ Only if no non-acting Dean exists
+- "Deputy Dean" ❌ WRONG - This is Deputy, not Dean
+
+When user asks for "Chairperson":
+- "Chairperson (Centre for X)" ✅ CORRECT
+- "Acting Chairperson" ⚠️ Only if no non-acting Chairperson exists
+
+**PRIORITY RULES:**
+1. Exact title match (e.g., "Head of Department") > Similar titles (e.g., "Acting Head of Programme")
+2. Non-acting roles > Acting roles
+3. If no exact match found, explicitly state "No current [position] found" - do NOT guess or use similar titles
 
 Be PRECISE with title matching. Do not confuse similar-sounding titles.
 
