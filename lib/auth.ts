@@ -30,9 +30,9 @@ export const authOptions: NextAuthOptions = {
 
                 console.log('[AUTH] User found:', { email: user.email, role: user.role, isApproved: user.isApproved });
 
-                // Check if public user is approved
-                if (user.role === 'public' && !user.isApproved) {
-                    console.log('[AUTH] Public user not approved');
+                // Check if user is approved (apply to all roles)
+                if (!user.isApproved) {
+                    console.log('[AUTH] User not approved');
                     throw new Error('Your account is pending approval by the administrator');
                 }
 

@@ -147,7 +147,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(
             {
                 success: true,
-                message: 'Signup successful! Please check your email to verify your account before logging in.',
+                message: 'Signup successful! Please verify your email. Your account will then be reviewed by an administrator for approval.',
                 user: {
                     id: user.id,
                     email: user.email,
