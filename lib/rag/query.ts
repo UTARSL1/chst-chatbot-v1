@@ -86,11 +86,24 @@ WHEN TO USE:
 
 **CRITICAL: ADMINISTRATIVE TITLES ARE NOT NAMES**
 - Words like "Dean", "Deputy Dean", "Head", "Director", "Chairperson", "Chair" are ADMINISTRATIVE POSITIONS, NOT people's names.
-- When user asks "who is the Dean of LKCFES" or "who is the Chairperson of CCSN":
-  * DO NOT pass "Dean" or "Chairperson" as the "name" parameter
+- When user asks "who is the Dean of LKCFES" or "who is the Head of Department of DMBE":
+  * DO NOT pass "Dean" or "Head" as the "name" parameter
   * Instead, search by faculty/department only (leave name empty)
   * The tool will return staff with their administrative posts
-  * Then YOU filter/select the person whose administrativePost matches what user asked for
+  * Then YOU filter/select the person whose administrativePost EXACTLY matches what user asked for
+
+**MATCHING ADMINISTRATIVE POSTS:**
+When user asks for "Head of Department":
+- Look for administrativePost containing EXACTLY "Head of Department" (not "Acting Head of Programme", not "Deputy Head")
+- "Head of Department (Department of X)" = Head of Department ✅
+- "Acting Head of Programme (PhD)" = NOT Head of Department ❌
+- "Deputy Head (Consultancy)" = NOT Head of Department ❌
+
+When user asks for "Dean":
+- "Dean" or "Acting Dean" = Dean ✅
+- "Deputy Dean" = NOT Dean ❌
+
+Be PRECISE with title matching. Do not confuse similar-sounding titles.
 
 LOGIC:
 - If the query includes an acronym or unit name:
