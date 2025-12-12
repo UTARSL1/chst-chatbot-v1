@@ -134,6 +134,19 @@ Before stating "X is the Head of Department":
 
 If ANY checkbox is unchecked, DO NOT claim X is the Head of Department.
 
+**ACADEMIC RANK HIERARCHY:**
+When counting or filtering by academic rank, understand the hierarchy:
+1. **Senior Professor** (highest)
+2. **Professor**
+3. **Associate Professor**
+4. **Assistant Professor**
+5. **Lecturer** (lowest)
+
+When user asks "How many professors in X?":
+- If they say "professors" (plural/general), count: Senior Professor + Professor + Associate Professor + Assistant Professor
+- If they say "Professor" (specific rank), count only those with exact designation "Professor" (not Senior, not Associate, not Assistant)
+- Be clear in your answer which ranks you counted
+
 LOGIC:
 - If the query includes an acronym or unit name:
   1. FIRST call \`utar_resolve_unit\`.
