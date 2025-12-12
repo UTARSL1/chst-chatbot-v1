@@ -4,7 +4,8 @@
         "canonical": "President's Office",
         "type": "University Administration",
         "aliases": [
-            "President's Office"
+            "President's Office",
+            "PRES"
         ]
     },
     {
@@ -42,7 +43,8 @@
         "canonical": "Registrar's Office",
         "type": "University Administration",
         "aliases": [
-            "Registrar's Office"
+            "Registrar's Office",
+            "RGO"
         ]
     },
     {
@@ -51,7 +53,8 @@
         "type": "Administrative Division",
         "aliases": [
             "Division of Human Resource",
-            "Human Resource"
+            "Human Resource",
+            "DHR"
         ]
     },
     {
@@ -60,7 +63,8 @@
         "type": "Administrative Division",
         "aliases": [
             "Division of Finance",
-            "Finance Division"
+            "Finance Division",
+            "DFN"
         ]
     },
     {
@@ -68,7 +72,8 @@
         "canonical": "Division of Quality Assurance and Audit",
         "type": "Administrative Division",
         "aliases": [
-            "Division of Quality Assurance and Audit"
+            "Division of Quality Assurance and Audit",
+            "DQAA"
         ]
     },
     {
@@ -95,7 +100,8 @@
         "type": "Faculty",
         "aliases": [
             "Faculty of Accountancy and Management",
-            "Accountancy and Management Faculty"
+            "Accountancy and Management Faculty",
+            "FAM"
         ]
     },
     {
@@ -105,7 +111,8 @@
         "aliases": [
             "Faculty of Arts and Social Science",
             "Arts and Social Science Faculty",
-            "FASS"
+            "FASS",
+            "FAS"
         ]
     },
     {
@@ -114,7 +121,8 @@
         "type": "Faculty",
         "aliases": [
             "Faculty of Chinese Studies",
-            "Chinese Studies Faculty"
+            "Chinese Studies Faculty",
+            "FCS"
         ]
     },
     {
@@ -123,7 +131,8 @@
         "type": "Faculty",
         "aliases": [
             "Faculty of Creative Industries",
-            "Creative Industries Faculty"
+            "Creative Industries Faculty",
+            "FCI"
         ]
     },
     {
@@ -132,7 +141,8 @@
         "type": "Faculty",
         "aliases": [
             "Faculty of Education",
-            "Education Faculty"
+            "Education Faculty",
+            "FEd"
         ]
     },
     {
@@ -141,7 +151,8 @@
         "type": "Faculty",
         "aliases": [
             "Faculty of Engineering and Green Technology",
-            "Engineering and Green Technology Faculty"
+            "Engineering and Green Technology Faculty",
+            "FEGT"
         ]
     },
     {
@@ -151,7 +162,8 @@
         "aliases": [
             "Faculty of Information and Communication Technology",
             "Information and Communication Technology Faculty",
-            "ICT Faculty"
+            "ICT Faculty",
+            "FICT"
         ]
     },
     {
@@ -160,7 +172,8 @@
         "type": "Faculty",
         "aliases": [
             "Faculty of Science",
-            "Science Faculty"
+            "Science Faculty",
+            "FSc"
         ]
     },
     {
@@ -212,7 +225,8 @@
         "aliases": [
             "Institute of Postgraduate Studies and Research",
             "Postgraduate Studies and Research Institute",
-            "IPSR"
+            "IPSR",
+            "Institute of Postgraduate Studies &amp; Research"
         ]
     },
     {
@@ -253,7 +267,8 @@
         "type": "Administrative Division",
         "aliases": [
             "Library",
-            "UTAR Library"
+            "UTAR Library",
+            "LIB"
         ]
     },
     {
@@ -262,7 +277,8 @@
         "type": "Administrative Division",
         "aliases": [
             "Division of Admissions and Credit Evaluation",
-            "Admissions and Credit Evaluation"
+            "Admissions and Credit Evaluation",
+            "DACE"
         ]
     },
     {
@@ -271,7 +287,8 @@
         "type": "Administrative Division",
         "aliases": [
             "Division of Corporate Communication and Public Relations",
-            "Corporate Communication and Public Relations"
+            "Corporate Communication and Public Relations",
+            "DCCPR"
         ]
     },
     {
@@ -280,7 +297,8 @@
         "type": "Administrative Division",
         "aliases": [
             "Division of Examination and Awards",
-            "Examination and Awards Division"
+            "Examination and Awards Division",
+            "DEAS"
         ]
     },
     {
@@ -289,7 +307,8 @@
         "type": "Administrative Division",
         "aliases": [
             "Division of Programme Promotion",
-            "Programme Promotion Division"
+            "Programme Promotion Division",
+            "DPP"
         ]
     },
     {
@@ -298,7 +317,8 @@
         "type": "Administrative Division",
         "aliases": [
             "Division of Sustainability and Strategic Management",
-            "Sustainability and Strategic Management Division"
+            "Sustainability and Strategic Management Division",
+            "DSSM"
         ]
     },
     {
@@ -367,7 +387,8 @@
         "type": "Centre",
         "aliases": [
             "Unovate Centre",
-            "UC"
+            "UC",
+            "Unovate"
         ]
     },
     {
@@ -417,7 +438,8 @@
         "aliases": [
             "Department of Estate and Facilities (Kampar Campus)",
             "Estate and Facilities Kampar",
-            "DEF-KPR"
+            "DEF-KPR",
+            "Department of Estates and Facilities (Kampar Campus)"
         ]
     },
     {
@@ -667,7 +689,8 @@
         "aliases": [
             "Centre for Communication Systems and Networks",
             "Communication Systems and Networks Centre",
-            "CCSN"
+            "CCSN",
+            "Centre for Communicaton Systems and Networks"
         ]
     },
     {
@@ -697,7 +720,8 @@
         "aliases": [
             "Centre of Electronic System Design",
             "Electronic System Design Centre",
-            "CESD"
+            "CESD",
+            "Centre for Electronics Systems Design"
         ]
     },
     {
@@ -747,7 +771,8 @@
         "aliases": [
             "Centre for Internet of Things and Big Data",
             "Internet of Things and Big Data Centre",
-            "CIoTBD"
+            "CIoTBD",
+            "Centre for IoT and Big Data"
         ]
     },
     {
@@ -817,7 +842,9 @@
         "aliases": [
             "Centre for Research on Non-communicable Diseases",
             "Non-communicable Diseases Research Centre",
-            "CRNCD"
+            "CRNCD",
+            "Centre for Research on Non-Communicable Diseases",
+            "CRND"
         ]
     },
     {
@@ -847,7 +874,8 @@
         "aliases": [
             "Centre of Sustainable Design and Built Environment",
             "Sustainable Design and Built Environment Centre",
-            "COSBE"
+            "COSBE",
+            "Centre for Sustainable Design and Built Environment"
         ]
     },
     {
@@ -906,7 +934,8 @@
         "aliases": [
             "XDU-UTAR Institute of Science, Technology and Innovation",
             "XDU UTAR Institute of Science, Technology and Innovation",
-            "XDU-UTAR"
+            "XDU-UTAR",
+            "XDU-UTAR ISTI"
         ]
     },
     {
@@ -944,6 +973,587 @@
         "aliases": [
             "International Institute of Media",
             "IIM"
+        ]
+    },
+    {
+        "acronym": "DMBE",
+        "canonical": "Department of Mechatronics and Biomedical Engineering",
+        "type": "Academic Department",
+        "parent": "Lee Kong Chian Faculty of Engineering and Science",
+        "aliases": [
+            "Department of Mechatronics and Biomedical Engineering",
+            "Mechatronics and Biomedical Engineering Department",
+            "DMBE"
+        ]
+    },
+    {
+        "acronym": "DASD",
+        "canonical": "Department of Architecture and Sustainable Design",
+        "type": "Academic Department",
+        "parent": "Lee Kong Chian Faculty of Engineering and Science",
+        "aliases": [
+            "Department of Architecture and Sustainable Design",
+            "DASD"
+        ]
+    },
+    {
+        "acronym": "DCL",
+        "canonical": "Department of Chemical Engineering",
+        "type": "Academic Department",
+        "parent": "Lee Kong Chian Faculty of Engineering and Science",
+        "aliases": [
+            "Department of Chemical Engineering",
+            "DCL"
+        ]
+    },
+    {
+        "acronym": "DCI",
+        "canonical": "Department of Civil Engineering",
+        "type": "Academic Department",
+        "parent": "Lee Kong Chian Faculty of Engineering and Science",
+        "aliases": [
+            "Department of Civil Engineering",
+            "DCI"
+        ]
+    },
+    {
+        "acronym": "D3E",
+        "canonical": "Department of Electrical and Electronic Engineering",
+        "type": "Academic Department",
+        "parent": "Lee Kong Chian Faculty of Engineering and Science",
+        "aliases": [
+            "Department of Electrical and Electronic Engineering",
+            "D3E"
+        ]
+    },
+    {
+        "acronym": "DIECS",
+        "canonical": "Department of Internet Engineering and Computer Science",
+        "type": "Academic Department",
+        "parent": "Lee Kong Chian Faculty of Engineering and Science",
+        "aliases": [
+            "Department of Internet Engineering and Computer Science",
+            "DIECS"
+        ]
+    },
+    {
+        "acronym": "DMAS",
+        "canonical": "Department of Mathematical and Actuarial Sciences",
+        "type": "Academic Department",
+        "parent": "Lee Kong Chian Faculty of Engineering and Science",
+        "aliases": [
+            "Department of Mathematical and Actuarial Sciences",
+            "DMAS"
+        ]
+    },
+    {
+        "acronym": "DMME",
+        "canonical": "Department of Mechanical and Material Engineering",
+        "type": "Academic Department",
+        "parent": "Lee Kong Chian Faculty of Engineering and Science",
+        "aliases": [
+            "Department of Mechanical and Material Engineering",
+            "DMME"
+        ]
+    },
+    {
+        "acronym": "DS",
+        "canonical": "Department of Surveying",
+        "type": "Academic Department",
+        "parent": "Lee Kong Chian Faculty of Engineering and Science",
+        "aliases": [
+            "Department of Surveying",
+            "DS"
+        ]
+    },
+    {
+        "acronym": "DA",
+        "canonical": "Department of Accountancy",
+        "type": "Academic Department",
+        "parent": "Faculty of Accountancy and Management",
+        "aliases": [
+            "Department of Accountancy",
+            "DA"
+        ]
+    },
+    {
+        "acronym": "DBPM",
+        "canonical": "Department of Building and Property Management",
+        "type": "Academic Department",
+        "parent": "Faculty of Accountancy and Management",
+        "aliases": [
+            "Department of Building and Property Management",
+            "DBPM"
+        ]
+    },
+    {
+        "acronym": "DE",
+        "canonical": "Department of Economics",
+        "type": "Academic Department",
+        "parent": "Faculty of Accountancy and Management",
+        "aliases": [
+            "Department of Economics",
+            "DE"
+        ]
+    },
+    {
+        "acronym": "DIB",
+        "canonical": "Department of International Business",
+        "type": "Academic Department",
+        "parent": "Faculty of Accountancy and Management",
+        "aliases": [
+            "Department of International Business",
+            "DIB"
+        ]
+    },
+    {
+        "acronym": "DAD",
+        "canonical": "Department of Advertising",
+        "type": "Academic Department",
+        "parent": "Faculty of Arts and Social Science",
+        "aliases": [
+            "Department of Advertising",
+            "DAD"
+        ]
+    },
+    {
+        "acronym": "DEng",
+        "canonical": "Department of English",
+        "type": "Academic Department",
+        "parent": "Faculty of Arts and Social Science",
+        "aliases": [
+            "Department of English",
+            "DEng"
+        ]
+    },
+    {
+        "acronym": "DJ",
+        "canonical": "Department of Journalism",
+        "type": "Academic Department",
+        "parent": "Faculty of Arts and Social Science",
+        "aliases": [
+            "Department of Journalism",
+            "DJ"
+        ]
+    },
+    {
+        "acronym": "DPC",
+        "canonical": "Department of Psychology and Counselling",
+        "type": "Academic Department",
+        "parent": "Faculty of Arts and Social Science",
+        "aliases": [
+            "Department of Psychology and Counselling",
+            "DPC"
+        ]
+    },
+    {
+        "acronym": "DPR",
+        "canonical": "Department of Public Relations",
+        "type": "Academic Department",
+        "parent": "Faculty of Arts and Social Science",
+        "aliases": [
+            "Department of Public Relations",
+            "DPR"
+        ]
+    },
+    {
+        "acronym": "DCCT",
+        "canonical": "Department of Computer and Communication Technology",
+        "type": "Academic Department",
+        "parent": "Faculty of Information and Communication Technology",
+        "aliases": [
+            "Department of Computer and Communication Technology",
+            "DCCT"
+        ]
+    },
+    {
+        "acronym": "DCS",
+        "canonical": "Department of Computer Science",
+        "type": "Academic Department",
+        "parent": "Faculty of Information and Communication Technology",
+        "aliases": [
+            "Department of Computer Science",
+            "DCS"
+        ]
+    },
+    {
+        "acronym": "DIS",
+        "canonical": "Department of Information Systems",
+        "type": "Academic Department",
+        "parent": "Faculty of Information and Communication Technology",
+        "aliases": [
+            "Department of Information Systems",
+            "DIS"
+        ]
+    },
+    {
+        "acronym": "DAFS",
+        "canonical": "Department of Agricultural and Food Science",
+        "type": "Academic Department",
+        "parent": "Faculty of Science",
+        "aliases": [
+            "Department of Agricultural and Food Science",
+            "DAFS"
+        ]
+    },
+    {
+        "acronym": "DBS",
+        "canonical": "Department of Biological Science",
+        "type": "Academic Department",
+        "parent": "Faculty of Science",
+        "aliases": [
+            "Department of Biological Science",
+            "DBS"
+        ]
+    },
+    {
+        "acronym": "DCS",
+        "canonical": "Department of Chemical Science",
+        "type": "Academic Department",
+        "parent": "Faculty of Science",
+        "aliases": [
+            "Department of Chemical Science",
+            "DCS"
+        ]
+    },
+    {
+        "acronym": "DAHS",
+        "canonical": "Department of Allied Health Sciences",
+        "type": "Academic Department",
+        "parent": "Faculty of Science",
+        "aliases": [
+            "Department of Allied Health Sciences",
+            "DAHS"
+        ]
+    },
+    {
+        "acronym": "DCM",
+        "canonical": "Department of Construction Management",
+        "type": "Academic Department",
+        "parent": "Faculty of Engineering and Green Technology",
+        "aliases": [
+            "Department of Construction Management",
+            "DCM"
+        ]
+    },
+    {
+        "acronym": "DEE",
+        "canonical": "Department of Electronic Engineering",
+        "type": "Academic Department",
+        "parent": "Faculty of Engineering and Green Technology",
+        "aliases": [
+            "Department of Electronic Engineering",
+            "DEE"
+        ]
+    },
+    {
+        "acronym": "DEvE",
+        "canonical": "Department of Environmental Engineering",
+        "type": "Academic Department",
+        "parent": "Faculty of Engineering and Green Technology",
+        "aliases": [
+            "Department of Environmental Engineering",
+            "DEvE"
+        ]
+    },
+    {
+        "acronym": "DIE",
+        "canonical": "Department of Industrial Engineering",
+        "type": "Academic Department",
+        "parent": "Faculty of Engineering and Green Technology",
+        "aliases": [
+            "Department of Industrial Engineering",
+            "DIE"
+        ]
+    },
+    {
+        "acronym": "DPE",
+        "canonical": "Department of Petrochemical Engineering",
+        "type": "Academic Department",
+        "parent": "Faculty of Engineering and Green Technology",
+        "aliases": [
+            "Department of Petrochemical Engineering",
+            "DPE"
+        ]
+    },
+    {
+        "acronym": "DBRM",
+        "canonical": "Department of Banking and Risk Management",
+        "type": "Academic Department",
+        "parent": "Faculty of Business and Finance",
+        "aliases": [
+            "Department of Banking and Risk Management",
+            "DBRM"
+        ]
+    },
+    {
+        "acronym": "DB",
+        "canonical": "Department of Business",
+        "type": "Academic Department",
+        "parent": "Faculty of Business and Finance",
+        "aliases": [
+            "Department of Business",
+            "DB"
+        ]
+    },
+    {
+        "acronym": "DCA",
+        "canonical": "Department of Commerce and Accountancy",
+        "type": "Academic Department",
+        "parent": "Faculty of Business and Finance",
+        "aliases": [
+            "Department of Commerce and Accountancy",
+            "DCA"
+        ]
+    },
+    {
+        "acronym": "DE",
+        "canonical": "Department of Economics",
+        "type": "Academic Department",
+        "parent": "Faculty of Business and Finance",
+        "aliases": [
+            "Department of Economics",
+            "DE"
+        ]
+    },
+    {
+        "acronym": "DES",
+        "canonical": "Department of Entrepreneurship and Supply Chain Management",
+        "type": "Academic Department",
+        "parent": "Faculty of Business and Finance",
+        "aliases": [
+            "Department of Entrepreneurship and Supply Chain Management",
+            "DES"
+        ]
+    },
+    {
+        "acronym": "DF",
+        "canonical": "Department of Finance",
+        "type": "Academic Department",
+        "parent": "Faculty of Business and Finance",
+        "aliases": [
+            "Department of Finance",
+            "DF"
+        ]
+    },
+    {
+        "acronym": "DM",
+        "canonical": "Department of Marketing",
+        "type": "Academic Department",
+        "parent": "Faculty of Business and Finance",
+        "aliases": [
+            "Department of Marketing",
+            "DM"
+        ]
+    },
+    {
+        "acronym": "DCM",
+        "canonical": "Department of Chinese Medicine",
+        "type": "Academic Department",
+        "parent": "M. Kandiah Faculty of Medicine and Health Sciences",
+        "aliases": [
+            "Department of Chinese Medicine",
+            "DCM"
+        ]
+    },
+    {
+        "acronym": "DM",
+        "canonical": "Department of Medicine",
+        "type": "Academic Department",
+        "parent": "M. Kandiah Faculty of Medicine and Health Sciences",
+        "aliases": [
+            "Department of Medicine",
+            "DM"
+        ]
+    },
+    {
+        "acronym": "DN",
+        "canonical": "Department of Nursing",
+        "type": "Academic Department",
+        "parent": "M. Kandiah Faculty of Medicine and Health Sciences",
+        "aliases": [
+            "Department of Nursing",
+            "DN"
+        ]
+    },
+    {
+        "acronym": "DP",
+        "canonical": "Department of Physiotherapy",
+        "type": "Academic Department",
+        "parent": "M. Kandiah Faculty of Medicine and Health Sciences",
+        "aliases": [
+            "Department of Physiotherapy",
+            "DP"
+        ]
+    },
+    {
+        "acronym": "DPM",
+        "canonical": "Department of Population Medicine",
+        "type": "Academic Department",
+        "parent": "M. Kandiah Faculty of Medicine and Health Sciences",
+        "aliases": [
+            "Department of Population Medicine",
+            "DPM"
+        ]
+    },
+    {
+        "acronym": "DPS",
+        "canonical": "Department of Pre-clinical Sciences",
+        "type": "Academic Department",
+        "parent": "M. Kandiah Faculty of Medicine and Health Sciences",
+        "aliases": [
+            "Department of Pre-clinical Sciences",
+            "DPS"
+        ]
+    },
+    {
+        "acronym": "DSurg",
+        "canonical": "Department of Surgery",
+        "type": "Academic Department",
+        "parent": "M. Kandiah Faculty of Medicine and Health Sciences",
+        "aliases": [
+            "Department of Surgery",
+            "DSurg"
+        ]
+    },
+    {
+        "acronym": "DGS",
+        "canonical": "Department of Game Studies",
+        "type": "Academic Department",
+        "parent": "Faculty of Creative Industries",
+        "aliases": [
+            "Department of Game Studies",
+            "DGS"
+        ]
+    },
+    {
+        "acronym": "DMC",
+        "canonical": "Department of Mass Communication",
+        "type": "Academic Department",
+        "parent": "Faculty of Creative Industries",
+        "aliases": [
+            "Department of Mass Communication",
+            "DMC"
+        ]
+    },
+    {
+        "acronym": "DMedia",
+        "canonical": "Department of Media",
+        "type": "Academic Department",
+        "parent": "Faculty of Creative Industries",
+        "aliases": [
+            "Department of Media",
+            "DMedia"
+        ]
+    },
+    {
+        "acronym": "DGenS",
+        "canonical": "Department of General Studies",
+        "type": "Academic Department",
+        "parent": "Faculty of Creative Industries",
+        "aliases": [
+            "Department of General Studies",
+            "DGenS"
+        ]
+    },
+    {
+        "acronym": "DCS",
+        "canonical": "Department of Chinese Studies",
+        "type": "Academic Department",
+        "parent": "Institute of Chinese Studies",
+        "aliases": [
+            "Department of Chinese Studies",
+            "DCS"
+        ]
+    },
+    {
+        "canonical": "Chancellery",
+        "acronym": "Chancellery",
+        "type": "Chancellery",
+        "parent": null,
+        "aliases": [
+            "Chancellery",
+            "Chancellery"
+        ]
+    },
+    {
+        "canonical": "Dr Wu Lien-Teh Centre for Research in Communicable Diseases",
+        "acronym": "WLTCRCD",
+        "type": "Centre",
+        "parent": null,
+        "aliases": [
+            "Dr Wu Lien-Teh Centre for Research in Communicable Diseases",
+            "WLTCRCD"
+        ]
+    },
+    {
+        "canonical": "Office of VP (Internationalisation and Academic Development)",
+        "acronym": "IAD",
+        "type": "Administrative Office",
+        "parent": null,
+        "aliases": [
+            "Office of VP (Internationalisation and Academic Development)",
+            "IAD"
+        ]
+    },
+    {
+        "canonical": "Office of VP (R&amp;D and Commercialisation)",
+        "acronym": "RDC",
+        "type": "Administrative Office",
+        "parent": null,
+        "aliases": [
+            "Office of VP (R&amp;D and Commercialisation)",
+            "RDC"
+        ]
+    },
+    {
+        "canonical": "Office of VP (Student Development and Alumni Relations)",
+        "acronym": "SDAR",
+        "type": "Administrative Office",
+        "parent": null,
+        "aliases": [
+            "Office of VP (Student Development and Alumni Relations)",
+            "SDAR"
+        ]
+    },
+    {
+        "canonical": "Open and Distance Learning Centre",
+        "acronym": "ODL",
+        "type": "Centre",
+        "parent": null,
+        "aliases": [
+            "Open and Distance Learning Centre",
+            "ODL"
+        ]
+    },
+    {
+        "canonical": "Sg Long Campus Administration Director's Office",
+        "acronym": "CAD",
+        "type": "Administrative Office",
+        "parent": null,
+        "aliases": [
+            "Sg Long Campus Administration Director's Office",
+            "CAD"
+        ]
+    },
+    {
+        "canonical": "STEAM Outreach",
+        "acronym": "STEAM",
+        "type": "Organisation Unit",
+        "parent": null,
+        "aliases": [
+            "STEAM Outreach",
+            "STEAM"
+        ]
+    },
+    {
+        "canonical": "Xinwei Institute",
+        "acronym": "XI",
+        "type": "Institute",
+        "parent": null,
+        "aliases": [
+            "Xinwei Institute",
+            "XI"
         ]
     }
 ]

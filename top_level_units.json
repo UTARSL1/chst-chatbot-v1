@@ -1,0 +1,398 @@
+[
+    {
+        "value": "ACSF",
+        "text": "ASEAN Research Centre for A Community with Shared Future"
+    },
+    {
+        "value": "BRSRC",
+        "text": "Belt and Road Strategic Research Centre"
+    },
+    {
+        "value": "CABF",
+        "text": "Centre for Accounting, Banking and Finance"
+    },
+    {
+        "value": "CASMR",
+        "text": "Centre for Advanced and Sustainable Materials Research"
+    },
+    {
+        "value": "CAFR",
+        "text": "Centre for Agriculture and Food Research"
+    },
+    {
+        "value": "CAPCN",
+        "text": "Centre for Applied Psychology and Cognitive Neuroscience"
+    },
+    {
+        "value": "CAICA",
+        "text": "Centre for Artificial Intelligence and Computing Applications"
+    },
+    {
+        "value": "CFAR",
+        "text": "Centre for Artistic Research"
+    },
+    {
+        "value": "CBNR",
+        "text": "Centre for Biomedical and Nutrition Research"
+    },
+    {
+        "value": "CBM",
+        "text": "Centre for Business and Management"
+    },
+    {
+        "value": "CCR",
+        "text": "Centre for Cancer Research"
+    },
+    {
+        "value": "3CDRR",
+        "text": "Centre for Climate Change and Disaster Risk Reduction"
+    },
+    {
+        "value": "CCSN",
+        "text": "Centre for Communicaton Systems and Networks"
+    },
+    {
+        "value": "CCCD",
+        "text": "Centre for Corporate and Community Development"
+    },
+    {
+        "value": "CCDI",
+        "text": "Centre for Curriculum Development and Innovation"
+    },
+    {
+        "value": "CCS",
+        "text": "Centre for Cyber Security"
+    },
+    {
+        "value": "CES",
+        "text": "Centre for Economic Studies"
+    },
+    {
+        "value": "CESD",
+        "text": "Centre for Electronics Systems Design"
+    },
+    {
+        "value": "CENTS",
+        "text": "Centre for Entrepreneurial Sustainability"
+    },
+    {
+        "value": "CEGT",
+        "text": "Centre for Environment and Green Technology"
+    },
+    {
+        "value": "CEE",
+        "text": "Centre for Extension Education"
+    },
+    {
+        "value": "CFS-KPR",
+        "text": "Centre for Foundation Studies (Kampar Campus)"
+    },
+    {
+        "value": "CFS-SL",
+        "text": "Centre for Foundation Studies (Sungai Long Campus)"
+    },
+    {
+        "value": "CHST",
+        "text": "Centre for Healthcare Science and Technology"
+    },
+    {
+        "value": "CITC",
+        "text": "Centre for Immersive Technology and Creativity"
+    },
+    {
+        "value": "CISREC",
+        "text": "Centre for International Student Recruitment and Education Collaboration"
+    },
+    {
+        "value": "CIoTBD",
+        "text": "Centre for IoT and Big Data"
+    },
+    {
+        "value": "CLT",
+        "text": "Centre for Learning and Teaching"
+    },
+    {
+        "value": "CMS",
+        "text": "Centre for Mathematical Sciences"
+    },
+    {
+        "value": "CMCR",
+        "text": "Centre for Media and Communication Research"
+    },
+    {
+        "value": "CMLL",
+        "text": "Centre for Modern Languages and Literature"
+    },
+    {
+        "value": "CMPS",
+        "text": "Centre for Multimedia Production and Services"
+    },
+    {
+        "value": "CPSE",
+        "text": "Centre for Power Systems and Electricity"
+    },
+    {
+        "value": "CRIE",
+        "text": "Centre for Railway Infrastructure and Engineering"
+    },
+    {
+        "value": "CRTCM",
+        "text": "Centre for Research in Traditional Chinese Medicine"
+    },
+    {
+        "value": "CRND",
+        "text": "Centre for Research on Non-Communicable Diseases"
+    },
+    {
+        "value": "CSPS",
+        "text": "Centre for Social and Policy Studies"
+    },
+    {
+        "value": "CSDS",
+        "text": "Centre for Software Development and Support"
+    },
+    {
+        "value": "CSCR",
+        "text": "Centre for Stem Cell Research"
+    },
+    {
+        "value": "COSBE",
+        "text": "Centre for Sustainable Design and Built Environment"
+    },
+    {
+        "value": "CSMT",
+        "text": "Centre for Sustainable Mobility Technologies"
+    },
+    {
+        "value": "Chancellery",
+        "text": "Chancellery"
+    },
+    {
+        "value": "Confucius Institute",
+        "text": "Confucius Institute"
+    },
+    {
+        "value": "DARP",
+        "text": "Department of Alumni Relations and Placement"
+    },
+    {
+        "value": "DCC",
+        "text": "Department of Consultancy and Commercialisation"
+    },
+    {
+        "value": "DEF-KPR",
+        "text": "Department of Estates and Facilities (Kampar Campus)"
+    },
+    {
+        "value": "DEF-SL",
+        "text": "Department of Estates and Facilities (Sungai Long Campus)"
+    },
+    {
+        "value": "DGS-KPR",
+        "text": "Department of General Services (Kampar Campus)"
+    },
+    {
+        "value": "DGS-SL",
+        "text": "Department of General Services (Sungai Long Campus)"
+    },
+    {
+        "value": "DISS-KPR",
+        "text": "Department of International Student Services (Kampar Campus)"
+    },
+    {
+        "value": "DISS-SL",
+        "text": "Department of International Student Services (Sungai Long Campus)"
+    },
+    {
+        "value": "DSS-KPR",
+        "text": "Department of Safety and Security (Kampar Campus)"
+    },
+    {
+        "value": "DSS-SL",
+        "text": "Department of Safety and Security (Sungai Long Campus)"
+    },
+    {
+        "value": "DSFA",
+        "text": "Department of Scholarships and Financial Aid"
+    },
+    {
+        "value": "DSSC-KPR",
+        "text": "Department of Soft Skills Competency (Kampar Campus)"
+    },
+    {
+        "value": "DSSC-SL",
+        "text": "Department of Soft Skills Competency (Sungai Long Campus)"
+    },
+    {
+        "value": "DSA-KPR",
+        "text": "Department of Student Affairs (Kampar Campus)"
+    },
+    {
+        "value": "DSA-SL",
+        "text": "Department of Student Affairs (Sungai Long Campus)"
+    },
+    {
+        "value": "DACE",
+        "text": "Division of Admissions and Credit Evaluation"
+    },
+    {
+        "value": "DCCPR",
+        "text": "Division of Corporate Communication and Public Relations"
+    },
+    {
+        "value": "DEAS",
+        "text": "Division of Examination and Awards"
+    },
+    {
+        "value": "DFN",
+        "text": "Division of Finance"
+    },
+    {
+        "value": "DHR",
+        "text": "Division of Human Resource"
+    },
+    {
+        "value": "DPP",
+        "text": "Division of Programme Promotion"
+    },
+    {
+        "value": "DQAA",
+        "text": "Division of Quality Assurance and Audit"
+    },
+    {
+        "value": "DSSM",
+        "text": "Division of Sustainability and Strategic Management"
+    },
+    {
+        "value": "WLTCRCD",
+        "text": "Dr Wu Lien-Teh Centre for Research in Communicable Diseases"
+    },
+    {
+        "value": "FAM",
+        "text": "Faculty of Accountancy and Management"
+    },
+    {
+        "value": "FAS",
+        "text": "Faculty of Arts and Social Science"
+    },
+    {
+        "value": "FCS",
+        "text": "Faculty of Chinese Studies"
+    },
+    {
+        "value": "FCI",
+        "text": "Faculty of Creative Industries"
+    },
+    {
+        "value": "FEd",
+        "text": "Faculty of Education"
+    },
+    {
+        "value": "FEGT",
+        "text": "Faculty of Engineering and Green Technology"
+    },
+    {
+        "value": "FICT",
+        "text": "Faculty of Information and Communication Technology"
+    },
+    {
+        "value": "FSc",
+        "text": "Faculty of Science"
+    },
+    {
+        "value": "IMLD",
+        "text": "Institute of Management and Leadership Development"
+    },
+    {
+        "value": "IPSR",
+        "text": "Institute of Postgraduate Studies & Research"
+    },
+    {
+        "value": "IIM",
+        "text": "International Institute of Media"
+    },
+    {
+        "value": "ITISC",
+        "text": "IT Infrastructure and Support Centre"
+    },
+    {
+        "value": "LKC FES",
+        "text": "Lee Kong Chian Faculty of Engineering and Science"
+    },
+    {
+        "value": "LIB",
+        "text": "Library"
+    },
+    {
+        "value": "MK FMHS",
+        "text": "M. Kandiah Faculty of Medicine and Health Sciences"
+    },
+    {
+        "value": "Mencius Institute",
+        "text": "Mencius Institute"
+    },
+    {
+        "value": "OIA",
+        "text": "Office of International Affairs"
+    },
+    {
+        "value": "IAD",
+        "text": "Office of VP (Internationalisation and Academic Development)"
+    },
+    {
+        "value": "RDC",
+        "text": "Office of VP (R&D and Commercialisation)"
+    },
+    {
+        "value": "SDAR",
+        "text": "Office of VP (Student Development and Alumni Relations)"
+    },
+    {
+        "value": "ODL",
+        "text": "Open and Distance Learning Centre"
+    },
+    {
+        "value": "PRES",
+        "text": "President's Office"
+    },
+    {
+        "value": "RGO",
+        "text": "Registrar's Office"
+    },
+    {
+        "value": "CAD",
+        "text": "Sg Long Campus Administration Director's Office"
+    },
+    {
+        "value": "STEAM",
+        "text": "STEAM Outreach"
+    },
+    {
+        "value": "THP FBF",
+        "text": "Teh Hong Piow Faculty of Business and Finance"
+    },
+    {
+        "value": "TCLI",
+        "text": "Tun Tan Cheng Lock Institute of Social Studies"
+    },
+    {
+        "value": "Unovate",
+        "text": "Unovate Centre"
+    },
+    {
+        "value": "UBRC",
+        "text": "UTAR Buddhist Research Centre"
+    },
+    {
+        "value": "XDU-UTAR ISTI",
+        "text": "XDU-UTAR Institute of Science, Technology and Innovation"
+    },
+    {
+        "value": "XI",
+        "text": "Xinwei Institute"
+    },
+    {
+        "value": "YCF CChS",
+        "text": "Yu Cai Foundation Centre for Chinese Studies"
+    }
+]

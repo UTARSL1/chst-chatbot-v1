@@ -31,6 +31,7 @@ class ResolveUnitResponse(BaseModel):
     canonical: str
     acronym: Optional[str] = None
     type: Optional[str] = None
+    parent: Optional[str] = None
     detail: Optional[str] = None
 
 class StaffSearchRequest(BaseModel):
@@ -104,7 +105,7 @@ def get_manifest():
         "tools": [
             {
                 "name": "utar_resolve_unit",
-                "description": "Resolves a unit acronym or partial name (e.g. 'CCR', 'Engineering') to the canonical form for searching.",
+                "description": "Resolves a unit acronym or partial name to the canonical form. Returns parent faculty for departments to aid searching.",
                 "parameters": {
                     "type": "object",
                     "properties": {
@@ -119,8 +120,8 @@ def get_manifest():
                 "parameters": {
                     "type": "object",
                     "properties": {
-                        "faculty": {"type": "string", "description": "Canonical faculty/centre name (use 'All' if unknown)."},
-                        "department": {"type": "string", "description": "Department name (optional, default 'All')."},
+                        "faculty": {"type": "string", "description": "Canonical faculty/centre name (use 'All' if unknown or for top-level admin departments)."},
+                        "department": {"type": "string", "description": "Department name. If a parent faculty exists, use that for 'faculty' param."},
                         "name": {"type": "string", "description": "Staff name query."},
                         "expertise": {"type": "string", "description": "Area of expertise query."}
                     }

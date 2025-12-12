@@ -107,7 +107,8 @@ class UnitResolver:
         return {
             "canonical": unit["canonical"],
             "acronym": unit.get("acronym"),
-            "type": unit.get("type")
+            "type": unit.get("type"),
+            "parent": unit.get("parent")
         }
 
 # Usage
