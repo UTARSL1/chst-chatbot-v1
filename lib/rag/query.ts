@@ -192,8 +192,7 @@ When the tool returns staff results, you MUST filter by the exact designation re
 - DO NOT include "Associate Professor" or "Assistant Professor" in "professors" results
 - DO NOT include "Deputy Dean" or other administrative roles unless specifically asked
 
-Example filtering code (pseudo):
-```
+Example filtering logic (pseudo-code):
 if (user_asked_for === "professors") {
     filtered = results.filter(staff =>
         staff.designation.toLowerCase() === "professor" &&
@@ -202,7 +201,7 @@ if (user_asked_for === "professors") {
         !staff.designation.toLowerCase().includes("senior")
     );
 }
-```
+
 
 
 LOGIC:
