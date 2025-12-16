@@ -1073,6 +1073,28 @@
     "departmentId": "274"
   },
   {
+    "acronym": "DLMSA",
+    "canonical": "Department of Laboratory Management and Safety Administration",
+    "type": "Admin Department",
+    "parent": "Lee Kong Chian Faculty of Engineering and Science",
+    "aliases": [
+      "Department of Laboratory Management and Safety Administration",
+      "DLMSA"
+    ],
+    "departmentId": "3353"
+  },
+  {
+    "acronym": "FGO",
+    "canonical": "Faculty General Office",
+    "type": "Admin Department",
+    "parent": "Lee Kong Chian Faculty of Engineering and Science",
+    "aliases": [
+      "Faculty General Office",
+      "FGO"
+    ],
+    "departmentId": "3354"
+  },
+  {
     "acronym": "DA",
     "canonical": "Department of Accountancy",
     "type": "Academic Department",
