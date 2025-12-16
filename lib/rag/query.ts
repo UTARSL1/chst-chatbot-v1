@@ -840,7 +840,14 @@ async function contextualizeQuery(query: string, history: any[]): Promise<string
 
         const systemPrompt = `Given the following conversation and a follow-up question, rephrase the follow-up question to be a standalone question.
 If the follow-up question is already standalone, return it as is.
-Check for pronouns (it, they, he, she) and replace them with the entities they refer to.`;
+Check for pronouns (it, they, he, she) and replace them with the entities they refer to.
+
+IMPORTANT: Preserve acronyms and unit names EXACTLY as written. Do NOT try to expand them.
+- Keep "D3E" as "D3E" (do not expand to department name)
+- Keep "DMBE" as "DMBE"
+- Keep "LKC FES" as "LKC FES"
+- Keep "CHST" as "CHST"
+The tools will handle acronym resolution correctly.`;
 
         const completion = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo',
