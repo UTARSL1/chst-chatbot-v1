@@ -400,14 +400,25 @@ export async function searchStaff(
                 const info = parseSearchId(staff.searchId);
                 return { ...staff, joiningYear: info.year, joiningSequence: info.seq };
             });
+
+        // Build message with oldest/newest staff info
+        let message = `There are ${totalStaffCount} staff members (${breakdown.join(', ')}).`;
+        if (sortedStaff.length > 0) {
+            const oldest = sortedStaff[0];
+            const newest = sortedStaff[sortedStaff.length - 1];
+            message += ` Oldest staff: ${oldest.name} (joined ${oldest.joiningYear}). Newest staff: ${newest.name} (joined ${newest.joiningYear}).`;
+        }
+
         return {
-            message: `There are ${totalStaffCount} staff members (${breakdown.join(', ')}).`,
+            message,
             totalCount: totalStaffCount,
             fullTimeCount,
             adjunctCount,
             partTimeCount,
             staff: results,
-            sortedStaff  // Sorted by joining date (oldest first)
+            sortedStaff,  // Sorted by joining date (oldest first)
+            oldestStaff: sortedStaff[0] || null,
+            newestStaff: sortedStaff[sortedStaff.length - 1] || null
         } as any;
 
     } catch (error: any) {
