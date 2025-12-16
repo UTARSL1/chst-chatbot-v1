@@ -140,6 +140,16 @@ export async function searchStaff(
         if (deptUnit && (deptUnit as any).departmentId) {
             departmentId = (deptUnit as any).departmentId;
             log(`Mapped department '${params.department}' to ID '${departmentId}'`);
+
+            // Auto-correct faculty if department has a parent faculty
+            if ((deptUnit as any).parent) {
+                const correctFaculty = (deptUnit as any).parent;
+                const correctFacultyUnit = unitsData.find(u => u.canonical === correctFaculty);
+                if (correctFacultyUnit && correctFacultyUnit.acronym) {
+                    facultyAcronym = correctFacultyUnit.acronym;
+                    log(`Auto-corrected faculty to '${correctFaculty}' (${facultyAcronym}) based on department's parent`);
+                }
+            }
         } else {
             log(`Warning: No department ID found for '${params.department}', using 'All'`);
         }

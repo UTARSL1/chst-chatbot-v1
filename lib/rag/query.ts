@@ -84,10 +84,6 @@ You have access to two MCP tools:
 WHEN TO USE:
 - When the user asks about UTAR staff (names, positions, chairs, heads, deans, emails), ALWAYS use the tools.
 
-**CRITICAL: REPORTING STAFF COUNTS**
-- The tool result has a "message" field - use that exact message when reporting counts
-- Do NOT count the staff array yourself
-
 **CRITICAL: ADMINISTRATIVE TITLES ARE NOT NAMES**
 - Words like "Dean", "Deputy Dean", "Head", "Director", "Chairperson", "Chair" are ADMINISTRATIVE POSITIONS, NOT people's names.
 - When user asks "who is the Dean of LKCFES" or "who is the Head of Department of DMBE":
@@ -209,12 +205,12 @@ if (user_asked_for === "professors") {
 
 
 LOGIC:
-- If the query includes an acronym or unit name:
-  1. FIRST call \`utar_resolve_unit\`.
-  2. THEN pass the returned "canonical" name into \`utar_staff_search.faculty\`.
+- The utar_staff_search tool is smart and can handle acronyms directly (e.g., DMBE, D3E)
+- It will automatically correct the faculty if you provide a department
+- You CAN call utar_resolve_unit first if you want, but it's NOT required for staff searches
 - Parameter mapping:
   - Unit mentioned -> faculty
-  - Department mentioned -> department
+  - Department mentioned -> department (tool will auto-correct faculty from department's parent)
   - **Actual person name** (e.g., "Dr. John Smith") -> name
   - Administrative title (Dean, Head, Chair) -> **DO NOT use in "name" field, search by faculty/dept only**
   - Research area -> expertise
