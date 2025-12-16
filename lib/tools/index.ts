@@ -170,8 +170,10 @@ export async function searchStaff(
     try {
         const results: StaffResult[] = [];
         const seenIds = new Set<string>();
+        const seenPageHashes = new Set<string>(); // Track page content to detect duplicates
         let currentPage = 1;
         let hasMorePages = true;
+        let totalStaffCount = 0; // Track total including those without searchId
 
         // Pagination loop - fetch all pages
         while (hasMorePages && currentPage <= 10) { // Max 10 pages as safety limit
@@ -180,6 +182,15 @@ export async function searchStaff(
 
             const html = await httpsGet(pageUrl);
             log(`Page ${currentPage} HTML length: ${html.length} characters`);
+
+            // Detect duplicate pages (UTAR website returns same page repeatedly)
+            const pageHash = html.length + '_' + html.substring(0, 500);
+            if (seenPageHashes.has(pageHash)) {
+                log(`Page ${currentPage}: Duplicate page detected, stopping pagination`);
+                hasMorePages = false;
+                break;
+            }
+            seenPageHashes.add(pageHash);
 
             const $ = cheerio.load(html);
 
@@ -193,6 +204,9 @@ export async function searchStaff(
                 break;
             }
 
+            // Count ALL cards on this page (including those without searchId)
+            totalStaffCount += staffTables.length;
+
             // Step 2: For each staff card, extract detail page URL and fetch it
             for (let i = 0; i < staffTables.length; i++) {
                 const table = staffTables[i];
@@ -201,7 +215,8 @@ export async function searchStaff(
                 // Extract detail page URL from onclick="javascript:location='staffListDetailV2.jsp?searchId=16131';"
                 const match = onclick.match(/staffListDetailV2\.jsp\?searchId=(\d+)/);
                 if (!match) {
-                    log(`Card ${i + 1}: No searchId found in onclick`);
+                    log(`Card ${i + 1}: No searchId found in onclick (counted but details not fetched)`);
+                    // Still count this card, just can't fetch details
                     continue;
                 }
 
@@ -314,12 +329,12 @@ export async function searchStaff(
             currentPage++;
         }
 
-        log(`Found ${results.length} total staff members across ${currentPage - 1} pages.`);
+        log(`Found ${totalStaffCount} total staff cards (${results.length} with details) across ${currentPage - 1} pages.`);
 
         // Return with clear summary message that LLM can directly use
         return {
-            message: `There are ${results.length} staff members.`,
-            totalCount: results.length,
+            message: `There are ${totalStaffCount} staff members.`,
+            totalCount: totalStaffCount,
             staff: results
         } as any;
 
