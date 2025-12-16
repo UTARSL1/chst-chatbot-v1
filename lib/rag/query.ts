@@ -91,12 +91,21 @@ const AVAILABLE_TOOLS = [...UTAR_STAFF_TOOLS, JCR_TOOL];
 
 const STAFF_SEARCH_SYSTEM_PROMPT = `
 === UTAR STAFF SEARCH TOOLS ===
-You have access to two MCP tools:
+You have access to three MCP tools:
 1. utar_resolve_unit: converts acronyms (CCR, CHST, FSc) into official UTAR names.
-2. utar_staff_search: performs live staff lookups.
+2. utar_list_departments: lists all departments in a faculty.
+3. utar_staff_search: performs live staff lookups.
 
 WHEN TO USE:
 - When the user asks about UTAR staff (names, positions, chairs, heads, deans, emails), ALWAYS use the tools.
+
+**IMPORTANT WORKFLOW FOR "ALL DEPARTMENTS" QUERIES:**
+When asked for staff counts across ALL departments in a faculty (e.g., "how many staff in each department in LKC FES?"):
+1. **FIRST**: Call utar_list_departments with the faculty name to get the complete list of departments
+2. **THEN**: Call utar_staff_search for EACH department returned by utar_list_departments
+3. **DO NOT GUESS** department names - use the exact names from utar_list_departments
+
+
 
 **CRITICAL: ADMINISTRATIVE TITLES ARE NOT NAMES**
 - Words like "Dean", "Deputy Dean", "Head", "Director", "Chairperson", "Chair" are ADMINISTRATIVE POSITIONS, NOT people's names.

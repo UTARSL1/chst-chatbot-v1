@@ -82,7 +82,7 @@ export function resolveUnit(query: string, logger?: (msg: string) => void) {
 // --- Tool 2: Search Staff ---
 function httpsGet(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
-        https.get(url, (res) => {
+        https.get(url, { rejectUnauthorized: false }, (res) => {
             let data = '';
             res.on('data', (chunk) => data += chunk);
             res.on('end', () => resolve(data));
