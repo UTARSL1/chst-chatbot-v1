@@ -13,6 +13,8 @@ interface UnitMapping {
 }
 
 interface StaffResult {
+    searchId?: string;  // For sorting by hire date (higher = newer)
+    staffType?: 'full-time' | 'adjunct' | 'part-time';  // Employment type
     name: string;
     position: string;
     email: string;
@@ -332,6 +334,8 @@ export async function searchStaff(
                     log(`Card ${i + 1}: ✓ ${name} <${email}> - ${position}`);
 
                     results.push({
+                        searchId,  // For sorting by hire date (higher = newer)
+                        staffType, // For filtering (full-time, adjunct, part-time)
                         name,
                         position,
                         email,

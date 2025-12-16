@@ -172,6 +172,19 @@ When user asks "How many professors in X?":
 - "Below Professor" = Associate Professor + Assistant Professor + Lecturer (ranks 3-5)
 - "Assistant Professor or lower" = Assistant Professor + Lecturer (ranks 4-5)
 
+**IDENTIFYING NEWEST/OLDEST STAFF:**
+The tool returns searchId and staffType for each staff member:
+- **searchId**: Higher number = newer/more junior staff (e.g., 22083 is newer than 16072)
+- **staffType**: 'full-time', 'adjunct', or 'part-time'
+
+When user asks "who are the newest staff" or "most junior staff":
+1. Filter by staffType if specified (e.g., exclude adjunct and part-time if user says "full-time only")
+2. Sort by searchId in DESCENDING order (highest first)
+3. Take top N results
+4. Mention in your answer that you're excluding adjunct/part-time if that's the case
+
+Example: "The 3 newest full-time staff in DMBE are: Dr X (searchId: 22083), Dr Y (22051), Dr Z (21038). Note: This excludes adjunct and part-time staff."
+
 **HANDLING LARGE RESULT SETS:**
 When searching large faculties (e.g., LKC FES with 100+ staff):
 - The tool will return ALL staff from that faculty
