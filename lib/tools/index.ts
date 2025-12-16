@@ -193,18 +193,6 @@ export async function searchStaff(
             log(`Fetching page ${currentPage}: ${pageUrl}`);
 
             const html = await httpsGet(pageUrl);
-            log(`Page ${currentPage} HTML length: ${html.length} characters`);
-
-            // Detect duplicate pages (UTAR website returns same page repeatedly)
-            // Hash includes length + middle section (where staff cards are) to avoid false positives
-            const midPoint = Math.floor(html.length / 2);
-            const pageHash = html.length + '_' + html.substring(midPoint, midPoint + 1000);
-            if (seenPageHashes.has(pageHash)) {
-                log(`Page ${currentPage}: Duplicate page detected, stopping pagination`);
-                hasMorePages = false;
-                break;
-            }
-            seenPageHashes.add(pageHash);
 
             const $ = cheerio.load(html);
 
@@ -216,6 +204,13 @@ export async function searchStaff(
                 // No more staff cards, stop pagination
                 hasMorePages = false;
                 break;
+            }
+
+            // Check if next page link exists
+            const nextPageNum = currentPage + 1;
+            if (!html.includes(`page=${nextPageNum}`)) {
+                log(`Page ${currentPage}: Last page`);
+                hasMorePages = false;
             }
 
             // Count ALL cards on this page (including those without searchId)
