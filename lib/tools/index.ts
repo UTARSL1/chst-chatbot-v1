@@ -403,10 +403,20 @@ export async function searchStaff(
 
         // Build message with oldest/newest staff info
         let message = `There are ${totalStaffCount} staff members (${breakdown.join(', ')}).`;
+
+        // Overall oldest/newest (all staff types)
         if (sortedStaff.length > 0) {
             const oldest = sortedStaff[0];
             const newest = sortedStaff[sortedStaff.length - 1];
-            message += ` Oldest staff: ${oldest.name} (joined ${oldest.joiningYear}). Newest staff: ${newest.name} (joined ${newest.joiningYear}).`;
+            message += ` Overall: Oldest staff is ${oldest.name} (joined ${oldest.joiningYear}), newest is ${newest.name} (joined ${newest.joiningYear}).`;
+        }
+
+        // Full-time only oldest/newest
+        const fullTimeStaff = sortedStaff.filter(s => s.staffType === 'full-time');
+        if (fullTimeStaff.length > 0) {
+            const oldestFT = fullTimeStaff[0];
+            const newestFT = fullTimeStaff[fullTimeStaff.length - 1];
+            message += ` Full-time only: Oldest is ${oldestFT.name} (joined ${oldestFT.joiningYear}), newest is ${newestFT.name} (joined ${newestFT.joiningYear}).`;
         }
 
         return {
@@ -416,9 +426,11 @@ export async function searchStaff(
             adjunctCount,
             partTimeCount,
             staff: results,
-            sortedStaff,  // Sorted by joining date (oldest first)
+            sortedStaff,  // All staff sorted by joining date
             oldestStaff: sortedStaff[0] || null,
-            newestStaff: sortedStaff[sortedStaff.length - 1] || null
+            newestStaff: sortedStaff[sortedStaff.length - 1] || null,
+            oldestFullTimeStaff: fullTimeStaff[0] || null,
+            newestFullTimeStaff: fullTimeStaff[fullTimeStaff.length - 1] || null
         } as any;
 
     } catch (error: any) {
