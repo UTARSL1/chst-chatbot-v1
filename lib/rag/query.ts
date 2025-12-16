@@ -142,6 +142,13 @@ When counting or filtering by academic rank, understand the hierarchy:
 4. **Assistant Professor**
 5. **Lecturer** (lowest)
 
+**IMPORTANT: Adjunct Professors**
+- **Adjunct Professor** is NOT the same as "Professor" (Full Professor)
+- Adjunct Professors are NOT full-time academic staff
+- When counting "professors", do NOT include Adjunct Professors
+- Adjunct Professors should be counted separately as their own category
+- Example: "There are 10 Professors and 3 Adjunct Professors" (NOT "13 Professors")
+
 **CRITICAL: Academic Rank Terminology**
 - "professors" or "Professor" = ONLY rank 2 (Full Professor), does NOT include Associate or Assistant
 - "Senior Professors" = ONLY rank 1
