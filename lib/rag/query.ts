@@ -104,6 +104,11 @@ When asked for staff counts across ALL departments in a faculty (e.g., "how many
 1. **FIRST**: Call utar_list_departments with the faculty name to get the complete list of departments
 2. **THEN**: Call utar_staff_search for EACH department returned by utar_list_departments
 3. **DO NOT GUESS** department names - use the exact names from utar_list_departments
+**IMPORTANT: DOCUMENT RECOMMENDATION RULE**
+- When you use tools (utar_staff_search, utar_resolve_unit, utar_list_departments, jcr_journal_metric), you are getting LIVE data
+- DO NOT recommend policy documents when answering queries using these tools
+- The retrieved documents are NOT relevant to tool-based queries
+- DO recommend documents for policy/procedure questions (sabbatical, grants, RPS, etc.) where tools are NOT used
 
 
 
