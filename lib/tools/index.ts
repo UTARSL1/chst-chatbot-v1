@@ -390,15 +390,16 @@ export async function searchStaff(
             return { year, seq, sortKey: year * 10000 + seq };
         }
         // Sort staff by joining date (oldest first)
-        const sortedStaff = [...results].sort((a, b) => {
-            const aInfo = parseSearchId(a.searchId);
-            const bInfo = parseSearchId(b.searchId);
-            return aInfo.sortKey - bInfo.sortKey;
-        }).map(staff => {
-            const info = parseSearchId(staff.searchId);
-            return { ...staff, joiningYear: info.year, joiningSequence: info.seq };
-        });
-
+        const sortedStaff = [...results]
+            .filter((staff): staff is typeof staff & { searchId: string } => !!staff.searchId)
+            .sort((a, b) => {
+                const aInfo = parseSearchId(a.searchId);
+                const bInfo = parseSearchId(b.searchId);
+                return aInfo.sortKey - bInfo.sortKey;
+            }).map(staff => {
+                const info = parseSearchId(staff.searchId);
+                return { ...staff, joiningYear: info.year, joiningSequence: info.seq };
+            });
         return {
             message: `There are ${totalStaffCount} staff members (${breakdown.join(', ')}).`,
             totalCount: totalStaffCount,
