@@ -449,15 +449,24 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
             }
 
             // NEW VALIDATION: Reject faculty-wide searches without department
-            // This forces the LLM to use utar_list_departments first, then query each department
+            // EXCEPTION: Allow Research Centres (they don't have departments)
             if (department === 'All' || !department) {
-                const errorMsg = `Query too broad: Cannot search all staff in '${faculty}' without specifying a department. To get staff counts for all departments, use utar_list_departments first to get the department list, then call utar_staff_search for each department individually.`;
-                if (logger) logger(`[VALIDATION REJECTED] ${errorMsg}`);
-                return {
-                    error: errorMsg,
-                    validationFailed: true,
-                    suggestion: "Use utar_list_departments to get all departments in this faculty, then call utar_staff_search for each department."
-                };
+                // Check if this is a Research Centre by looking up in units
+                const { resolveUnit } = await import('@/lib/tools');
+                const unitInfo = await resolveUnit(faculty);
+                const isResearchCentre = unitInfo?.type === 'Research Centre';
+
+                if (!isResearchCentre) {
+                    const errorMsg = `Query too broad: Cannot search all staff in '${faculty}' without specifying a department. To get staff counts for all departments, use utar_list_departments first to get the department list, then call utar_staff_search for each department individually.`;
+                    if (logger) logger(`[VALIDATION REJECTED] ${errorMsg}`);
+                    return {
+                        error: errorMsg,
+                        validationFailed: true,
+                        suggestion: "Use utar_list_departments to get all departments in this faculty, then call utar_staff_search for each department."
+                    };
+                } else {
+                    if (logger) logger(`[VALIDATION PASSED] Research Centre '${faculty}' can be searched without department.`);
+                }
             }
 
             // Proceed with search
