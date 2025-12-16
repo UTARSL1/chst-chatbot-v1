@@ -480,10 +480,21 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
             chatHistoryStr = history.map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n');
 
             if (history.length > 0) {
-                const rewritten = await contextualizeQuery(query.query, history);
-                if (rewritten && rewritten !== query.query) {
-                    effectiveQuery = rewritten;
-                    log(`Contextualized query: "${effectiveQuery}"`);
+                // Skip contextualization if query contains known UTAR acronyms
+                // to prevent LLM from hallucinating wrong expansions
+                const knownAcronyms = ['D3E', 'DMBE', 'CHST', 'CCR', 'LKC FES', 'FEGT', 'FSc', 'FAM', 'FCI', 'FAS'];
+                const hasAcronym = knownAcronyms.some(acronym =>
+                    query.query.toUpperCase().includes(acronym.toUpperCase())
+                );
+
+                if (!hasAcronym) {
+                    const rewritten = await contextualizeQuery(query.query, history);
+                    if (rewritten && rewritten !== query.query) {
+                        effectiveQuery = rewritten;
+                        log(`Contextualized query: "${effectiveQuery}"`);
+                    }
+                } else {
+                    log(`Skipped contextualization (query contains acronym)`);
                 }
             }
         }
