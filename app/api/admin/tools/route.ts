@@ -6,6 +6,7 @@ import { authOptions } from '@/lib/auth';
 
 const KNOWN_TOOLS = [
     { name: 'utar_resolve_unit', description: 'Resolve unit acronyms (e.g. CHST) to full names.' },
+    { name: 'utar_list_departments', description: 'List all departments in a faculty.' },
     { name: 'utar_staff_search', description: 'Search UTAR internal staff directory.' },
     { name: 'jcr_journal_metric', description: 'Query JCR Impact Factors and Quartiles.' }
 ];

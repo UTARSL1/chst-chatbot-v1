@@ -1031,13 +1031,13 @@
     "departmentId": "97"
   },
   {
-    "acronym": "DIECS",
-    "canonical": "Department of Internet Engineering and Computer Science",
+    "acronym": "DC",
+    "canonical": "Department of Computing",
     "type": "Academic Department",
     "parent": "Lee Kong Chian Faculty of Engineering and Science",
     "aliases": [
-      "Department of Internet Engineering and Computer Science",
-      "DIECS"
+      "Department of Computing",
+      "DC"
     ]
   },
   {

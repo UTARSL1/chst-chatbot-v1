@@ -443,6 +443,18 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
                 };
             }
 
+            // NEW VALIDATION: Reject faculty-wide searches without department
+            // This forces the LLM to use utar_list_departments first, then query each department
+            if (department === 'All' || !department) {
+                const errorMsg = `Query too broad: Cannot search all staff in '${faculty}' without specifying a department. To get staff counts for all departments, use utar_list_departments first to get the department list, then call utar_staff_search for each department individually.`;
+                if (logger) logger(`[VALIDATION REJECTED] ${errorMsg}`);
+                return {
+                    error: errorMsg,
+                    validationFailed: true,
+                    suggestion: "Use utar_list_departments to get all departments in this faculty, then call utar_staff_search for each department."
+                };
+            }
+
             // Proceed with search
             return await searchStaff(args, logger);
         }
@@ -513,7 +525,7 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
                     // Faculty acronyms
                     'LKC FES', 'FEGT', 'FSc', 'FAM', 'FCI', 'FAS', 'FICT',
                     // LKC FES Department acronyms (9 academic + 2 admin = 11 total)
-                    'DMBE', 'DASD', 'DCL', 'DCI', 'D3E', 'DIECS', 'DMAS', 'DMME', 'DS',
+                    'DMBE', 'DASD', 'DCL', 'DCI', 'D3E', 'DC', 'DMAS', 'DMME', 'DS',
                     'DLMSA', 'FGO',  // Admin departments
                     // FICT Department acronyms
                     'DCCT', 'DCS', 'DISE', 'DIT',

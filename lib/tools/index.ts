@@ -361,13 +361,52 @@ export async function searchStaff(
         if (adjunctCount > 0) breakdown.push(`${adjunctCount} adjunct`);
         if (partTimeCount > 0) breakdown.push(`${partTimeCount} part-time`);
 
+        // Parse searchId to extract joining year
+        // Format: YYNNN (e.g., 16072 = 2016, 72nd staff)
+        // Special: J##NNN, AP##NNN, EP##NNN, E##NNN (External/Expat)
+        function parseSearchId(searchId: string): { year: number; seq: number; sortKey: number } {
+            if (searchId.startsWith('J')) {
+                const year = 2000 + parseInt(searchId.substring(1, 3));
+                const seq = parseInt(searchId.substring(3));
+                return { year, seq, sortKey: year * 10000 + seq };
+            }
+            if (searchId.startsWith('AP')) {
+                const year = 2000 + parseInt(searchId.substring(2, 4));
+                const seq = parseInt(searchId.substring(4));
+                return { year, seq, sortKey: year * 10000 + seq };
+            }
+            if (searchId.startsWith('EP')) {
+                const year = 2000 + parseInt(searchId.substring(2, 4));
+                const seq = parseInt(searchId.substring(4));
+                return { year, seq, sortKey: year * 10000 + seq };
+            }
+            if (searchId.startsWith('E')) {
+                const year = 2000 + parseInt(searchId.substring(1, 3));
+                const seq = parseInt(searchId.substring(3));
+                return { year, seq, sortKey: year * 10000 + seq };
+            }
+            const year = 2000 + parseInt(searchId.substring(0, 2));
+            const seq = parseInt(searchId.substring(2));
+            return { year, seq, sortKey: year * 10000 + seq };
+        }
+        // Sort staff by joining date (oldest first)
+        const sortedStaff = [...results].sort((a, b) => {
+            const aInfo = parseSearchId(a.searchId);
+            const bInfo = parseSearchId(b.searchId);
+            return aInfo.sortKey - bInfo.sortKey;
+        }).map(staff => {
+            const info = parseSearchId(staff.searchId);
+            return { ...staff, joiningYear: info.year, joiningSequence: info.seq };
+        });
+
         return {
             message: `There are ${totalStaffCount} staff members (${breakdown.join(', ')}).`,
             totalCount: totalStaffCount,
             fullTimeCount,
             adjunctCount,
             partTimeCount,
-            staff: results
+            staff: results,
+            sortedStaff  // Sorted by joining date (oldest first)
         } as any;
 
     } catch (error: any) {
