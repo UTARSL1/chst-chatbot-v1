@@ -499,11 +499,25 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
             if (history.length > 0) {
                 // Skip contextualization if query contains known UTAR acronyms
                 // to prevent LLM from hallucinating wrong expansions
-                const knownAcronyms = ['D3E', 'DMBE', 'CHST', 'CCR', 'LKC FES', 'FEGT', 'FSc', 'FAM', 'FCI', 'FAS'];
+                // These acronyms are extracted from units.json
+                const knownAcronyms = [
+                    // Faculty acronyms
+                    'LKC FES', 'FEGT', 'FSc', 'FAM', 'FCI', 'FAS', 'FICT',
+                    // LKC FES Department acronyms (9 academic + 2 admin = 11 total)
+                    'DMBE', 'DASD', 'DCL', 'DCI', 'D3E', 'DIECS', 'DMAS', 'DMME', 'DS',
+                    'DLMSA', 'FGO',  // Admin departments
+                    // FICT Department acronyms
+                    'DCCT', 'DCS', 'DISE', 'DIT',
+                    // FAM Department acronyms
+                    'DA', 'DBPM', 'DE', 'DIB',
+                    // FAS Department acronyms
+                    'DAD', 'DEng', 'DJ', 'DPC', 'DPR',
+                    // Other common acronyms
+                    'CHST', 'CCR'
+                ];
                 const hasAcronym = knownAcronyms.some(acronym =>
                     query.query.toUpperCase().includes(acronym.toUpperCase())
                 );
-
                 if (!hasAcronym) {
                     const rewritten = await contextualizeQuery(query.query, history);
                     if (rewritten && rewritten !== query.query) {
