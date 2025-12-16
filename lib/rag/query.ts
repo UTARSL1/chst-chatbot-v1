@@ -6,7 +6,7 @@ import { RAGQuery, RAGResponse, DocumentSource } from '@/types';
 import { prisma } from '@/lib/db';
 import { getRelatedDocuments } from './suggestions';
 import { searchKnowledgeNotes } from './knowledgeSearch';
-import { resolveUnit, searchStaff } from '@/lib/tools';
+import { resolveUnit, searchStaff, listDepartments } from '@/lib/tools';
 import { getJournalMetricsByTitle, getJournalMetricsByIssn, ensureJcrCacheLoaded } from '@/lib/jcrCache';
 
 // Initialize OpenAI client
@@ -46,6 +46,20 @@ const UTAR_STAFF_TOOLS = [
                     department: { type: 'string', description: 'Department name (optional).' },
                     name: { type: 'string', description: 'Staff member\'s actual name (e.g., "John Smith"). DO NOT use administrative titles like Dean, Head, Director, Chairperson as names.' },
                     expertise: { type: 'string', description: 'Research area/expertise (optional).' }
+                },
+                required: ['faculty']
+            }
+        }
+    },
+    {
+        type: 'function' as const,
+        function: {
+            name: 'utar_list_departments',
+            description: 'Lists all departments within a faculty. Use this FIRST when asked for staff counts across all departments in a faculty.',
+            parameters: {
+                type: 'object',
+                properties: {
+                    faculty: { type: 'string', description: 'Canonical faculty name from utar_resolve_unit.' }
                 },
                 required: ['faculty']
             }
@@ -422,6 +436,9 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
 
             // Proceed with search
             return await searchStaff(args, logger);
+        }
+        if (name === 'utar_list_departments') {
+            return listDepartments(args.faculty, logger);
         }
         if (name === 'jcr_journal_metric') {
             // Ensure data is loaded

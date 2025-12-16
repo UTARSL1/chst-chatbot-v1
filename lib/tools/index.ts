@@ -49,147 +49,136 @@ export function resolveUnit(query: string, logger?: (msg: string) => void) {
 
     const queryLower = query.toLowerCase().trim();
 
-    const exact = unitsData.find(u =>
+    // Exact match on canonical or acronym
+    const exactMatch = unitsData.find(u =>
         u.canonical.toLowerCase() === queryLower ||
-        (u.acronym && u.acronym.toLowerCase() === queryLower) ||
-        u.aliases.some(a => a.toLowerCase() === queryLower)
+        (u.acronym && u.acronym.toLowerCase() === queryLower)
     );
-
-    if (exact) {
+    if (exactMatch) {
+        log(`Exact match: ${exactMatch.canonical} (${exactMatch.acronym || 'no acronym'})`);
         return {
-            canonical: exact.canonical,
-            acronym: exact.acronym,
-            type: exact.type,
-            parent: exact.parent
+            canonical: exactMatch.canonical,
+            acronym: exactMatch.acronym,
+            type: exactMatch.type
         };
     }
 
-    const searchResults = fuse.search(query);
-    if (searchResults.length > 0) {
-        const best = searchResults[0].item;
+    // Fuzzy search
+    const results = fuse.search(query);
+    if (results.length > 0) {
+        const best = results[0].item;
+        log(`Fuzzy match: ${best.canonical} (${best.acronym || 'no acronym'}) with score ${results[0].score}`);
         return {
             canonical: best.canonical,
             acronym: best.acronym,
-            type: best.type,
-            parent: best.parent
+            type: best.type
         };
     }
 
-    return {
-        canonical: query,
-        acronym: null,
-        type: null,
-        error: "No confident match found, using original query"
-    };
+    log(`No match found for: ${query}`);
+    return { canonical: "", acronym: null, type: null, error: "No match found" };
 }
 
-// Helper function to make HTTPS GET request
+// --- Tool 2: Search Staff ---
 function httpsGet(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
-        const req = https.request(url, {
-            method: 'GET',
-            rejectUnauthorized: false,
-            timeout: 10000
-        }, (res) => {
-            let html = '';
-            res.on('data', (chunk) => { html += chunk; });
-            res.on('end', () => resolve(html));
-        });
-        req.on('error', reject);
-        req.on('timeout', () => {
-            req.destroy();
-            reject(new Error('Request timeout'));
-        });
-        req.end();
+        https.get(url, (res) => {
+            let data = '';
+            res.on('data', (chunk) => data += chunk);
+            res.on('end', () => resolve(data));
+        }).on('error', reject);
     });
 }
 
 export async function searchStaff(
-    params: { faculty?: string; department?: string; name?: string; expertise?: string },
+    params: {
+        faculty?: string;
+        department?: string;
+        name?: string;
+        expertise?: string;
+    },
     logger?: (msg: string) => void
-): Promise<StaffResult[]> {
+) {
     const log = (msg: string) => {
         console.log(`[Tools] ${msg}`);
         if (logger) logger(`[Tools] ${msg}`);
     };
 
-    log(`Searching staff with params: ${JSON.stringify(params)}`);
-
-    const baseUrl = "https://www2.utar.edu.my";
-    const searchUrl = `${baseUrl}/staffListSearchV2.jsp`;
-
-    // Auto-correct: If searching by name only (no department), use 'All' for faculty
-    // This prevents LLM from hallucinating a faculty
-    let facultyAcronym = params.faculty || 'All';
-    if (params.name && !params.department && facultyAcronym !== 'All') {
-        log(`Auto-correcting: Searching by name only, setting faculty to 'All' (was: '${facultyAcronym}')`);
-        facultyAcronym = 'All';
-    }
-
-    if (facultyAcronym !== 'All') {
-        const queryLower = facultyAcronym.toLowerCase().trim();
-        const unit = unitsData.find(u =>
-            u.canonical.toLowerCase() === queryLower ||
-            (u.acronym && u.acronym.toLowerCase() === queryLower)
-        );
-        if (unit && unit.acronym) {
-            facultyAcronym = unit.acronym;
-            log(`Mapped faculty '${params.faculty}' to acronym '${facultyAcronym}'`);
-        }
-    }
-
-    // Resolve department to ID if provided
-    let departmentId = 'All';
-    if (params.department && params.department !== 'All') {
-        const deptQueryLower = params.department.toLowerCase().trim();
-        const deptUnit = unitsData.find(u =>
-            u.canonical.toLowerCase() === deptQueryLower ||
-            (u.acronym && u.acronym.toLowerCase() === deptQueryLower)
-        );
-        if (deptUnit && (deptUnit as any).departmentId) {
-            departmentId = (deptUnit as any).departmentId;
-            log(`Mapped department '${params.department}' to ID '${departmentId}'`);
-
-            // Auto-correct faculty if department has a parent faculty
-            if ((deptUnit as any).parent) {
-                const correctFaculty = (deptUnit as any).parent;
-                const correctFacultyUnit = unitsData.find(u => u.canonical === correctFaculty);
-                if (correctFacultyUnit && correctFacultyUnit.acronym) {
-                    facultyAcronym = correctFacultyUnit.acronym;
-                    log(`Auto-corrected faculty to '${correctFaculty}' (${facultyAcronym}) based on department's parent`);
-                }
-            }
-        } else {
-            // Department not found - return error to force LLM to use correct name
-            const errorMsg = `Department '${params.department}' not found in units database. Please use utar_resolve_unit to get the correct department name, or check the spelling.`;
-            log(`ERROR: ${errorMsg}`);
-            return {
-                message: errorMsg,
-                totalCount: 0,
-                fullTimeCount: 0,
-                adjunctCount: 0,
-                partTimeCount: 0,
-                staff: []
-            } as any; // Cast to any to satisfy current return type, as the instruction only asks for the code change.
-        }
-    }
-
-    // Step 1: Search for staff
-    const queryParams = new URLSearchParams();
-    queryParams.append('searchDept', facultyAcronym === 'All' ? 'ALL' : facultyAcronym);
-    queryParams.append('searchDiv', departmentId);
-    queryParams.append('searchName', params.name || '');
-    queryParams.append('searchExpertise', params.expertise || '');
-    queryParams.append('submit', 'Search');
-    queryParams.append('searchResult', 'Y');
-
-    const url = `${searchUrl}?${queryParams.toString()}`;
-    log(`GET Request to: ${url}`);
-
     try {
+        log(`Searching staff with params: ${JSON.stringify(params)}`);
+
+        const baseUrl = 'https://www2.utar.edu.my';
         const results: StaffResult[] = [];
         const seenIds = new Set<string>();
-        const seenPageHashes = new Set<string>(); // Track page content to detect duplicates
+
+        // Auto-correct: If searching by name only (no department), use 'All' for faculty
+        // This prevents LLM from hallucinating a faculty
+        let facultyAcronym = params.faculty || 'All';
+        if (params.name && !params.department && facultyAcronym !== 'All') {
+            log(`Auto-correcting: Searching by name only, setting faculty to 'All' (was: '${facultyAcronym}')`);
+            facultyAcronym = 'All';
+        }
+
+        if (facultyAcronym !== 'All') {
+            const queryLower = facultyAcronym.toLowerCase().trim();
+            const unit = unitsData.find(u =>
+                u.canonical.toLowerCase() === queryLower ||
+                (u.acronym && u.acronym.toLowerCase() === queryLower)
+            );
+            if (unit && unit.acronym) {
+                facultyAcronym = unit.acronym;
+                log(`Mapped faculty '${params.faculty}' to acronym '${facultyAcronym}'`);
+            }
+        }
+
+        // Resolve department to ID if provided
+        let departmentId = 'All';
+        if (params.department && params.department !== 'All') {
+            const deptQueryLower = params.department.toLowerCase().trim();
+            const deptUnit = unitsData.find(u =>
+                u.canonical.toLowerCase() === deptQueryLower ||
+                (u.acronym && u.acronym.toLowerCase() === deptQueryLower)
+            );
+            if (deptUnit && (deptUnit as any).departmentId) {
+                departmentId = (deptUnit as any).departmentId;
+                log(`Mapped department '${params.department}' to ID '${departmentId}'`);
+
+                // Auto-correct faculty if department has a parent faculty
+                if ((deptUnit as any).parent) {
+                    const correctFaculty = (deptUnit as any).parent;
+                    const correctFacultyUnit = unitsData.find(u => u.canonical === correctFaculty);
+                    if (correctFacultyUnit && correctFacultyUnit.acronym) {
+                        facultyAcronym = correctFacultyUnit.acronym;
+                        log(`Auto-corrected faculty to '${correctFaculty}' (${facultyAcronym}) based on department's parent`);
+                    }
+                }
+            } else {
+                // Department not found - return error to force LLM to use correct name
+                const errorMsg = `Department '${params.department}' not found in units database. Please use utar_resolve_unit to get the correct department name, or check the spelling.`;
+                log(`ERROR: ${errorMsg}`);
+                return {
+                    message: errorMsg,
+                    totalCount: 0,
+                    fullTimeCount: 0,
+                    adjunctCount: 0,
+                    partTimeCount: 0,
+                    staff: []
+                } as any;
+            }
+        }
+
+        // Build search URL
+        const searchParams = new URLSearchParams();
+        searchParams.set('searchDept', facultyAcronym);
+        searchParams.set('searchDiv', departmentId);
+        searchParams.set('searchName', params.name || '');
+        searchParams.set('searchExpertise', params.expertise || '');
+        searchParams.set('submit', 'Search');
+        searchParams.set('searchResult', 'Y');
+
+        const url = `${baseUrl}/staffListSearchV2.jsp?${searchParams.toString()}`;
+        log(`GET Request to: ${url}`);
+
         let currentPage = 1;
         let hasMorePages = true;
         let totalStaffCount = 0; // Track total including those without searchId
@@ -385,4 +374,41 @@ export async function searchStaff(
         log(`Error: ${error.message}`);
         return [];
     }
+}
+
+// --- Tool 3: List Departments in Faculty ---
+export function listDepartments(facultyName: string, logger?: (msg: string) => void) {
+    const log = (msg: string) => {
+        console.log(`[Tools] ${msg}`);
+        if (logger) logger(`[Tools] ${msg}`);
+    };
+
+    log(`Listing departments in faculty: ${facultyName}`);
+
+    // Find all departments that have this faculty as their parent
+    const departments = unitsData.filter(unit => {
+        const hasParent = (unit as any).parent === facultyName;
+        const hasDepartmentId = (unit as any).departmentId !== undefined;
+        return hasParent && hasDepartmentId;
+    });
+
+    if (departments.length === 0) {
+        return {
+            error: `No departments found for faculty '${facultyName}'. Please use utar_resolve_unit to get the correct faculty name.`,
+            departments: []
+        };
+    }
+
+    const departmentList = departments.map(dept => ({
+        name: dept.canonical,
+        acronym: dept.acronym || '',
+        departmentId: (dept as any).departmentId
+    }));
+
+    log(`Found ${departmentList.length} departments`);
+    return {
+        faculty: facultyName,
+        count: departmentList.length,
+        departments: departmentList
+    };
 }
