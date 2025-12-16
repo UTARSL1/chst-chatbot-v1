@@ -189,7 +189,7 @@ export async function searchStaff(
 
         // Pagination loop - fetch all pages
         while (hasMorePages && currentPage <= 10) { // Max 10 pages as safety limit
-            const pageUrl = currentPage === 1 ? url : `${url}&page=${currentPage}`;
+            const pageUrl = currentPage === 1 ? url : `${url}&iPage=${currentPage}`;
             log(`Fetching page ${currentPage}: ${pageUrl}`);
 
             const html = await httpsGet(pageUrl);
@@ -208,7 +208,7 @@ export async function searchStaff(
 
             // Check if next page link exists
             const nextPageNum = currentPage + 1;
-            if (!html.includes(`page=${nextPageNum}`)) {
+            if (!html.includes(`iPage=${nextPageNum}`)) {
                 log(`Page ${currentPage}: Last page`);
                 hasMorePages = false;
             }
