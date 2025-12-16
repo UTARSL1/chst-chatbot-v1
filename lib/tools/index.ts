@@ -305,7 +305,13 @@ export async function searchStaff(
         }
 
         log(`Found ${results.length} total staff members across ${currentPage - 1} pages.`);
-        return results;
+
+        // Return with clear summary message that LLM can directly use
+        return {
+            message: `There are ${results.length} staff members.`,
+            totalCount: results.length,
+            staff: results
+        } as any;
 
     } catch (error: any) {
         log(`Error: ${error.message}`);

@@ -84,6 +84,10 @@ You have access to two MCP tools:
 WHEN TO USE:
 - When the user asks about UTAR staff (names, positions, chairs, heads, deans, emails), ALWAYS use the tools.
 
+**CRITICAL: REPORTING STAFF COUNTS**
+- The tool result has a "message" field - use that exact message when reporting counts
+- Do NOT count the staff array yourself
+
 **CRITICAL: ADMINISTRATIVE TITLES ARE NOT NAMES**
 - Words like "Dean", "Deputy Dean", "Head", "Director", "Chairperson", "Chair" are ADMINISTRATIVE POSITIONS, NOT people's names.
 - When user asks "who is the Dean of LKCFES" or "who is the Head of Department of DMBE":
@@ -703,10 +707,19 @@ ${chatHistoryStr}
 
                     log(`Tool Result (${toolName}): ${JSON.stringify(result).substring(0, 100)}...`);
 
+                    // For staff search, prepend the count message to force LLM to see it
+                    let toolResponse = JSON.stringify(result);
+                    if (toolName === 'utar_staff_search' && result && typeof result === 'object') {
+                        if ('message' in result) {
+                            // Prepend the message to the response so LLM sees it first
+                            toolResponse = `STAFF COUNT: ${result.message}\n\nFull details: ${toolResponse}`;
+                        }
+                    }
+
                     messages.push({
                         role: 'tool',
                         tool_call_id: call.id,
-                        content: JSON.stringify(result)
+                        content: toolResponse
                     });
                 }
             } else {
