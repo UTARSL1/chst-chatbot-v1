@@ -181,6 +181,9 @@ export async function searchStaff(
         let currentPage = 1;
         let hasMorePages = true;
         let totalStaffCount = 0; // Track total including those without searchId
+        let fullTimeCount = 0;
+        let adjunctCount = 0;
+        let partTimeCount = 0;
 
         // Pagination loop - fetch all pages
         while (hasMorePages && currentPage <= 10) { // Max 10 pages as safety limit
@@ -191,7 +194,9 @@ export async function searchStaff(
             log(`Page ${currentPage} HTML length: ${html.length} characters`);
 
             // Detect duplicate pages (UTAR website returns same page repeatedly)
-            const pageHash = html.length + '_' + html.substring(0, 500);
+            // Hash includes length + middle section (where staff cards are) to avoid false positives
+            const midPoint = Math.floor(html.length / 2);
+            const pageHash = html.length + '_' + html.substring(midPoint, midPoint + 1000);
             if (seenPageHashes.has(pageHash)) {
                 log(`Page ${currentPage}: Duplicate page detected, stopping pagination`);
                 hasMorePages = false;
@@ -220,7 +225,8 @@ export async function searchStaff(
                 const onclick = $(table).attr('onclick') || '';
 
                 // Extract detail page URL from onclick="javascript:location='staffListDetailV2.jsp?searchId=16131';"
-                const match = onclick.match(/staffListDetailV2\.jsp\?searchId=(\d+)/);
+                // searchId can be: numeric (20003) = full-time, AP##### = adjunct, J##### = part-time
+                const match = onclick.match(/staffListDetailV2\.jsp\?searchId=([A-Z0-9]+)/i);
                 if (!match) {
                     log(`Card ${i + 1}: No searchId found in onclick (counted but details not fetched)`);
                     // Still count this card, just can't fetch details
@@ -228,6 +234,19 @@ export async function searchStaff(
                 }
 
                 const searchId = match[1];
+
+                // Categorize staff type based on searchId pattern
+                let staffType: 'full-time' | 'adjunct' | 'part-time' = 'full-time';
+                if (searchId.startsWith('AP')) {
+                    staffType = 'adjunct';
+                    adjunctCount++;
+                } else if (searchId.startsWith('J')) {
+                    staffType = 'part-time';
+                    partTimeCount++;
+                } else {
+                    fullTimeCount++;
+                }
+
                 if (seenIds.has(searchId)) continue;
                 seenIds.add(searchId);
 
@@ -336,12 +355,20 @@ export async function searchStaff(
             currentPage++;
         }
 
-        log(`Found ${totalStaffCount} total staff cards (${results.length} with details) across ${currentPage - 1} pages.`);
+        log(`Found ${totalStaffCount} total staff cards (${fullTimeCount} full-time, ${adjunctCount} adjunct, ${partTimeCount} part-time) across ${currentPage - 1} pages.`);
 
         // Return with clear summary message that LLM can directly use
+        const breakdown = [];
+        if (fullTimeCount > 0) breakdown.push(`${fullTimeCount} full-time`);
+        if (adjunctCount > 0) breakdown.push(`${adjunctCount} adjunct`);
+        if (partTimeCount > 0) breakdown.push(`${partTimeCount} part-time`);
+
         return {
-            message: `There are ${totalStaffCount} staff members.`,
+            message: `There are ${totalStaffCount} staff members (${breakdown.join(', ')}).`,
             totalCount: totalStaffCount,
+            fullTimeCount,
+            adjunctCount,
+            partTimeCount,
             staff: results
         } as any;
 
