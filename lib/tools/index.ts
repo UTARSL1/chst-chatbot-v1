@@ -160,7 +160,17 @@ export async function searchStaff(
                 }
             }
         } else {
-            log(`Warning: No department ID found for '${params.department}', using 'All'`);
+            // Department not found - return error to force LLM to use correct name
+            const errorMsg = `Department '${params.department}' not found in units database. Please use utar_resolve_unit to get the correct department name, or check the spelling.`;
+            log(`ERROR: ${errorMsg}`);
+            return {
+                message: errorMsg,
+                totalCount: 0,
+                fullTimeCount: 0,
+                adjunctCount: 0,
+                partTimeCount: 0,
+                staff: []
+            } as any; // Cast to any to satisfy current return type, as the instruction only asks for the code change.
         }
     }
 
