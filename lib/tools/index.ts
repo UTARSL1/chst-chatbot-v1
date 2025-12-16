@@ -116,7 +116,14 @@ export async function searchStaff(
     const baseUrl = "https://www2.utar.edu.my";
     const searchUrl = `${baseUrl}/staffListSearchV2.jsp`;
 
+    // Auto-correct: If searching by name only (no department), use 'All' for faculty
+    // This prevents LLM from hallucinating a faculty
     let facultyAcronym = params.faculty || 'All';
+    if (params.name && !params.department && facultyAcronym !== 'All') {
+        log(`Auto-correcting: Searching by name only, setting faculty to 'All' (was: '${facultyAcronym}')`);
+        facultyAcronym = 'All';
+    }
+
     if (facultyAcronym !== 'All') {
         const queryLower = facultyAcronym.toLowerCase().trim();
         const unit = unitsData.find(u =>
