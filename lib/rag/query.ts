@@ -982,6 +982,13 @@ ${chatHistoryStr}
         const enrichedSources = await enrichSourcesWithMetadata(sourcesToEnrich);
         log(`⏱️ Step 9 (Enrich sources): ${((Date.now() - t9) / 1000).toFixed(2)}s`);
 
+        // Log sources for debugging download links
+        log(`📄 Sources available for download links:`);
+        enrichedSources.forEach((src, idx) => {
+            log(`  ${idx + 1}. "${src.originalName}" (filename: ${src.filename})`);
+        });
+
+
         if (!finalResponse) {
             finalResponse = "I apologize, but I was unable to generate a response. This may be because I do not have permission to access the necessary tools or data to answer your question.";
         }
