@@ -170,7 +170,8 @@ export async function searchStaff(
 
         // Build search URL
         const searchParams = new URLSearchParams();
-        searchParams.set('searchDept', facultyAcronym);
+        // IMPORTANT: UTAR website expects 'ALL' (uppercase), not 'All' (mixed case)
+        searchParams.set('searchDept', facultyAcronym === 'All' ? 'ALL' : facultyAcronym);
         searchParams.set('searchDiv', departmentId);
         searchParams.set('searchName', params.name || '');
         searchParams.set('searchExpertise', params.expertise || '');
