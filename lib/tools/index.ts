@@ -96,6 +96,7 @@ export async function searchStaff(
         department?: string;
         name?: string;
         expertise?: string;
+        role?: string;
     },
     logger?: (msg: string) => void
 ) {
@@ -357,15 +358,26 @@ export async function searchStaff(
                         extra: `${faculty} | ${department}`
                     });
 
-                    // Early termination: If we found a Dean, stop pagination
-                    const hasDean = administrativePosts.some(post =>
-                        post.toLowerCase().trim() === 'dean'
-                    );
-                    if (hasDean) {
-                        log(`Found Dean: ${name}. Stopping pagination for efficiency.`);
-                        hasMorePages = false;
-                        break; // Exit the for loop
+                    // Optimization: If user is strictly searching for a role (e.g. Dean), stop early when found
+                    if (params.role) {
+                        const targetRole = params.role.toLowerCase().trim();
+                        const hasRole = administrativePosts.some(post => {
+                            const p = post.toLowerCase();
+                            // Special check: If searching for "Dean", ignore "Deputy", "Associate", "Assistant"
+                            if (targetRole === 'dean' && (p.includes('deputy') || p.includes('associate') || p.includes('assistant'))) {
+                                return false;
+                            }
+                            return p.includes(targetRole);
+                        });
+
+                        if (hasRole) {
+                            log(`Found staff with role '${params.role}': ${name}. Stopping pagination for efficiency.`);
+                            hasMorePages = false;
+                            break;
+                        }
                     }
+
+
 
                 } catch (detailError: any) {
                     log(`Card ${i + 1}: Error fetching detail page: ${detailError.message}`);

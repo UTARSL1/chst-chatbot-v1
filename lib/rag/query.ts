@@ -131,7 +131,8 @@ const UTAR_STAFF_TOOLS = [
                     faculty: { type: 'string', description: 'Canonical faculty name from utar_resolve_unit (or "All").' },
                     department: { type: 'string', description: 'Department name (optional).' },
                     name: { type: 'string', description: 'Staff member\'s actual name (e.g., "John Smith"). DO NOT use administrative titles like Dean, Head, Director, Chairperson as names.' },
-                    expertise: { type: 'string', description: 'Research area/expertise (optional).' }
+                    expertise: { type: 'string', description: 'Research area/expertise (optional).' },
+                    role: { type: 'string', description: 'Specific administrative role to stop search early (e.g. "Dean"). Only use if user asks for a specific role.' }
                 },
                 required: ['faculty']
             }
@@ -202,6 +203,7 @@ When asked for staff counts across ALL departments in a faculty (e.g., "how many
 - Words like "Dean", "Deputy Dean", "Head", "Director", "Chairperson", "Chair" are ADMINISTRATIVE POSITIONS, NOT people's names.
 - When user asks "who is the Dean of LKCFES" or "who is the Head of Department of DMBE":
   * DO NOT pass "Dean" or "Head" as the "name" parameter
+  * ✅ DO pass exact title (e.g. "Dean") as the "role" parameter to optimize search speed
   * Instead, search by faculty/department only (leave name empty)
   * The tool will return staff with their administrative posts
   * Then YOU filter/select the person whose administrativePost EXACTLY matches what user asked for
@@ -335,10 +337,6 @@ if (user_asked_for === "professors") {
         !staff.designation.toLowerCase().includes("senior")
     );
 }
-
-
-
-
 
 LOGIC:
 - The utar_staff_search tool is smart and can handle acronyms directly (e.g., DMBE, D3E)
