@@ -96,7 +96,6 @@ export async function searchStaff(
         department?: string;
         name?: string;
         expertise?: string;
-        role?: string;
     },
     logger?: (msg: string) => void
 ) {
@@ -358,34 +357,15 @@ export async function searchStaff(
                         extra: `${faculty} | ${department}`
                     });
 
-                    // Optimization: If user is strictly searching for a role (e.g. Dean), stop early when found
-                    if (params.role) {
-                        const targetRole = params.role.toLowerCase().trim();
-                        const hasRole = administrativePosts.some(post => {
-                            const p = post.toLowerCase();
-
-                            // General false positive protection:
-                            // If searching for "Dean", ignore "Deputy Dean".
-                            // If searching for "Director", ignore "Deputy Director".
-                            // BUT if searching for "Deputy Dean", DO find "Deputy Dean".
-                            const isSubRole = p.includes('deputy') || p.includes('associate') || p.includes('assistant') || p.includes('acting');
-                            const targetIsSubRole = targetRole.includes('deputy') || targetRole.includes('associate') || targetRole.includes('assistant') || targetRole.includes('acting');
-
-                            if (isSubRole && !targetIsSubRole) {
-                                return false;
-                            }
-
-                            return p.includes(targetRole);
-                        });
-
-                        if (hasRole) {
-                            log(`Found staff with role '${params.role}': ${name}. Stopping pagination for efficiency.`);
-                            hasMorePages = false;
-                            break;
-                        }
+                    // Early termination: If we found a Dean, stop pagination
+                    const hasDean = administrativePosts.some(post =>
+                        post.toLowerCase().trim() === 'dean'
+                    );
+                    if (hasDean) {
+                        log(`Found Dean: ${name}. Stopping pagination for efficiency.`);
+                        hasMorePages = false;
+                        break; // Exit the for loop
                     }
-
-
 
                 } catch (detailError: any) {
                     log(`Card ${i + 1}: Error fetching detail page: ${detailError.message}`);

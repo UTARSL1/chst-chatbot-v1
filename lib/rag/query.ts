@@ -129,10 +129,11 @@ const UTAR_STAFF_TOOLS = [
                 type: 'object',
                 properties: {
                     faculty: { type: 'string', description: 'Canonical faculty name from utar_resolve_unit (or "All").' },
-                    department: { type: 'string', description: 'Department name (optional).' },
+                    department: { type: 'string', description: 'Department name (optional). WARNING: Do not expand acronyms here. usage: department="Department of Computing".' },
                     name: { type: 'string', description: 'Staff member\'s actual name (e.g., "John Smith"). DO NOT use administrative titles like Dean, Head, Director, Chairperson as names.' },
                     expertise: { type: 'string', description: 'Research area/expertise (optional).' },
-                    role: { type: 'string', description: 'Specific administrative role to stop search early (e.g. "Dean"). Only use if user asks for a specific role.' }
+                    role: { type: 'string', description: 'Specific administrative role to stop search early (e.g. "Dean"). Only use if user asks for a specific role.' },
+                    acronym: { type: 'string', description: 'Exact acronym found in query (e.g. "D3E"). REQUIRED if user query contains an acronym. This ensures correct department resolution.' }
                 },
                 required: ['faculty']
             }
@@ -196,6 +197,12 @@ When asked for staff counts across ALL departments in a faculty (e.g., "how many
 - DO NOT recommend policy documents when answering queries using these tools
 - The retrieved documents are NOT relevant to tool-based queries
 - DO recommend documents for policy/procedure questions (sabbatical, grants, RPS, etc.) where tools are NOT used
+
+**CRITICAL: DO NOT EXPAND ACRONYMS**
+- If the user uses an acronym (e.g., "D3E", "DMBE", "LKC FES"), pass it EXACTLY as the parameter.
+- ❌ WRONG: \`department = "Department of Electronic Engineering"\` (for D3E) - this is a hallucination!
+- ✅ CORRECT: \`department = "D3E"\` or \`department = "Department of Electrical and Electronic Engineering"\` (only if user said full name)
+- The tool has a built-in dictionary to resolve acronyms deterministically. Trust the tool.
 
 
 
