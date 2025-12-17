@@ -866,35 +866,71 @@ export default function ChatPage() {
                                                         const rawDocName = href.replace('download:', '').trim();
                                                         console.log('[Download Link] Looking for document:', rawDocName);
 
-                                                        // Helper to normalize strings: purely lowercase alphanumeric for robust matching
+                                                        // Helper to normalize strings
                                                         const normalizeForMatch = (str: string) => {
                                                             return str.toLowerCase()
                                                                 .replace(/\.[^/.]+$/, "") // Remove extension
-                                                                .replace(/[^a-z0-9]/g, "") // Remove EVERYTHING that is not a letter or number
+                                                                .replace(/[^a-z0-9]/g, "") // Remove non-alphanumeric
                                                                 .trim();
                                                         };
 
-                                                        const targetName = normalizeForMatch(rawDocName);
+                                                        // Extract meaningful keywords (words >= 4 chars)
+                                                        const extractKeywords = (str: string) => {
+                                                            return str.toLowerCase()
+                                                                .replace(/\.[^/.]+$/, "") // Remove extension
+                                                                .split(/[^a-z0-9]+/) // Split on non-alphanumeric
+                                                                .filter(word => word.length >= 4); // Only meaningful words
+                                                        };
 
-                                                        // Find matching document in sources with flexible matching
+                                                        const targetNormalized = normalizeForMatch(rawDocName);
+                                                        const targetKeywords = extractKeywords(rawDocName);
+
+                                                        console.log('[Download Link] Target keywords:', targetKeywords);
+
+                                                        // Find matching document with intelligent scoring
                                                         const doc = message.sources?.find((s: any) => {
                                                             const sourceOriginal = normalizeForMatch(s.originalName || '');
                                                             const sourceFilename = normalizeForMatch(s.filename || '');
+                                                            const sourceKeywords = extractKeywords(s.originalName || '');
 
-                                                            // 1. Check exact match after aggressive normalization
-                                                            if (sourceOriginal === targetName || sourceFilename === targetName) {
+                                                            // 1. Exact match (best)
+                                                            if (sourceOriginal === targetNormalized || sourceFilename === targetNormalized) {
+                                                                console.log('[Download Link] ✅ Exact match:', s.originalName);
                                                                 return true;
                                                             }
 
-                                                            // 2. Check if one contains the other (robust partial match)
-                                                            if (sourceOriginal.includes(targetName) || targetName.includes(sourceOriginal)) {
+                                                            // 2. Contains match
+                                                            if (sourceOriginal.includes(targetNormalized) || targetNormalized.includes(sourceOriginal)) {
+                                                                console.log('[Download Link] ✅ Contains match:', s.originalName);
+                                                                return true;
+                                                            }
+
+                                                            // 3. Keyword-based matching (NEW!)
+                                                            // Check if ALL target keywords exist in source
+                                                            const allKeywordsMatch = targetKeywords.every(keyword =>
+                                                                sourceOriginal.includes(keyword)
+                                                            );
+
+                                                            if (allKeywordsMatch && targetKeywords.length >= 2) {
+                                                                console.log('[Download Link] ✅ Keyword match:', s.originalName, 'Keywords:', targetKeywords);
+                                                                return true;
+                                                            }
+
+                                                            // 4. Partial keyword match (at least 70% of keywords)
+                                                            const matchedKeywords = targetKeywords.filter(keyword =>
+                                                                sourceOriginal.includes(keyword)
+                                                            );
+                                                            const matchRatio = matchedKeywords.length / targetKeywords.length;
+
+                                                            if (matchRatio >= 0.7 && targetKeywords.length >= 2) {
+                                                                console.log('[Download Link] ✅ Partial keyword match:', s.originalName, `(${matchedKeywords.length}/${targetKeywords.length} keywords)`);
                                                                 return true;
                                                             }
 
                                                             return false;
                                                         });
 
-                                                        console.log(`[Download Link] Match result for '${targetName}':`, doc ? 'Found' : 'Not Found');
+                                                        console.log(`[Download Link] Match result for '${targetNormalized}':`, doc ? 'Found' : 'Not Found');
 
                                                         if (doc && doc.documentId) {
                                                             return (
