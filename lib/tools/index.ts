@@ -105,6 +105,7 @@ export async function searchStaff(
         console.log(`[Tools] ${msg}`);
         if (logger) logger(`[Tools] ${msg}`);
     };
+    log('!!! DEBUG: NEW CODE LOADED (Pagination Fix + Acronyms) !!!');
 
     try {
         log(`Searching staff with params: ${JSON.stringify(params)}`);
@@ -383,6 +384,9 @@ export async function searchStaff(
                     });
 
                     // Optimization: If user is strictly searching for a role (e.g. Dean), stop early when found
+                    // Optimization: If user is strictly searching for a role (e.g. Dean), stop early when found
+                    /* 
+                    // DISABLED FOR DEBUGGING: Checking if this causes premature stop
                     if (params.role) {
                         const targetRole = params.role.toLowerCase();
                         // Generalized Check: Matches "Dean", "Dean (Faculty)", but avoids "Deputy Dean" (unless query was "Deputy Dean")
@@ -400,9 +404,10 @@ export async function searchStaff(
                         if (hasRole) {
                             log(`Found ${params.role}: ${name}. Stopping pagination for efficiency.`);
                             hasMorePages = false;
-                            break;
+                            break; 
                         }
                     }
+                    */
 
                 } catch (detailError: any) {
                     log(`Card ${i + 1}: Error fetching detail page: ${detailError.message}`);
