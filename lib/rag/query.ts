@@ -339,6 +339,7 @@ if (user_asked_for === "professors") {
 
 
 
+
 LOGIC:
 - The utar_staff_search tool is smart and can handle acronyms directly (e.g., DMBE, D3E)
 - It will automatically correct the faculty if you provide a department
@@ -365,7 +366,18 @@ LOGIC:
   2. Set expertise="<search term>"
   3. Example: {"faculty": "All", "expertise": "computer vision"}
   4. DO NOT guess which faculty the expertise belongs to - search all faculties!
+
+**RESEARCH CENTRES (IMPORTANT):**
+- Research centres (e.g., CCSN, CHST, CCR) are TOP-LEVEL units, same as faculties
+- They are NOT departments - treat them as faculties!
+- When searching for staff in a research centre:
+  1. Use the centre acronym as the faculty parameter
+  2. Set department="all"
+  3. Example: For CCSN, use: {"faculty": "CCSN", "department": "all"}
+  4. DO NOT put research centres as departments!
 `;
+
+
 
 
 const JCR_SYSTEM_PROMPT = `

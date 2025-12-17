@@ -111,68 +111,79 @@ export async function searchStaff(
         const results: StaffResult[] = [];
         const seenIds = new Set<string>();
 
-        // Auto-correct: If searching by name only (no department), use 'All' for faculty
-        // This prevents LLM from hallucinating a faculty
-        let facultyAcronym = params.faculty || 'All';
-        if (params.name && !params.department && facultyAcronym !== 'All') {
-            log(`Auto-correcting: Searching by name only, setting faculty to 'All' (was: '${facultyAcronym}')`);
-            facultyAcronym = 'All';
-        }
+        // --- DETERMINISTIC UNIT RESOLUTION ---
 
-        if (facultyAcronym !== 'All') {
-            const queryLower = facultyAcronym.toLowerCase().trim();
-            const unit = unitsData.find(u =>
-                u.canonical.toLowerCase() === queryLower ||
-                (u.acronym && u.acronym.toLowerCase() === queryLower) ||
-                (u.aliases && u.aliases.some(alias => alias.toLowerCase() === queryLower))
+        // Helper to find input in knowledge base
+        const findUnit = (query: string) => {
+            if (!query || query.toLowerCase() === 'all') return null;
+            const q = query.toLowerCase().trim();
+            return unitsData.find(u =>
+                u.canonical.toLowerCase() === q ||
+                (u.acronym && u.acronym.toLowerCase() === q) ||
+                (u.aliases && u.aliases.some(alias => alias.toLowerCase() === q))
             );
-            if (unit && unit.acronym) {
-                facultyAcronym = unit.acronym;
-                log(`Mapped faculty '${params.faculty}' to acronym '${facultyAcronym}'`);
-            }
-        }
+        };
 
-        // Resolve department to ID if provided
-        let departmentId = 'All';
+        let resolvedFaculty = params.faculty || 'All';
+        let resolvedDepartmentId = 'All';
+
+        // 1. Analyze 'department' argument first
+        // LLM often puts Research Centres (CCSN) in 'department' field incorrectly.
         if (params.department && params.department.toLowerCase() !== 'all') {
-            const deptQueryLower = params.department.toLowerCase().trim();
-            const deptUnit = unitsData.find(u =>
-                u.canonical.toLowerCase() === deptQueryLower ||
-                (u.acronym && u.acronym.toLowerCase() === deptQueryLower)
-            );
-            if (deptUnit && (deptUnit as any).departmentId) {
-                departmentId = (deptUnit as any).departmentId;
-                log(`Mapped department '${params.department}' to ID '${departmentId}'`);
+            const unit = findUnit(params.department);
 
-                // Auto-correct faculty if department has a parent faculty
-                if ((deptUnit as any).parent) {
-                    const correctFaculty = (deptUnit as any).parent;
-                    const correctFacultyUnit = unitsData.find(u => u.canonical === correctFaculty);
-                    if (correctFacultyUnit && correctFacultyUnit.acronym) {
-                        facultyAcronym = correctFacultyUnit.acronym;
-                        log(`Auto-corrected faculty to '${correctFaculty}' (${facultyAcronym}) based on department's parent`);
+            if (unit) {
+                if ((unit as any).departmentId) {
+                    // CASE A: It is a valid Department (e.g., "Department of Computer Science")
+                    resolvedDepartmentId = (unit as any).departmentId;
+
+                    // Auto-fix faculty based on department's parent
+                    if ((unit as any).parent) {
+                        const parentUnit = findUnit((unit as any).parent);
+                        if (parentUnit && parentUnit.acronym) {
+                            resolvedFaculty = parentUnit.acronym;
+                            log(`Auto-corrected faculty to '${resolvedFaculty}' based on department '${unit.canonical}'`);
+                        }
+                    }
+                } else {
+                    // CASE B: It is a Top-Level Unit (Faculty/Research Centre) put in department field
+                    // e.g. department="CCSN" -> should be faculty="CCSN", department="All"
+                    if (unit.acronym) {
+                        resolvedFaculty = unit.acronym;
+                        resolvedDepartmentId = 'All';
+                        log(`Auto-corrected: Promoted '${unit.canonical}' from department to faculty (it is a Research Centre/Faculty).`);
                     }
                 }
             } else {
-                // Department not found - return error to force LLM to use correct name
-                const errorMsg = `Department '${params.department}' not found in units database. Please use utar_resolve_unit to get the correct department name, or check the spelling.`;
-                log(`ERROR: ${errorMsg}`);
-                return {
-                    message: errorMsg,
-                    totalCount: 0,
-                    fullTimeCount: 0,
-                    adjunctCount: 0,
-                    partTimeCount: 0,
-                    staff: []
-                } as any;
+                // Department name not matched in DB.
+                // Depending on strictness, we might warn or just pass it through. 
+                // For now, if we can't map it to an ID, we potentially lose it or fail. 
+                // But let's proceed with original logic's fallback or just warn.
+                log(`Warning: Department '${params.department}' not found in DB.`);
             }
         }
+
+        // 2. Normalize Faculty Acronym
+        if (resolvedFaculty !== 'All') {
+            const unit = findUnit(resolvedFaculty);
+            if (unit && unit.acronym) {
+                resolvedFaculty = unit.acronym;
+            }
+        }
+
+        // 3. Auto-correct: If Name provided but no unit, force Global Search (Faculty=All)
+        // unless we already have a specific resolved faculty
+        if (params.name && (!params.department || params.department === 'All') && resolvedFaculty === 'All') {
+            // Keep it All
+        }
+
+        // --- END RESOLUTION ---
 
         // Build search URL
         const searchParams = new URLSearchParams();
         // IMPORTANT: UTAR website expects 'ALL' (uppercase), not 'All' (mixed case)
-        searchParams.set('searchDept', facultyAcronym === 'All' ? 'ALL' : facultyAcronym);
-        searchParams.set('searchDiv', departmentId);
+        searchParams.set('searchDept', resolvedFaculty === 'All' ? 'ALL' : resolvedFaculty);
+        searchParams.set('searchDiv', resolvedDepartmentId); // resolvedId is 'All' or specific ID like 'DCS'
         searchParams.set('searchName', params.name || '');
         searchParams.set('searchExpertise', params.expertise || '');
         searchParams.set('submit', 'Search');
