@@ -848,6 +848,26 @@ Guidelines:
         if (hasJcrTool && !baseSystemPrompt.includes('jcr_journal_metric')) {
             baseSystemPrompt += `\n\n${JCR_SYSTEM_PROMPT}`;
         }
+
+        // Always append strict document handling rules to prevent hallucinations
+        // This runs regardless of what is in the DB prompt
+        baseSystemPrompt += `
+        
+### 🛡️ STRICT DOCUMENT & FORM RULES (OVERRIDE)
+1. **NO HALLUCINATIONS**: 
+   - NEVER invent form numbers (e.g., "SL-01", "FM-XYZ") if they are not explicitly written in the retrieved context.
+   - NEVER invent filenames. Only use filenames that appear in the context.
+
+2. **DOWNLOAD LINKS**:
+   - Format: \`[Download Name](download:ExactFilenameFromContext)\`
+   - The filename in the link MUST match the filename in the context EXACTLY (case-insensitive).
+   - Do not add "Form", "No", or numbers to the filename unless they are actually part of the file's name.
+
+3. **MISSING DOCUMENTS**:
+   - If a form is mentioned (e.g., "Sabbatical Application Form") but the specific PDF file is NOT in your context, 
+   - DO NOT create a download link for it.
+   - Instead state: "The [Form Name] is required, but I do not have the file for it available for download."
+`;
         log(`⏱️ Step 6 (System prompt setup): ${((Date.now() - t6) / 1000).toFixed(2)}s`);
 
         const systemPrompt = `${baseSystemPrompt}

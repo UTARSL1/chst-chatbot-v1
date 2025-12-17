@@ -908,25 +908,21 @@ export default function ChatPage() {
                                                                 return true;
                                                             }
 
-                                                            // 3. Keyword-based matching (NEW!)
-                                                            // Check if ALL target keywords exist in source
-                                                            const allKeywordsMatch = targetKeywords.every(keyword =>
-                                                                sourceOriginal.includes(keyword)
-                                                            );
+                                                            // 3. Keyword-based matching (Relaxed)
+                                                            // Instead of requiring 100% of keywords, we check for a high percentage match
+                                                            const matchCount = targetKeywords.filter(keyword => sourceOriginal.includes(keyword)).length;
+                                                            const matchRatio = targetKeywords.length > 0 ? matchCount / targetKeywords.length : 0;
 
-                                                            if (allKeywordsMatch && targetKeywords.length >= 2) {
-                                                                console.log('[Download Link] ✅ Keyword match:', s.originalName, 'Keywords:', targetKeywords);
+                                                            // If we have multiple keywords, allow a partial match (e.g., 60% match)
+                                                            // This helps when LLM adds extra words like "Form" or "SL01" that aren't in the file name
+                                                            if (targetKeywords.length >= 3 && matchRatio >= 0.6) {
+                                                                console.log(`[Download Link] ✅ Fuzzy match (${(matchRatio * 100).toFixed(0)}%):`, s.originalName);
                                                                 return true;
                                                             }
 
-                                                            // 4. Partial keyword match (at least 70% of keywords)
-                                                            const matchedKeywords = targetKeywords.filter(keyword =>
-                                                                sourceOriginal.includes(keyword)
-                                                            );
-                                                            const matchRatio = matchedKeywords.length / targetKeywords.length;
-
-                                                            if (matchRatio >= 0.7 && targetKeywords.length >= 2) {
-                                                                console.log('[Download Link] ✅ Partial keyword match:', s.originalName, `(${matchedKeywords.length}/${targetKeywords.length} keywords)`);
+                                                            // For short queries (1-2 keywords), still strictly require all of them
+                                                            if (targetKeywords.length < 3 && matchCount === targetKeywords.length && targetKeywords.length > 0) {
+                                                                console.log('[Download Link] ✅ Strict match (short query):', s.originalName);
                                                                 return true;
                                                             }
 
