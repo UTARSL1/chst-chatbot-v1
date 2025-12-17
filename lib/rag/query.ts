@@ -918,15 +918,25 @@ ${chatHistoryStr}
         }
         log(`⏱️ Step 7 (Total LLM inference): ${((Date.now() - t7) / 1000).toFixed(2)}s`);
 
-        // 9. Suggestions
+
+        // 9. Suggestions (Optional - can be disabled for performance)
         const t8 = Date.now();
-        const referencedDocIds = relevantChunks.map(c => c.metadata.documentId).filter(Boolean);
-        const relatedDocs = await getRelatedDocuments({
-            referencedDocIds,
-            userRole: query.userRole,
-            referencedChunks: relevantChunks
-        });
-        log(`⏱️ Step 8 (Related docs): ${((Date.now() - t8) / 1000).toFixed(2)}s`);
+        const ENABLE_RELATED_DOCS = process.env.ENABLE_RELATED_DOCS === 'true';
+
+        let relatedDocs: DocumentSource[] = [];
+
+        if (ENABLE_RELATED_DOCS) {
+            const referencedDocIds = relevantChunks.map(c => c.metadata.documentId).filter(Boolean);
+            relatedDocs = await getRelatedDocuments({
+                referencedDocIds,
+                userRole: query.userRole,
+                referencedChunks: relevantChunks
+            });
+            log(`⏱️ Step 8 (Related docs): ${((Date.now() - t8) / 1000).toFixed(2)}s - Found ${relatedDocs.length} suggestions`);
+        } else {
+            log(`⏱️ Step 8 (Related docs): 0.00s - Disabled for performance`);
+        }
+
 
         // 10. Enrich sources
         const sourcesToEnrich: DocumentSource[] = relevantChunks.map(chunk => ({
