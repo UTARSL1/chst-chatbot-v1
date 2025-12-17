@@ -76,6 +76,26 @@ export function invalidateRAGCaches() {
     toolPermissionsCache = null;
     console.log('[RAG] Caches invalidated - changes will apply on next query');
 }
+
+/**
+ * Warm up the cache on server start to avoid cold start penalty
+ */
+async function warmUpCache() {
+    try {
+        console.log('[RAG] Warming up cache...');
+        await Promise.all([
+            getCachedSystemPrompt(),
+            getCachedToolPermissions()
+        ]);
+        console.log('[RAG] Cache warmed up successfully');
+    } catch (error) {
+        console.error('[RAG] Failed to warm up cache:', error);
+    }
+}
+
+// Warm up cache when module loads (server start)
+warmUpCache();
+
 // ===== END CACHING =====
 
 
