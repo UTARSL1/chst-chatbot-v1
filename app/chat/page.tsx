@@ -876,7 +876,10 @@ export default function ChatPage() {
 
                                                         // Extract meaningful keywords (words >= 4 chars)
                                                         const extractKeywords = (str: string) => {
-                                                            return str.toLowerCase()
+                                                            // First, split camelCase: "SabbaticalLeavePolicy" -> "Sabbatical Leave Policy"
+                                                            const withSpaces = str.replace(/([a-z])([A-Z])/g, '$1 $2');
+
+                                                            return withSpaces.toLowerCase()
                                                                 .replace(/\.[^/.]+$/, "") // Remove extension
                                                                 .split(/[^a-z0-9]+/) // Split on non-alphanumeric
                                                                 .filter(word => word.length >= 4); // Only meaningful words
