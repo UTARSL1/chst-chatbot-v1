@@ -96,6 +96,8 @@ export async function searchStaff(
         department?: string;
         name?: string;
         expertise?: string;
+        role?: string;
+        acronym?: string;
     },
     logger?: (msg: string) => void
 ) {
@@ -171,7 +173,30 @@ export async function searchStaff(
             }
         }
 
-        // 3. Auto-correct: If Name provided but no unit, force Global Search (Faculty=All)
+        // 3. (NEW) Analyze 'acronym' argument (HIGHEST PRIORITY)
+        // Code-based override for robust unit resolution.
+        if (params.acronym) {
+            const unit = findUnit(params.acronym);
+            if (unit) {
+                log(`[Code-Resolution] Overriding with acronym '${params.acronym}' -> '${unit.canonical}'`);
+                if ((unit as any).departmentId) {
+                    resolvedDepartmentId = (unit as any).departmentId;
+                    if ((unit as any).parent) {
+                        const parentUnit = findUnit((unit as any).parent);
+                        if (parentUnit && parentUnit.acronym) {
+                            resolvedFaculty = parentUnit.acronym;
+                        }
+                    }
+                } else if (unit.acronym) {
+                    resolvedFaculty = unit.acronym;
+                    resolvedDepartmentId = 'All';
+                }
+            } else {
+                log(`[Code-Resolution] Warning: Provided acronym '${params.acronym}' not found in DB.`);
+            }
+        }
+
+        // 4. Auto-correct: If Name provided but no unit, force Global Search (Faculty=All)
         // unless we already have a specific resolved faculty
         if (params.name && (!params.department || params.department === 'All') && resolvedFaculty === 'All') {
             // Keep it All
@@ -357,14 +382,26 @@ export async function searchStaff(
                         extra: `${faculty} | ${department}`
                     });
 
-                    // Early termination: If we found a Dean, stop pagination
-                    const hasDean = administrativePosts.some(post =>
-                        post.toLowerCase().trim() === 'dean'
-                    );
-                    if (hasDean) {
-                        log(`Found Dean: ${name}. Stopping pagination for efficiency.`);
-                        hasMorePages = false;
-                        break; // Exit the for loop
+                    // Optimization: If user is strictly searching for a role (e.g. Dean), stop early when found
+                    if (params.role) {
+                        const targetRole = params.role.toLowerCase();
+                        // Generalized Check: Matches "Dean", "Dean (Faculty)", but avoids "Deputy Dean" (unless query was "Deputy Dean")
+                        const hasRole = administrativePosts.some(post => {
+                            const p = post.toLowerCase();
+                            if (p.includes(targetRole)) {
+                                const falsePositives = ['deputy', 'assistant', 'associate', 'vice'];
+                                const hasPrefix = falsePositives.some(prefix => p.includes(prefix) && !targetRole.includes(prefix));
+                                if (hasPrefix) return false;
+                                return true;
+                            }
+                            return false;
+                        });
+
+                        if (hasRole) {
+                            log(`Found ${params.role}: ${name}. Stopping pagination for efficiency.`);
+                            hasMorePages = false;
+                            break;
+                        }
                     }
 
                 } catch (detailError: any) {
