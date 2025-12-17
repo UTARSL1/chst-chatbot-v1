@@ -338,6 +338,7 @@ if (user_asked_for === "professors") {
 
 
 
+
 LOGIC:
 - The utar_staff_search tool is smart and can handle acronyms directly (e.g., DMBE, D3E)
 - It will automatically correct the faculty if you provide a department
@@ -357,7 +358,15 @@ LOGIC:
   3. DO NOT list all departments - this is unnecessary!
   4. Example: To find Dean of FICT, use: {"faculty": "FICT", "department": "all"}
 - The Dean's administrative post will be labeled "Dean" in the results
+
+**SEARCHING BY EXPERTISE:**
+- When searching for staff by area of expertise (e.g., "computer vision", "machine learning"):
+  1. Use faculty="All" to search across ALL faculties (unless a specific faculty is mentioned)
+  2. Set expertise="<search term>"
+  3. Example: {"faculty": "All", "expertise": "computer vision"}
+  4. DO NOT guess which faculty the expertise belongs to - search all faculties!
 `;
+
 
 const JCR_SYSTEM_PROMPT = `
 === JCR JOURNAL METRICS TOOL ===
@@ -634,19 +643,23 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
                     'DAD', 'DEng', 'DJ', 'DPC', 'DPR',
                     // Other common acronyms
                     'CHST', 'CCR'
-                ];
+                ]
+                    ;
                 const hasAcronym = knownAcronyms.some(acronym =>
                     query.query.toUpperCase().includes(acronym.toUpperCase())
                 );
-                if (!hasAcronym) {
-                    const rewritten = await contextualizeQuery(query.query, history);
-                    if (rewritten && rewritten !== query.query) {
-                        effectiveQuery = rewritten;
-                        log(`Contextualized query: "${effectiveQuery}"`);
-                    }
-                } else {
-                    log(`Skipped contextualization (query contains acronym)`);
-                }
+
+                // CONTEXTUALIZATION DISABLED FOR PERFORMANCE (saves 20+ seconds)
+                // if (!hasAcronym) {
+                //     const rewritten = await contextualizeQuery(query.query, history);
+                //     if (rewritten && rewritten !== query.query) {
+                //         effectiveQuery = rewritten;
+                //         log(`Contextualized query: "${effectiveQuery}"`);
+                //     }
+                // } else {
+                //     log(`Skipped contextualization (query contains acronym)`);
+                // }
+                log(`Skipped contextualization (disabled for performance)`);
             }
         } else if (isSimpleQuestion) {
             log(`Skipped contextualization (simple standalone question)`);
