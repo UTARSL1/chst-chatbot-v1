@@ -530,10 +530,11 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
             // HARD VALIDATION: Reject overly broad queries
             const faculty = args.faculty || 'All';
             const hasName = args.name && args.name.trim().length > 0;
+            const hasExpertise = args.expertise && args.expertise.trim().length > 0;
 
-            // Reject if searching ALL of UTAR (no faculty specified) UNLESS searching by name
-            // (Name searches are allowed to search all of UTAR)
-            if ((faculty === 'All' || !faculty) && !hasName) {
+            // Reject if searching ALL of UTAR (no faculty specified) UNLESS searching by name or expertise
+            // (Name and expertise searches are allowed to search all of UTAR)
+            if ((faculty === 'All' || !faculty) && !hasName && !hasExpertise) {
                 const errorMsg = "Query too broad: Cannot search all staff across UTAR. Please specify a faculty (e.g., 'Lee Kong Chian Faculty of Engineering and Science') or department (e.g., 'Department of Mechatronics and Biomedical Engineering').";
                 if (logger) logger(`[VALIDATION REJECTED] ${errorMsg}`);
                 return {
@@ -544,7 +545,8 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
             }
 
             // Allow department='All' to search entire faculty (needed for Deans, etc.)
-            if (logger) logger(`[VALIDATION PASSED] Staff search for faculty '${faculty}'${hasName ? ` (searching by name: ${args.name})` : ''}`);
+            const searchType = hasName ? `name: ${args.name}` : hasExpertise ? `expertise: ${args.expertise}` : 'faculty-wide';
+            if (logger) logger(`[VALIDATION PASSED] Staff search for faculty '${faculty}' (${searchType})`);
 
             // Proceed with search
             return await searchStaff(args, logger);
