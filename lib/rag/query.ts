@@ -503,6 +503,7 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
  * Process a RAG query and generate a response
  */
 export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
+    const startTime = Date.now(); // Start timer
     const debugLogs: string[] = []; // Capture activity for debugging
     const log = (msg: string) => {
         console.log(`[RAG] ${msg}`);
@@ -876,6 +877,11 @@ ${chatHistoryStr}
         if (!finalResponse) {
             finalResponse = "I apologize, but I was unable to generate a response. This may be because I do not have permission to access the necessary tools or data to answer your question.";
         }
+
+        // Calculate elapsed time
+        const endTime = Date.now();
+        const elapsedSeconds = ((endTime - startTime) / 1000).toFixed(2);
+        log(`⏱️ Total processing time: ${elapsedSeconds} seconds`);
 
         return {
             answer: finalResponse,
