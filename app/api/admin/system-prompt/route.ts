@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+import { invalidateRAGCaches } from '@/lib/rag/query';
 
 const DEFAULT_PROMPT_NAME = 'default_rag';
 const DEFAULT_PROMPT_CONTENT = `You are a helpful assistant for the CHST research centre at UTAR. Your primary role is to answer questions about university and centre-level research policies and forms, but you can also help with general questions.
@@ -134,6 +135,9 @@ export async function POST(request: Request) {
                 updatedBy: session.user.id,
             },
         });
+
+        // Invalidate cache so changes take effect immediately
+        invalidateRAGCaches();
 
         return NextResponse.json({ success: true, prompt });
     } catch (error) {

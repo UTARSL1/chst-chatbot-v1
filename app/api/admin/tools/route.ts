@@ -1,8 +1,11 @@
 
+
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { invalidateRAGCaches } from '@/lib/rag/query';
+
 
 const KNOWN_TOOLS = [
     { name: 'utar_resolve_unit', description: 'Resolve unit acronyms (e.g. CHST) to full names.' },
@@ -72,6 +75,9 @@ export async function POST(req: Request) {
                 updatedBy: session.user.email
             }
         });
+
+        // Invalidate cache so changes take effect immediately
+        invalidateRAGCaches();
 
         return NextResponse.json({ success: true, tool: updated });
     } catch (error) {

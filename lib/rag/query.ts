@@ -14,6 +14,72 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
+// ===== PERFORMANCE OPTIMIZATION: IN-MEMORY CACHING =====
+let systemPromptCache: { content: string; timestamp: number } | null = null;
+let toolPermissionsCache: { permissions: any[]; timestamp: number } | null = null;
+
+// Cache TTL configuration via environment variables
+// Set DEMO_MODE=true for longer cache during demos/presentations
+const DEMO_MODE = process.env.DEMO_MODE === 'true';
+
+const SYSTEM_PROMPT_CACHE_TTL = DEMO_MODE
+    ? 30 * 60 * 1000  // 30 minutes for demos
+    : parseInt(process.env.SYSTEM_PROMPT_CACHE_TTL || '600000'); // Default: 10 minutes
+
+const TOOL_PERMISSIONS_CACHE_TTL = DEMO_MODE
+    ? 30 * 60 * 1000  // 30 minutes for demos
+    : parseInt(process.env.TOOL_PERMISSIONS_CACHE_TTL || '300000'); // Default: 5 minutes
+
+console.log(`[RAG Cache] System Prompt TTL: ${SYSTEM_PROMPT_CACHE_TTL / 1000}s, Tool Permissions TTL: ${TOOL_PERMISSIONS_CACHE_TTL / 1000}s${DEMO_MODE ? ' (DEMO MODE)' : ''}`);
+
+async function getCachedSystemPrompt(): Promise<string> {
+    const now = Date.now();
+    if (systemPromptCache && (now - systemPromptCache.timestamp) < SYSTEM_PROMPT_CACHE_TTL) {
+        return systemPromptCache.content;
+    }
+
+    try {
+        const dbPrompt = await prisma.systemPrompt.findUnique({
+            where: { name: 'default_rag' }
+        });
+        const content = dbPrompt?.content || '';
+        systemPromptCache = { content, timestamp: now };
+        return content;
+    } catch (e) {
+        console.error('Failed to fetch system prompt:', e);
+        return '';
+    }
+}
+
+async function getCachedToolPermissions(): Promise<any[]> {
+    const now = Date.now();
+    if (toolPermissionsCache && (now - toolPermissionsCache.timestamp) < TOOL_PERMISSIONS_CACHE_TTL) {
+        return toolPermissionsCache.permissions;
+    }
+
+    try {
+        const permissions = await prisma.toolPermission.findMany();
+        toolPermissionsCache = { permissions, timestamp: now };
+        return permissions;
+    } catch (e) {
+        console.error('Failed to fetch tool permissions:', e);
+        return [];
+    }
+}
+
+/**
+ * Invalidate all caches - call this when system prompt or tool permissions are updated
+ * This ensures changes take effect immediately instead of waiting for TTL expiry
+ */
+export function invalidateRAGCaches() {
+    systemPromptCache = null;
+    toolPermissionsCache = null;
+    console.log('[RAG] Caches invalidated - changes will apply on next query');
+}
+// ===== END CACHING =====
+
+
+
 // --- TOOL DEFINITIONS ---
 
 const UTAR_STAFF_TOOLS = [
@@ -513,12 +579,16 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
     try {
         log(`Processing query: "${query.query}" for role: ${query.userRole}`);
 
-        // 1. Contextualize the query
+        // 1. Contextualize the query (with smart skip for simple questions)
         const t1 = Date.now();
         let effectiveQuery = query.query;
         let chatHistoryStr = '';
 
-        if (query.sessionId) {
+        // Skip contextualization for simple standalone questions
+        const isSimpleQuestion = /^(how|what|where|when|who|why|can|is|are|do|does)/i.test(query.query.trim());
+        const needsContext = query.sessionId && !isSimpleQuestion;
+
+        if (needsContext) {
             const recentMessages = await prisma.message.findMany({
                 where: { sessionId: query.sessionId },
                 orderBy: { createdAt: 'desc' },
@@ -565,26 +635,25 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
                     log(`Skipped contextualization (query contains acronym)`);
                 }
             }
+        } else if (isSimpleQuestion) {
+            log(`Skipped contextualization (simple standalone question)`);
         }
         log(`⏱️ Step 1 (Contextualization): ${((Date.now() - t1) / 1000).toFixed(2)}s`);
 
-        // 2. Generate embedding
+        // 2-4. PARALLELIZED: Generate embedding + Search knowledge notes + Vector search
         const t2 = Date.now();
-        const embedding = await generateEmbedding(effectiveQuery);
-        log(`⏱️ Step 2 (Embedding generation): ${((Date.now() - t2) / 1000).toFixed(2)}s`);
-
-        // 3. Define access levels
         const accessLevels = getAccessibleLevels(query.userRole);
 
-        // 4. Retrieve Priority Knowledge Notes
-        const t3 = Date.now();
-        const knowledgeNotes = await searchKnowledgeNotes(effectiveQuery, accessLevels, 3);
-        log(`⏱️ Step 3 (Knowledge notes search): ${((Date.now() - t3) / 1000).toFixed(2)}s - Found ${knowledgeNotes.length} notes`);
+        const [embedding, knowledgeNotes, relevantChunks] = await Promise.all([
+            generateEmbedding(effectiveQuery),
+            searchKnowledgeNotes(effectiveQuery, accessLevels, 3),
+            // Vector search needs embedding, so we do it in a nested promise
+            generateEmbedding(effectiveQuery).then(emb => searchSimilarDocuments(emb, accessLevels, 5))
+        ]);
 
-        // 5. Retrieve Document Chunks
-        const t4 = Date.now();
-        const relevantChunks = await searchSimilarDocuments(embedding, accessLevels, 5);
-        log(`⏱️ Step 4 (Vector search): ${((Date.now() - t4) / 1000).toFixed(2)}s - Found ${relevantChunks.length} chunks`);
+        log(`⏱️ Steps 2-4 (Parallel: Embedding + Knowledge + Vector): ${((Date.now() - t2) / 1000).toFixed(2)}s`);
+        log(`  - Found ${knowledgeNotes.length} knowledge notes`);
+        log(`  - Found ${relevantChunks.length} document chunks`);
 
         // 6. Prepare context
         let baseContextStrings: string[] = [];
@@ -689,11 +758,11 @@ Format: [Download ${docsWithDates[0].originalName.replace('.pdf', '')}](download
         const baseContext = baseContextStrings.join('\n\n=== === ===\n\n');
 
 
-        // --- TOOL PERMISSION CHECK ---
+        // --- TOOL PERMISSION CHECK (CACHED) ---
         const t5 = Date.now();
         let localTools = AVAILABLE_TOOLS;
         try {
-            const permissions = await prisma.toolPermission.findMany();
+            const permissions = await getCachedToolPermissions(); // ← Using cache!
             if (permissions.length > 0) {
                 const allowedToolNames = new Set(
                     permissions
@@ -712,19 +781,11 @@ Format: [Download ${docsWithDates[0].originalName.replace('.pdf', '')}](download
 
         const dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
-        // Retrieve System Prompt from DB
+        // Retrieve System Prompt (CACHED)
         const t6 = Date.now();
-        let baseSystemPrompt = '';
-        try {
-            const dbPrompt = await prisma.systemPrompt.findUnique({
-                where: { name: 'default_rag' }
-            });
-            if (dbPrompt?.content) {
-                baseSystemPrompt = dbPrompt.content;
-                log('Loaded system prompt from database.');
-            }
-        } catch (e) {
-            log('Failed to fetch system prompt from DB, using fallback.');
+        let baseSystemPrompt = await getCachedSystemPrompt(); // ← Using cache!
+        if (baseSystemPrompt) {
+            log('Loaded system prompt (from cache or DB).');
         }
 
         if (!baseSystemPrompt) {
