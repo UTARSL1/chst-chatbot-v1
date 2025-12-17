@@ -363,10 +363,18 @@ export async function searchStaff(
                         const targetRole = params.role.toLowerCase().trim();
                         const hasRole = administrativePosts.some(post => {
                             const p = post.toLowerCase();
-                            // Special check: If searching for "Dean", ignore "Deputy", "Associate", "Assistant"
-                            if (targetRole === 'dean' && (p.includes('deputy') || p.includes('associate') || p.includes('assistant'))) {
+
+                            // General false positive protection:
+                            // If searching for "Dean", ignore "Deputy Dean".
+                            // If searching for "Director", ignore "Deputy Director".
+                            // BUT if searching for "Deputy Dean", DO find "Deputy Dean".
+                            const isSubRole = p.includes('deputy') || p.includes('associate') || p.includes('assistant') || p.includes('acting');
+                            const targetIsSubRole = targetRole.includes('deputy') || targetRole.includes('associate') || targetRole.includes('assistant') || targetRole.includes('acting');
+
+                            if (isSubRole && !targetIsSubRole) {
                                 return false;
                             }
+
                             return p.includes(targetRole);
                         });
 

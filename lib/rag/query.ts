@@ -203,7 +203,8 @@ When asked for staff counts across ALL departments in a faculty (e.g., "how many
 - Words like "Dean", "Deputy Dean", "Head", "Director", "Chairperson", "Chair" are ADMINISTRATIVE POSITIONS, NOT people's names.
 - When user asks "who is the Dean of LKCFES" or "who is the Head of Department of DMBE":
   * DO NOT pass "Dean" or "Head" as the "name" parameter
-  * ✅ DO pass exact title (e.g. "Dean") as the "role" parameter to optimize search speed
+  * ✅ DO pass exact title (e.g. "Dean") as the "role" parameter ONLY for single-person searches (e.g. "Who is the Acting Dean?").
+  * ❌ DO NOT use "role" parameter if user asks to "list all" or "count" staff.
   * Instead, search by faculty/department only (leave name empty)
   * The tool will return staff with their administrative posts
   * Then YOU filter/select the person whose administrativePost EXACTLY matches what user asked for
