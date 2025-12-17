@@ -1140,19 +1140,27 @@ export default function ChatPage() {
                                     )}
 
                                     {/* Debug Logs Section - Only for Chairperson */}
-                                    {session?.user?.role === 'chairperson' && message.logs && message.logs.length > 0 && (
-                                        <details className="mt-3 group">
-                                            <summary className="cursor-pointer text-xs font-mono text-slate-500 hover:text-slate-300 flex items-center gap-1 select-none">
-                                                <svg className="w-3 h-3 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                </svg>
-                                                Debug Logs
-                                            </summary>
-                                            <div className="mt-2 p-3 bg-black/50 rounded border border-slate-800 font-mono text-[10px] text-slate-400 overflow-x-auto whitespace-pre-wrap max-h-48 overflow-y-auto">
-                                                {message.logs.join('\n')}
-                                            </div>
-                                        </details>
-                                    )}
+                                    {(() => {
+                                        console.log('[Debug Logs Check]', {
+                                            role: session?.user?.role,
+                                            hasLogs: !!message.logs,
+                                            logsLength: message.logs?.length,
+                                            logs: message.logs
+                                        });
+                                        return session?.user?.role === 'chairperson' && message.logs && message.logs.length > 0;
+                                    })() && (
+                                            <details className="mt-3 group">
+                                                <summary className="cursor-pointer text-xs font-mono text-slate-500 hover:text-slate-300 flex items-center gap-1 select-none">
+                                                    <svg className="w-3 h-3 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                    </svg>
+                                                    Debug Logs
+                                                </summary>
+                                                <div className="mt-2 p-3 bg-black/50 rounded border border-slate-800 font-mono text-[10px] text-slate-400 overflow-x-auto whitespace-pre-wrap max-h-48 overflow-y-auto">
+                                                    {message.logs.join('\n')}
+                                                </div>
+                                            </details>
+                                        )}
                                 </Card>
                             </div>
                         ))
