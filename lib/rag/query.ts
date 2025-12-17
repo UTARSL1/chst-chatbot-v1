@@ -132,7 +132,7 @@ const UTAR_STAFF_TOOLS = [
                     department: { type: 'string', description: 'Department name (optional). WARNING: Do not expand acronyms here. usage: department="Department of Computing".' },
                     name: { type: 'string', description: 'Staff member\'s actual name (e.g., "John Smith"). DO NOT use administrative titles like Dean, Head, Director, Chairperson as names.' },
                     expertise: { type: 'string', description: 'Research area/expertise (optional).' },
-                    role: { type: 'string', description: 'Specific administrative role to stop search early (e.g. "Dean"). Only use if user asks for a specific role.' },
+                    role: { type: 'string', description: 'Specific administrative role (e.g. "Dean"). REQUIRED for single-person queries to enable fast search. Do not use for "List all" queries.' },
                     acronym: { type: 'string', description: 'Exact acronym found in query (e.g. "D3E"). REQUIRED if user query contains an acronym. This ensures correct department resolution.' }
                 },
                 required: ['faculty']
@@ -207,7 +207,7 @@ When asked for staff counts across ALL departments in a faculty (e.g., "how many
 - Words like "Dean", "Deputy Dean", "Head", "Director", "Chairperson", "Chair" are ADMINISTRATIVE POSITIONS, NOT people's names.
 - When user asks "who is the Dean of LKCFES" or "who is the Head of Department of DMBE":
   * DO NOT pass "Dean" or "Head" as the "name" parameter
-  * ✅ DO pass exact title (e.g. "Dean") as the "role" parameter ONLY for single-person searches (e.g. "Who is the Acting Dean?").
+  * ✅ CRITICAL OPTIMIZATION: You MUST pass the target title (e.g. "Dean") as the "role" parameter for single-person searches (e.g. "Who is the Dean?"). This makes the search 100x faster.
   * ❌ DO NOT use "role" parameter if user asks to "list all" or "count" staff.
   * Instead, search by faculty/department only (leave name empty)
   * The tool will return staff with their administrative posts

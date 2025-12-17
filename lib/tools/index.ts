@@ -398,9 +398,13 @@ export async function searchStaff(
                         });
 
                         if (hasRole) {
-                            log(`Found ${params.role}: ${name}. Stopping pagination for efficiency.`);
-                            hasMorePages = false;
-                            break;
+                            // User Rule: Only stop pagination if searching Faculty-Wide (Department='All').
+                            // If searching a specific department, continue to ensure full list.
+                            if (resolvedDepartmentId === 'All') {
+                                log(`Found ${params.role}: ${name}. Stopping pagination for efficiency.`);
+                                hasMorePages = false;
+                                break;
+                            }
                         }
                     }
 
