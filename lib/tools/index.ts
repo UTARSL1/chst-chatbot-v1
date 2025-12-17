@@ -129,6 +129,29 @@ export async function searchStaff(
         let resolvedFaculty = params.faculty || 'All';
         let resolvedDepartmentId = 'All';
 
+        // 0. Analyze 'faculty' argument robustly
+        // LLM sometimes passes a Department name (e.g. "D3E" or "Dept of Electrical...") as the 'faculty'.
+        if (resolvedFaculty.toLowerCase() !== 'all') {
+            const unit = findUnit(resolvedFaculty);
+            if (unit) {
+                // If the 'faculty' argument is actually a Department (has a departmentId)
+                if ((unit as any).departmentId) {
+                    resolvedDepartmentId = (unit as any).departmentId;
+                    // Resolve its parent to get the real Faculty
+                    if ((unit as any).parent) {
+                        const parentUnit = findUnit((unit as any).parent);
+                        if (parentUnit && parentUnit.acronym) {
+                            resolvedFaculty = parentUnit.acronym;
+                            log(`[Auto-fix] Input faculty '${params.faculty}' is actually a Department. Resolved to Faculty: '${resolvedFaculty}', DeptID: '${resolvedDepartmentId}'`);
+                        }
+                    }
+                } else if (unit.acronym) {
+                    // It is a valid Faculty/Centre, ensure we use the Acronym (e.g. found by name "Lee Kong Chian...")
+                    resolvedFaculty = unit.acronym;
+                }
+            }
+        }
+
         // 1. Analyze 'department' argument first
         // LLM often puts Research Centres (CCSN) in 'department' field incorrectly.
         if (params.department && params.department.toLowerCase() !== 'all') {
