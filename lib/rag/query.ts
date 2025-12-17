@@ -1076,6 +1076,8 @@ async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<Doc
 
     try {
         const filenames = [...new Set(sources.map(s => s.filename))];
+        console.log('[Enrich] Looking up filenames:', filenames);
+
         const documents = await prisma.document.findMany({
             where: {
                 OR: [
@@ -1092,6 +1094,11 @@ async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<Doc
             }
         });
 
+        console.log('[Enrich] Found documents:', documents.length);
+        documents.forEach(doc => {
+            console.log(`  - ${doc.originalName} (filename: ${doc.filename})`);
+        });
+
         const docMap = new Map();
         documents.forEach(doc => {
             docMap.set(doc.filename, doc);
@@ -1101,6 +1108,7 @@ async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<Doc
         const enriched = sources.map(source => {
             const doc = docMap.get(source.filename);
             if (doc) {
+                console.log(`[Enrich] ✅ Matched: ${source.filename} → ${doc.originalName}`);
                 return {
                     ...source,
                     documentId: doc.id,
@@ -1109,6 +1117,7 @@ async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<Doc
                     department: doc.department || undefined,
                 };
             }
+            console.log(`[Enrich] ❌ No match for: ${source.filename}`);
             return source;
         });
 
