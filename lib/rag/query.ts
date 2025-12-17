@@ -349,6 +349,14 @@ LOGIC:
   - Administrative title (Dean, Head, Chair) -> **DO NOT use in "name" field, search by faculty/dept only**
   - Research area -> expertise
 - Leave unmentioned fields as empty string.
+
+**FINDING DEANS EFFICIENTLY:**
+- When asked for the Dean of a faculty (e.g., "Who is the Dean of FICT?"):
+  1. Call utar_staff_search with faculty="FICT" and department="all"
+  2. The tool will return the Dean (usually first person) and stop automatically
+  3. DO NOT list all departments - this is unnecessary!
+  4. Example: To find Dean of FICT, use: {"faculty": "FICT", "department": "all"}
+- The Dean's administrative post will be labeled "Dean" in the results
 `;
 
 const JCR_SYSTEM_PROMPT = `
@@ -521,10 +529,11 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
         if (name === 'utar_staff_search') {
             // HARD VALIDATION: Reject overly broad queries
             const faculty = args.faculty || 'All';
-            const department = args.department || 'All';
+            const hasName = args.name && args.name.trim().length > 0;
 
-            // Reject if searching ALL of UTAR (no faculty specified)
-            if (faculty === 'All' || !faculty) {
+            // Reject if searching ALL of UTAR (no faculty specified) UNLESS searching by name
+            // (Name searches are allowed to search all of UTAR)
+            if ((faculty === 'All' || !faculty) && !hasName) {
                 const errorMsg = "Query too broad: Cannot search all staff across UTAR. Please specify a faculty (e.g., 'Lee Kong Chian Faculty of Engineering and Science') or department (e.g., 'Department of Mechatronics and Biomedical Engineering').";
                 if (logger) logger(`[VALIDATION REJECTED] ${errorMsg}`);
                 return {
@@ -534,26 +543,8 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
                 };
             }
 
-            // NEW VALIDATION: Reject faculty-wide searches without department
-            // EXCEPTION: Allow Research Centres (they don't have departments)
-            if (department === 'All' || !department) {
-                // Check if this is a Research Centre by looking up in units
-                const { resolveUnit } = await import('@/lib/tools');
-                const unitInfo = await resolveUnit(faculty);
-                const isResearchCentre = unitInfo?.type === 'Research Centre';
-
-                if (!isResearchCentre) {
-                    const errorMsg = `Query too broad: Cannot search all staff in '${faculty}' without specifying a department. To get staff counts for all departments, use utar_list_departments first to get the department list, then call utar_staff_search for each department individually.`;
-                    if (logger) logger(`[VALIDATION REJECTED] ${errorMsg}`);
-                    return {
-                        error: errorMsg,
-                        validationFailed: true,
-                        suggestion: "Use utar_list_departments to get all departments in this faculty, then call utar_staff_search for each department."
-                    };
-                } else {
-                    if (logger) logger(`[VALIDATION PASSED] Research Centre '${faculty}' can be searched without department.`);
-                }
-            }
+            // Allow department='All' to search entire faculty (needed for Deans, etc.)
+            if (logger) logger(`[VALIDATION PASSED] Staff search for faculty '${faculty}'${hasName ? ` (searching by name: ${args.name})` : ''}`);
 
             // Proceed with search
             return await searchStaff(args, logger);

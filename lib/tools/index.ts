@@ -344,6 +344,16 @@ export async function searchStaff(
                         extra: `${faculty} | ${department}`
                     });
 
+                    // Early termination: If we found a Dean, stop pagination
+                    const hasDean = administrativePosts.some(post =>
+                        post.toLowerCase().trim() === 'dean'
+                    );
+                    if (hasDean) {
+                        log(`Found Dean: ${name}. Stopping pagination for efficiency.`);
+                        hasMorePages = false;
+                        break; // Exit the for loop
+                    }
+
                 } catch (detailError: any) {
                     log(`Card ${i + 1}: Error fetching detail page: ${detailError.message}`);
                 }
