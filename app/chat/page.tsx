@@ -1157,7 +1157,7 @@ export default function ChatPage() {
                                                     Debug Logs
                                                 </summary>
                                                 <div className="mt-2 p-3 bg-black/50 rounded border border-slate-800 font-mono text-[10px] text-slate-400 overflow-x-auto whitespace-pre-wrap max-h-48 overflow-y-auto">
-                                                    {message.logs.join('\n')}
+                                                    {message.logs?.join('\n') || 'No logs available'}
                                                 </div>
                                             </details>
                                         )}
