@@ -133,7 +133,7 @@ export async function searchStaff(
 
         // Resolve department to ID if provided
         let departmentId = 'All';
-        if (params.department && params.department !== 'All') {
+        if (params.department && params.department.toLowerCase() !== 'all') {
             const deptQueryLower = params.department.toLowerCase().trim();
             const deptUnit = unitsData.find(u =>
                 u.canonical.toLowerCase() === deptQueryLower ||
