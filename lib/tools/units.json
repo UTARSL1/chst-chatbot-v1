@@ -184,6 +184,7 @@
       "Lee Kong Chian Faculty of Engineering and Science",
       "Lee Kong Chian Engineering and Science Faculty",
       "LKC FES",
+      "LKCFES",
       "LKC FES UTAR"
     ]
   },
@@ -195,7 +196,8 @@
       "M. Kandiah Faculty of Medicine and Health Sciences",
       "M Kandiah Faculty of Medicine and Health Sciences",
       "Medicine and Health Sciences Faculty",
-      "MK FMHS"
+      "MK FMHS",
+      "MKFMHS"
     ]
   },
   {
@@ -206,7 +208,8 @@
       "Teh Hong Piow Faculty of Business and Finance",
       "Faculty of Business and Finance",
       "Business and Finance Faculty",
-      "THP FBF"
+      "THP FBF",
+      "THPFBF"
     ]
   },
   {
@@ -945,7 +948,8 @@
     "aliases": [
       "Yu Cai Foundation Centre for Chinese Studies",
       "YCF Centre for Chinese Studies",
-      "YCF CChS"
+      "YCF CChS",
+      "YCFCCHS"
     ]
   },
   {

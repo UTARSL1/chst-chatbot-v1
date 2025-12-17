@@ -123,7 +123,8 @@ export async function searchStaff(
             const queryLower = facultyAcronym.toLowerCase().trim();
             const unit = unitsData.find(u =>
                 u.canonical.toLowerCase() === queryLower ||
-                (u.acronym && u.acronym.toLowerCase() === queryLower)
+                (u.acronym && u.acronym.toLowerCase() === queryLower) ||
+                (u.aliases && u.aliases.some(alias => alias.toLowerCase() === queryLower))
             );
             if (unit && unit.acronym) {
                 facultyAcronym = unit.acronym;
