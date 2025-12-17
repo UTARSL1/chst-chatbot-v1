@@ -514,6 +514,7 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
         log(`Processing query: "${query.query}" for role: ${query.userRole}`);
 
         // 1. Contextualize the query
+        const t1 = Date.now();
         let effectiveQuery = query.query;
         let chatHistoryStr = '';
 
@@ -565,21 +566,25 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
                 }
             }
         }
+        log(`⏱️ Step 1 (Contextualization): ${((Date.now() - t1) / 1000).toFixed(2)}s`);
 
         // 2. Generate embedding
+        const t2 = Date.now();
         const embedding = await generateEmbedding(effectiveQuery);
-        log('Generated query embedding.');
+        log(`⏱️ Step 2 (Embedding generation): ${((Date.now() - t2) / 1000).toFixed(2)}s`);
 
         // 3. Define access levels
         const accessLevels = getAccessibleLevels(query.userRole);
 
         // 4. Retrieve Priority Knowledge Notes
+        const t3 = Date.now();
         const knowledgeNotes = await searchKnowledgeNotes(effectiveQuery, accessLevels, 3);
-        log(`Found ${knowledgeNotes.length} knowledge notes.`);
+        log(`⏱️ Step 3 (Knowledge notes search): ${((Date.now() - t3) / 1000).toFixed(2)}s - Found ${knowledgeNotes.length} notes`);
 
         // 5. Retrieve Document Chunks
+        const t4 = Date.now();
         const relevantChunks = await searchSimilarDocuments(embedding, accessLevels, 5);
-        log(`Found ${relevantChunks.length} relevant document chunks.`);
+        log(`⏱️ Step 4 (Vector search): ${((Date.now() - t4) / 1000).toFixed(2)}s - Found ${relevantChunks.length} chunks`);
 
         // 6. Prepare context
         let baseContextStrings: string[] = [];
@@ -685,6 +690,7 @@ Format: [Download ${docsWithDates[0].originalName.replace('.pdf', '')}](download
 
 
         // --- TOOL PERMISSION CHECK ---
+        const t5 = Date.now();
         let localTools = AVAILABLE_TOOLS;
         try {
             const permissions = await prisma.toolPermission.findMany();
@@ -702,10 +708,12 @@ Format: [Download ${docsWithDates[0].originalName.replace('.pdf', '')}](download
         } catch (e) {
             log(`Failed to fetch tool permissions, defaulting to ALL: ${e}`);
         }
+        log(`⏱️ Step 5 (Tool permissions): ${((Date.now() - t5) / 1000).toFixed(2)}s`);
 
         const dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
         // Retrieve System Prompt from DB
+        const t6 = Date.now();
         let baseSystemPrompt = '';
         try {
             const dbPrompt = await prisma.systemPrompt.findUnique({
@@ -741,7 +749,7 @@ Guidelines:
         if (hasJcrTool && !baseSystemPrompt.includes('jcr_journal_metric')) {
             baseSystemPrompt += `\n\n${JCR_SYSTEM_PROMPT}`;
         }
-        log(`System Prompt configured. Staff Tool: ${hasStaffTool}, JCR Tool: ${hasJcrTool}`);
+        log(`⏱️ Step 6 (System prompt setup): ${((Date.now() - t6) / 1000).toFixed(2)}s`);
 
         const systemPrompt = `${baseSystemPrompt}
         
@@ -767,11 +775,12 @@ ${chatHistoryStr}
         let totalTokens = 0;
 
         log('Starting LLM inference loop...');
-
+        const t7 = Date.now();
 
 
 
         while (runLoop && loopCount < 5) {
+            const tLoop = Date.now();
             const completion = await openai.chat.completions.create({
                 model: 'gpt-4o-mini',
                 messages: messages,
@@ -781,6 +790,7 @@ ${chatHistoryStr}
                 temperature: 0.7,
                 max_tokens: 1000,
             });
+            log(`⏱️ LLM call #${loopCount + 1}: ${((Date.now() - tLoop) / 1000).toFixed(2)}s`);
 
             totalTokens += completion.usage?.total_tokens || 0;
             const message = completion.choices[0].message;
@@ -796,8 +806,10 @@ ${chatHistoryStr}
                     const toolArgs = JSON.parse(call.function.arguments);
 
                     log(`Executing Tool: ${toolName} with args: ${JSON.stringify(toolArgs)}`);
+                    const tTool = Date.now();
 
                     const result = await executeToolCall(toolName, toolArgs, log); // Pass logger
+                    log(`⏱️ Tool execution (${toolName}): ${((Date.now() - tTool) / 1000).toFixed(2)}s`);
 
                     log(`Tool Result (${toolName}): ${JSON.stringify(result).substring(0, 100)}...`);
 
@@ -823,14 +835,17 @@ ${chatHistoryStr}
             }
             loopCount++;
         }
+        log(`⏱️ Step 7 (Total LLM inference): ${((Date.now() - t7) / 1000).toFixed(2)}s`);
 
         // 9. Suggestions
+        const t8 = Date.now();
         const referencedDocIds = relevantChunks.map(c => c.metadata.documentId).filter(Boolean);
         const relatedDocs = await getRelatedDocuments({
             referencedDocIds,
             userRole: query.userRole,
             referencedChunks: relevantChunks
         });
+        log(`⏱️ Step 8 (Related docs): ${((Date.now() - t8) / 1000).toFixed(2)}s`);
 
         // 10. Enrich sources
         const sourcesToEnrich: DocumentSource[] = relevantChunks.map(chunk => ({
@@ -872,7 +887,9 @@ ${chatHistoryStr}
             }
         }
 
+        const t9 = Date.now();
         const enrichedSources = await enrichSourcesWithMetadata(sourcesToEnrich);
+        log(`⏱️ Step 9 (Enrich sources): ${((Date.now() - t9) / 1000).toFixed(2)}s`);
 
         if (!finalResponse) {
             finalResponse = "I apologize, but I was unable to generate a response. This may be because I do not have permission to access the necessary tools or data to answer your question.";
