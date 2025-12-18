@@ -33,7 +33,7 @@ const TOOL_PERMISSIONS_CACHE_TTL = DEMO_MODE
 
 const MODEL_CONFIG_CACHE_TTL = DEMO_MODE
     ? 30 * 60 * 1000  // 30 minutes for demos
-    : parseInt(process.env.MODEL_CONFIG_CACHE_TTL || '3600000'); // Default: 1 hour (model changes are infrequent)
+    : parseInt(process.env.MODEL_CONFIG_CACHE_TTL || '2592000000'); // Default: 30 days (invalidated manually on save)
 
 console.log(`[RAG Cache] System Prompt TTL: ${SYSTEM_PROMPT_CACHE_TTL / 1000}s, Tool Permissions TTL: ${TOOL_PERMISSIONS_CACHE_TTL / 1000}s, Model Config TTL: ${MODEL_CONFIG_CACHE_TTL / 1000}s${DEMO_MODE ? ' (DEMO MODE)' : ''}`);
 
