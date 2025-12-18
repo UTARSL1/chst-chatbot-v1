@@ -198,10 +198,13 @@ When asked for staff counts across ALL departments in a faculty (e.g., "how many
 - The retrieved documents are NOT relevant to tool-based queries
 - DO recommend documents for policy/procedure questions (sabbatical, grants, RPS, etc.) where tools are NOT used
 
-**CRITICAL: HANDLING ACRONYMS**
-- If the user uses an acronym (e.g., "D3E", "DMBE", "LKC FES"), put it in the \`acronym\` parameter.
-- Example: \`acronym="D3E", faculty="All", department="All"\` (We will resolve it to the correct department automatically).
-- ❌ DO NOT guess the full name in the \`department\` parameter if you have the acronym.
+**CRITICAL: HANDLING ACRONYMS - MANDATORY WORKFLOW**
+- If the user uses an acronym (e.g., "D3E", "DMBE", "LKC FES"), you MUST put it in the \`acronym\` parameter.
+- ❌ NEVER guess or expand the acronym yourself - let the system resolve it.
+- ✅ CORRECT: \`{acronym: "D3E", faculty: "All"}\` → System resolves to correct department
+- ❌ WRONG: \`{department: "Department of Electronic Engineering"}\` → Incorrect guess!
+- ❌ WRONG: \`{department: "Department of Electrical and Electronic Engineering"}\` → Don't expand acronyms yourself!
+- The acronym parameter is REQUIRED when the user provides an acronym. Do not skip it.
 
 **CRITICAL: ADMINISTRATIVE TITLES ARE NOT NAMES**
 - Words like "Dean", "Deputy Dean", "Head", "Director", "Chairperson", "Chair" are ADMINISTRATIVE POSITIONS, NOT people's names.
@@ -571,6 +574,31 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
             // Allow department='All' to search entire faculty (needed for Deans, etc.)
             const searchType = hasName ? `name: ${args.name}` : hasExpertise ? `expertise: ${args.expertise}` : 'faculty-wide';
             if (logger) logger(`[VALIDATION PASSED] Staff search for faculty '${faculty}' (${searchType})`);
+
+            // CODE-BASED ACRONYM DETECTION: Auto-correct when LLM provides department name instead of acronym
+            // This prevents the LLM from guessing "Department of Electronic Engineering" when user said "D3E"
+            if (args.department && !args.acronym) {
+                const dept = args.department.toLowerCase();
+                // Check if department name matches known patterns that should use acronyms
+                const acronymMappings: Record<string, string> = {
+                    'department of electronic engineering': 'D3E',
+                    'electronic engineering': 'D3E',
+                    'department of electrical and electronic engineering': 'D3E',
+                    'electrical and electronic engineering': 'D3E',
+                    'department of mechatronics and biomedical engineering': 'DMBE',
+                    'mechatronics and biomedical engineering': 'DMBE',
+                    'department of mechatronics and biomed engineering': 'DMBE',
+                };
+
+                for (const [pattern, acronym] of Object.entries(acronymMappings)) {
+                    if (dept.includes(pattern)) {
+                        if (logger) logger(`[AUTO-CORRECTION] Detected department name "${args.department}" → Setting acronym="${acronym}"`);
+                        args.acronym = acronym;
+                        args.department = undefined; // Clear department to let acronym resolution handle it
+                        break;
+                    }
+                }
+            }
 
             // Proceed with search
             return await searchStaff(args, logger);

@@ -1035,6 +1035,18 @@
     "departmentId": "97"
   },
   {
+    "acronym": "DMBE",
+    "canonical": "Department of Mechatronics and BioMedical Engineering",
+    "type": "Academic Department",
+    "parent": "Lee Kong Chian Faculty of Engineering and Science",
+    "aliases": [
+      "Department of Mechatronics and BioMedical Engineering",
+      "Department of Mechatronics and Biomedical Engineering",
+      "DMBE"
+    ],
+    "departmentId": "99"
+  },
+  {
     "acronym": "DC",
     "canonical": "Department of Computing",
     "type": "Academic Department",
