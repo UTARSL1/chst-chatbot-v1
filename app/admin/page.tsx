@@ -2,12 +2,18 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { prisma } from '@/lib/db';
 import { LatestMessagesList } from '@/components/admin/latest-messages';
+import { Pinecone } from '@pinecone-database/pinecone';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboard() {
+    // Initialize Pinecone
+    const pinecone = new Pinecone({
+        apiKey: process.env.PINECONE_API_KEY!,
+    });
+
     // Fetch stats directly on the server (parallelized)
-    const [totalUsers, pendingUsers, totalDocuments, totalChats, totalChunks, latestFeedback] = await Promise.all([
+    const [totalUsers, pendingUsers, totalDocuments, totalChats, totalChunks, pineconeStats, latestFeedback] = await Promise.all([
         prisma.user.count(),
         prisma.user.count({ where: { isApproved: false } }),
         prisma.document.count(),
@@ -16,6 +22,8 @@ export default async function AdminDashboard() {
             _sum: { chunkCount: true },
             where: { status: 'processed' }
         }).then(result => result._sum.chunkCount || 0),
+        // Get Pinecone index stats
+        pinecone.index(process.env.PINECONE_INDEX_NAME!).describeIndexStats().catch(() => ({ totalRecordCount: 0 })),
         prisma.feedback.findMany({
             take: 5,
             orderBy: { createdAt: 'desc' },
@@ -36,6 +44,7 @@ export default async function AdminDashboard() {
         totalDocuments,
         totalChats,
         totalChunks,
+        pineconeVectors: pineconeStats.totalRecordCount || 0,
     };
 
     const dashboardCards = [
@@ -82,14 +91,15 @@ export default async function AdminDashboard() {
             color: 'bg-green-500/10 border-green-500/20',
         },
         {
-            name: 'Total Chunks',
-            value: stats.totalChunks,
+            name: 'Total Chunks (DB / Pinecone)',
+            value: `${stats.totalChunks} / ${stats.pineconeVectors}`,
+            subtitle: stats.totalChunks === stats.pineconeVectors ? '✅ Synced' : '⚠️ Mismatch',
             icon: (
                 <svg className="w-6 h-6 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
                 </svg>
             ),
-            color: 'bg-violet-500/10 border-violet-500/20',
+            color: stats.totalChunks === stats.pineconeVectors ? 'bg-violet-500/10 border-violet-500/20' : 'bg-yellow-500/10 border-yellow-500/20',
         },
     ];
 
@@ -114,6 +124,9 @@ export default async function AdminDashboard() {
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold text-white">{stat.value}</div>
+                                {stat.subtitle && (
+                                    <p className="text-xs text-gray-400 mt-1">{stat.subtitle}</p>
+                                )}
                                 {stat.clickable && stat.value > 0 && (
                                     <p className="text-xs text-yellow-400 mt-1">Click to review →</p>
                                 )}
