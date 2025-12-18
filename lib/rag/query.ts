@@ -1116,12 +1116,16 @@ async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<Doc
     if (sources.length === 0) return [];
 
     try {
+        // Collect all document IDs and filenames for lookup
+        const documentIds = [...new Set(sources.map(s => s.documentId).filter(Boolean))];
         const filenames = [...new Set(sources.map(s => s.filename))];
-        console.log('[Enrich] Looking up filenames:', filenames);
+
+        console.log('[Enrich] Looking up by documentIds:', documentIds.length, 'and filenames:', filenames.length);
 
         const documents = await prisma.document.findMany({
             where: {
                 OR: [
+                    { id: { in: documentIds as string[] } },
                     { filename: { in: filenames } },
                     { originalName: { in: filenames } }
                 ]
@@ -1140,14 +1144,25 @@ async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<Doc
             console.log(`  - ${doc.originalName} (filename: ${doc.filename})`);
         });
 
-        const docMap = new Map();
+        // Create maps for efficient lookup
+        const docByIdMap = new Map();
+        const docByFilenameMap = new Map();
+
         documents.forEach(doc => {
-            docMap.set(doc.filename, doc);
-            docMap.set(doc.originalName, doc);
+            docByIdMap.set(doc.id, doc);
+            docByFilenameMap.set(doc.filename, doc);
+            docByFilenameMap.set(doc.originalName, doc);
         });
 
         const enriched = sources.map(source => {
-            const doc = docMap.get(source.filename);
+            // Try lookup by documentId first (most reliable)
+            let doc = source.documentId ? docByIdMap.get(source.documentId) : null;
+
+            // Fall back to filename lookup
+            if (!doc) {
+                doc = docByFilenameMap.get(source.filename);
+            }
+
             if (doc) {
                 console.log(`[Enrich] ✅ Matched: ${source.filename} → ${doc.originalName}`);
                 return {
@@ -1158,8 +1173,14 @@ async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<Doc
                     department: doc.department || undefined,
                 };
             }
-            console.log(`[Enrich] ❌ No match for: ${source.filename}`);
-            return source;
+
+            // Fallback: If document not found in DB, use filename as originalName
+            // This ensures fuzzy matching has something to work with
+            console.log(`[Enrich] ⚠️  No DB match for: ${source.filename} (documentId: ${source.documentId || 'none'}) - using filename as originalName`);
+            return {
+                ...source,
+                originalName: source.filename, // Use filename instead of UUID from vector metadata
+            };
         });
 
         return enriched;
@@ -1168,3 +1189,4 @@ async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<Doc
         return sources;
     }
 }
+

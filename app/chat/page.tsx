@@ -913,11 +913,9 @@ export default function ChatPage() {
                                                             const matchCount = targetKeywords.filter(keyword => sourceOriginal.includes(keyword)).length;
                                                             const matchRatio = targetKeywords.length > 0 ? matchCount / targetKeywords.length : 0;
 
-                                                            console.log(`[Download Link] Debug: '${targetNormalized}' vs '${s.originalName}' -> Match: ${matchCount}/${targetKeywords.length} (${(matchRatio * 100).toFixed(0)}%)`);
-
-                                                            // If we have multiple keywords, allow a partial match (e.g., 50% match)
-                                                            // This helps when LLM adds extra words like "Form No XYZ" which significantly dilutes the ratio
-                                                            if (targetKeywords.length >= 3 && matchRatio >= 0.5) {
+                                                            // If we have multiple keywords, allow a partial match (e.g., 60% match)
+                                                            // This helps when LLM adds extra words like "Form" or "SL01" that aren't in the file name
+                                                            if (targetKeywords.length >= 3 && matchRatio >= 0.6) {
                                                                 console.log(`[Download Link] ✅ Fuzzy match (${(matchRatio * 100).toFixed(0)}%):`, s.originalName);
                                                                 return true;
                                                             }
