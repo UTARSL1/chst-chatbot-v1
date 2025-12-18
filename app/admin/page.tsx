@@ -7,11 +7,15 @@ export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboard() {
     // Fetch stats directly on the server (parallelized)
-    const [totalUsers, pendingUsers, totalDocuments, totalChats, latestFeedback] = await Promise.all([
+    const [totalUsers, pendingUsers, totalDocuments, totalChats, totalChunks, latestFeedback] = await Promise.all([
         prisma.user.count(),
         prisma.user.count({ where: { isApproved: false } }),
         prisma.document.count(),
         prisma.chatSession.count(),
+        prisma.document.aggregate({
+            _sum: { chunkCount: true },
+            where: { status: 'processed' }
+        }).then(result => result._sum.chunkCount || 0),
         prisma.feedback.findMany({
             take: 5,
             orderBy: { createdAt: 'desc' },
@@ -31,6 +35,7 @@ export default async function AdminDashboard() {
         pendingUsers,
         totalDocuments,
         totalChats,
+        totalChunks,
     };
 
     const dashboardCards = [
@@ -75,6 +80,16 @@ export default async function AdminDashboard() {
                 </svg>
             ),
             color: 'bg-green-500/10 border-green-500/20',
+        },
+        {
+            name: 'Total Chunks',
+            value: stats.totalChunks,
+            icon: (
+                <svg className="w-6 h-6 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                </svg>
+            ),
+            color: 'bg-violet-500/10 border-violet-500/20',
         },
     ];
 

@@ -153,6 +153,9 @@ export function DocumentList() {
                                     <th className="px-6 py-3 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('status')}>
                                         Status <SortIcon columnKey="status" />
                                     </th>
+                                    <th className="px-6 py-3 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('chunkCount')}>
+                                        Chunks <SortIcon columnKey="chunkCount" />
+                                    </th>
                                     <th className="px-6 py-3 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('fileSize')}>
                                         Size <SortIcon columnKey="fileSize" />
                                     </th>
@@ -193,8 +196,16 @@ export function DocumentList() {
                                                     'bg-red-500/10 text-red-400'
                                                 }`}>
                                                 {doc.status.charAt(0).toUpperCase() + doc.status.slice(1)}
-                                                {doc.status === 'processed' && doc.chunkCount ? ` (${doc.chunkCount} chunks)` : ''}
                                             </span>
+                                        </td>
+                                        <td className="px-6 py-4 text-center">
+                                            {doc.chunkCount ? (
+                                                <span className="px-2 py-1 rounded-full text-xs font-medium bg-violet-500/20 text-violet-300">
+                                                    {doc.chunkCount}
+                                                </span>
+                                            ) : (
+                                                <span className="text-gray-600">-</span>
+                                            )}
                                         </td>
                                         <td className="px-6 py-4">
                                             {formatFileSize(doc.fileSize)}
