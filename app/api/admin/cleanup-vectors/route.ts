@@ -29,7 +29,9 @@ export async function POST(req: NextRequest) {
                     { status: { not: 'processed' } },
                     { deletedAt: { not: null } }
                 ],
-                vectorIds: { not: { equals: null } }
+                AND: [
+                    { vectorIds: { not: { equals: null } } }
+                ]
             },
             select: {
                 id: true,
