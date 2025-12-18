@@ -17,6 +17,7 @@ const openai = new OpenAI({
 // ===== PERFORMANCE OPTIMIZATION: IN-MEMORY CACHING =====
 let systemPromptCache: { content: string; timestamp: number } | null = null;
 let toolPermissionsCache: { permissions: any[]; timestamp: number } | null = null;
+let modelConfigCache: { modelName: string; timestamp: number } | null = null;
 
 // Cache TTL configuration via environment variables
 // Set DEMO_MODE=true for longer cache during demos/presentations
@@ -30,7 +31,11 @@ const TOOL_PERMISSIONS_CACHE_TTL = DEMO_MODE
     ? 30 * 60 * 1000  // 30 minutes for demos
     : parseInt(process.env.TOOL_PERMISSIONS_CACHE_TTL || '300000'); // Default: 5 minutes
 
-console.log(`[RAG Cache] System Prompt TTL: ${SYSTEM_PROMPT_CACHE_TTL / 1000}s, Tool Permissions TTL: ${TOOL_PERMISSIONS_CACHE_TTL / 1000}s${DEMO_MODE ? ' (DEMO MODE)' : ''}`);
+const MODEL_CONFIG_CACHE_TTL = DEMO_MODE
+    ? 30 * 60 * 1000  // 30 minutes for demos
+    : parseInt(process.env.MODEL_CONFIG_CACHE_TTL || '300000'); // Default: 5 minutes
+
+console.log(`[RAG Cache] System Prompt TTL: ${SYSTEM_PROMPT_CACHE_TTL / 1000}s, Tool Permissions TTL: ${TOOL_PERMISSIONS_CACHE_TTL / 1000}s, Model Config TTL: ${MODEL_CONFIG_CACHE_TTL / 1000}s${DEMO_MODE ? ' (DEMO MODE)' : ''}`);
 
 async function getCachedSystemPrompt(): Promise<string> {
     const now = Date.now();
@@ -50,6 +55,26 @@ async function getCachedSystemPrompt(): Promise<string> {
         return '';
     }
 }
+
+export async function getCachedModelConfig(): Promise<string> {
+    const now = Date.now();
+    if (modelConfigCache && (now - modelConfigCache.timestamp) < MODEL_CONFIG_CACHE_TTL) {
+        return modelConfigCache.modelName;
+    }
+
+    try {
+        const activeModel = await prisma.modelConfig.findFirst({
+            where: { isActive: true }
+        });
+        const modelName = activeModel?.modelName || 'gpt-4o'; // Default to gpt-4o if not configured
+        modelConfigCache = { modelName, timestamp: now };
+        return modelName;
+    } catch (e) {
+        console.error('Failed to fetch model config:', e);
+        return 'gpt-4o'; // Fallback to gpt-4o
+    }
+}
+
 
 async function getCachedToolPermissions(): Promise<any[]> {
     const now = Date.now();
@@ -74,6 +99,7 @@ async function getCachedToolPermissions(): Promise<any[]> {
 export function invalidateRAGCaches() {
     systemPromptCache = null;
     toolPermissionsCache = null;
+    modelConfigCache = null;
     console.log('[RAG] Caches invalidated - changes will apply on next query');
 }
 
@@ -931,8 +957,9 @@ ${chatHistoryStr}
 
         while (runLoop && loopCount < 5) {
             const tLoop = Date.now();
+            const activeModel = await getCachedModelConfig();
             const completion = await openai.chat.completions.create({
-                model: 'gpt-4o-mini',
+                model: activeModel,
                 messages: messages,
                 tools: localTools.length > 0 ? localTools : undefined, // Only pass tools if any are allowed
                 tool_choice: localTools.length > 0 ? 'auto' : undefined,
@@ -1116,8 +1143,9 @@ IMPORTANT: Preserve acronyms and unit names EXACTLY as written. Do NOT try to ex
 - Keep "CHST" as "CHST"
 The tools will handle acronym resolution correctly.`;
 
+        const activeModel = await getCachedModelConfig();
         const completion = await openai.chat.completions.create({
-            model: 'gpt-3.5-turbo',
+            model: activeModel,
             messages: [
                 { role: 'system', content: systemPrompt },
                 { role: 'user', content: `Chat History:\n${historyText}\n\nLatest Question: ${query}` }

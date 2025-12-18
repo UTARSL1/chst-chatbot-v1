@@ -272,6 +272,20 @@ model ToolPermission {
   @@map("tool_permissions")
 }
 
+// Model Configuration (for AI model selection)
+model ModelConfig {
+  id          String   @id @default(uuid())
+  modelName   String   @unique // e.g., "gpt-4o", "gpt-4o-mini", "gpt-3.5-turbo"
+  displayName String   // e.g., "GPT-4O", "GPT-4O Mini"
+  description String   @db.Text // Model capabilities and use cases
+  isActive    Boolean  @default(false) // Only one should be true
+  updatedBy   String?  // User ID of the editor
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+
+  @@map("model_configs")
+}
+
 // JCR Journal Metric model
 model JcrJournalMetric {
   id              Int      @id @default(autoincrement())

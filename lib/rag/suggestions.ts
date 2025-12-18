@@ -2,6 +2,7 @@ import { prisma } from '@/lib/db';
 import { DocumentSource } from '@/types';
 import { getAccessibleLevels } from '@/lib/utils';
 import { OpenAI } from 'openai';
+import { getCachedModelConfig } from './query';
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -83,8 +84,9 @@ RULES:
 
 Your response (numbers only or NONE):`;
 
+        const activeModel = await getCachedModelConfig();
         const completion = await openai.chat.completions.create({
-            model: 'gpt-4o-mini',
+            model: activeModel,
             messages: [
                 { role: 'system', content: 'You are a precise document analyzer. Only suggest documents explicitly mentioned in policies.' },
                 { role: 'user', content: prompt },
