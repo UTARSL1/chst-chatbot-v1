@@ -13,7 +13,7 @@ export default async function AdminDashboard() {
     });
 
     // Fetch stats directly on the server (parallelized)
-    const [totalUsers, pendingUsers, totalDocuments, totalChats, totalChunks, pineconeStats, latestFeedback] = await Promise.all([
+    const [totalUsers, pendingUsers, totalDocuments, totalChats, totalChunks, pineconeStats, chunkComparison, latestFeedback] = await Promise.all([
         prisma.user.count(),
         prisma.user.count({ where: { isApproved: false } }),
         prisma.document.count(),
@@ -24,6 +24,42 @@ export default async function AdminDashboard() {
         }).then(result => result._sum.chunkCount || 0),
         // Get Pinecone index stats
         pinecone.index(process.env.PINECONE_INDEX_NAME!).describeIndexStats().catch(() => ({ totalRecordCount: 0 })),
+        // Get detailed chunk comparison
+        (async () => {
+            const documents = await prisma.document.findMany({
+                where: { status: 'processed' },
+                select: { id: true, filename: true, originalName: true, chunkCount: true }
+            });
+            const index = pinecone.index(process.env.PINECONE_INDEX_NAME!);
+            const comparison: any[] = [];
+
+            for (const doc of documents) {
+                try {
+                    const stats = await index.query({
+                        vector: new Array(1536).fill(0),
+                        topK: 10000,
+                        filter: { filename: doc.filename },
+                        includeMetadata: false,
+                        includeValues: false,
+                    });
+                    const pineconeCount = stats.matches?.length || 0;
+                    const dbCount = doc.chunkCount || 0;
+
+                    if (dbCount !== pineconeCount) {
+                        comparison.push({
+                            id: doc.id,
+                            originalName: doc.originalName,
+                            dbCount,
+                            pineconeCount,
+                            difference: dbCount - pineconeCount
+                        });
+                    }
+                } catch (error) {
+                    console.error(`Error checking ${doc.originalName}:`, error);
+                }
+            }
+            return comparison;
+        })(),
         prisma.feedback.findMany({
             take: 5,
             orderBy: { createdAt: 'desc' },
@@ -45,6 +81,7 @@ export default async function AdminDashboard() {
         totalChats,
         totalChunks,
         pineconeVectors: pineconeStats.totalRecordCount || 0,
+        mismatchedDocs: chunkComparison,
     };
 
     const dashboardCards = [
