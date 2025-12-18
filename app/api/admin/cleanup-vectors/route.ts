@@ -22,23 +22,19 @@ export async function POST(req: NextRequest) {
 
         console.log('[Cleanup] Starting orphaned vector cleanup...');
 
-        // Find all documents that have vectorIds but are deleted or have status != 'processed'
+        // Find all documents that have vectorIds but failed processing
         const orphanedDocs = await prisma.document.findMany({
             where: {
-                OR: [
-                    { status: { not: 'processed' } },
-                    { deletedAt: { not: null } }
-                ],
-                AND: [
-                    { vectorIds: { not: { equals: null } } }
-                ]
+                status: { not: 'processed' },
+                vectorIds: {
+                    not: { equals: null }
+                }
             },
             select: {
                 id: true,
                 originalName: true,
                 vectorIds: true,
-                status: true,
-                deletedAt: true
+                status: true
             }
         });
 
