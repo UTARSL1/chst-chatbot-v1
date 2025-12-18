@@ -280,36 +280,50 @@ export async function DELETE(req: NextRequest) {
             );
         }
 
-        // 1. Delete from Pinecone (if processed)
+        // 1. Delete from Pinecone FIRST (strict mode - must succeed)
         const vectorIds = document.vectorIds as string[];
         if (vectorIds && vectorIds.length > 0) {
+            console.log(`[Delete] Attempting to delete ${vectorIds.length} vectors for document: ${document.originalName}`);
             try {
                 await deleteDocumentVectors(document.vectorIds as string[]);
+                console.log(`[Delete] ✅ Successfully deleted ${vectorIds.length} vectors from Pinecone`);
             } catch (error) {
-                console.error('Error deleting vectors:', error);
-                // Continue even if vector deletion fails
+                console.error(`[Delete] ❌ CRITICAL: Failed to delete vectors for ${document.originalName}:`, error);
+                // STRICT MODE: Fail the entire deletion to prevent orphaned vectors
+                return NextResponse.json(
+                    {
+                        error: 'Failed to delete document vectors from Pinecone. Document not deleted to maintain data consistency.',
+                        details: error instanceof Error ? error.message : String(error)
+                    },
+                    { status: 500 }
+                );
             }
         }
 
         // 2. Delete file from Supabase Storage
         try {
+            console.log(`[Delete] Deleting file from Supabase: ${document.filePath}`);
             const { error: deleteError } = await supabase.storage
                 .from('documents')
                 .remove([document.filePath]);
 
             if (deleteError) {
-                console.error('Error deleting from Supabase Storage:', deleteError);
-                // Continue even if storage deletion fails
+                console.error('[Delete] ⚠️ Error deleting from Supabase Storage:', deleteError);
+                // Continue - file might already be gone, and vectors are already deleted
+            } else {
+                console.log('[Delete] ✅ File deleted from Supabase');
             }
         } catch (error) {
-            console.error('Error deleting file:', error);
-            // Continue even if file deletion fails (might be already gone)
+            console.error('[Delete] ⚠️ Error deleting file:', error);
+            // Continue - file might already be gone, and vectors are already deleted
         }
 
-        // 3. Delete from database
+        // 3. Delete from database (only after vectors are confirmed deleted)
+        console.log(`[Delete] Deleting database record for: ${document.originalName}`);
         await prisma.document.delete({
             where: { id },
         });
+        console.log('[Delete] ✅ Database record deleted');
 
         return NextResponse.json(
             { success: true, message: 'Document deleted successfully' },
