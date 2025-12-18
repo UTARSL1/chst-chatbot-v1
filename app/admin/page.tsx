@@ -28,22 +28,28 @@ export default async function AdminDashboard() {
         (async () => {
             const documents = await prisma.document.findMany({
                 where: { status: 'processed' },
-                select: { id: true, filename: true, originalName: true, chunkCount: true }
+                select: { id: true, filename: true, originalName: true, chunkCount: true, vectorIds: true }
             });
             const index = pinecone.index(process.env.PINECONE_INDEX_NAME!);
             const comparison: any[] = [];
 
             for (const doc of documents) {
                 try {
-                    const stats = await index.query({
-                        vector: new Array(1536).fill(0),
-                        topK: 10000,
-                        filter: { filename: doc.filename },
-                        includeMetadata: false,
-                        includeValues: false,
-                    });
-                    const pineconeCount = stats.matches?.length || 0;
                     const dbCount = doc.chunkCount || 0;
+                    let pineconeCount = 0;
+
+                    // Use vectorIds to get accurate count
+                    if (doc.vectorIds && Array.isArray(doc.vectorIds) && doc.vectorIds.length > 0) {
+                        try {
+                            // Fetch vectors by ID to verify they exist
+                            const fetchResult = await index.fetch(doc.vectorIds as string[]);
+                            pineconeCount = Object.keys(fetchResult.records || {}).length;
+                        } catch (fetchError) {
+                            console.error(`Error fetching vectors for ${doc.originalName}:`, fetchError);
+                            // Fallback: assume vectorIds count is accurate
+                            pineconeCount = (doc.vectorIds as string[]).length;
+                        }
+                    }
 
                     if (dbCount !== pineconeCount) {
                         comparison.push({
@@ -211,8 +217,8 @@ export default async function AdminDashboard() {
                                     </div>
                                     <div className="text-right">
                                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${doc.difference > 0
-                                                ? 'bg-red-500/20 text-red-300'
-                                                : 'bg-blue-500/20 text-blue-300'
+                                            ? 'bg-red-500/20 text-red-300'
+                                            : 'bg-blue-500/20 text-blue-300'
                                             }`}>
                                             {doc.difference > 0 ? `+${doc.difference}` : doc.difference} chunks
                                         </span>
