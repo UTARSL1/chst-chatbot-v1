@@ -59,7 +59,8 @@ export function searchStaffFromDirectory(
     } else if (params.faculty || params.department) {
         // Search by faculty/department name
         const facultyQuery = params.faculty?.toLowerCase() || '';
-        const deptQuery = params.department?.toLowerCase() || '';
+        // Normalize 'all' to empty string (faculty-wide search)
+        const deptQuery = (params.department?.toLowerCase() === 'all' ? '' : params.department?.toLowerCase()) || '';
 
         for (const [facAcronym, fac] of Object.entries(directory.faculties)) {
             // Check if faculty matches
