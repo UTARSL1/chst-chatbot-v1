@@ -213,7 +213,11 @@ export async function searchStaff(
                             department: s.department,
                             designation: s.designation,
                             administrativePosts: s.administrativePosts,
-                            areasOfExpertise: s.areasOfExpertise
+                            areasOfExpertise: s.areasOfExpertise,
+                            googleScholarUrl: s.googleScholarUrl,
+                            scopusUrl: s.scopusUrl,
+                            orcidUrl: s.orcidUrl,
+                            homepageUrl: s.homepageUrl
                         }))
                     } as any;
                 } else {
