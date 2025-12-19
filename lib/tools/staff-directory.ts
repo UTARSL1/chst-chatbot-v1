@@ -38,49 +38,6 @@ function httpsGet(url: string): Promise<string> {
     });
 }
 
-// Scrape h-index from Google Scholar profile page
-async function scrapeHIndex(googleScholarUrl: string, logger?: (msg: string) => void): Promise<number | null> {
-    const log = (msg: string) => {
-        if (logger) logger(msg);
-    };
-
-    if (!googleScholarUrl) return null;
-
-    try {
-        log(`  Scraping h-index from Google Scholar...`);
-        const html = await httpsGet(googleScholarUrl);
-
-        // Pattern: ">h-index</a></td><td class="gsc_rsb_std">28</td>
-        // Google Scholar shows two h-index values: all-time and last 5 years
-        // We want the second occurrence (last 5 years)
-        const regex = /h-index<\/a><\/td><td class="gsc_rsb_std">(\d+)<\/td>/g;
-        const matches = [];
-        let match;
-
-        while ((match = regex.exec(html)) !== null) {
-            matches.push(parseInt(match[1]));
-        }
-
-        if (matches.length >= 2) {
-            // Second match is "since 2020" (last 5 years)
-            const hIndex = matches[1];
-            log(`  h-index (last 5 years): ${hIndex}`);
-            return hIndex;
-        } else if (matches.length === 1) {
-            // Fallback: if only one h-index found, use it
-            log(`  h-index: ${matches[0]} (only one value found)`);
-            return matches[0];
-        }
-
-        log(`  No h-index found in Google Scholar page`);
-        return null;
-    } catch (error: any) {
-        log(`  Failed to scrape h-index: ${error.message}`);
-        return null;
-    }
-}
-
-
 // Load staff directory from JSON file
 export function loadStaffDirectory(): StaffDirectory | null {
     try {
@@ -373,21 +330,8 @@ async function scrapeUnitStaff(
             await sleep(RATE_LIMIT_MS);
 
             if (staffDetail) {
-                // Scrape h-index from Google Scholar if URL exists
-                if (staffDetail.googleScholarUrl) {
-                    const hIndex = await scrapeHIndex(staffDetail.googleScholarUrl, logger);
-                    staffDetail.hIndex = hIndex !== null ? hIndex : undefined;
-                    staffDetail.hIndexScrapedAt = new Date().toISOString();
-
-                    // Extra rate limiting for Google Scholar to avoid blocking
-                    await sleep(1000); // 1 second delay for Google Scholar
-                }
-
                 results.push(staffDetail);
-                const hIndexInfo = staffDetail.hIndex !== undefined && staffDetail.hIndex !== null
-                    ? ` [h-index: ${staffDetail.hIndex}]`
-                    : '';
-                log(`✓ ${staffDetail.name} (${staffDetail.employmentType})${hIndexInfo}`);
+                log(`✓ ${staffDetail.name} (${staffDetail.employmentType})`);
             }
         }
 

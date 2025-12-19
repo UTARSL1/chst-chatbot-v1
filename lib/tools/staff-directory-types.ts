@@ -21,8 +21,6 @@ export interface StaffMember {
     scopusUrl?: string;
     orcidUrl?: string;
     homepageUrl?: string;
-    hIndex?: number; // h-index from Google Scholar (last 5 years)
-    hIndexScrapedAt?: string; // ISO timestamp of when h-index was scraped
     areasOfExpertise?: string[]; // Optional: admin staff may not have research expertise
     joiningYear: number;
     joiningSequence: number;
