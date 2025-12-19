@@ -133,15 +133,15 @@ export function searchStaffFromDirectory(
     if (params.role) {
         const roleQuery = params.role.toLowerCase();
         results = results.filter(staff => {
-            // Check position field
-            if (staff.position.toLowerCase().includes(roleQuery)) return true;
-
-            // Check administrative posts
+            // Check administrative posts (exact match for precision)
             if (staff.administrativePosts?.some(post =>
-                post.toLowerCase().includes(roleQuery)
+                post.toLowerCase() === roleQuery
             )) return true;
 
-            // Check designation
+            // Check position field (fuzzy match for flexibility)
+            if (staff.position.toLowerCase().includes(roleQuery)) return true;
+
+            // Check designation (fuzzy match for flexibility)
             if (staff.designation?.toLowerCase().includes(roleQuery)) return true;
 
             return false;
