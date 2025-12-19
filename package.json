@@ -13,7 +13,8 @@
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "db:generate": "prisma generate",
-    "import:jcr": "ts-node scripts/import_jcr_year.ts"
+    "import:jcr": "ts-node scripts/import_jcr_year.ts",
+    "sync:local": "node lib/tools/run-sync-local.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
