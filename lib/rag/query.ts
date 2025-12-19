@@ -746,20 +746,33 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
         }
         log(`⏱️ Step 1 (Contextualization): ${((Date.now() - t1) / 1000).toFixed(2)}s`);
 
-        // 2-4. PARALLELIZED: Generate embedding + Search knowledge notes + Vector search
-        const t2 = Date.now();
+        // SMART QUERY DETECTION: Skip RAG for simple staff count queries
+        const isStaffCountQuery = /how many|count|total|number of.*staff/i.test(query.query) &&
+            (query.query.match(/\b[A-Z]{2,6}\b/g)?.length || 0) > 0; // Has acronyms
+
+        let embedding: number[] = [];
+        let knowledgeNotes: any[] = [];
+        let relevantChunks: any[] = [];
         const accessLevels = getAccessibleLevels(query.userRole);
 
-        const [embedding, knowledgeNotes, relevantChunks] = await Promise.all([
-            generateEmbedding(effectiveQuery),
-            searchKnowledgeNotes(effectiveQuery, accessLevels, 3),
-            // Vector search needs embedding, so we do it in a nested promise
-            generateEmbedding(effectiveQuery).then(emb => searchSimilarDocuments(emb, accessLevels, 5))
-        ]);
+        if (isStaffCountQuery) {
+            log(`⏱️ Steps 2-4 (Skipped for staff count query): 0.00s`);
+            log('  - Detected simple staff count query, bypassing RAG for performance');
+        } else {
+            // 2-4. PARALLELIZED: Generate embedding + Search knowledge notes + Vector search
+            const t2 = Date.now();
 
-        log(`⏱️ Steps 2-4 (Parallel: Embedding + Knowledge + Vector): ${((Date.now() - t2) / 1000).toFixed(2)}s`);
-        log(`  - Found ${knowledgeNotes.length} knowledge notes`);
-        log(`  - Found ${relevantChunks.length} document chunks`);
+            [embedding, knowledgeNotes, relevantChunks] = await Promise.all([
+                generateEmbedding(effectiveQuery),
+                searchKnowledgeNotes(effectiveQuery, accessLevels, 3),
+                // Vector search needs embedding, so we do it in a nested promise
+                generateEmbedding(effectiveQuery).then(emb => searchSimilarDocuments(emb, accessLevels, 5))
+            ]);
+
+            log(`⏱️ Steps 2-4 (Parallel: Embedding + Knowledge + Vector): ${((Date.now() - t2) / 1000).toFixed(2)}s`);
+            log(`  - Found ${knowledgeNotes.length} knowledge notes`);
+            log(`  - Found ${relevantChunks.length} document chunks`);
+        }
 
         // 6. Prepare context
         let baseContextStrings: string[] = [];
