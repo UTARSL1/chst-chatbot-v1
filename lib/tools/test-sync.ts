@@ -33,9 +33,9 @@ async function testSync() {
             console.log(`Version: ${directory.version}`);
             console.log(`Last Updated: ${directory.lastUpdated}`);
             console.log(`\nMetadata:`);
-            console.log(`  Total Positions: ${directory.metadata.totalStaff}`);
+            console.log(`  Total Positions: ${directory.metadata.staffCount}`);
             console.log(`  Unique Staff: ${directory.metadata.uniqueStaffCount}`);
-            console.log(`  Overlap: ${directory.metadata.totalStaff - (directory.metadata.uniqueStaffCount || 0)} (staff in multiple depts)`);
+            console.log(`  Overlap: ${directory.metadata.staffCount - (directory.metadata.uniqueStaffCount || 0)} (staff in multiple depts)`);
             console.log(`  Full-Time: ${directory.metadata.fullTimeCount}`);
             console.log(`  Adjunct: ${directory.metadata.adjunctCount}`);
             console.log(`  Part-Time: ${directory.metadata.partTimeCount}`);

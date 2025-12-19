@@ -364,7 +364,7 @@ export async function syncStaffDirectory(
             lastUpdated: '',
             syncDuration: '',
             metadata: {
-                totalStaff: 0,
+                staffCount: 0,
                 uniqueStaffCount: 0,
                 fullTimeCount: 0,
                 adjunctCount: 0,
@@ -624,7 +624,7 @@ export async function syncStaffDirectory(
         }
     }
 
-    directory.metadata.totalStaff = totalStaff;
+    directory.metadata.staffCount = totalStaff;
     directory.metadata.uniqueStaffCount = globalUniqueSearchIds.size;
     directory.metadata.fullTimeCount = totalFullTime;
     directory.metadata.adjunctCount = totalAdjunct;
