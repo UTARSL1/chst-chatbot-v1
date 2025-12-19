@@ -4,6 +4,7 @@ import unitsData from './units.json';
 import https from 'https';
 import { searchStaffFromDirectory } from './search-from-directory';
 import { StaffMember } from './staff-directory-types';
+import { queryStaffDirectory } from './query-staff-directory';
 
 // --- Types ---
 interface UnitMapping {
