@@ -130,13 +130,73 @@ export async function searchStaff(
     try {
         log(`Searching staff with params: ${JSON.stringify(params)}`);
 
+        // **OPTIMIZATION: Use pre-calculated metadata if possible**
+        // If query is just for counts (no name/expertise/role filters), use metadata directly
+        const isCountOnlyQuery = !params.name && !params.expertise && !params.role;
+
+        if (isCountOnlyQuery && params.acronym) {
+            log('Attempting to use pre-calculated metadata counts...');
+            try {
+                const { getStaffCountsFromMetadata } = await import('./get-staff-counts');
+                const counts = getStaffCountsFromMetadata(params, logger);
+
+                if (counts) {
+                    log(`✓ Retrieved counts from metadata (instant)`);
+
+                    // Build breakdown message
+                    const breakdown: string[] = [];
+                    if (counts.fullTimeCount > 0) breakdown.push(`${counts.fullTimeCount} full-time`);
+                    if (counts.adjunctCount > 0) breakdown.push(`${counts.adjunctCount} adjunct`);
+                    if (counts.partTimeCount > 0) breakdown.push(`${counts.partTimeCount} part-time`);
+                    if (counts.expatriateCount > 0) breakdown.push(`${counts.expatriateCount} expatriate`);
+
+                    const message = `There are ${counts.staffCount} staff members (${breakdown.join(', ')}).`;
+
+                    return {
+                        message,
+                        totalCount: counts.staffCount,
+                        fullTimeCount: counts.fullTimeCount,
+                        adjunctCount: counts.adjunctCount,
+                        partTimeCount: counts.partTimeCount,
+                        expatriateCount: counts.expatriateCount
+                    } as any;
+                }
+            } catch (error: any) {
+                log(`Metadata retrieval failed: ${error.message}, falling back to full search`);
+            }
+        }
+
         // **PRIMARY METHOD: Use lookup table (fast!)**
         log('Attempting to search from lookup table...');
         try {
             const staffFromDirectory = searchStaffFromDirectory(params, logger);
             if (staffFromDirectory.length > 0) {
                 log(`✓ Found ${staffFromDirectory.length} staff from lookup table (fast path)`);
-                return staffFromDirectory.map(convertToStaffResult);
+
+                // Count employment types
+                const fullTimeCount = staffFromDirectory.filter(s => s.staffType === 'full-time').length;
+                const adjunctCount = staffFromDirectory.filter(s => s.staffType === 'adjunct').length;
+                const partTimeCount = staffFromDirectory.filter(s => s.staffType === 'part-time').length;
+                const expatriateCount = staffFromDirectory.filter(s => s.staffType === 'expatriate').length;
+
+                // Build breakdown message
+                const breakdown: string[] = [];
+                if (fullTimeCount > 0) breakdown.push(`${fullTimeCount} full-time`);
+                if (adjunctCount > 0) breakdown.push(`${adjunctCount} adjunct`);
+                if (partTimeCount > 0) breakdown.push(`${partTimeCount} part-time`);
+                if (expatriateCount > 0) breakdown.push(`${expatriateCount} expatriate`);
+
+                // Return summary message (matching live scraping format)
+                const message = `There are ${staffFromDirectory.length} staff members (${breakdown.join(', ')}).`;
+
+                return {
+                    message,
+                    totalCount: staffFromDirectory.length,
+                    fullTimeCount,
+                    adjunctCount,
+                    partTimeCount,
+                    expatriateCount
+                } as any;
             } else {
                 log('No results from lookup table, falling back to live scraping...');
             }
