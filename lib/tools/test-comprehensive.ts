@@ -20,7 +20,7 @@ async function runTests() {
 
         console.log(`   ✓ Found: ${results.length} staff`);
         console.log(`   ✓ Duration: ${duration}ms`);
-        console.log(`   ✓ Sample: ${results.slice(0, 3).map(s => s.name).join(', ')}`);
+        console.log(`   ✓ Sample: ${results.slice(0, 3).map((s: any) => s.name).join(', ')}`);
 
         if (results.length === 38 && duration < 1000) {
             console.log('   ✅ PASS\n');
@@ -42,7 +42,7 @@ async function runTests() {
 
         console.log(`   ✓ Found: ${results.length} staff`);
         console.log(`   ✓ Duration: ${duration}ms`);
-        console.log(`   ✓ Unique departments: ${new Set(results.map(s => s.department)).size}`);
+        console.log(`   ✓ Unique departments: ${new Set(results.map((s: any) => s.department)).size}`);
 
         if (results.length === 278 && duration < 1000) {
             console.log('   ✅ PASS\n');
@@ -64,7 +64,7 @@ async function runTests() {
 
         console.log(`   ✓ Found: ${results.length} staff`);
         console.log(`   ✓ Duration: ${duration}ms`);
-        console.log(`   ✓ Names: ${results.map(s => s.name).join(', ')}`);
+        console.log(`   ✓ Names: ${results.map((s: any) => s.name).join(', ')}`);
 
         if (results.length > 0 && duration < 1000) {
             console.log('   ✅ PASS\n');
@@ -111,7 +111,7 @@ async function runTests() {
 
         console.log(`   ✓ Found: ${results.length} staff`);
         console.log(`   ✓ Duration: ${duration}ms`);
-        console.log(`   ✓ Sample: ${results.slice(0, 3).map(s => s.name).join(', ')}`);
+        console.log(`   ✓ Sample: ${results.slice(0, 3).map((s: any) => s.name).join(', ')}`);
 
         if (results.length > 0 && duration < 1000) {
             console.log('   ✅ PASS\n');
