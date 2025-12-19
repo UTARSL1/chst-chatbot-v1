@@ -24,6 +24,7 @@ interface StaffResult {
     department: string;
     designation?: string;
     administrativePosts?: string[]; // Changed to array to support multiple posts
+    areasOfExpertise?: string[]; // Research areas
     googleScholarUrl?: string;
     scopusUrl?: string;
     orcidUrl?: string;
@@ -42,7 +43,8 @@ function convertToStaffResult(staff: StaffMember): StaffResult {
         faculty: staff.faculty,
         department: staff.department,
         designation: staff.designation,
-        administrativePosts: staff.administrativePosts,
+        administrativePosts: staff.administrativePosts || [], // Default to empty array
+        areasOfExpertise: staff.areasOfExpertise || [], // Default to empty array
         googleScholarUrl: staff.googleScholarUrl,
         scopusUrl: staff.scopusUrl,
         orcidUrl: staff.orcidUrl,

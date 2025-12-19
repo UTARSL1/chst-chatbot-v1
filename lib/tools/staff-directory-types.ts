@@ -9,18 +9,18 @@ export interface StaffMember {
     employmentType: string; // Human-readable label
     name: string;
     position: string;
-    email: string;
+    email?: string; // Optional: new/adjunct staff may not have email yet
     faculty: string;
     facultyAcronym: string;
     department: string;
     departmentAcronym: string;
     designation: string;
-    administrativePosts: string[];
+    administrativePosts?: string[]; // Optional: most staff don't have admin posts
     googleScholarUrl?: string;
     scopusUrl?: string;
     orcidUrl?: string;
     homepageUrl?: string;
-    areasOfExpertise: string[];
+    areasOfExpertise?: string[]; // Optional: admin staff may not have research expertise
     joiningYear: number;
     joiningSequence: number;
 }
