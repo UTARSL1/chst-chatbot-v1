@@ -129,14 +129,14 @@ export function detectEmploymentType(searchId: string): { type: EmploymentType; 
         return { type: 'part-time', label: 'Part-Time' };
     }
 
-    // Expatriate: EP or E prefix (but not EM)
-    if (id.startsWith('EP') || (id.startsWith('E') && !id.startsWith('EM'))) {
-        return { type: 'expatriate', label: 'Expatriate (Contract)' };
+    // Emeritus: EP or EM prefix (check before E to avoid misclassification)
+    if (id.startsWith('EP') || id.startsWith('EM')) {
+        return { type: 'emeritus', label: 'Emeritus Professor' };
     }
 
-    // Emeritus: EM prefix
-    if (id.startsWith('EM')) {
-        return { type: 'emeritus', label: 'Emeritus Professor' };
+    // Expatriate: E prefix (but not EP or EM, already handled above)
+    if (id.startsWith('E')) {
+        return { type: 'expatriate', label: 'Expatriate (Contract)' };
     }
 
     // Full-time: Numeric only
