@@ -997,7 +997,8 @@ ${chatHistoryStr}
                     const result = await executeToolCall(toolName, toolArgs, log); // Pass logger
                     log(`⏱️ Tool execution (${toolName}): ${((Date.now() - tTool) / 1000).toFixed(2)}s`);
 
-                    log(`Tool Result (${toolName}): ${JSON.stringify(result).substring(0, 100)}...`);
+                    // Log full tool result for debugging
+                    log(`Tool Result (${toolName}): ${JSON.stringify(result, null, 2)}`);
 
                     // For staff search, prepend the count message to force LLM to see it
                     let toolResponse = JSON.stringify(result);
