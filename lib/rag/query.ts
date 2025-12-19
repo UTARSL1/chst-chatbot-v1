@@ -384,6 +384,15 @@ LOGIC:
   - Research area -> expertise
 - Leave unmentioned fields as empty string.
 
+**OPTIMIZED COUNT QUERIES (FASTEST PATH):**
+- When asked for staff counts by department acronym (e.g., "How many staff in DMBE and D3E?"):
+  1. Use acronym parameter DIRECTLY: {"acronym": "DMBE"} and {"acronym": "D3E"}
+  2. DO NOT specify faculty - the tool will look it up automatically from metadata
+  3. DO NOT call utar_list_departments first - it's unnecessary
+  4. This uses pre-calculated metadata counts (instant, <1ms)
+  5. Example: For "How many staff in DMBE?", use: {"acronym": "DMBE"}
+- The tool returns instant counts without loading full staff lists
+
 **FINDING DEANS EFFICIENTLY:**
 - When asked for the Dean of a faculty (e.g., "Who is the Dean of FICT?"):
   1. Call utar_staff_search with faculty="FICT" and department="all"
