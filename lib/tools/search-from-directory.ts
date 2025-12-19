@@ -121,9 +121,9 @@ export function searchStaffFromDirectory(
     if (params.expertise) {
         const expertiseQuery = params.expertise.toLowerCase();
         results = results.filter(staff =>
-            staff.areasOfExpertise.some(area =>
+            staff.areasOfExpertise?.some(area =>
                 area.toLowerCase().includes(expertiseQuery)
-            )
+            ) || false
         );
         log(`After expertise filter: ${results.length} staff`);
     }
@@ -136,7 +136,7 @@ export function searchStaffFromDirectory(
             if (staff.position.toLowerCase().includes(roleQuery)) return true;
 
             // Check administrative posts
-            if (staff.administrativePosts.some(post =>
+            if (staff.administrativePosts?.some(post =>
                 post.toLowerCase().includes(roleQuery)
             )) return true;
 
