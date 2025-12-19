@@ -217,7 +217,9 @@ export async function searchStaff(
                             googleScholarUrl: s.googleScholarUrl,
                             scopusUrl: s.scopusUrl,
                             orcidUrl: s.orcidUrl,
-                            homepageUrl: s.homepageUrl
+                            homepageUrl: s.homepageUrl,
+                            hIndex: s.hIndex,
+                            hIndexScrapedAt: s.hIndexScrapedAt
                         }))
                     } as any;
                 } else {
