@@ -18,7 +18,7 @@ import {
     DepartmentType
 } from './staff-directory-types';
 
-const STAFF_DIRECTORY_PATH = path.join(__dirname, 'staff_directory.json');
+const STAFF_DIRECTORY_PATH = path.join(process.cwd(), 'lib', 'tools', 'staff_directory.json');
 const RATE_LIMIT_MS = 500; // 500ms delay between requests
 
 // Utility: Sleep function for rate limiting
