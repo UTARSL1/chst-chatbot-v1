@@ -2,6 +2,7 @@
 
 export type EmploymentType = 'full-time' | 'adjunct' | 'part-time' | 'expatriate' | 'emeritus' | 'unknown';
 export type DepartmentType = 'Academic' | 'Administrative';
+export type AcademicCategory = 'Engineering' | 'Non-Engineering' | 'N/A'; // N/A for administrative depts
 
 export interface StaffMember {
     searchId: string;
@@ -44,6 +45,7 @@ export interface Department extends StaffCounts {
     parent: string;
     type: string;
     departmentType: DepartmentType;
+    academicCategory?: AcademicCategory; // Engineering, Non-Engineering, or N/A
     staff: StaffMember[];
 }
 

@@ -17,6 +17,7 @@ import {
     StaffCounts,
     DepartmentType
 } from './staff-directory-types';
+import { getDepartmentAcademicCategory } from './department-categories';
 
 const STAFF_DIRECTORY_PATH = path.join(process.cwd(), 'lib', 'tools', 'staff_directory.json');
 const RATE_LIMIT_MS = 500; // 500ms delay between requests
@@ -478,6 +479,7 @@ export async function syncStaffDirectory(
                 const deptType: DepartmentType =
                     deptUnit.type === 'Administrative Department' ? 'Administrative' : 'Academic';
 
+
                 faculty.departments[deptAcronym] = {
                     canonical: deptUnit.canonical,
                     acronym: deptAcronym,
@@ -486,6 +488,7 @@ export async function syncStaffDirectory(
                     parent: facultyAcronym,
                     type: deptUnit.type || 'Department',
                     departmentType: deptType,
+                    academicCategory: getDepartmentAcademicCategory(deptUnit.canonical, deptType),
                     staffCount: 0,
                     fullTimeCount: 0,
                     adjunctCount: 0,
