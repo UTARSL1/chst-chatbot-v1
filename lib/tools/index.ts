@@ -2,6 +2,8 @@ import Fuse from 'fuse.js';
 import * as cheerio from 'cheerio';
 import unitsData from './units.json';
 import https from 'https';
+import { searchStaffFromDirectory } from './search-from-directory';
+import { StaffMember } from './staff-directory-types';
 
 // --- Types ---
 interface UnitMapping {
@@ -27,6 +29,25 @@ interface StaffResult {
     orcidUrl?: string;
     homepageUrl?: string;
     extra?: string;
+}
+
+// Helper to convert StaffMember to StaffResult
+function convertToStaffResult(staff: StaffMember): StaffResult {
+    return {
+        searchId: staff.searchId,
+        staffType: staff.staffType as 'full-time' | 'adjunct' | 'part-time',
+        name: staff.name,
+        position: staff.position,
+        email: staff.email || '', // Email might be empty for adjunct staff
+        faculty: staff.faculty,
+        department: staff.department,
+        designation: staff.designation,
+        administrativePosts: staff.administrativePosts,
+        googleScholarUrl: staff.googleScholarUrl,
+        scopusUrl: staff.scopusUrl,
+        orcidUrl: staff.orcidUrl,
+        homepageUrl: staff.homepageUrl
+    };
 }
 
 // --- Tool 1: Resolve Unit ---
@@ -108,6 +129,23 @@ export async function searchStaff(
 
     try {
         log(`Searching staff with params: ${JSON.stringify(params)}`);
+
+        // **PRIMARY METHOD: Use lookup table (fast!)**
+        log('Attempting to search from lookup table...');
+        try {
+            const staffFromDirectory = searchStaffFromDirectory(params, logger);
+            if (staffFromDirectory.length > 0) {
+                log(`✓ Found ${staffFromDirectory.length} staff from lookup table (fast path)`);
+                return staffFromDirectory.map(convertToStaffResult);
+            } else {
+                log('No results from lookup table, falling back to live scraping...');
+            }
+        } catch (error: any) {
+            log(`Lookup table search failed: ${error.message}, falling back to live scraping...`);
+        }
+
+        // **FALLBACK: Live scraping (slow, only if lookup table fails)**
+        log('Using live scraping (this may take 20-30 seconds)...');
 
         const baseUrl = 'https://www2.utar.edu.my';
         const results: StaffResult[] = [];

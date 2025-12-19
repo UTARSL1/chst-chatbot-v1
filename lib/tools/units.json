@@ -980,18 +980,6 @@
     ]
   },
   {
-    "acronym": "DMBE",
-    "canonical": "Department of Mechatronics and Biomedical Engineering",
-    "type": "Academic Department",
-    "parent": "Lee Kong Chian Faculty of Engineering and Science",
-    "aliases": [
-      "Department of Mechatronics and Biomedical Engineering",
-      "Mechatronics and Biomedical Engineering Department",
-      "DMBE"
-    ],
-    "departmentId": "99"
-  },
-  {
     "acronym": "DASD",
     "canonical": "Department of Architecture and Sustainable Design",
     "type": "Academic Department",
@@ -999,7 +987,8 @@
     "aliases": [
       "Department of Architecture and Sustainable Design",
       "DASD"
-    ]
+    ],
+    "departmentId": "275"
   },
   {
     "acronym": "DCL",
@@ -1010,7 +999,7 @@
       "Department of Chemical Engineering",
       "DCL"
     ],
-    "departmentId": "3352"
+    "departmentId": "101"
   },
   {
     "acronym": "DCI",
@@ -1054,7 +1043,8 @@
     "aliases": [
       "Department of Computing",
       "DC"
-    ]
+    ],
+    "departmentId": "3351"
   },
   {
     "acronym": "DMAS",
@@ -1075,7 +1065,8 @@
     "aliases": [
       "Department of Mechanical and Material Engineering",
       "DMME"
-    ]
+    ],
+    "departmentId": "98"
   },
   {
     "acronym": "DS",
@@ -1097,7 +1088,7 @@
       "Department of Laboratory Management and Safety Administration",
       "DLMSA"
     ],
-    "departmentId": "3353"
+    "departmentId": "1295"
   },
   {
     "acronym": "FGO",
@@ -1108,7 +1099,7 @@
       "Faculty General Office",
       "FGO"
     ],
-    "departmentId": "3354"
+    "departmentId": "89"
   },
   {
     "acronym": "DA",
@@ -1129,7 +1120,8 @@
     "aliases": [
       "Department of Building and Property Management",
       "DBPM"
-    ]
+    ],
+    "departmentId": "291"
   },
   {
     "acronym": "DE",
@@ -1329,20 +1321,10 @@
     "departmentId": "253"
   },
   {
-    "acronym": "DPE",
-    "canonical": "Department of Petrochemical Engineering",
-    "type": "Academic Department",
-    "parent": "Faculty of Engineering and Green Technology",
-    "aliases": [
-      "Department of Petrochemical Engineering",
-      "DPE"
-    ]
-  },
-  {
     "acronym": "DBRM",
     "canonical": "Department of Banking and Risk Management",
     "type": "Academic Department",
-    "parent": "Faculty of Business and Finance",
+    "parent": "Teh Hong Piow Faculty of Business and Finance",
     "aliases": [
       "Department of Banking and Risk Management",
       "DBRM"
@@ -1351,19 +1333,20 @@
   },
   {
     "acronym": "DB",
-    "canonical": "Department of Business",
+    "canonical": "Department of Business and Public Administration",
     "type": "Academic Department",
-    "parent": "Faculty of Business and Finance",
+    "parent": "Teh Hong Piow Faculty of Business and Finance",
     "aliases": [
-      "Department of Business",
+      "Department of Business and Public Administration",
       "DB"
-    ]
+    ],
+    "departmentId": "6382"
   },
   {
     "acronym": "DCA",
     "canonical": "Department of Commerce and Accountancy",
     "type": "Academic Department",
-    "parent": "Faculty of Business and Finance",
+    "parent": "Teh Hong Piow Faculty of Business and Finance",
     "aliases": [
       "Department of Commerce and Accountancy",
       "DCA"
@@ -1374,7 +1357,7 @@
     "acronym": "DE",
     "canonical": "Department of Economics",
     "type": "Academic Department",
-    "parent": "Faculty of Business and Finance",
+    "parent": "Teh Hong Piow Faculty of Business and Finance",
     "aliases": [
       "Department of Economics",
       "DE"
@@ -1385,7 +1368,7 @@
     "acronym": "DES",
     "canonical": "Department of Entrepreneurship and Supply Chain Management",
     "type": "Academic Department",
-    "parent": "Faculty of Business and Finance",
+    "parent": "Teh Hong Piow Faculty of Business and Finance",
     "aliases": [
       "Department of Entrepreneurship and Supply Chain Management",
       "DES"
@@ -1396,7 +1379,7 @@
     "acronym": "DF",
     "canonical": "Department of Finance",
     "type": "Academic Department",
-    "parent": "Faculty of Business and Finance",
+    "parent": "Teh Hong Piow Faculty of Business and Finance",
     "aliases": [
       "Department of Finance",
       "DF"
@@ -1407,7 +1390,7 @@
     "acronym": "DM",
     "canonical": "Department of Marketing",
     "type": "Academic Department",
-    "parent": "Faculty of Business and Finance",
+    "parent": "Teh Hong Piow Faculty of Business and Finance",
     "aliases": [
       "Department of Marketing",
       "DM"
