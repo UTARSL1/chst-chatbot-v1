@@ -189,17 +189,44 @@ export async function searchStaff(
                 if (partTimeCount > 0) breakdown.push(`${partTimeCount} part-time`);
                 if (expatriateCount > 0) breakdown.push(`${expatriateCount} expatriate`);
 
-                // Return summary message (matching live scraping format)
                 const message = `There are ${staffFromDirectory.length} staff members (${breakdown.join(', ')}).`;
 
-                return {
-                    message,
-                    totalCount: staffFromDirectory.length,
-                    fullTimeCount,
-                    adjunctCount,
-                    partTimeCount,
-                    expatriateCount
-                } as any;
+                // Check if this is a detail query (role/name/expertise) or count-only query
+                const isDetailQuery = params.role || params.name || params.expertise;
+
+                if (isDetailQuery) {
+                    // Return full staff details for role/name/expertise queries
+                    return {
+                        message,
+                        totalCount: staffFromDirectory.length,
+                        fullTimeCount,
+                        adjunctCount,
+                        partTimeCount,
+                        expatriateCount,
+                        staff: staffFromDirectory.map(s => ({
+                            searchId: s.searchId,
+                            staffType: s.staffType,
+                            name: s.name,
+                            position: s.position,
+                            email: s.email,
+                            faculty: s.faculty,
+                            department: s.department,
+                            designation: s.designation,
+                            administrativePosts: s.administrativePosts,
+                            areasOfExpertise: s.areasOfExpertise
+                        }))
+                    } as any;
+                } else {
+                    // Return summary only for count queries
+                    return {
+                        message,
+                        totalCount: staffFromDirectory.length,
+                        fullTimeCount,
+                        adjunctCount,
+                        partTimeCount,
+                        expatriateCount
+                    } as any;
+                }
             } else {
                 log('No results from lookup table, falling back to live scraping...');
             }
