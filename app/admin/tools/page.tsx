@@ -161,7 +161,7 @@ export default function ToolManagementPage() {
                             Staff Directory Sync
                         </h2>
                         <p className="text-sm text-muted-foreground mt-1">
-                            Sync staff data from UTAR website to enable fast lookup queries
+                            Run <code className="bg-muted px-1 py-0.5 rounded text-xs">npm run sync:local</code> to sync staff data locally, then click button to refresh dashboard
                         </p>
                     </div>
                     <Button
@@ -170,12 +170,12 @@ export default function ToolManagementPage() {
                         className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                     >
                         <RefreshCw className={`w-4 h-4 mr-2 ${syncing ? 'animate-spin' : ''}`} />
-                        {syncing ? 'Syncing...' : 'Sync Now'}
+                        {syncing ? 'Refreshing...' : 'Sync Done Locally'}
                     </Button>
                 </div>
 
                 {staffSyncStatus?.status === 'initialized' && staffSyncStatus.data && (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                         <div className="bg-background/50 p-4 rounded-lg">
                             <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
                                 <Calendar className="w-4 h-4" />
@@ -188,10 +188,10 @@ export default function ToolManagementPage() {
                                 {new Date(staffSyncStatus.data.lastUpdated).toLocaleString()}
                             </div>
                             <div className={`inline-block px-2 py-1 rounded-full text-xs font-medium mt-2 ${staffSyncStatus.data.healthStatus === 'fresh'
-                                    ? 'bg-green-500/20 text-green-400'
-                                    : staffSyncStatus.data.healthStatus === 'warning'
-                                        ? 'bg-yellow-500/20 text-yellow-400'
-                                        : 'bg-red-500/20 text-red-400'
+                                ? 'bg-green-500/20 text-green-400'
+                                : staffSyncStatus.data.healthStatus === 'warning'
+                                    ? 'bg-yellow-500/20 text-yellow-400'
+                                    : 'bg-red-500/20 text-red-400'
                                 }`}>
                                 {staffSyncStatus.data.healthStatus === 'fresh' && '✓ Fresh'}
                                 {staffSyncStatus.data.healthStatus === 'warning' && '⚠ Due Soon'}
@@ -214,26 +214,13 @@ export default function ToolManagementPage() {
                                 {staffSyncStatus.data.departmentsCount} departments
                             </div>
                         </div>
-
-                        <div className="bg-background/50 p-4 rounded-lg">
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
-                                <RefreshCw className="w-4 h-4" />
-                                Sync Duration
-                            </div>
-                            <div className="text-lg font-semibold">
-                                {staffSyncStatus.data.syncDuration}
-                            </div>
-                            <div className="text-xs text-muted-foreground mt-1">
-                                Last sync time
-                            </div>
-                        </div>
                     </div>
                 )}
 
                 {staffSyncStatus?.status === 'not_initialized' && (
                     <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 mt-4">
                         <p className="text-sm text-yellow-400">
-                            ⚠ Staff directory has not been synced yet. Click "Sync Now" to initialize.
+                            ⚠ Staff directory has not been synced yet. Run <code className="bg-muted px-1 py-0.5 rounded text-xs">npm run sync:local</code> to initialize.
                         </p>
                     </div>
                 )}

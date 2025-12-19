@@ -2,7 +2,7 @@
 // This must be run locally because Vercel has a 10-second timeout for serverless functions
 // and the sync takes 2-5 minutes to complete.
 
-const { syncStaffDirectory } = require('./staff-directory.js');
+import { syncStaffDirectory } from './staff-directory';
 
 console.log('=== Starting Local Staff Directory Sync ===\n');
 console.log('This will update lib/tools/staff_directory.json\n');
