@@ -11,7 +11,7 @@ async function testLookupSearch() {
     const duration1 = Date.now() - startTime1;
     console.log(`  Found: ${d3eStaff.length} staff`);
     console.log(`  Duration: ${duration1}ms`);
-    console.log(`  Sample: ${d3eStaff.slice(0, 3).map(s => s.name).join(', ')}\n`);
+    console.log(`  Sample: ${d3eStaff.slice(0, 3).map((s: any) => s.name).join(', ')}\n`);
 
     // Test 2: Search by name
     console.log('Test 2: Search by name "Wong"');
@@ -20,7 +20,7 @@ async function testLookupSearch() {
     const duration2 = Date.now() - startTime2;
     console.log(`  Found: ${wongStaff.length} staff`);
     console.log(`  Duration: ${duration2}ms`);
-    console.log(`  Names: ${wongStaff.map(s => s.name).join(', ')}\n`);
+    console.log(`  Names: ${wongStaff.map((s: any) => s.name).join(', ')}\n`);
 
     // Test 3: Search by role
     console.log('Test 3: Search for "Dean"');
@@ -40,7 +40,7 @@ async function testLookupSearch() {
     const duration4 = Date.now() - startTime4;
     console.log(`  Found: ${mlStaff.length} staff`);
     console.log(`  Duration: ${duration4}ms`);
-    console.log(`  Sample: ${mlStaff.slice(0, 3).map(s => s.name).join(', ')}\n`);
+    console.log(`  Sample: ${mlStaff.slice(0, 3).map((s: any) => s.name).join(', ')}\n`);
 
     console.log('=== Performance Summary ===');
     console.log(`Average query time: ${(duration1 + duration2 + duration3 + duration4) / 4}ms`);
