@@ -982,21 +982,29 @@ ${chatHistoryStr}
         while (runLoop && loopCount < 5) {
             const tLoop = Date.now();
 
-            // PERFORMANCE OPTIMIZATION: Use GPT-3.5-turbo for simple tool-based queries
-            // These queries just format tool results, so GPT-3.5-turbo is 3-5x faster than GPT-4
-            const onlySimpleTools = localTools.length > 0 && localTools.every(t =>
-                t.function.name === 'utar_staff_search' ||
-                t.function.name === 'utar_resolve_unit' ||
-                t.function.name === 'utar_list_departments' ||
-                t.function.name === 'jcr_journal_metric'  // JCR is also simple lookup
-            );
+            // PERFORMANCE OPTIMIZATION: Use GPT-3.5-turbo for formatting tool results
+            // CRITICAL: Only use GPT-3.5 AFTER tools are called (loopCount > 0)
+            // First call (loopCount === 0) must use GPT-4 for smart tool selection
 
-            const activeModel = onlySimpleTools
-                ? 'gpt-3.5-turbo'  // Fast model for simple lookup queries
-                : await getCachedModelConfig();  // Use configured model (GPT-4) for complex queries
+            let activeModel = await getCachedModelConfig(); // Default to GPT-4
 
-            if (loopCount === 0 && onlySimpleTools) {
-                log(`Using GPT-3.5-turbo for simple tool query (3-5x faster than GPT-4)`);
+            // Check if we're formatting results from simple tools (loop #2+)
+            if (loopCount > 0) {
+                // Check if previous message had only simple tool calls
+                const prevMessage = messages[messages.length - 1];
+                if (prevMessage?.tool_calls) {
+                    const allSimpleTools = prevMessage.tool_calls.every((tc: any) =>
+                        tc.function.name === 'utar_staff_search' ||
+                        tc.function.name === 'utar_resolve_unit' ||
+                        tc.function.name === 'utar_list_departments' ||
+                        tc.function.name === 'jcr_journal_metric'
+                    );
+
+                    if (allSimpleTools) {
+                        activeModel = 'gpt-3.5-turbo'; // Fast formatting for simple tool results
+                        log(`Using GPT-3.5-turbo to format simple tool results (3-5x faster than GPT-4)`);
+                    }
+                }
             }
 
             const completion = await openai.chat.completions.create({
