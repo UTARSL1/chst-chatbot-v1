@@ -59,27 +59,79 @@ model User {
   @@map("users")
 }
 
-// Knowledge Note model (Priority notes for RAG)
-model KnowledgeNote {
-  id          String   @id @default(uuid())
-  title       String
-  content     String   @db.Text
-  category    String?
-  priority    String   @default("standard") // standard, high, critical
-  formatType  String   @default("auto")     // auto, table, prose, list, quote, code
-  accessLevel String[] @default(["public", "student", "member", "chairperson"]) // Array of roles
-  status      String   @default("active")   // processing, active, failed
-  isActive    Boolean  @default(true)
-  createdBy   String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+// Department model (for organizing knowledge notes)
+model Department {
+  id              String   @id @default(uuid())
+  name            String   @unique
+  abbreviation    String?
+  color           String?  // Hex color for UI badges
+  icon            String?  // Emoji or icon name
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
   
   // Relations
-  creator     User     @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  knowledgeNotes  KnowledgeNote[]
+  
+  @@index([isActive])
+  @@map("departments")
+}
+
+// Document Type model (Policy, Form, Procedure, etc.)
+model DocumentType {
+  id              String   @id @default(uuid())
+  name            String   @unique
+  icon            String?  // Emoji or icon name
+  color           String?  // Hex color for UI styling
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  knowledgeNotes  KnowledgeNote[]
+  
+  @@index([isActive])
+  @@map("document_types")
+}
+
+// Knowledge Note model (Priority notes for RAG)
+model KnowledgeNote {
+  id              String   @id @default(uuid())
+  title           String
+  content         String   @db.Text
+  
+  // Organization (OPTIONAL - won't break existing notes)
+  departmentId    String?
+  department      Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  
+  documentTypeId  String?
+  documentType    DocumentType? @relation(fields: [documentTypeId], references: [id], onDelete: SetNull)
+  
+  // Legacy/existing fields
+  category        String?
+  priority        String   @default("standard")
+  formatType      String   @default("auto")
+  accessLevel     String[] @default(["public", "student", "member", "chairperson"])
+  status          String   @default("active")
+  isActive        Boolean  @default(true)
+  
+  // Metadata
+  tags            String[] @default([])
+  
+  // Timestamps
+  createdBy       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  creator         User     @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  linkedDocuments Document[] @relation("KnowledgeNoteDocuments")
   
   @@index([isActive])
   @@index([createdBy])
   @@index([priority])
+  @@index([departmentId])
+  @@index([documentTypeId])
   @@map("knowledge_notes")
 }
 
@@ -144,6 +196,7 @@ model Document {
   
   // Relations
   uploadedBy    User        @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+  linkedKnowledgeNotes KnowledgeNote[] @relation("KnowledgeNoteDocuments")
   
   @@index([accessLevel])
   @@index([status])
