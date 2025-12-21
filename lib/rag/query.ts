@@ -795,6 +795,63 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
                 knowledgeNotes.map((note) => `[Priority Knowledge: ${note.title}]\n${note.content}`).join('\n\n---\n\n')
             );
         }
+
+        // SYSTEMIC SOLUTION: Filter out document chunks that overlap with knowledge notes
+        // This ensures knowledge base always takes priority, regardless of topic
+        if (knowledgeNotes.length > 0 && relevantChunks.length > 0) {
+            const originalChunkCount = relevantChunks.length;
+
+            // Extract key topics/keywords from knowledge note titles and content
+            const knowledgeKeywords = new Set<string>();
+            knowledgeNotes.forEach(note => {
+                // Extract significant words from title (3+ chars)
+                const titleWords = note.title.toLowerCase()
+                    .split(/\s+/)
+                    .filter((w: string) => w.length > 3);
+                titleWords.forEach((w: string) => knowledgeKeywords.add(w));
+
+                // Extract key phrases from content (e.g., "service bond", "sponsorship")
+                const contentLower = note.content.toLowerCase();
+                const keyPhrases = [
+                    'service bond', 'sponsorship', 'conference', 'training',
+                    'sabbatical', 'research leave', 'publication', 'rps',
+                    'journal', 'impact factor', 'quartile'
+                ];
+                keyPhrases.forEach(phrase => {
+                    if (contentLower.includes(phrase)) {
+                        knowledgeKeywords.add(phrase);
+                    }
+                });
+            });
+
+            // Filter chunks: keep only if they DON'T overlap with knowledge topics
+            relevantChunks = relevantChunks.filter(chunk => {
+                const chunkText = chunk.content.toLowerCase();
+
+                // Check if chunk discusses same topic as any knowledge note
+                let overlapScore = 0;
+                knowledgeKeywords.forEach(keyword => {
+                    if (chunkText.includes(keyword)) {
+                        overlapScore++;
+                    }
+                });
+
+                // If chunk has 2+ keyword matches, it's likely covering same topic
+                const hasSignificantOverlap = overlapScore >= 2;
+
+                if (hasSignificantOverlap) {
+                    log(`  ⚠️ Filtered chunk from "${chunk.metadata.originalName}" (${overlapScore} keyword matches with knowledge notes)`);
+                }
+
+                return !hasSignificantOverlap; // Keep only non-overlapping chunks
+            });
+
+            const filteredCount = originalChunkCount - relevantChunks.length;
+            if (filteredCount > 0) {
+                log(`✂️ Filtered ${filteredCount} overlapping document chunks to prioritize knowledge notes`);
+            }
+        }
+
         if (relevantChunks.length > 0) {
             log(`📄 Document Chunks being sent to LLM:`);
             relevantChunks.forEach((chunk, idx) => {
@@ -975,10 +1032,7 @@ Guidelines:
    - **CRITICAL**: If you see "🔴 PRIORITY KNOWLEDGE" in the context, you MUST use that information FIRST.
    - Priority knowledge notes contain the most accurate and up-to-date information.
    - If there's a conflict between priority knowledge and document chunks, ALWAYS trust the priority knowledge.
-   - **DO NOT GENERALIZE OR SIMPLIFY**: When the knowledge note contains tiered/structured information (e.g., "RM12,500 to <RM15,000 → 1 year, RM15,000 to <RM25,000 → 2 years, RM25,000+ → 3 years"), you MUST cite ALL tiers, not just one value.
-   - **INCLUDE ALL TIERS**: If the knowledge note has multiple tiers (e.g., "Below RM3,000 → no bond, RM3,000-RM12,500 → 6 months, RM12,500+ → formal contract"), you MUST mention ALL of them, including the lower tiers. Don't skip any tier.
-   - **Example BAD response**: "The service bond is 2 years" or only mentioning tiers above RM12,500
-   - **Example GOOD response**: "Below RM3,000 requires no service bond. RM3,000 to <RM12,500 requires 6 months. RM12,500 to <RM15,000 requires 1 year, RM15,000 to <RM25,000 requires 2 years, and RM25,000+ requires 3 years."
+   - When answering, cite the complete information from priority knowledge notes. Don't simplify or generalize tiered/structured information.
 
 `;
         log(`⏱️ Step 6 (System prompt setup): ${((Date.now() - t6) / 1000).toFixed(2)}s`);
