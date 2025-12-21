@@ -63,16 +63,19 @@ export async function searchKnowledgeNotes(
             let score = 0;
             let titleMatches = 0;
             let contentMatches = 0;
+            const matchedWords: string[] = [];
 
             // Higher weight for title matches
             queryWords.forEach(word => {
                 if (titleLower.includes(word)) {
                     score += 3;
                     titleMatches++;
+                    matchedWords.push(`T:${word}`);
                 }
                 if (contentLower.includes(word)) {
                     score += 1;
                     contentMatches++;
+                    matchedWords.push(`C:${word}`);
                 }
             });
 
@@ -83,6 +86,9 @@ export async function searchKnowledgeNotes(
                 score *= 1.2;
             }
 
+            // Debug logging
+            console.log(`[KnowledgeSearch] "${note.title}": score=${score}, titleMatches=${titleMatches}, contentMatches=${contentMatches}, matched=[${matchedWords.join(', ')}]`);
+
             return { ...note, score, titleMatches, contentMatches };
         });
 
@@ -90,7 +96,11 @@ export async function searchKnowledgeNotes(
         // - Require at least 1 title match OR
         // - Require score >= 3 (at least 3 content matches or 1 title match)
         const relevantNotes = scoredNotes
-            .filter(note => note.titleMatches > 0 || note.score >= 3)
+            .filter(note => {
+                const isRelevant = note.titleMatches > 0 || note.score >= 3;
+                console.log(`[KnowledgeSearch] "${note.title}": ${isRelevant ? 'INCLUDED' : 'FILTERED OUT'} (titleMatches=${note.titleMatches}, score=${note.score})`);
+                return isRelevant;
+            })
             .sort((a, b) => b.score - a.score)
             .slice(0, limit)
             .map(({ score, titleMatches, contentMatches, ...note }) => note);
