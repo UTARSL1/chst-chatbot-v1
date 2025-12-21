@@ -61,14 +61,18 @@ export async function searchKnowledgeNotes(
             const contentLower = note.content.toLowerCase();
 
             let score = 0;
+            let titleMatches = 0;
+            let contentMatches = 0;
 
             // Higher weight for title matches
             queryWords.forEach(word => {
                 if (titleLower.includes(word)) {
                     score += 3;
+                    titleMatches++;
                 }
                 if (contentLower.includes(word)) {
                     score += 1;
+                    contentMatches++;
                 }
             });
 
@@ -79,15 +83,17 @@ export async function searchKnowledgeNotes(
                 score *= 1.2;
             }
 
-            return { ...note, score };
+            return { ...note, score, titleMatches, contentMatches };
         });
 
-        // Filter notes with score > 0 and sort by score
+        // Filter notes with meaningful relevance:
+        // - Require at least 1 title match OR
+        // - Require score >= 3 (at least 3 content matches or 1 title match)
         const relevantNotes = scoredNotes
-            .filter(note => note.score > 0)
+            .filter(note => note.titleMatches > 0 || note.score >= 3)
             .sort((a, b) => b.score - a.score)
             .slice(0, limit)
-            .map(({ score, ...note }) => note);
+            .map(({ score, titleMatches, contentMatches, ...note }) => note);
 
         return relevantNotes;
     } catch (error) {
