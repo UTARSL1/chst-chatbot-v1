@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+import { stringifyMetadata, type KnowledgeNoteMetadata } from '@/lib/types/knowledge-base';
 
 export async function GET() {
     try {
@@ -42,21 +43,39 @@ export async function POST(req: Request) {
         }
 
         const body = await req.json();
-        const { title, content, category, priority, formatType, accessLevel } = body;
+        const {
+            title,
+            content,
+            department,
+            documentType,
+            tags,
+            linkedDocIds,
+            priority,
+            formatType,
+            accessLevel
+        } = body;
 
         if (!title || !content) {
             return new NextResponse('Missing required fields', { status: 400 });
         }
 
+        // Build metadata object
+        const metadata: KnowledgeNoteMetadata = {
+            department,
+            documentType,
+            tags: tags || [],
+            linkedDocIds: linkedDocIds || [],
+        };
+
         const note = await prisma.knowledgeNote.create({
             data: {
                 title,
                 content,
-                category,
+                category: stringifyMetadata(metadata), // Store metadata as JSON string
                 priority: priority || 'standard',
                 formatType: formatType || 'auto',
                 accessLevel: accessLevel || ['public', 'student', 'member', 'chairperson'],
-                status: 'active', // Direct to active since no processing needed yet
+                status: 'active',
                 createdBy: session.user.id,
             },
         });
