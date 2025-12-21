@@ -982,20 +982,21 @@ ${chatHistoryStr}
         while (runLoop && loopCount < 5) {
             const tLoop = Date.now();
 
-            // PERFORMANCE OPTIMIZATION: Use GPT-3.5-turbo for staff-only queries
-            // Staff queries are simple (just formatting tool results), so GPT-3.5-turbo is 3-5x faster
-            const onlyStaffTools = localTools.length > 0 && localTools.every(t =>
+            // PERFORMANCE OPTIMIZATION: Use GPT-3.5-turbo for simple tool-based queries
+            // These queries just format tool results, so GPT-3.5-turbo is 3-5x faster than GPT-4
+            const onlySimpleTools = localTools.length > 0 && localTools.every(t =>
                 t.function.name === 'utar_staff_search' ||
                 t.function.name === 'utar_resolve_unit' ||
-                t.function.name === 'utar_list_departments'
+                t.function.name === 'utar_list_departments' ||
+                t.function.name === 'jcr_journal_metric'  // JCR is also simple lookup
             );
 
-            const activeModel = onlyStaffTools
-                ? 'gpt-3.5-turbo'  // Fast model for simple staff queries
+            const activeModel = onlySimpleTools
+                ? 'gpt-3.5-turbo'  // Fast model for simple lookup queries
                 : await getCachedModelConfig();  // Use configured model (GPT-4) for complex queries
 
-            if (loopCount === 0 && onlyStaffTools) {
-                log(`Using GPT-3.5-turbo for staff-only query (3-5x faster than GPT-4)`);
+            if (loopCount === 0 && onlySimpleTools) {
+                log(`Using GPT-3.5-turbo for simple tool query (3-5x faster than GPT-4)`);
             }
 
             const completion = await openai.chat.completions.create({
