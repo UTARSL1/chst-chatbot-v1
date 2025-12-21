@@ -789,10 +789,65 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
                 log(`  ${idx + 1}. "${note.title}" (${note.content.length} chars)`);
                 log(`     FULL CONTENT:\n${note.content}`);
             });
+
+            // SYSTEMIC SOLUTION: Pre-format tiered knowledge notes as markdown tables
+            // LLMs naturally quote tables verbatim instead of summarizing them
+            const formattedNotes = knowledgeNotes.map(note => {
+                let formattedContent = note.content;
+
+                // Detect if this is a tiered/structured note
+                const hasTiers = note.content.match(/→|–/g);
+                if (hasTiers && hasTiers.length >= 2) {
+                    log(`🔧 Converting "${note.title}" to markdown table format`);
+
+                    // Extract tier lines
+                    const lines = note.content.split('\n');
+                    const tierLines: string[] = [];
+                    let currentSection = '';
+
+                    lines.forEach(line => {
+                        const trimmed = line.trim();
+                        if (!trimmed) return;
+
+                        // Detect tier patterns
+                        if (trimmed.match(/^(\d+\.|Below|RM\s*\d+)/i) || trimmed.includes('→') || trimmed.includes('–')) {
+                            tierLines.push(trimmed);
+                        } else if (trimmed.length > 0 && !trimmed.match(/^(Training|Subject|Summary|Multiple|Annual|further)/i)) {
+                            // Continuation of previous tier
+                            if (tierLines.length > 0) {
+                                tierLines[tierLines.length - 1] += ' ' + trimmed;
+                            }
+                        }
+                    });
+
+                    // Build markdown table if we found tiers
+                    if (tierLines.length >= 2) {
+                        let tableContent = '\n\n**COMPLETE TIER STRUCTURE (use all rows):**\n\n';
+                        tableContent += '| Sponsorship Amount | Service Bond Requirement |\n';
+                        tableContent += '|-------------------|-------------------------|\n';
+
+                        tierLines.forEach(tier => {
+                            // Parse tier into amount and requirement
+                            const parts = tier.split(/→|–|:/);
+                            if (parts.length >= 2) {
+                                const amount = parts[0].replace(/^\d+\.\s*/, '').trim();
+                                const requirement = parts[1].trim();
+                                tableContent += `| ${amount} | ${requirement} |\n`;
+                            } else if (tier.match(/below|less than|under/i)) {
+                                tableContent += `| ${tier} | No service bond required |\n`;
+                            }
+                        });
+
+                        formattedContent = tableContent + '\n\n' + note.content;
+                    }
+                }
+
+                return `[Priority Knowledge: ${note.title}]\n${formattedContent}`;
+            });
+
             // CRITICAL: Mark knowledge notes as PRIORITY to ensure LLM uses them first
             baseContextStrings.push(
-                `🔴 PRIORITY KNOWLEDGE (USE THIS FIRST):\n\n` +
-                knowledgeNotes.map((note) => `[Priority Knowledge: ${note.title}]\n${note.content}`).join('\n\n---\n\n')
+                `🔴 PRIORITY KNOWLEDGE (USE THIS FIRST):\n\n` + formattedNotes.join('\n\n---\n\n')
             );
         }
 
