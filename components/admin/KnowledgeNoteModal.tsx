@@ -538,16 +538,16 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
                         <label className="block text-sm font-medium text-slate-300 mb-2">
                             Who can see this note?
                         </label>
-                        <div className="space-y-2">
+                        <div className="grid grid-cols-2 gap-3">
                             {[
-                                { value: 'public', label: 'Public', icon: '🌐' },
-                                { value: 'student', label: 'Student', icon: '🎓' },
-                                { value: 'member', label: 'Member', icon: '👤' },
-                                { value: 'chairperson', label: 'Chairperson', icon: '⭐' },
-                            ].map(({ value, label, icon }) => (
+                                { value: 'student', label: 'Student' },
+                                { value: 'member', label: 'Member' },
+                                { value: 'public', label: 'Public' },
+                                { value: 'chairperson', label: 'Chairperson' },
+                            ].map(({ value, label }) => (
                                 <label
                                     key={value}
-                                    className="flex items-center gap-3 cursor-pointer"
+                                    className="flex items-center gap-2 cursor-pointer"
                                 >
                                     <input
                                         type="checkbox"
@@ -555,7 +555,6 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
                                         onChange={() => toggleAccessLevel(value)}
                                         className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-blue-500 focus:ring-2 focus:ring-blue-500"
                                     />
-                                    <span className="text-lg">{icon}</span>
                                     <span className="text-slate-300">{label}</span>
                                 </label>
                             ))}
