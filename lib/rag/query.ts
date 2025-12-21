@@ -1120,9 +1120,12 @@ Guidelines:
    - DO NOT create a download link for it.
 
 4. **MARKDOWN TABLE OUTPUT (MANDATORY)**:
-   - **CRITICAL**: If the context contains a markdown table (with pipe symbols), you MUST output it as a proper markdown table in your response.
-   - DO NOT convert tables to plain text or pipe-separated lists.
-   - Always include the header row, separator row, and data rows with proper pipe alignment.
+   - **CRITICAL**: If the context contains a markdown table (with pipe symbols), you MUST copy and paste the ENTIRE table exactly as shown.
+   - DO NOT convert tables to numbered lists, bullet points, or plain text.
+   - DO NOT summarize or reformat table data.
+   - PRESERVE the exact table structure with all rows and columns.
+   - If you see a table in the context, your response MUST include that same table in markdown format.
+   - **SPECIAL RULE**: If you see "**COMPLETE TIER STRUCTURE (use all rows):**" followed by a table, you MUST output that EXACT table in your response. Do not convert it to a list.
 
    - Instead state: "The [Form Name] is required, but I do not have the file for it available for download."
 

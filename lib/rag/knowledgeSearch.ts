@@ -6,6 +6,7 @@ interface KnowledgeNoteResult {
     content: string;
     priority: string;
     category: string | null;
+    formatType?: string;
 }
 
 /**
@@ -37,6 +38,7 @@ export async function searchKnowledgeNotes(
                 content: true,
                 priority: true,
                 category: true,
+                formatType: true,
             },
             orderBy: [
                 // Order by priority first (critical > high > standard)
