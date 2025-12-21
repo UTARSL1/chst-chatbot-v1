@@ -93,11 +93,12 @@ export async function searchKnowledgeNotes(
         });
 
         // Filter notes with meaningful relevance:
-        // - Require at least 1 title match OR
-        // - Require score >= 3 (at least 3 content matches or 1 title match)
+        // - Require at least 2 title matches (strong title relevance) OR
+        // - Require score >= 6 (at least 2 title matches or 6 content matches)
+        // This prevents weak matches like single word "conference" from being included
         const relevantNotes = scoredNotes
             .filter(note => {
-                const isRelevant = note.titleMatches > 0 || note.score >= 3;
+                const isRelevant = note.titleMatches >= 2 || note.score >= 6;
                 console.log(`[KnowledgeSearch] "${note.title}": ${isRelevant ? 'INCLUDED' : 'FILTERED OUT'} (titleMatches=${note.titleMatches}, score=${note.score})`);
                 return isRelevant;
             })
