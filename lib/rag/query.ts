@@ -1225,6 +1225,62 @@ ${chatHistoryStr}
             finalResponse = "I apologize, but I was unable to generate a response. This may be because I do not have permission to access the necessary tools or data to answer your question.";
         }
 
+        // SYSTEMIC SOLUTION: Validate response completeness against knowledge notes
+        // If LLM gives incomplete answer for tiered information, inject the complete structure
+        if (knowledgeNotes.length > 0 && finalResponse) {
+            knowledgeNotes.forEach(note => {
+                const noteTitleLower = note.title.toLowerCase();
+                const noteContentLower = note.content.toLowerCase();
+                const responseLower = finalResponse.toLowerCase();
+
+                // Detect if this is a tiered/structured knowledge note
+                const hasTiers = note.content.match(/→|:|–|-\s*\d+\s*(year|month|day)/gi);
+
+                if (hasTiers && hasTiers.length >= 2) {
+                    // Check if response mentions this topic
+                    const topicWords = noteTitleLower.split(/\s+/).filter((w: string) => w.length > 4);
+                    const mentionsTopic = topicWords.some((word: string) => responseLower.includes(word));
+
+                    if (mentionsTopic) {
+                        // Count how many tiers are mentioned in the response
+                        const tiersInNote = hasTiers.length;
+                        let tiersInResponse = 0;
+
+                        // Check for common tier indicators
+                        if (responseLower.includes('below') || responseLower.includes('less than') || responseLower.includes('under')) tiersInResponse++;
+                        if (responseLower.match(/rm\s*\d+,?\d*/gi)) {
+                            tiersInResponse += (responseLower.match(/rm\s*\d+,?\d*/gi) || []).length;
+                        }
+
+                        // If response has fewer than half the tiers, it's incomplete
+                        if (tiersInResponse < tiersInNote / 2) {
+                            log(`⚠️ Detected incomplete response for "${note.title}" (${tiersInResponse}/${tiersInNote} tiers mentioned)`);
+                            log(`🔧 Injecting complete tiered structure from knowledge note`);
+
+                            // Extract the tiered structure from knowledge note
+                            const lines = note.content.split('\n').filter((l: string) => l.trim().length > 0);
+                            const tierLines = lines.filter((l: string) =>
+                                l.match(/→|:|–/) ||
+                                l.match(/^\d+\./) ||
+                                l.match(/^-\s/) ||
+                                l.match(/rm\s*\d+/i)
+                            );
+
+                            if (tierLines.length > 0) {
+                                // Replace the incomplete response with complete structure
+                                const completeAnswer = `Based on the policy, here is the complete breakdown:\n\n${tierLines.join('\n')}\n\n` +
+                                    `For more details, please refer to the official policy document.`;
+
+                                finalResponse = completeAnswer;
+                                log(`✅ Response corrected with complete tiered structure`);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+
         // Calculate elapsed time
         const endTime = Date.now();
         const elapsedSeconds = ((endTime - startTime) / 1000).toFixed(2);
