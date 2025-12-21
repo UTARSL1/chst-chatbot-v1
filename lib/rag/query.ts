@@ -792,6 +792,7 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
 
             // SYSTEMIC SOLUTION: Format knowledge notes based on admin-selected formatType
             // This respects the admin's choice from the UI instead of auto-detecting
+            const formattedContentMap = new Map<string, string>(); // Store for response validation
             const formattedNotes = knowledgeNotes.map(note => {
                 let formattedContent = note.content;
                 const formatType = (note as any).formatType || 'auto';
@@ -834,6 +835,9 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
                         // No formatting, use as-is
                         break;
                 }
+
+                // Store formatted content for later reuse
+                formattedContentMap.set(note.title, formattedContent);
 
                 return `[Priority Knowledge: ${note.title}]\n${formattedContent}`;
             });
@@ -1368,12 +1372,19 @@ ${chatHistoryStr}
                             );
 
                             if (tierLines.length > 0) {
-                                // Replace the incomplete response with complete structure
-                                const completeAnswer = `Based on the policy, here is the complete breakdown:\n\n${tierLines.join('\n')}\n\n` +
-                                    `For more details, please refer to the official policy document.`;
-
-                                finalResponse = completeAnswer;
-                                log(`✅ Response corrected with complete tiered structure`);
+                                // Use the formatted content that was already generated
+                                const formattedContent = formattedContentMap.get(note.title);
+                                if (formattedContent) {
+                                    const completeAnswer = `Based on the policy, here is the complete breakdown:\n\n${formattedContent}\n\nFor more details, please refer to the official policy document.`;
+                                    finalResponse = completeAnswer;
+                                    log(`✅ Response corrected with complete formatted structure`);
+                                } else {
+                                    // Fallback to plain text if formatted content not found
+                                    const completeAnswer = `Based on the policy, here is the complete breakdown:\n\n${tierLines.join('\n')}\n\n` +
+                                        `For more details, please refer to the official policy document.`;
+                                    finalResponse = completeAnswer;
+                                    log(`✅ Response corrected with complete tiered structure`);
+                                }
                             }
                         }
                     }
