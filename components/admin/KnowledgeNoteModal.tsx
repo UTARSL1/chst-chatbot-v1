@@ -7,6 +7,7 @@ interface Document {
     id: string;
     originalName: string;
     fileSize: number;
+    category?: string;
 }
 
 interface Department {
@@ -351,114 +352,184 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
 
                     {/* Linked Documents */}
                     <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                        <label className="block text-sm font-medium text-slate-300 mb-3">
                             Linked Documents
                         </label>
 
-                        {/* Upload Sections */}
-                        <div className="grid grid-cols-2 gap-4 mb-4">
-                            {/* Upload Policy */}
-                            <div className="border-2 border-dashed border-slate-700 rounded-lg p-4 hover:border-blue-500 transition-colors">
-                                <div className="flex items-center gap-2 mb-2">
+                        <div className="grid grid-cols-2 gap-4">
+                            {/* Policy Section */}
+                            <div className="border border-slate-700 rounded-lg p-4 bg-slate-800/30">
+                                <div className="flex items-center gap-2 mb-3">
                                     <FileText className="w-4 h-4 text-blue-400" />
-                                    <span className="text-sm font-medium text-slate-300">Upload Policy</span>
+                                    <span className="text-sm font-semibold text-blue-400">Policy Document</span>
                                 </div>
-                                <input
-                                    type="file"
-                                    accept=".pdf,.doc,.docx"
-                                    onChange={(e) => handleFileUpload(e, 'policy')}
-                                    className="w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 file:cursor-pointer"
-                                />
-                                <p className="text-xs text-slate-500 mt-1">PDF, DOC, DOCX</p>
-                            </div>
 
-                            {/* Upload Form */}
-                            <div className="border-2 border-dashed border-slate-700 rounded-lg p-4 hover:border-green-500 transition-colors">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <FileText className="w-4 h-4 text-green-400" />
-                                    <span className="text-sm font-medium text-slate-300">Upload Form</span>
+                                {/* Upload Policy */}
+                                <div className="mb-3">
+                                    <input
+                                        type="file"
+                                        accept=".pdf,.doc,.docx"
+                                        onChange={(e) => handleFileUpload(e, 'policy')}
+                                        className="w-full text-xs text-slate-400 file:mr-2 file:py-2 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 file:cursor-pointer"
+                                    />
                                 </div>
-                                <input
-                                    type="file"
-                                    accept=".pdf,.doc,.docx"
-                                    onChange={(e) => handleFileUpload(e, 'form')}
-                                    className="w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-green-500 file:text-white hover:file:bg-green-600 file:cursor-pointer"
-                                />
-                                <p className="text-xs text-slate-500 mt-1">PDF, DOC, DOCX</p>
-                            </div>
-                        </div>
 
-                        {/* OR Divider */}
-                        <div className="relative mb-4">
-                            <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-slate-700"></div>
-                            </div>
-                            <div className="relative flex justify-center text-xs">
-                                <span className="px-2 bg-slate-900 text-slate-500">OR LINK EXISTING</span>
-                            </div>
-                        </div>
+                                {/* OR Divider */}
+                                <div className="relative mb-3">
+                                    <div className="absolute inset-0 flex items-center">
+                                        <div className="w-full border-t border-slate-600"></div>
+                                    </div>
+                                    <div className="relative flex justify-center text-xs">
+                                        <span className="px-2 bg-slate-800/30 text-slate-500">OR LINK</span>
+                                    </div>
+                                </div>
 
-                        {/* Search Existing Documents */}
-                        <div className="relative mb-3">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                            <input
-                                type="text"
-                                value={searchDocQuery}
-                                onChange={(e) => setSearchDocQuery(e.target.value)}
-                                onFocus={() => setShowDocSearch(true)}
-                                placeholder="Search existing documents..."
-                                className="w-full pl-10 pr-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white placeholder-slate-500 text-sm focus:outline-none focus:border-blue-500"
-                            />
-                        </div>
+                                {/* Search Existing Policies */}
+                                <div className="relative mb-2">
+                                    <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-400" />
+                                    <input
+                                        type="text"
+                                        value={searchDocQuery}
+                                        onChange={(e) => setSearchDocQuery(e.target.value)}
+                                        onFocus={() => setShowDocSearch(true)}
+                                        placeholder="Search policies..."
+                                        className="w-full pl-7 pr-2 py-1.5 bg-slate-700/50 border border-slate-600 rounded text-white placeholder-slate-500 text-xs focus:outline-none focus:border-blue-500"
+                                    />
+                                </div>
 
-                        {/* Document Search Results */}
-                        {showDocSearch && searchDocQuery && (
-                            <div className="mb-3 max-h-40 overflow-y-auto bg-slate-800/50 border border-slate-700 rounded-lg">
-                                {filteredDocs.map(doc => (
-                                    <button
-                                        key={doc.id}
-                                        onClick={() => {
-                                            toggleDocument(doc.id);
-                                            setSearchDocQuery('');
-                                            setShowDocSearch(false);
-                                        }}
-                                        className="w-full px-4 py-2 text-left hover:bg-slate-700/50 flex items-center gap-2 text-sm"
-                                    >
-                                        <FileText className="w-4 h-4 text-slate-400" />
-                                        <span className="text-white flex-1">{doc.originalName}</span>
-                                        <span className="text-slate-500 text-xs">
-                                            {(doc.fileSize / 1024 / 1024).toFixed(2)} MB
-                                        </span>
-                                    </button>
-                                ))}
-                                {filteredDocs.length === 0 && (
-                                    <div className="px-4 py-3 text-sm text-slate-500">
-                                        No documents found
+                                {/* Policy Search Results */}
+                                {showDocSearch && searchDocQuery && (
+                                    <div className="mb-2 max-h-32 overflow-y-auto bg-slate-700/50 border border-slate-600 rounded">
+                                        {availableDocs
+                                            .filter(doc => doc.category === 'policy' && doc.originalName.toLowerCase().includes(searchDocQuery.toLowerCase()))
+                                            .map(doc => (
+                                                <button
+                                                    key={doc.id}
+                                                    onClick={() => {
+                                                        toggleDocument(doc.id);
+                                                        setSearchDocQuery('');
+                                                        setShowDocSearch(false);
+                                                    }}
+                                                    className="w-full px-2 py-1.5 text-left hover:bg-slate-600/50 flex items-center gap-2 text-xs"
+                                                >
+                                                    <FileText className="w-3 h-3 text-blue-400" />
+                                                    <span className="text-white flex-1 truncate">{doc.originalName}</span>
+                                                </button>
+                                            ))}
                                     </div>
                                 )}
-                            </div>
-                        )}
 
-                        {/* Linked Documents Chips */}
-                        <div className="flex flex-wrap gap-2">
-                            {linkedDocs.map(doc => (
-                                <div
-                                    key={doc.id}
-                                    className="px-3 py-1.5 bg-blue-500/20 border border-blue-500/50 rounded-lg flex items-center gap-2 text-sm"
-                                >
-                                    <FileText className="w-3 h-3 text-blue-400" />
-                                    <span className="text-blue-300">{doc.originalName}</span>
-                                    <button
-                                        onClick={() => toggleDocument(doc.id)}
-                                        className="text-blue-400 hover:text-blue-300"
-                                    >
-                                        <X className="w-3 h-3" />
-                                    </button>
+                                {/* Linked Policy */}
+                                <div className="space-y-1">
+                                    {linkedDocs
+                                        .filter(doc => doc.category === 'policy')
+                                        .map(doc => (
+                                            <div
+                                                key={doc.id}
+                                                className="px-2 py-1.5 bg-blue-500/20 border border-blue-500/50 rounded flex items-center gap-2 text-xs"
+                                            >
+                                                <FileText className="w-3 h-3 text-blue-400 flex-shrink-0" />
+                                                <span className="text-blue-300 flex-1 truncate">{doc.originalName}</span>
+                                                <button
+                                                    onClick={() => toggleDocument(doc.id)}
+                                                    className="text-blue-400 hover:text-blue-300 flex-shrink-0"
+                                                >
+                                                    <X className="w-3 h-3" />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    {linkedDocs.filter(doc => doc.category === 'policy').length === 0 && (
+                                        <p className="text-xs text-slate-500">No policy linked</p>
+                                    )}
                                 </div>
-                            ))}
-                            {linkedDocs.length === 0 && (
-                                <p className="text-sm text-slate-500">No documents linked yet</p>
-                            )}
+                            </div>
+
+                            {/* Form Section */}
+                            <div className="border border-slate-700 rounded-lg p-4 bg-slate-800/30">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <FileText className="w-4 h-4 text-green-400" />
+                                    <span className="text-sm font-semibold text-green-400">Form Document</span>
+                                </div>
+
+                                {/* Upload Form */}
+                                <div className="mb-3">
+                                    <input
+                                        type="file"
+                                        accept=".pdf,.doc,.docx"
+                                        onChange={(e) => handleFileUpload(e, 'form')}
+                                        className="w-full text-xs text-slate-400 file:mr-2 file:py-2 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-green-500 file:text-white hover:file:bg-green-600 file:cursor-pointer"
+                                    />
+                                </div>
+
+                                {/* OR Divider */}
+                                <div className="relative mb-3">
+                                    <div className="absolute inset-0 flex items-center">
+                                        <div className="w-full border-t border-slate-600"></div>
+                                    </div>
+                                    <div className="relative flex justify-center text-xs">
+                                        <span className="px-2 bg-slate-800/30 text-slate-500">OR LINK</span>
+                                    </div>
+                                </div>
+
+                                {/* Search Existing Forms */}
+                                <div className="relative mb-2">
+                                    <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-400" />
+                                    <input
+                                        type="text"
+                                        value={searchDocQuery}
+                                        onChange={(e) => setSearchDocQuery(e.target.value)}
+                                        onFocus={() => setShowDocSearch(true)}
+                                        placeholder="Search forms..."
+                                        className="w-full pl-7 pr-2 py-1.5 bg-slate-700/50 border border-slate-600 rounded text-white placeholder-slate-500 text-xs focus:outline-none focus:border-green-500"
+                                    />
+                                </div>
+
+                                {/* Form Search Results */}
+                                {showDocSearch && searchDocQuery && (
+                                    <div className="mb-2 max-h-32 overflow-y-auto bg-slate-700/50 border border-slate-600 rounded">
+                                        {availableDocs
+                                            .filter(doc => doc.category === 'form' && doc.originalName.toLowerCase().includes(searchDocQuery.toLowerCase()))
+                                            .map(doc => (
+                                                <button
+                                                    key={doc.id}
+                                                    onClick={() => {
+                                                        toggleDocument(doc.id);
+                                                        setSearchDocQuery('');
+                                                        setShowDocSearch(false);
+                                                    }}
+                                                    className="w-full px-2 py-1.5 text-left hover:bg-slate-600/50 flex items-center gap-2 text-xs"
+                                                >
+                                                    <FileText className="w-3 h-3 text-green-400" />
+                                                    <span className="text-white flex-1 truncate">{doc.originalName}</span>
+                                                </button>
+                                            ))}
+                                    </div>
+                                )}
+
+                                {/* Linked Form */}
+                                <div className="space-y-1">
+                                    {linkedDocs
+                                        .filter(doc => doc.category === 'form')
+                                        .map(doc => (
+                                            <div
+                                                key={doc.id}
+                                                className="px-2 py-1.5 bg-green-500/20 border border-green-500/50 rounded flex items-center gap-2 text-xs"
+                                            >
+                                                <FileText className="w-3 h-3 text-green-400 flex-shrink-0" />
+                                                <span className="text-green-300 flex-1 truncate">{doc.originalName}</span>
+                                                <button
+                                                    onClick={() => toggleDocument(doc.id)}
+                                                    className="text-green-400 hover:text-green-300 flex-shrink-0"
+                                                >
+                                                    <X className="w-3 h-3" />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    {linkedDocs.filter(doc => doc.category === 'form').length === 0 && (
+                                        <p className="text-xs text-slate-500">No form linked</p>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </div>
 
