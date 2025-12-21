@@ -976,8 +976,9 @@ Guidelines:
    - Priority knowledge notes contain the most accurate and up-to-date information.
    - If there's a conflict between priority knowledge and document chunks, ALWAYS trust the priority knowledge.
    - **DO NOT GENERALIZE OR SIMPLIFY**: When the knowledge note contains tiered/structured information (e.g., "RM12,500 to <RM15,000 → 1 year, RM15,000 to <RM25,000 → 2 years, RM25,000+ → 3 years"), you MUST cite ALL tiers, not just one value.
-   - **Example BAD response**: "The service bond is 2 years" or "The service bond is 3 years"
-   - **Example GOOD response**: "The service bond depends on the sponsorship amount: RM12,500 to <RM15,000 requires 1 year, RM15,000 to <RM25,000 requires 2 years, and RM25,000+ requires 3 years."
+   - **INCLUDE ALL TIERS**: If the knowledge note has multiple tiers (e.g., "Below RM3,000 → no bond, RM3,000-RM12,500 → 6 months, RM12,500+ → formal contract"), you MUST mention ALL of them, including the lower tiers. Don't skip any tier.
+   - **Example BAD response**: "The service bond is 2 years" or only mentioning tiers above RM12,500
+   - **Example GOOD response**: "Below RM3,000 requires no service bond. RM3,000 to <RM12,500 requires 6 months. RM12,500 to <RM15,000 requires 1 year, RM15,000 to <RM25,000 requires 2 years, and RM25,000+ requires 3 years."
 
 `;
         log(`⏱️ Step 6 (System prompt setup): ${((Date.now() - t6) / 1000).toFixed(2)}s`);
