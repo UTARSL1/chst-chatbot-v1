@@ -1118,6 +1118,12 @@ Guidelines:
 3. **MISSING DOCUMENTS**:
    - If a form is mentioned (e.g., "Sabbatical Application Form") but the specific PDF file is NOT in your context, 
    - DO NOT create a download link for it.
+
+4. **MARKDOWN TABLE OUTPUT (MANDATORY)**:
+   - **CRITICAL**: If the context contains a markdown table (with pipe symbols), you MUST output it as a proper markdown table in your response.
+   - DO NOT convert tables to plain text or pipe-separated lists.
+   - Always include the header row, separator row, and data rows with proper pipe alignment.
+
    - Instead state: "The [Form Name] is required, but I do not have the file for it available for download."
 
 4. **PRIORITY KNOWLEDGE NOTES**:
