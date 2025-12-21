@@ -852,10 +852,10 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
                     const trimmed = line.trim();
                     if (!trimmed) return;
 
-                    // Detect tier patterns
-                    if (trimmed.match(/^(\d+\.|Below|RM\s*\d+)/i) || trimmed.includes('→') || trimmed.includes('–')) {
+                    // Detect tier patterns (including -> arrows)
+                    if (trimmed.match(/^(\d+\.|Below|RM\s*\d+)/i) || trimmed.includes('→') || trimmed.includes('–') || trimmed.includes('->')) {
                         tierLines.push(trimmed);
-                    } else if (trimmed.length > 0 && !trimmed.match(/^(Training|Subject|Summary|Multiple|Annual|further)/i)) {
+                    } else if (trimmed.length > 0 && !trimmed.match(/^(Training|Subject|Summary|Multiple|Annual|further|Service bond)/i)) {
                         // Continuation of previous tier
                         if (tierLines.length > 0) {
                             tierLines[tierLines.length - 1] += ' ' + trimmed;
@@ -870,8 +870,8 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
                     tableContent += '|------|-------------|\n';
 
                     tierLines.forEach((tier: string) => {
-                        // Parse tier into parts
-                        const parts = tier.split(/→|–|:/);
+                        // Parse tier into parts (handle both → and ->)
+                        const parts = tier.split(/→|–|->|:/);
                         if (parts.length >= 2) {
                             const left = parts[0].replace(/^\d+\.\s*/, '').trim();
                             const right = parts[1].trim();
@@ -881,7 +881,8 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
                         }
                     });
 
-                    return tableContent + '\n\n' + content;
+                    // Return ONLY the table, not the original content (to avoid duplication)
+                    return tableContent;
                 }
 
                 return content;
