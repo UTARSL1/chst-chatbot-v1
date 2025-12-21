@@ -780,7 +780,7 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
             log(`📝 Knowledge Notes being sent to LLM:`);
             knowledgeNotes.forEach((note, idx) => {
                 log(`  ${idx + 1}. "${note.title}" (${note.content.length} chars)`);
-                log(`     Preview: ${note.content.substring(0, 150)}...`);
+                log(`     FULL CONTENT:\n${note.content}`);
             });
             // CRITICAL: Mark knowledge notes as PRIORITY to ensure LLM uses them first
             baseContextStrings.push(
