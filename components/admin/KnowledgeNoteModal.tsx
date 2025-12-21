@@ -2,18 +2,26 @@
 
 import { useState, useEffect } from 'react';
 import { X, Upload, Search, FileText, Tag, Plus } from 'lucide-react';
-import {
-    DEFAULT_DEPARTMENTS,
-    DEFAULT_DOCUMENT_TYPES,
-    stringifyMetadata,
-    parseMetadata,
-    type KnowledgeNoteMetadata
-} from '@/lib/types/knowledge-base';
 
 interface Document {
     id: string;
     originalName: string;
     fileSize: number;
+}
+
+interface Department {
+    id: string;
+    name: string;
+    abbreviation?: string;
+    icon?: string;
+    color?: string;
+}
+
+interface DocumentType {
+    id: string;
+    name: string;
+    icon?: string;
+    color?: string;
 }
 
 interface KnowledgeNoteModalProps {
@@ -26,8 +34,8 @@ interface KnowledgeNoteModalProps {
 export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: KnowledgeNoteModalProps) {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [department, setDepartment] = useState('');
-    const [documentType, setDocumentType] = useState('');
+    const [departmentId, setDepartmentId] = useState('');
+    const [documentTypeId, setDocumentTypeId] = useState('');
     const [formatType, setFormatType] = useState('auto');
     const [accessLevel, setAccessLevel] = useState<string[]>(['public', 'student', 'member', 'chairperson']);
     const [tags, setTags] = useState<string[]>([]);
@@ -35,6 +43,8 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
     const [linkedDocIds, setLinkedDocIds] = useState<string[]>([]);
     const [searchDocQuery, setSearchDocQuery] = useState('');
     const [availableDocs, setAvailableDocs] = useState<Document[]>([]);
+    const [departments, setDepartments] = useState<Department[]>([]);
+    const [documentTypes, setDocumentTypes] = useState<DocumentType[]>([]);
     const [showDocSearch, setShowDocSearch] = useState(false);
     const [saving, setSaving] = useState(false);
 
@@ -45,26 +55,28 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
         }
     }, [noteId]);
 
-    // Load available documents
+    // Load data
     useEffect(() => {
-        loadDocuments();
-    }, []);
+        if (isOpen) {
+            loadDocuments();
+            loadDepartments();
+            loadDocumentTypes();
+        }
+    }, [isOpen]);
 
     const loadNote = async () => {
         try {
             const res = await fetch(`/api/admin/knowledge/${noteId}`);
             if (res.ok) {
                 const note = await res.json();
-                const metadata = parseMetadata(note.category);
-
                 setTitle(note.title);
                 setContent(note.content);
-                setDepartment(metadata.department || '');
-                setDocumentType(metadata.documentType || '');
+                setDepartmentId(note.departmentId || '');
+                setDocumentTypeId(note.documentTypeId || '');
                 setFormatType(note.formatType);
                 setAccessLevel(note.accessLevel);
-                setTags(metadata.tags || []);
-                setLinkedDocIds(metadata.linkedDocIds || []);
+                setTags(note.tags || []);
+                setLinkedDocIds(note.linkedDocuments?.map((d: any) => d.id) || []);
             }
         } catch (error) {
             console.error('Error loading note:', error);
@@ -80,6 +92,30 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
             }
         } catch (error) {
             console.error('Error loading documents:', error);
+        }
+    };
+
+    const loadDepartments = async () => {
+        try {
+            const res = await fetch('/api/admin/departments');
+            if (res.ok) {
+                const data = await res.json();
+                setDepartments(data);
+            }
+        } catch (error) {
+            console.error('Error loading departments:', error);
+        }
+    };
+
+    const loadDocumentTypes = async () => {
+        try {
+            const res = await fetch('/api/admin/document-types');
+            if (res.ok) {
+                const data = await res.json();
+                setDocumentTypes(data);
+            }
+        } catch (error) {
+            console.error('Error loading document types:', error);
         }
     };
 
@@ -100,8 +136,8 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
                 body: JSON.stringify({
                     title,
                     content,
-                    department,
-                    documentType,
+                    departmentId: departmentId || null,
+                    documentTypeId: documentTypeId || null,
                     tags,
                     linkedDocIds,
                     formatType,
@@ -202,17 +238,22 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
                                 Department
                             </label>
                             <select
-                                value={department}
-                                onChange={(e) => setDepartment(e.target.value)}
+                                value={departmentId}
+                                onChange={(e) => setDepartmentId(e.target.value)}
                                 className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-blue-500"
                             >
                                 <option value="">Select Department</option>
-                                {DEFAULT_DEPARTMENTS.map(dept => (
-                                    <option key={dept.name} value={dept.name}>
+                                {departments.map(dept => (
+                                    <option key={dept.id} value={dept.id}>
                                         {dept.icon} {dept.name}
                                     </option>
                                 ))}
                             </select>
+                            {departments.length === 0 && (
+                                <p className="text-xs text-slate-500 mt-1">
+                                    No departments yet. Add one in settings.
+                                </p>
+                            )}
                         </div>
 
                         <div>
@@ -220,17 +261,22 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
                                 Document Type
                             </label>
                             <select
-                                value={documentType}
-                                onChange={(e) => setDocumentType(e.target.value)}
+                                value={documentTypeId}
+                                onChange={(e) => setDocumentTypeId(e.target.value)}
                                 className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-blue-500"
                             >
                                 <option value="">Select Type</option>
-                                {DEFAULT_DOCUMENT_TYPES.map(type => (
-                                    <option key={type.name} value={type.name}>
+                                {documentTypes.map(type => (
+                                    <option key={type.id} value={type.id}>
                                         {type.icon} {type.name}
                                     </option>
                                 ))}
                             </select>
+                            {documentTypes.length === 0 && (
+                                <p className="text-xs text-slate-500 mt-1">
+                                    No document types yet. Add one in settings.
+                                </p>
+                            )}
                         </div>
                     </div>
 
