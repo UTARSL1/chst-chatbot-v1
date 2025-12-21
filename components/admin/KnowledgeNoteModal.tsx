@@ -186,6 +186,39 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
         }
     };
 
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, category: 'policy' | 'form') => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('category', category);
+        formData.append('department', 'General'); // Default department
+        formData.append('accessLevel', 'public'); // Default access level
+
+        try {
+            const res = await fetch('/api/admin/documents', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (res.ok) {
+                const newDoc = await res.json();
+                // Auto-link the uploaded document
+                setLinkedDocIds([...linkedDocIds, newDoc.id]);
+                // Refresh documents list
+                loadDocuments();
+                // Clear the input
+                e.target.value = '';
+            } else {
+                alert('Error uploading file');
+            }
+        } catch (error) {
+            console.error('Error uploading file:', error);
+            alert('Error uploading file');
+        }
+    };
+
     const filteredDocs = availableDocs.filter(doc =>
         doc.originalName.toLowerCase().includes(searchDocQuery.toLowerCase())
     );
@@ -322,7 +355,50 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
                             Linked Documents
                         </label>
 
-                        {/* Search Documents */}
+                        {/* Upload Sections */}
+                        <div className="grid grid-cols-2 gap-4 mb-4">
+                            {/* Upload Policy */}
+                            <div className="border-2 border-dashed border-slate-700 rounded-lg p-4 hover:border-blue-500 transition-colors">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <FileText className="w-4 h-4 text-blue-400" />
+                                    <span className="text-sm font-medium text-slate-300">Upload Policy</span>
+                                </div>
+                                <input
+                                    type="file"
+                                    accept=".pdf,.doc,.docx"
+                                    onChange={(e) => handleFileUpload(e, 'policy')}
+                                    className="w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 file:cursor-pointer"
+                                />
+                                <p className="text-xs text-slate-500 mt-1">PDF, DOC, DOCX</p>
+                            </div>
+
+                            {/* Upload Form */}
+                            <div className="border-2 border-dashed border-slate-700 rounded-lg p-4 hover:border-green-500 transition-colors">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <FileText className="w-4 h-4 text-green-400" />
+                                    <span className="text-sm font-medium text-slate-300">Upload Form</span>
+                                </div>
+                                <input
+                                    type="file"
+                                    accept=".pdf,.doc,.docx"
+                                    onChange={(e) => handleFileUpload(e, 'form')}
+                                    className="w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-green-500 file:text-white hover:file:bg-green-600 file:cursor-pointer"
+                                />
+                                <p className="text-xs text-slate-500 mt-1">PDF, DOC, DOCX</p>
+                            </div>
+                        </div>
+
+                        {/* OR Divider */}
+                        <div className="relative mb-4">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-slate-700"></div>
+                            </div>
+                            <div className="relative flex justify-center text-xs">
+                                <span className="px-2 bg-slate-900 text-slate-500">OR LINK EXISTING</span>
+                            </div>
+                        </div>
+
+                        {/* Search Existing Documents */}
                         <div className="relative mb-3">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                             <input
