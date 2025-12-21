@@ -345,24 +345,26 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
                         <label className="block text-sm font-medium text-slate-300 mb-2">
                             Who can see this note?
                         </label>
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-2">
                             {[
-                                { value: 'public', label: 'Public', icon: '🌐', color: 'blue' },
-                                { value: 'student', label: 'Student', icon: '🎓', color: 'green' },
-                                { value: 'member', label: 'Member', icon: '👤', color: 'orange' },
-                                { value: 'chairperson', label: 'Chairperson', icon: '⭐', color: 'purple' },
-                            ].map(({ value, label, icon, color }) => (
-                                <button
+                                { value: 'public', label: 'Public', icon: '🌐' },
+                                { value: 'student', label: 'Student', icon: '🎓' },
+                                { value: 'member', label: 'Member', icon: '👤' },
+                                { value: 'chairperson', label: 'Chairperson', icon: '⭐' },
+                            ].map(({ value, label, icon }) => (
+                                <label
                                     key={value}
-                                    onClick={() => toggleAccessLevel(value)}
-                                    className={`px-4 py-3 rounded-lg border-2 transition-all ${accessLevel.includes(value)
-                                            ? `border-${color}-500 bg-${color}-500/20`
-                                            : 'border-slate-700 bg-slate-800/50'
-                                        }`}
+                                    className="flex items-center gap-3 cursor-pointer"
                                 >
-                                    <span className="text-lg mr-2">{icon}</span>
-                                    <span className="text-white font-medium">{label}</span>
-                                </button>
+                                    <input
+                                        type="checkbox"
+                                        checked={accessLevel.includes(value)}
+                                        onChange={() => toggleAccessLevel(value)}
+                                        className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-blue-500 focus:ring-2 focus:ring-blue-500"
+                                    />
+                                    <span className="text-lg">{icon}</span>
+                                    <span className="text-slate-300">{label}</span>
+                                </label>
                             ))}
                         </div>
                     </div>
