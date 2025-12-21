@@ -2,7 +2,6 @@ import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
-import { stringifyMetadata, type KnowledgeNoteMetadata } from '@/lib/types/knowledge-base';
 
 export async function PATCH(
     req: Request,
@@ -20,8 +19,8 @@ export async function PATCH(
         const {
             title,
             content,
-            department,
-            documentType,
+            departmentId,
+            documentTypeId,
             tags,
             linkedDocIds,
             priority,
@@ -31,29 +30,22 @@ export async function PATCH(
             status
         } = body;
 
-        // Build metadata object if any metadata fields provided
-        let category = body.category; // Keep existing if not updating metadata
-        if (department !== undefined || documentType !== undefined || tags !== undefined || linkedDocIds !== undefined) {
-            const metadata: KnowledgeNoteMetadata = {
-                department,
-                documentType,
-                tags: tags || [],
-                linkedDocIds: linkedDocIds || [],
-            };
-            category = stringifyMetadata(metadata);
-        }
-
         const note = await prisma.knowledgeNote.update({
             where: { id },
             data: {
                 title,
                 content,
-                category,
+                departmentId: departmentId || null,
+                documentTypeId: documentTypeId || null,
+                tags: tags || [],
                 priority,
                 formatType,
                 isActive,
                 accessLevel,
                 status,
+                linkedDocuments: linkedDocIds ? {
+                    set: linkedDocIds.map((docId: string) => ({ id: docId })),
+                } : undefined,
             },
         });
 

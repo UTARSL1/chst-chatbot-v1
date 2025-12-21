@@ -23,15 +23,6 @@ export async function GET() {
                         email: true,
                     },
                 },
-                department: true,
-                documentType: true,
-                linkedDocuments: {
-                    select: {
-                        id: true,
-                        originalName: true,
-                        fileSize: true,
-                    },
-                },
             },
         });
 
@@ -82,11 +73,6 @@ export async function POST(req: Request) {
                 linkedDocuments: linkedDocIds?.length > 0 ? {
                     connect: linkedDocIds.map((id: string) => ({ id })),
                 } : undefined,
-            },
-            include: {
-                department: true,
-                documentType: true,
-                linkedDocuments: true,
             },
         });
 
