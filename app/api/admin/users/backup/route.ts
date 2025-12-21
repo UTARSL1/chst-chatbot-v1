@@ -15,7 +15,7 @@ export async function GET() {
             select: {
                 email: true,
                 name: true,
-                password: true,
+                passwordHash: true,
                 role: true,
                 isApproved: true,
                 isVerified: true,
@@ -26,9 +26,9 @@ export async function GET() {
 
         // Convert to CSV
         const csv = [
-            'email,name,password,role,isApproved,isVerified,recoveryEmail,createdAt',
+            'email,name,passwordHash,role,isApproved,isVerified,recoveryEmail,createdAt',
             ...users.map(u =>
-                `${u.email},"${(u.name || '').replace(/"/g, '""')}",${u.password},${u.role},${u.isApproved},${u.isVerified},${u.recoveryEmail || ''},${u.createdAt.toISOString()}`
+                `${u.email},"${(u.name || '').replace(/"/g, '""')}",${u.passwordHash},${u.role},${u.isApproved},${u.isVerified},${u.recoveryEmail || ''},${u.createdAt.toISOString()}`
             )
         ].join('\n');
 
