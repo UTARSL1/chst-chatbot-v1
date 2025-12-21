@@ -777,11 +777,22 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
         // 6. Prepare context
         let baseContextStrings: string[] = [];
         if (knowledgeNotes.length > 0) {
+            log(`📝 Knowledge Notes being sent to LLM:`);
+            knowledgeNotes.forEach((note, idx) => {
+                log(`  ${idx + 1}. "${note.title}" (${note.content.length} chars)`);
+                log(`     Preview: ${note.content.substring(0, 150)}...`);
+            });
             baseContextStrings.push(
                 knowledgeNotes.map((note) => `[Priority Knowledge: ${note.title}]\n${note.content}`).join('\n\n---\n\n')
             );
         }
         if (relevantChunks.length > 0) {
+            log(`📄 Document Chunks being sent to LLM:`);
+            relevantChunks.forEach((chunk, idx) => {
+                const docName = chunk.metadata.originalName || chunk.metadata.filename;
+                log(`  ${idx + 1}. From "${docName}" (${chunk.content.length} chars, similarity: ${chunk.similarity?.toFixed(3)})`);
+                log(`     Preview: ${chunk.content.substring(0, 200).replace(/\n/g, ' ')}...`);
+            });
             baseContextStrings.push(
                 relevantChunks.map((chunk) => `[Source: ${chunk.metadata.originalName || chunk.metadata.filename}]\n${chunk.content}`).join('\n\n---\n\n')
             );
