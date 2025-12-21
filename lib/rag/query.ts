@@ -981,7 +981,23 @@ ${chatHistoryStr}
 
         while (runLoop && loopCount < 5) {
             const tLoop = Date.now();
-            const activeModel = await getCachedModelConfig();
+
+            // PERFORMANCE OPTIMIZATION: Use GPT-3.5-turbo for staff-only queries
+            // Staff queries are simple (just formatting tool results), so GPT-3.5-turbo is 3-5x faster
+            const onlyStaffTools = localTools.length > 0 && localTools.every(t =>
+                t.function.name === 'utar_staff_search' ||
+                t.function.name === 'utar_resolve_unit' ||
+                t.function.name === 'utar_list_departments'
+            );
+
+            const activeModel = onlyStaffTools
+                ? 'gpt-3.5-turbo'  // Fast model for simple staff queries
+                : await getCachedModelConfig();  // Use configured model (GPT-4) for complex queries
+
+            if (loopCount === 0 && onlyStaffTools) {
+                log(`Using GPT-3.5-turbo for staff-only query (3-5x faster than GPT-4)`);
+            }
+
             const completion = await openai.chat.completions.create({
                 model: activeModel,
                 messages: messages,
