@@ -782,7 +782,9 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
                 log(`  ${idx + 1}. "${note.title}" (${note.content.length} chars)`);
                 log(`     Preview: ${note.content.substring(0, 150)}...`);
             });
+            // CRITICAL: Mark knowledge notes as PRIORITY to ensure LLM uses them first
             baseContextStrings.push(
+                `🔴 PRIORITY KNOWLEDGE (USE THIS FIRST):\n\n` +
                 knowledgeNotes.map((note) => `[Priority Knowledge: ${note.title}]\n${note.content}`).join('\n\n---\n\n')
             );
         }
@@ -950,15 +952,23 @@ Guidelines:
    - NEVER invent form numbers (e.g., "SL-01", "FM-XYZ") if they are not explicitly written in the retrieved context.
    - NEVER invent filenames. Only use filenames that appear in the context.
 
-2. **DOWNLOAD LINKS**:
+2. **DOWNLOAD LINKS (MANDATORY)**:
+   - **CRITICAL**: When answering questions about policies, forms, or procedures, you MUST provide download links to relevant documents.
    - Format: \`[Download Name](download:ExactFilenameFromContext)\`
    - The filename in the link MUST match the filename in the context EXACTLY (case-insensitive).
    - Do not add "Form", "No", or numbers to the filename unless they are actually part of the file's name.
+   - **Example**: If context mentions "POL-DHR-001 Policy on Sponsorship...", provide: \`[Download POL-DHR-001](download:POL-DHR-001 Policy on Sponsorship to Attend Training and Conference .pdf)\`
 
 3. **MISSING DOCUMENTS**:
    - If a form is mentioned (e.g., "Sabbatical Application Form") but the specific PDF file is NOT in your context, 
    - DO NOT create a download link for it.
    - Instead state: "The [Form Name] is required, but I do not have the file for it available for download."
+
+4. **PRIORITY KNOWLEDGE NOTES**:
+   - **CRITICAL**: If you see "🔴 PRIORITY KNOWLEDGE" in the context, you MUST use that information FIRST.
+   - Priority knowledge notes contain the most accurate and up-to-date information.
+   - If there's a conflict between priority knowledge and document chunks, ALWAYS trust the priority knowledge.
+   - When answering, cite the complete information from priority knowledge, don't simplify or generalize.
 `;
         log(`⏱️ Step 6 (System prompt setup): ${((Date.now() - t6) / 1000).toFixed(2)}s`);
 
