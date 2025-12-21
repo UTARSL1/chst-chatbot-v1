@@ -66,6 +66,7 @@ model KnowledgeNote {
   content     String   @db.Text
   category    String?
   priority    String   @default("standard") // standard, high, critical
+  formatType  String   @default("auto")     // auto, table, prose, list, quote, code
   accessLevel String[] @default(["public", "student", "member", "chairperson"]) // Array of roles
   status      String   @default("active")   // processing, active, failed
   isActive    Boolean  @default(true)

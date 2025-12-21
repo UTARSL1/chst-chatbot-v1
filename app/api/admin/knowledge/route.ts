@@ -42,7 +42,7 @@ export async function POST(req: Request) {
         }
 
         const body = await req.json();
-        const { title, content, category, priority, accessLevel } = body;
+        const { title, content, category, priority, formatType, accessLevel } = body;
 
         if (!title || !content) {
             return new NextResponse('Missing required fields', { status: 400 });
@@ -54,6 +54,7 @@ export async function POST(req: Request) {
                 content,
                 category,
                 priority: priority || 'standard',
+                formatType: formatType || 'auto',
                 accessLevel: accessLevel || ['public', 'student', 'member', 'chairperson'],
                 status: 'active', // Direct to active since no processing needed yet
                 createdBy: session.user.id,

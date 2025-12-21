@@ -16,6 +16,7 @@ interface KnowledgeNote {
     content: string;
     category?: string;
     priority: 'standard' | 'high' | 'critical';
+    formatType?: 'auto' | 'table' | 'prose' | 'list' | 'quote' | 'code';
     accessLevel: string[];
     status: 'processing' | 'active' | 'failed';
     isActive: boolean;
@@ -39,6 +40,7 @@ export default function KnowledgeBasePage() {
     const [isEditing, setIsEditing] = useState(false);
     const [currentNote, setCurrentNote] = useState<Partial<KnowledgeNote>>({
         priority: 'standard',
+        formatType: 'auto',
         accessLevel: ['public', 'student', 'member', 'chairperson'],
         isActive: true,
         status: 'active',
@@ -143,6 +145,7 @@ export default function KnowledgeBasePage() {
         setIsEditing(false);
         setCurrentNote({
             priority: 'standard',
+            formatType: 'auto',
             accessLevel: ['public', 'student', 'member', 'chairperson'],
             isActive: true,
             status: 'active'
@@ -232,6 +235,29 @@ export default function KnowledgeBasePage() {
                                         </SelectContent>
                                     </Select>
                                 </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="formatType">Format Type</Label>
+                                <Select
+                                    value={currentNote.formatType || 'auto'}
+                                    onValueChange={(val) => setCurrentNote({ ...currentNote, formatType: val as any })}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select format" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="auto">Auto-detect</SelectItem>
+                                        <SelectItem value="table">Table (for tiered data)</SelectItem>
+                                        <SelectItem value="prose">Prose (plain text)</SelectItem>
+                                        <SelectItem value="list">Bullet List</SelectItem>
+                                        <SelectItem value="quote">Block Quote</SelectItem>
+                                        <SelectItem value="code">Code Block</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <p className="text-xs text-muted-foreground">
+                                    Controls how this note is presented to the AI. Use "Table" for tiered/structured data.
+                                </p>
                             </div>
 
                             <div className="space-y-2">

@@ -16,7 +16,7 @@ export async function PATCH(
 
         const { id } = await context.params;
         const body = await req.json();
-        const { title, content, category, priority, isActive, accessLevel, status } = body;
+        const { title, content, category, priority, formatType, isActive, accessLevel, status } = body;
 
         const note = await prisma.knowledgeNote.update({
             where: { id },
@@ -25,6 +25,7 @@ export async function PATCH(
                 content,
                 category,
                 priority,
+                formatType,
                 isActive,
                 accessLevel,
                 status,
