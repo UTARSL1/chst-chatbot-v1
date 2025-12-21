@@ -148,12 +148,6 @@ export default function AdminUsersPage() {
                     <h1 className="text-3xl font-bold">User Management</h1>
                     <p className="text-muted-foreground mt-1">Manage user approvals and accounts</p>
                 </div>
-                <Button
-                    onClick={() => window.open('/api/admin/users/backup', '_blank')}
-                    className="bg-blue-600 hover:bg-blue-700"
-                >
-                    💾 Backup Users
-                </Button>
             </div>
 
             {/* Tabs */}
