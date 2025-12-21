@@ -783,6 +783,8 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
 
         // 6. Prepare context
         let baseContextStrings: string[] = [];
+        const formattedContentMap = new Map<string, string>(); // Store for response validation
+
         if (knowledgeNotes.length > 0) {
             log(`📝 Knowledge Notes being sent to LLM:`);
             knowledgeNotes.forEach((note, idx) => {
@@ -792,7 +794,6 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
 
             // SYSTEMIC SOLUTION: Format knowledge notes based on admin-selected formatType
             // This respects the admin's choice from the UI instead of auto-detecting
-            const formattedContentMap = new Map<string, string>(); // Store for response validation
             const formattedNotes = knowledgeNotes.map(note => {
                 let formattedContent = note.content;
                 const formatType = (note as any).formatType || 'auto';
