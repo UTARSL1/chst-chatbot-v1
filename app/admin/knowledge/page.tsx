@@ -1,63 +1,74 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import {
+    Plus,
+    Search,
+    Edit,
+    Trash2,
+    FileText,
+    Filter,
+    X
+} from 'lucide-react';
+import {
+    parseMetadata,
+    getDepartmentColor,
+    getDepartmentIcon,
+    getDocumentTypeColor,
+    getDocumentTypeIcon,
+    DEFAULT_DEPARTMENTS,
+    DEFAULT_DOCUMENT_TYPES,
+    type KnowledgeNoteMetadata
+} from '@/lib/types/knowledge-base';
+import KnowledgeNoteModal from '@/components/admin/KnowledgeNoteModal';
 
 interface KnowledgeNote {
     id: string;
     title: string;
     content: string;
-    category?: string;
-    priority: 'standard' | 'high' | 'critical';
-    formatType?: 'auto' | 'table' | 'prose' | 'list' | 'quote' | 'code';
+    category: string | null;
+    priority: string;
+    formatType: string;
     accessLevel: string[];
-    status: 'processing' | 'active' | 'failed';
+    status: string;
     isActive: boolean;
     createdAt: string;
+    updatedAt: string;
     creator: {
         name: string;
         email: string;
     };
 }
 
-const ROLES = [
-    { id: 'public', label: 'Public' },
-    { id: 'student', label: 'Student' },
-    { id: 'member', label: 'Member' },
-    { id: 'chairperson', label: 'Chairperson' },
-];
-
 export default function KnowledgeBasePage() {
+    const { data: session, status } = useSession();
+    const router = useRouter();
     const [notes, setNotes] = useState<KnowledgeNote[]>([]);
     const [loading, setLoading] = useState(true);
-    const [isEditing, setIsEditing] = useState(false);
-    const [currentNote, setCurrentNote] = useState<Partial<KnowledgeNote>>({
-        priority: 'standard',
-        formatType: 'auto',
-        accessLevel: ['public', 'student', 'member', 'chairperson'],
-        isActive: true,
-        status: 'active',
-    });
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filterDepartment, setFilterDepartment] = useState<string>('');
+    const [filterType, setFilterType] = useState<string>('');
+    const [showCreateModal, setShowCreateModal] = useState(false);
 
+    // Redirect if not chairperson
+    useEffect(() => {
+        if (status === 'unauthenticated' || (session && session.user.role !== 'chairperson')) {
+            router.push('/');
+        }
+    }, [session, status, router]);
+
+    // Fetch notes
     useEffect(() => {
         fetchNotes();
     }, []);
 
     const fetchNotes = async () => {
         try {
-            // Add timestamp to prevent caching
-            const response = await fetch(`/api/admin/knowledge?t=${Date.now()}`, {
-                cache: 'no-store'
-            });
-            if (response.ok) {
-                const data = await response.json();
+            const res = await fetch('/api/admin/knowledge');
+            if (res.ok) {
+                const data = await res.json();
                 setNotes(data);
             }
         } catch (error) {
@@ -67,309 +78,223 @@ export default function KnowledgeBasePage() {
         }
     };
 
-    // ... handleSubmit ...
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
+    const deleteNote = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this knowledge note?')) return;
 
         try {
-            const url = isEditing && currentNote.id
-                ? `/api/admin/knowledge/${currentNote.id}`
-                : '/api/admin/knowledge';
-
-            const method = isEditing ? 'PATCH' : 'POST';
-
-            const response = await fetch(url, {
-                method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(currentNote),
-            });
-
-            if (response.ok) {
-                await fetchNotes();
-                resetForm();
-            } else {
-                const errorData = await response.json().catch(() => ({}));
-                alert(`Failed to save note: ${errorData.error || 'Unknown error'}`);
-            }
-        } catch (error) {
-            console.error('Error saving note:', error);
-            alert('Error saving note. Please check console for details.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleDelete = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this note?')) return;
-
-        // Optimistic update: Remove from UI immediately
-        const previousNotes = [...notes];
-        setNotes(notes.filter(n => n.id !== id));
-
-        try {
-            const response = await fetch(`/api/admin/knowledge/${id}`, {
+            const res = await fetch(`/api/admin/knowledge/${id}`, {
                 method: 'DELETE',
             });
 
-            if (!response.ok) {
-                // Revert if failed
-                setNotes(previousNotes);
-                alert('Failed to delete note');
+            if (res.ok) {
+                setNotes(notes.filter(n => n.id !== id));
             }
-            // No need to fetchNotes() if successful, we already updated UI
         } catch (error) {
             console.error('Error deleting note:', error);
-            setNotes(previousNotes);
-            alert('Error deleting note');
         }
     };
 
-    const handleToggleActive = async (note: KnowledgeNote) => {
-        try {
-            const response = await fetch(`/api/admin/knowledge/${note.id}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ isActive: !note.isActive }),
-            });
+    // Filter notes
+    const filteredNotes = notes.filter(note => {
+        const metadata = parseMetadata(note.category);
+        const matchesSearch = note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            note.content.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesDepartment = !filterDepartment || metadata.department === filterDepartment;
+        const matchesType = !filterType || metadata.documentType === filterType;
 
-            if (response.ok) {
-                fetchNotes();
-            }
-        } catch (error) {
-            console.error('Error toggling status:', error);
-        }
-    };
+        return matchesSearch && matchesDepartment && matchesType;
+    });
 
-    const resetForm = () => {
-        setIsEditing(false);
-        setCurrentNote({
-            priority: 'standard',
-            formatType: 'auto',
-            accessLevel: ['public', 'student', 'member', 'chairperson'],
-            isActive: true,
-            status: 'active'
-        });
-    };
-
-    const handleEdit = (note: KnowledgeNote) => {
-        setIsEditing(true);
-        setCurrentNote(note);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-
-    const handleRoleChange = (roleId: string, checked: boolean) => {
-        const currentRoles = currentNote.accessLevel || [];
-        if (checked) {
-            setCurrentNote({ ...currentNote, accessLevel: [...currentRoles, roleId] });
-        } else {
-            setCurrentNote({ ...currentNote, accessLevel: currentRoles.filter(r => r !== roleId) });
-        }
-    };
-
-    const getPriorityColor = (priority: string) => {
-        switch (priority) {
-            case 'critical': return 'bg-red-500/10 text-red-500 border-red-500/20';
-            case 'high': return 'bg-orange-500/10 text-orange-500 border-orange-500/20';
-            default: return 'bg-blue-500/10 text-blue-500 border-blue-500/20';
-        }
-    };
+    if (status === 'loading' || loading) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center">
+                <div className="text-white text-xl">Loading...</div>
+            </div>
+        );
+    }
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Priority Knowledge Base</h1>
-                    <p className="text-muted-foreground">
-                        Manage high-priority notes that override document policies.
+        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-8">
+            <div className="max-w-7xl mx-auto">
+                {/* Header */}
+                <div className="mb-8">
+                    <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">
+                        Knowledge Base
+                    </h1>
+                    <p className="text-slate-400">
+                        Curate authoritative answers with direct document links
                     </p>
                 </div>
-            </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
-                {/* Form Section */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>{isEditing ? 'Edit Note' : 'Add New Note'}</CardTitle>
-                        <CardDescription>
-                            These notes will be given highest priority in RAG responses.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="title">Title</Label>
-                                <Input
-                                    id="title"
-                                    value={currentNote.title || ''}
-                                    onChange={(e) => setCurrentNote({ ...currentNote, title: e.target.value })}
-                                    placeholder="e.g., Sabbatical Leave Update 2024"
-                                    required
-                                />
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="category">Category</Label>
-                                    <Input
-                                        id="category"
-                                        value={currentNote.category || ''}
-                                        onChange={(e) => setCurrentNote({ ...currentNote, category: e.target.value })}
-                                        placeholder="e.g., HR Policy"
-                                    />
-                                </div>
-
-                                <div className="space-y-2">
-                                    <Label htmlFor="priority">Override Level</Label>
-                                    <Select
-                                        value={currentNote.priority as string}
-                                        onValueChange={(val) => setCurrentNote({ ...currentNote, priority: val as any })}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select priority" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="standard">Standard (Equal to Docs)</SelectItem>
-                                            <SelectItem value="high">High (Overrides Docs)</SelectItem>
-                                            <SelectItem value="critical">Critical (Absolute Truth)</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="formatType">Format Type</Label>
-                                <Select
-                                    value={currentNote.formatType || 'auto'}
-                                    onValueChange={(val) => setCurrentNote({ ...currentNote, formatType: val as any })}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select format" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="auto">Auto-detect</SelectItem>
-                                        <SelectItem value="table">Table (for tiered data)</SelectItem>
-                                        <SelectItem value="prose">Prose (plain text)</SelectItem>
-                                        <SelectItem value="list">Bullet List</SelectItem>
-                                        <SelectItem value="quote">Block Quote</SelectItem>
-                                        <SelectItem value="code">Code Block</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <p className="text-xs text-muted-foreground">
-                                    Controls how this note is presented to the AI. Use "Table" for tiered/structured data.
-                                </p>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label>Applies To (Access Level)</Label>
-                                <div className="grid grid-cols-2 gap-2 border rounded-md p-3">
-                                    {ROLES.map((role) => (
-                                        <div key={role.id} className="flex items-center space-x-2">
-                                            <Checkbox
-                                                id={`role-${role.id}`}
-                                                checked={currentNote.accessLevel?.includes(role.id)}
-                                                onCheckedChange={(checked) => handleRoleChange(role.id, checked as boolean)}
-                                            />
-                                            <Label htmlFor={`role-${role.id}`} className="font-normal cursor-pointer">
-                                                {role.label}
-                                            </Label>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="content">Content</Label>
-                                <Textarea
-                                    id="content"
-                                    value={currentNote.content || ''}
-                                    onChange={(e) => setCurrentNote({ ...currentNote, content: e.target.value })}
-                                    placeholder="Enter the full rule, policy update, or knowledge here..."
-                                    className="min-h-[200px]"
-                                    required
-                                />
-                            </div>
-
-                            <div className="flex gap-2">
-                                <Button type="submit" disabled={loading}>
-                                    {loading ? 'Saving...' : (isEditing ? 'Update Note' : 'Create Note')}
-                                </Button>
-                                {isEditing && (
-                                    <Button type="button" variant="outline" onClick={resetForm}>
-                                        Cancel
-                                    </Button>
-                                )}
-                            </div>
-                        </form>
-                    </CardContent>
-                </Card>
-
-                {/* List Section */}
-                <div className="space-y-4">
-                    {notes.map((note) => (
-                        <Card key={note.id} className={!note.isActive ? 'opacity-60' : ''}>
-                            <CardHeader className="pb-2">
-                                <div className="flex justify-between items-start">
-                                    <div className="space-y-1">
-                                        <CardTitle className="text-lg flex items-center gap-2">
-                                            {note.title}
-                                            {!note.isActive && <Badge variant="secondary">Inactive</Badge>}
-                                        </CardTitle>
-                                        <div className="flex gap-2">
-                                            <Badge variant="outline" className={getPriorityColor(note.priority)}>
-                                                {note.priority.toUpperCase()}
-                                            </Badge>
-                                            <Badge variant="outline">
-                                                {note.status.toUpperCase()}
-                                            </Badge>
-                                            {note.category && <Badge variant="secondary">{note.category}</Badge>}
-                                        </div>
-                                    </div>
-                                    <div className="flex gap-2">
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() => handleToggleActive(note)}
-                                        >
-                                            {note.isActive ? 'Deactivate' : 'Activate'}
-                                        </Button>
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() => handleEdit(note)}
-                                        >
-                                            Edit
-                                        </Button>
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            className="text-red-500 hover:text-red-600"
-                                            onClick={() => handleDelete(note.id)}
-                                        >
-                                            Delete
-                                        </Button>
-                                    </div>
-                                </div>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-sm text-muted-foreground line-clamp-3 whitespace-pre-wrap mb-2">
-                                    {note.content}
-                                </p>
-                                <div className="flex justify-between items-center text-xs text-muted-foreground mt-4 border-t pt-2">
-                                    <span>Created by {note.creator.name}</span>
-                                    <span>{new Date(note.createdAt).toLocaleDateString()}</span>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))}
-
-                    {notes.length === 0 && !loading && (
-                        <div className="text-center p-8 text-muted-foreground">
-                            No knowledge notes found. Create one to get started.
+                {/* Search and Filters */}
+                <div className="mb-6 flex gap-4 flex-wrap">
+                    {/* Search */}
+                    <div className="flex-1 min-w-[300px]">
+                        <div className="relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                            <input
+                                type="text"
+                                placeholder="Search knowledge notes..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
+                            />
                         </div>
-                    )}
+                    </div>
+
+                    {/* Department Filter */}
+                    <select
+                        value={filterDepartment}
+                        onChange={(e) => setFilterDepartment(e.target.value)}
+                        className="px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                    >
+                        <option value="">All Departments</option>
+                        {DEFAULT_DEPARTMENTS.map(dept => (
+                            <option key={dept.name} value={dept.name}>
+                                {dept.icon} {dept.name}
+                            </option>
+                        ))}
+                    </select>
+
+                    {/* Type Filter */}
+                    <select
+                        value={filterType}
+                        onChange={(e) => setFilterType(e.target.value)}
+                        className="px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                    >
+                        <option value="">All Types</option>
+                        {DEFAULT_DOCUMENT_TYPES.map(type => (
+                            <option key={type.name} value={type.name}>
+                                {type.icon} {type.name}
+                            </option>
+                        ))}
+                    </select>
+
+                    {/* Create Button */}
+                    <button
+                        onClick={() => setShowCreateModal(true)}
+                        className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-lg font-medium flex items-center gap-2 transition-all"
+                    >
+                        <Plus className="w-5 h-5" />
+                        Create New Note
+                    </button>
                 </div>
+
+                {/* Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
+                        <div className="text-slate-400 text-sm mb-1">Total Notes</div>
+                        <div className="text-2xl font-bold text-white">{notes.length}</div>
+                    </div>
+                    <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
+                        <div className="text-slate-400 text-sm mb-1">Active</div>
+                        <div className="text-2xl font-bold text-green-400">
+                            {notes.filter(n => n.isActive).length}
+                        </div>
+                    </div>
+                    <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
+                        <div className="text-slate-400 text-sm mb-1">Departments</div>
+                        <div className="text-2xl font-bold text-blue-400">
+                            {new Set(notes.map(n => parseMetadata(n.category).department).filter(Boolean)).size}
+                        </div>
+                    </div>
+                    <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
+                        <div className="text-slate-400 text-sm mb-1">Document Types</div>
+                        <div className="text-2xl font-bold text-purple-400">
+                            {new Set(notes.map(n => parseMetadata(n.category).documentType).filter(Boolean)).size}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Notes Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {filteredNotes.map(note => {
+                        const metadata = parseMetadata(note.category);
+                        return (
+                            <div
+                                key={note.id}
+                                className="bg-slate-800/50 border border-slate-700 rounded-lg p-5 hover:border-blue-500/50 transition-all group"
+                            >
+                                {/* Header */}
+                                <div className="flex items-start justify-between mb-3">
+                                    <h3 className="text-lg font-semibold text-white flex-1 line-clamp-2">
+                                        {note.title}
+                                    </h3>
+                                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button
+                                            onClick={() => router.push(`/admin/knowledge/${note.id}`)}
+                                            className="p-1.5 hover:bg-slate-700 rounded text-blue-400"
+                                        >
+                                            <Edit className="w-4 h-4" />
+                                        </button>
+                                        <button
+                                            onClick={() => deleteNote(note.id)}
+                                            className="p-1.5 hover:bg-slate-700 rounded text-red-400"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Badges */}
+                                <div className="flex flex-wrap gap-2 mb-3">
+                                    {metadata.department && (
+                                        <span
+                                            className="px-2 py-1 rounded text-xs font-medium flex items-center gap-1"
+                                            style={{
+                                                backgroundColor: getDepartmentColor(metadata.department) + '20',
+                                                color: getDepartmentColor(metadata.department)
+                                            }}
+                                        >
+                                            {getDepartmentIcon(metadata.department)} {metadata.department}
+                                        </span>
+                                    )}
+                                    {metadata.documentType && (
+                                        <span
+                                            className="px-2 py-1 rounded text-xs font-medium flex items-center gap-1"
+                                            style={{
+                                                backgroundColor: getDocumentTypeColor(metadata.documentType) + '20',
+                                                color: getDocumentTypeColor(metadata.documentType)
+                                            }}
+                                        >
+                                            {getDocumentTypeIcon(metadata.documentType)} {metadata.documentType}
+                                        </span>
+                                    )}
+                                </div>
+
+                                {/* Content Preview */}
+                                <p className="text-slate-400 text-sm line-clamp-2 mb-3">
+                                    {note.content.substring(0, 100)}...
+                                </p>
+
+                                {/* Footer */}
+                                <div className="flex items-center justify-between text-xs text-slate-500">
+                                    <span className="capitalize">{note.formatType}</span>
+                                    <span>{metadata.linkedDocIds?.length || 0} docs</span>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {filteredNotes.length === 0 && (
+                    <div className="text-center py-12 text-slate-400">
+                        <FileText className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                        <p className="text-lg">No knowledge notes found</p>
+                        <p className="text-sm">Create your first note to get started</p>
+                    </div>
+                )}
             </div>
+
+            {/* Create/Edit Modal */}
+            <KnowledgeNoteModal
+                isOpen={showCreateModal}
+                onClose={() => setShowCreateModal(false)}
+                onSave={() => {
+                    fetchNotes();
+                    setShowCreateModal(false);
+                }}
+            />
         </div>
     );
 }
