@@ -2,7 +2,6 @@ import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
-import { stringifyMetadata, type KnowledgeNoteMetadata } from '@/lib/types/knowledge-base';
 
 export async function GET() {
     try {
@@ -22,6 +21,15 @@ export async function GET() {
                     select: {
                         name: true,
                         email: true,
+                    },
+                },
+                department: true,
+                documentType: true,
+                linkedDocuments: {
+                    select: {
+                        id: true,
+                        originalName: true,
+                        fileSize: true,
                     },
                 },
             },
@@ -46,8 +54,8 @@ export async function POST(req: Request) {
         const {
             title,
             content,
-            department,
-            documentType,
+            departmentId,
+            documentTypeId,
             tags,
             linkedDocIds,
             priority,
@@ -59,24 +67,26 @@ export async function POST(req: Request) {
             return new NextResponse('Missing required fields', { status: 400 });
         }
 
-        // Build metadata object
-        const metadata: KnowledgeNoteMetadata = {
-            department,
-            documentType,
-            tags: tags || [],
-            linkedDocIds: linkedDocIds || [],
-        };
-
         const note = await prisma.knowledgeNote.create({
             data: {
                 title,
                 content,
-                category: stringifyMetadata(metadata), // Store metadata as JSON string
+                departmentId: departmentId || null,
+                documentTypeId: documentTypeId || null,
+                tags: tags || [],
                 priority: priority || 'standard',
                 formatType: formatType || 'auto',
                 accessLevel: accessLevel || ['public', 'student', 'member', 'chairperson'],
                 status: 'active',
                 createdBy: session.user.id,
+                linkedDocuments: linkedDocIds?.length > 0 ? {
+                    connect: linkedDocIds.map((id: string) => ({ id })),
+                } : undefined,
+            },
+            include: {
+                department: true,
+                documentType: true,
+                linkedDocuments: true,
             },
         });
 
