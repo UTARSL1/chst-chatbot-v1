@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
 
         // Upload to Supabase Storage
         const storagePath = `${accessLevel}/${filename}`;
-        const { error: uploadError } = await supabase.storage
+        const { error: uploadError } = await supabaseAdmin.storage
             .from('documents')
             .upload(storagePath, buffer, {
                 contentType: 'application/pdf',

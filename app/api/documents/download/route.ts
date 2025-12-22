@@ -58,12 +58,12 @@ export async function GET(req: NextRequest) {
 
         // Generate a public URL
         console.log('[Download] Generating public URL for:', document.filePath);
-        const { data, error } = await supabaseAdmin.storage
+        const { data } = supabaseAdmin.storage
             .from('documents')
             .getPublicUrl(document.filePath);
 
-        if (error || !data || !data.publicUrl) {
-            console.error('Failed to generate public URL', error);
+        if (!data || !data.publicUrl) {
+            console.error('Failed to generate public URL');
             return NextResponse.json(
                 {
                     error: 'Failed to generate download link',
@@ -73,12 +73,12 @@ export async function GET(req: NextRequest) {
             );
         }
 
-        console.log('[Download] Public URL generated:', publicUrlData.publicUrl);
+        console.log('[Download] Public URL generated:', data.publicUrl);
 
         // Return the public URL in JSON format
         return NextResponse.json({
             success: true,
-            downloadUrl: publicUrlData.publicUrl,
+            downloadUrl: data.publicUrl,
             filename: document.originalName
         });
     } catch (error) {
