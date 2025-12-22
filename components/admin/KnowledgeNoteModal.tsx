@@ -167,9 +167,12 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
 
                 if (uploadRes.ok) {
                     const newDoc = await uploadRes.json();
+                    console.log('Policy document uploaded:', newDoc);
                     uploadedDocIds.push(newDoc.id);
                 } else {
-                    throw new Error('Failed to upload policy document');
+                    const errorData = await uploadRes.json();
+                    console.error('Failed to upload policy document:', uploadRes.status, errorData);
+                    throw new Error(`Failed to upload policy document: ${errorData.error || uploadRes.statusText}`);
                 }
             }
 
@@ -188,9 +191,12 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
 
                 if (uploadRes.ok) {
                     const newDoc = await uploadRes.json();
+                    console.log('Form document uploaded:', newDoc);
                     uploadedDocIds.push(newDoc.id);
                 } else {
-                    throw new Error('Failed to upload form document');
+                    const errorData = await uploadRes.json();
+                    console.error('Failed to upload form document:', uploadRes.status, errorData);
+                    throw new Error(`Failed to upload form document: ${errorData.error || uploadRes.statusText}`);
                 }
             }
 
