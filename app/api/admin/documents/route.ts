@@ -37,6 +37,7 @@ export async function POST(req: Request) {
         const buffer = Buffer.from(bytes);
 
         // Upload to Supabase Storage
+        console.log('[Upload] Uploading to Supabase:', { storagePath, fileSize: buffer.length, contentType: file.type });
         const storagePath = `${accessLevel}/${filename}`;
         const { error: uploadError } = await supabaseAdmin.storage
             .from('documents')
@@ -47,7 +48,10 @@ export async function POST(req: Request) {
 
         if (uploadError) {
             console.error('Supabase upload error:', uploadError);
-            return new NextResponse('Failed to upload file to storage', { status: 500 });
+            return NextResponse.json(
+                { error: 'Failed to upload file to storage', details: uploadError.message },
+                { status: 500 }
+            );
         }
 
         // Create document record in database
@@ -69,7 +73,11 @@ export async function POST(req: Request) {
         return NextResponse.json(document);
     } catch (error) {
         console.error('Error uploading document:', error);
-        return new NextResponse('Internal Server Error', { status: 500 });
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        return NextResponse.json(
+            { error: 'Internal Server Error', details: errorMessage },
+            { status: 500 }
+        );
     }
 }
 
