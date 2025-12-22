@@ -60,7 +60,7 @@ export async function POST(req: Request) {
                 mimeType: file.type,
                 category,
                 department,
-                accessLevel,
+                accessLevel: accessLevel as any, // Cast to AccessLevel enum
                 status: 'active',
                 uploadedById: session.user.id,
             },
