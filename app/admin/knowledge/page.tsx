@@ -40,6 +40,11 @@ interface KnowledgeNote {
         name: string;
         email: string;
     };
+    linkedDocuments: Array<{
+        id: string;
+        filename: string;
+        originalName: string;
+    }>;
 }
 
 export default function KnowledgeBasePage() {
@@ -270,7 +275,7 @@ export default function KnowledgeBasePage() {
                                 {/* Footer */}
                                 <div className="flex items-center justify-between text-xs text-slate-500">
                                     <span className="capitalize">{note.formatType}</span>
-                                    <span>{metadata.linkedDocIds?.length || 0} docs</span>
+                                    <span>{note.linkedDocuments?.length || 0} docs</span>
                                 </div>
                             </div>
                         );

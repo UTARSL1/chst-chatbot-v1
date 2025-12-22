@@ -23,6 +23,7 @@ export async function GET() {
                         email: true,
                     },
                 },
+                linkedDocuments: true,
             },
         });
 
