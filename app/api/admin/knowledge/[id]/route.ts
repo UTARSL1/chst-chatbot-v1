@@ -103,6 +103,42 @@ export async function DELETE(
         const { id } = await context.params;
         console.log('Attempting to delete knowledge note:', id);
 
+        // First, fetch the knowledge note with its linked documents
+        const note = await prisma.knowledgeNote.findUnique({
+            where: { id },
+            include: {
+                linkedDocuments: true,
+            },
+        });
+
+        if (!note) {
+            return new NextResponse('Knowledge note not found', { status: 404 });
+        }
+
+        // Delete linked documents from Supabase Storage and database
+        if (note.linkedDocuments && note.linkedDocuments.length > 0) {
+            const { supabaseAdmin } = await import('@/lib/supabase/client');
+
+            for (const doc of note.linkedDocuments) {
+                // Delete file from Supabase Storage
+                const { error: storageError } = await supabaseAdmin.storage
+                    .from('documents')
+                    .remove([doc.filePath]);
+
+                if (storageError) {
+                    console.error('Error deleting file from storage:', storageError);
+                }
+
+                // Delete document record from database
+                await prisma.document.delete({
+                    where: { id: doc.id },
+                });
+
+                console.log('Deleted document:', doc.id, doc.originalName);
+            }
+        }
+
+        // Finally, delete the knowledge note
         await prisma.knowledgeNote.delete({
             where: { id },
         });
