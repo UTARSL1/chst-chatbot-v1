@@ -195,7 +195,7 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
         formData.append('file', file);
         formData.append('category', category);
         formData.append('department', 'General'); // Default department
-        formData.append('accessLevel', 'public'); // Default access level
+        formData.append('accessLevel', 'student'); // Default access level (student = public access)
 
         try {
             const res = await fetch('/api/admin/documents', {
