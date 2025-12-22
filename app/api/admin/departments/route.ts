@@ -55,13 +55,13 @@ export async function POST(req: Request) {
         });
 
         // Upload files if provided
-        let iconUrl: string | undefined;
-        let imageUrl: string | undefined;
+        let iconUrl: string | null = null;
+        let imageUrl: string | null = null;
 
         if (iconFile && iconFile.size > 0) {
             const iconPath = generateFilePath('icons', department.id, iconFile.name);
             const iconResult = await uploadFile('departments', iconFile, iconPath);
-            if (iconResult.success) {
+            if (iconResult.success && iconResult.url) {
                 iconUrl = iconResult.url;
             }
         }
@@ -69,7 +69,7 @@ export async function POST(req: Request) {
         if (imageFile && imageFile.size > 0) {
             const imagePath = generateFilePath('images', department.id, imageFile.name);
             const imageResult = await uploadFile('departments', imageFile, imagePath);
-            if (imageResult.success) {
+            if (imageResult.success && imageResult.url) {
                 imageUrl = imageResult.url;
             }
         }
