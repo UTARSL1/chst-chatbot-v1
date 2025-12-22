@@ -15,6 +15,7 @@ export async function GET(
         }
 
         const { id } = await context.params;
+        console.log('[GET /api/admin/knowledge/[id]] Fetching note:', id);
 
         const note = await prisma.knowledgeNote.findUnique({
             where: { id },
@@ -26,9 +27,11 @@ export async function GET(
         });
 
         if (!note) {
+            console.log('[GET /api/admin/knowledge/[id]] Note not found:', id);
             return new NextResponse('Knowledge note not found', { status: 404 });
         }
 
+        console.log('[GET /api/admin/knowledge/[id]] Note found:', note.title);
         return NextResponse.json(note);
     } catch (error) {
         console.error('Error fetching knowledge note:', error);
