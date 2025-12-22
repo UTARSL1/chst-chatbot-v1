@@ -9,7 +9,7 @@ async function backupUsers() {
             select: {
                 email: true,
                 name: true,
-                password: true,
+                // password: true, // Cannot select password field in Prisma
                 role: true,
                 isApproved: true,
                 isVerified: true,
@@ -20,9 +20,9 @@ async function backupUsers() {
 
         // Convert to CSV
         const csv = [
-            'email,name,password,role,isApproved,isVerified,recoveryEmail,createdAt',
+            'email,name,role,isApproved,isVerified,recoveryEmail,createdAt',
             ...users.map(u =>
-                `${u.email},"${(u.name || '').replace(/"/g, '""')}",${u.password},${u.role},${u.isApproved},${u.isVerified},${u.recoveryEmail || ''},${u.createdAt.toISOString()}`
+                `${u.email},"${(u.name || '').replace(/"/g, '""')}",${u.role},${u.isApproved},${u.isVerified},${u.recoveryEmail || ''},${u.createdAt.toISOString()}`
             )
         ].join('\n');
 
