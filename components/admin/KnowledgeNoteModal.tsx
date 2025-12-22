@@ -80,9 +80,15 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
                 setAccessLevel(note.accessLevel);
                 setTags(note.tags || []);
                 setLinkedDocIds(note.linkedDocuments?.map((d: any) => d.id) || []);
+            } else {
+                console.error('Failed to load note:', res.status, res.statusText);
+                alert(`Failed to load note: ${res.status} ${res.statusText}. The note may have been deleted.`);
+                onClose();
             }
         } catch (error) {
             console.error('Error loading note:', error);
+            alert('Error loading note. Please try again.');
+            onClose();
         }
     };
 
