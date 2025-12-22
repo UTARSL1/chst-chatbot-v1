@@ -134,8 +134,11 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
             const uploadedDocIds = [...linkedDocIds];
 
             // Determine access level for documents (use least restrictive)
-            let documentAccessLevel = 'student';
-            if (accessLevel.includes('student')) {
+            // Priority: public > student > member > chairperson
+            let documentAccessLevel = 'chairperson'; // Default to most restrictive
+            if (accessLevel.includes('public')) {
+                documentAccessLevel = 'student'; // Public maps to student-level access
+            } else if (accessLevel.includes('student')) {
                 documentAccessLevel = 'student';
             } else if (accessLevel.includes('member')) {
                 documentAccessLevel = 'member';
