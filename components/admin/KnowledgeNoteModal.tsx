@@ -48,6 +48,8 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
     const [documentTypes, setDocumentTypes] = useState<DocumentType[]>([]);
     const [showDocSearch, setShowDocSearch] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [pendingPolicyFile, setPendingPolicyFile] = useState<File | null>(null);
+    const [pendingFormFile, setPendingFormFile] = useState<File | null>(null);
 
     // Load note if editing
     useEffect(() => {
@@ -128,6 +130,62 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
 
         setSaving(true);
         try {
+            // Upload pending files first
+            const uploadedDocIds = [...linkedDocIds];
+
+            // Determine access level for documents (use least restrictive)
+            let documentAccessLevel = 'student';
+            if (accessLevel.includes('student')) {
+                documentAccessLevel = 'student';
+            } else if (accessLevel.includes('member')) {
+                documentAccessLevel = 'member';
+            } else if (accessLevel.includes('chairperson')) {
+                documentAccessLevel = 'chairperson';
+            }
+
+            // Upload policy file if selected
+            if (pendingPolicyFile) {
+                const formData = new FormData();
+                formData.append('file', pendingPolicyFile);
+                formData.append('category', 'policy');
+                formData.append('department', 'General');
+                formData.append('accessLevel', documentAccessLevel);
+
+                const uploadRes = await fetch('/api/admin/documents', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (uploadRes.ok) {
+                    const newDoc = await uploadRes.json();
+                    uploadedDocIds.push(newDoc.id);
+                } else {
+                    throw new Error('Failed to upload policy document');
+                }
+            }
+
+            // Upload form file if selected
+            if (pendingFormFile) {
+                const formData = new FormData();
+                formData.append('file', pendingFormFile);
+                formData.append('category', 'form');
+                formData.append('department', 'General');
+                formData.append('accessLevel', documentAccessLevel);
+
+                const uploadRes = await fetch('/api/admin/documents', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (uploadRes.ok) {
+                    const newDoc = await uploadRes.json();
+                    uploadedDocIds.push(newDoc.id);
+                } else {
+                    throw new Error('Failed to upload form document');
+                }
+            }
+
+            // Save the knowledge note with all linked documents
             const url = noteId ? `/api/admin/knowledge/${noteId}` : '/api/admin/knowledge';
             const method = noteId ? 'PATCH' : 'POST';
 
@@ -140,7 +198,7 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
                     departmentId: departmentId || null,
                     documentTypeId: documentTypeId || null,
                     tags,
-                    linkedDocIds,
+                    linkedDocIds: uploadedDocIds,
                     formatType,
                     accessLevel,
                 }),
@@ -149,12 +207,15 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
             if (res.ok) {
                 onSave();
                 onClose();
+                // Clear pending files
+                setPendingPolicyFile(null);
+                setPendingFormFile(null);
             } else {
                 alert('Error saving note');
             }
         } catch (error) {
             console.error('Error saving note:', error);
-            alert('Error saving note');
+            alert(error instanceof Error ? error.message : 'Error saving note');
         } finally {
             setSaving(false);
         }
@@ -187,47 +248,23 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
         }
     };
 
-    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, category: 'policy' | 'form') => {
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>, category: 'policy' | 'form') => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Determine the most restrictive access level from the knowledge note's access settings
-        // Priority: chairperson > member > student > public
-        let documentAccessLevel = 'student'; // Default to student (most permissive)
-        if (accessLevel.includes('chairperson')) {
-            documentAccessLevel = 'chairperson';
-        } else if (accessLevel.includes('member')) {
-            documentAccessLevel = 'member';
-        } else if (accessLevel.includes('student')) {
-            documentAccessLevel = 'student';
+        // Store file in state, don't upload yet
+        if (category === 'policy') {
+            setPendingPolicyFile(file);
+        } else {
+            setPendingFormFile(file);
         }
+    };
 
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('category', category);
-        formData.append('department', 'General'); // Default department
-        formData.append('accessLevel', documentAccessLevel);
-
-        try {
-            const res = await fetch('/api/admin/documents', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (res.ok) {
-                const newDoc = await res.json();
-                // Auto-link the uploaded document
-                setLinkedDocIds([...linkedDocIds, newDoc.id]);
-                // Refresh documents list
-                loadDocuments();
-                // Clear the input
-                e.target.value = '';
-            } else {
-                alert('Error uploading file');
-            }
-        } catch (error) {
-            console.error('Error uploading file:', error);
-            alert('Error uploading file');
+    const removePendingFile = (category: 'policy' | 'form') => {
+        if (category === 'policy') {
+            setPendingPolicyFile(null);
+        } else {
+            setPendingFormFile(null);
         }
     };
 
@@ -377,12 +414,25 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
 
                                 {/* Upload Policy */}
                                 <div className="mb-3">
-                                    <input
-                                        type="file"
-                                        accept=".pdf,.doc,.docx"
-                                        onChange={(e) => handleFileUpload(e, 'policy')}
-                                        className="w-full text-xs text-slate-400 file:mr-2 file:py-2 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 file:cursor-pointer"
-                                    />
+                                    {!pendingPolicyFile ? (
+                                        <input
+                                            type="file"
+                                            accept=".pdf,.doc,.docx"
+                                            onChange={(e) => handleFileSelect(e, 'policy')}
+                                            className="w-full text-xs text-slate-400 file:mr-2 file:py-2 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 file:cursor-pointer"
+                                        />
+                                    ) : (
+                                        <div className="flex items-center justify-between p-2 bg-blue-500/10 border border-blue-500/30 rounded">
+                                            <span className="text-xs text-blue-400 truncate">{pendingPolicyFile.name}</span>
+                                            <button
+                                                type="button"
+                                                onClick={() => removePendingFile('policy')}
+                                                className="ml-2 text-red-400 hover:text-red-300"
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* OR Divider */}
@@ -464,12 +514,25 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
 
                                 {/* Upload Form */}
                                 <div className="mb-3">
-                                    <input
-                                        type="file"
-                                        accept=".pdf,.doc,.docx"
-                                        onChange={(e) => handleFileUpload(e, 'form')}
-                                        className="w-full text-xs text-slate-400 file:mr-2 file:py-2 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-green-500 file:text-white hover:file:bg-green-600 file:cursor-pointer"
-                                    />
+                                    {!pendingFormFile ? (
+                                        <input
+                                            type="file"
+                                            accept=".pdf,.doc,.docx"
+                                            onChange={(e) => handleFileSelect(e, 'form')}
+                                            className="w-full text-xs text-slate-400 file:mr-2 file:py-2 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-green-500 file:text-white hover:file:bg-green-600 file:cursor-pointer"
+                                        />
+                                    ) : (
+                                        <div className="flex items-center justify-between p-2 bg-green-500/10 border border-green-500/30 rounded">
+                                            <span className="text-xs text-green-400 truncate">{pendingFormFile.name}</span>
+                                            <button
+                                                type="button"
+                                                onClick={() => removePendingFile('form')}
+                                                className="ml-2 text-red-400 hover:text-red-300"
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* OR Divider */}
