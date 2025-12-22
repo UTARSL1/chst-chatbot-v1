@@ -28,7 +28,6 @@ export async function PATCH(
 
         const formData = await req.formData();
         const name = formData.get('name') as string;
-        const description = formData.get('description') as string | null;
         const abbreviation = formData.get('abbreviation') as string | null;
         const icon = formData.get('icon') as string | null;
         const color = formData.get('color') as string | null;
@@ -78,7 +77,6 @@ export async function PATCH(
             where: { id },
             data: {
                 name,
-                description,
                 abbreviation,
                 icon,
                 color,
