@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+// Force rebuild - GET route for fetching single knowledge note
 
 export async function GET(
     req: Request,
