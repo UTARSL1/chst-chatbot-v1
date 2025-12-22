@@ -20,43 +20,40 @@ export async function GET() {
             .from('documents')
             .list('', { limit: 5 });
 
-        // Test 2: Get a sample document from database
-        const sampleDoc = await prisma.document.findFirst({
-            select: {
-                id: true,
-                filename: true,
-                originalName: true,
-                filePath: true,
-            }
-        });
-
-        // Test 3: Try to create a signed URL for the sample document
+        // Test 2: Try to create a signed URL for a sample document
         let signedUrlTest = null;
-        if (sampleDoc) {
-            const { data: signedData, error: signedError } = await supabase.storage
+        if (files && files.length > 0) {
+            const sampleFile = files[0]; // Renamed to sampleFile to avoid confusion with DB documents
+            const { data: signedData, error: signedError } = await supabaseAdmin.storage
                 .from('documents')
-                .createSignedUrl(sampleDoc.filePath, 60);
+                .createSignedUrl(sampleFile.name, 60);
 
-            signedUrlTest = {
-                success: !!signedData,
-                error: signedError?.message,
-                url: signedData?.signedUrl?.substring(0, 100) + '...',
-            };
+            if (signedError) {
+                console.error('Signed URL error:', signedError);
+                signedUrlTest = { success: false, error: signedError.message };
+            } else {
+                signedUrlTest = { success: true, url: signedData?.signedUrl?.substring(0, 100) + '...' };
+            }
         }
 
+        // Get database documents
+        const dbDocuments = await prisma.document.findMany({
+            take: 5,
+            orderBy: { uploadedAt: 'desc' }
+        });
+
         return NextResponse.json({
-            bucketListTest: {
-                success: !listError,
-                error: listError?.message,
-                fileCount: files?.length || 0,
-                files: files?.slice(0, 3).map(f => f.name) || [],
+            supabaseStorage: {
+                listError: listError ? listError.message : null,
+                filesCount: files ? files.length : 0,
+                files: files ? files.map((f: any) => f.name) : [],
+                signedUrlTest
             },
-            sampleDocument: sampleDoc ? {
-                id: sampleDoc.id,
-                filename: sampleDoc.filename,
-                filePath: sampleDoc.filePath,
-            } : 'No documents in database',
-            signedUrlTest,
+            dbDocuments: dbDocuments.length > 0 ? dbDocuments.map(doc => ({
+                id: doc.id,
+                filename: doc.filename,
+                filePath: doc.filePath,
+            })) : 'No documents in database',
         });
     } catch (error: any) {
         return NextResponse.json({
