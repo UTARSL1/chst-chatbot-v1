@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { v4 as uuidv4 } from 'uuid';
 import { prisma } from '@/lib/db';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/client';
 import { extractTextFromPDF } from '@/lib/rag/pdfProcessor';
 import { chunkText, cleanText, generateEmbeddings } from '@/lib/rag/embeddings';
 import { storeDocumentChunks, deleteDocumentVectors } from '@/lib/rag/vectorStore';
@@ -303,12 +303,12 @@ export async function DELETE(req: NextRequest) {
         // 2. Delete file from Supabase Storage
         try {
             console.log(`[Delete] Deleting file from Supabase: ${document.filePath}`);
-            const { error: deleteError } = await supabase.storage
+            const { data, error } = await supabaseAdmin.storage
                 .from('documents')
                 .remove([document.filePath]);
 
-            if (deleteError) {
-                console.error('[Delete] ⚠️ Error deleting from Supabase Storage:', deleteError);
+            if (error) {
+                console.error('[Delete] ⚠️ Error deleting from Supabase Storage:', error);
                 // Continue - file might already be gone, and vectors are already deleted
             } else {
                 console.log('[Delete] ✅ File deleted from Supabase');

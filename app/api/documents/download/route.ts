@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/client';
 
 export const dynamic = 'force-dynamic';
 
@@ -58,12 +58,12 @@ export async function GET(req: NextRequest) {
 
         // Generate a public URL
         console.log('[Download] Generating public URL for:', document.filePath);
-        const { data: publicUrlData } = supabase.storage
+        const { data, error } = await supabaseAdmin.storage
             .from('documents')
             .getPublicUrl(document.filePath);
 
-        if (!publicUrlData || !publicUrlData.publicUrl) {
-            console.error('Failed to generate public URL');
+        if (error || !data || !data.publicUrl) {
+            console.error('Failed to generate public URL', error);
             return NextResponse.json(
                 {
                     error: 'Failed to generate download link',

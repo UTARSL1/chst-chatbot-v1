@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/client';
 import { prisma } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
@@ -16,7 +16,7 @@ export async function GET() {
         }
 
         // Test 1: List files in the bucket
-        const { data: files, error: listError } = await supabase.storage
+        const { data, error } = await supabaseAdmin.storage
             .from('documents')
             .list('', { limit: 5 });
 
