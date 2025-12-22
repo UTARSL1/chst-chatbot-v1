@@ -56,6 +56,7 @@ export default function KnowledgeBasePage() {
     const [filterDepartment, setFilterDepartment] = useState<string>('');
     const [filterType, setFilterType] = useState<string>('');
     const [showCreateModal, setShowCreateModal] = useState(false);
+    const [selectedNoteId, setSelectedNoteId] = useState<string | undefined>(undefined);
 
     // Redirect if not chairperson
     useEffect(() => {
@@ -227,7 +228,10 @@ export default function KnowledgeBasePage() {
                                     </h3>
                                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                         <button
-                                            onClick={() => router.push(`/admin/knowledge/${note.id}`)}
+                                            onClick={() => {
+                                                setSelectedNoteId(note.id);
+                                                setShowCreateModal(true);
+                                            }}
                                             className="p-1.5 hover:bg-slate-700 rounded text-blue-400"
                                         >
                                             <Edit className="w-4 h-4" />
@@ -294,11 +298,16 @@ export default function KnowledgeBasePage() {
             {/* Create/Edit Modal */}
             <KnowledgeNoteModal
                 isOpen={showCreateModal}
-                onClose={() => setShowCreateModal(false)}
+                onClose={() => {
+                    setShowCreateModal(false);
+                    setSelectedNoteId(undefined);
+                }}
                 onSave={() => {
                     fetchNotes();
                     setShowCreateModal(false);
+                    setSelectedNoteId(undefined);
                 }}
+                noteId={selectedNoteId}
             />
         </div>
     );
