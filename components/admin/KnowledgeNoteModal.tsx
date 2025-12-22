@@ -191,11 +191,22 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
         const file = e.target.files?.[0];
         if (!file) return;
 
+        // Determine the most restrictive access level from the knowledge note's access settings
+        // Priority: chairperson > member > student > public
+        let documentAccessLevel = 'student'; // Default to student (most permissive)
+        if (accessLevel.includes('chairperson')) {
+            documentAccessLevel = 'chairperson';
+        } else if (accessLevel.includes('member')) {
+            documentAccessLevel = 'member';
+        } else if (accessLevel.includes('student')) {
+            documentAccessLevel = 'student';
+        }
+
         const formData = new FormData();
         formData.append('file', file);
         formData.append('category', category);
         formData.append('department', 'General'); // Default department
-        formData.append('accessLevel', 'student'); // Default access level (student = public access)
+        formData.append('accessLevel', documentAccessLevel);
 
         try {
             const res = await fetch('/api/admin/documents', {
