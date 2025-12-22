@@ -1,4 +1,0 @@
-Message: pdfParse is not a function
-Stack: TypeError: pdfParse is not a function
-    at extractTextFromPDF (C:\Users\ychum\.gemini\antigravity\scratch\chst-chatbot-v1\lib\rag\pdfProcessor.ts:18:28)
-    at async test (C:\Users\ychum\.gemini\antigravity\scratch\chst-chatbot-v1\scripts\test-pdf-extraction.ts:34:22)
