@@ -37,8 +37,8 @@ export async function POST(req: Request) {
         const buffer = Buffer.from(bytes);
 
         // Upload to Supabase Storage
-        console.log('[Upload] Uploading to Supabase:', { storagePath, fileSize: buffer.length, contentType: file.type });
         const storagePath = `${accessLevel}/${filename}`;
+        console.log('[Upload] Uploading to Supabase:', { storagePath, fileSize: buffer.length, contentType: file.type });
         const { error: uploadError } = await supabaseAdmin.storage
             .from('documents')
             .upload(storagePath, buffer, {
