@@ -16,7 +16,7 @@ export async function GET() {
         }
 
         // Test 1: List files in the bucket
-        const { data, error } = await supabaseAdmin.storage
+        const { data: files, error: listError } = await supabaseAdmin.storage
             .from('documents')
             .list('', { limit: 5 });
 
