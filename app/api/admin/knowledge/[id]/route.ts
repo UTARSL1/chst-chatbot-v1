@@ -3,6 +3,39 @@ import { NextResponse } from 'next/server';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 
+export async function GET(
+    req: Request,
+    context: { params: Promise<{ id: string }> }
+) {
+    try {
+        const session = await getServerSession(authOptions);
+
+        if (!session || session.user.role !== 'chairperson') {
+            return new NextResponse('Unauthorized', { status: 401 });
+        }
+
+        const { id } = await context.params;
+
+        const note = await prisma.knowledgeNote.findUnique({
+            where: { id },
+            include: {
+                linkedDocuments: true,
+                department: true,
+                documentType: true,
+            },
+        });
+
+        if (!note) {
+            return new NextResponse('Knowledge note not found', { status: 404 });
+        }
+
+        return NextResponse.json(note);
+    } catch (error) {
+        console.error('Error fetching knowledge note:', error);
+        return new NextResponse('Internal Server Error', { status: 500 });
+    }
+}
+
 export async function PATCH(
     req: Request,
     context: { params: Promise<{ id: string }> }
