@@ -61,7 +61,7 @@ export async function POST(req: Request) {
                 category,
                 department,
                 accessLevel: accessLevel as any, // Cast to AccessLevel enum
-                status: 'active',
+                status: 'processing', // Changed from 'active' to match schema
                 uploadedById: session.user.id,
             },
         });
