@@ -51,7 +51,7 @@ export async function PATCH(
             // Upload new icon
             const iconPath = generateFilePath('icons', id, iconFile.name);
             const iconResult = await uploadFile('departments', iconFile, iconPath);
-            if (iconResult.success) {
+            if (iconResult.success && iconResult.url) {
                 iconUrl = iconResult.url;
             }
         }
@@ -69,7 +69,7 @@ export async function PATCH(
             // Upload new image
             const imagePath = generateFilePath('images', id, imageFile.name);
             const imageResult = await uploadFile('departments', imageFile, imagePath);
-            if (imageResult.success) {
+            if (imageResult.success && imageResult.url) {
                 imageUrl = imageResult.url;
             }
         }
