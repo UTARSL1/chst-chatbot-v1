@@ -57,7 +57,7 @@ export async function POST(req: Request) {
                 originalName: file.name,
                 filePath: storagePath,
                 fileSize: file.size,
-                mimeType: file.type,
+                // mimeType: file.type, // Field doesn't exist in schema
                 category,
                 department,
                 accessLevel: accessLevel as any, // Cast to AccessLevel enum
