@@ -66,7 +66,9 @@ model Department {
   name            String   @unique
   abbreviation    String?
   color           String?  // Hex color for UI badges
-  icon            String?  // Emoji or icon name
+  icon            String?  // Emoji or icon name (legacy)
+  iconUrl         String?  // Supabase storage URL for uploaded icon
+  imageUrl        String?  // Supabase storage URL for uploaded image
   isActive        Boolean  @default(true)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -82,7 +84,9 @@ model Department {
 model DocumentType {
   id              String   @id @default(uuid())
   name            String   @unique
-  icon            String?  // Emoji or icon name
+  icon            String?  // Emoji or icon name (legacy)
+  iconUrl         String?  // Supabase storage URL for uploaded icon
+  imageUrl        String?  // Supabase storage URL for uploaded image
   color           String?  // Hex color for UI styling
   isActive        Boolean  @default(true)
   createdAt       DateTime @default(now())

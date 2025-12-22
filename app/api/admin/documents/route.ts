@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
-import { put } from '@vercel/blob';
+import { supabase } from '@/lib/supabase';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(req: Request) {
     try {
@@ -26,16 +27,35 @@ export async function POST(req: Request) {
             return new NextResponse('Invalid category', { status: 400 });
         }
 
-        // Upload to Vercel Blob
-        const blob = await put(file.name, file, {
-            access: 'public',
-        });
+        // Generate unique filename
+        const fileId = uuidv4();
+        const fileExtension = file.name.split('.').pop();
+        const filename = `${fileId}.${fileExtension}`;
+
+        // Convert file to buffer
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+
+        // Upload to Supabase Storage
+        const storagePath = `${accessLevel}/${filename}`;
+        const { error: uploadError } = await supabase.storage
+            .from('documents')
+            .upload(storagePath, buffer, {
+                contentType: file.type,
+                upsert: false,
+            });
+
+        if (uploadError) {
+            console.error('Supabase upload error:', uploadError);
+            return new NextResponse('Failed to upload file to storage', { status: 500 });
+        }
 
         // Create document record in database
         const document = await prisma.document.create({
             data: {
-                filename: blob.url,
+                filename,
                 originalName: file.name,
+                filePath: storagePath,
                 fileSize: file.size,
                 mimeType: file.type,
                 category,

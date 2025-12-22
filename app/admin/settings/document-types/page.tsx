@@ -6,11 +6,16 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
+import FileUpload from '@/components/admin/FileUpload';
 
 interface DocumentType {
     id: string;
     name: string;
     description?: string;
+    icon?: string;
+    color?: string;
+    iconUrl?: string;
+    imageUrl?: string;
     createdAt: Date;
 }
 
@@ -21,7 +26,9 @@ export default function DocumentTypesPage() {
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [editingType, setEditingType] = useState<DocumentType | null>(null);
-    const [formData, setFormData] = useState({ name: '', description: '' });
+    const [formData, setFormData] = useState({ name: '', description: '', icon: '', color: '' });
+    const [iconFile, setIconFile] = useState<File | null>(null);
+    const [imageFile, setImageFile] = useState<File | null>(null);
 
     useEffect(() => {
         if (status === 'unauthenticated') {
@@ -50,11 +57,23 @@ export default function DocumentTypesPage() {
         e.preventDefault();
 
         try {
+            const formDataToSend = new FormData();
+            formDataToSend.append('name', formData.name);
+            formDataToSend.append('description', formData.description);
+            formDataToSend.append('icon', formData.icon);
+            formDataToSend.append('color', formData.color);
+
+            if (iconFile) {
+                formDataToSend.append('iconFile', iconFile);
+            }
+            if (imageFile) {
+                formDataToSend.append('imageFile', imageFile);
+            }
+
             if (editingType) {
                 const response = await fetch(`/api/admin/document-types/${editingType.id}`, {
                     method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData),
+                    body: formDataToSend,
                 });
 
                 if (response.ok) {
@@ -63,8 +82,7 @@ export default function DocumentTypesPage() {
             } else {
                 const response = await fetch('/api/admin/document-types', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData),
+                    body: formDataToSend,
                 });
 
                 if (response.ok) {
@@ -73,7 +91,9 @@ export default function DocumentTypesPage() {
             }
 
             setShowModal(false);
-            setFormData({ name: '', description: '' });
+            setFormData({ name: '', description: '', icon: '', color: '' });
+            setIconFile(null);
+            setImageFile(null);
             setEditingType(null);
             loadDocumentTypes();
         } catch (error) {
@@ -84,7 +104,14 @@ export default function DocumentTypesPage() {
 
     const handleEdit = (type: DocumentType) => {
         setEditingType(type);
-        setFormData({ name: type.name, description: type.description || '' });
+        setFormData({
+            name: type.name,
+            description: type.description || '',
+            icon: type.icon || '',
+            color: type.color || '',
+        });
+        setIconFile(null);
+        setImageFile(null);
         setShowModal(true);
     };
 
@@ -120,7 +147,9 @@ export default function DocumentTypesPage() {
                 <Button
                     onClick={() => {
                         setEditingType(null);
-                        setFormData({ name: '', description: '' });
+                        setFormData({ name: '', description: '', icon: '', color: '' });
+                        setIconFile(null);
+                        setImageFile(null);
                         setShowModal(true);
                     }}
                     className="bg-blue-600 hover:bg-blue-700"
@@ -136,6 +165,7 @@ export default function DocumentTypesPage() {
                         <table className="w-full text-sm">
                             <thead className="text-xs uppercase bg-muted/50 border-b">
                                 <tr>
+                                    <th className="px-6 py-3 text-left">Icon</th>
                                     <th className="px-6 py-3 text-left">Name</th>
                                     <th className="px-6 py-3 text-left">Description</th>
                                     <th className="px-6 py-3 text-left">Created</th>
@@ -145,6 +175,17 @@ export default function DocumentTypesPage() {
                             <tbody>
                                 {documentTypes.map((type) => (
                                     <tr key={type.id} className="border-b hover:bg-muted/50">
+                                        <td className="px-6 py-4">
+                                            {type.iconUrl ? (
+                                                <img src={type.iconUrl} alt={type.name} className="w-8 h-8 object-cover rounded" />
+                                            ) : type.imageUrl ? (
+                                                <img src={type.imageUrl} alt={type.name} className="w-8 h-8 object-cover rounded" />
+                                            ) : type.icon ? (
+                                                <span className="text-2xl">{type.icon}</span>
+                                            ) : (
+                                                <span className="text-muted-foreground">-</span>
+                                            )}
+                                        </td>
                                         <td className="px-6 py-4 font-medium">{type.name}</td>
                                         <td className="px-6 py-4 text-muted-foreground">{type.description || '-'}</td>
                                         <td className="px-6 py-4 text-muted-foreground">
@@ -174,7 +215,7 @@ export default function DocumentTypesPage() {
                                 ))}
                                 {documentTypes.length === 0 && (
                                     <tr>
-                                        <td colSpan={4} className="px-6 py-8 text-center text-muted-foreground">
+                                        <td colSpan={5} className="px-6 py-8 text-center text-muted-foreground">
                                             No document types found. Click "Add Document Type" to create one.
                                         </td>
                                     </tr>
@@ -187,8 +228,8 @@ export default function DocumentTypesPage() {
 
             {/* Modal */}
             {showModal && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-slate-900 rounded-lg p-6 w-full max-w-md">
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto">
+                    <div className="bg-slate-900 rounded-lg p-6 w-full max-w-2xl my-8 max-h-[90vh] overflow-y-auto">
                         <h2 className="text-xl font-bold mb-4">
                             {editingType ? 'Edit Document Type' : 'Add Document Type'}
                         </h2>
@@ -199,26 +240,66 @@ export default function DocumentTypesPage() {
                                     type="text"
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md"
+                                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-white"
                                     required
                                 />
                             </div>
+
                             <div>
                                 <label className="block text-sm font-medium mb-2">Description</label>
                                 <textarea
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md"
+                                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-white"
                                     rows={3}
                                 />
                             </div>
-                            <div className="flex gap-3 justify-end">
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium mb-2">Emoji Icon (fallback)</label>
+                                    <input
+                                        type="text"
+                                        value={formData.icon}
+                                        onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+                                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-white"
+                                        placeholder="📄"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-2">Color (hex)</label>
+                                    <input
+                                        type="text"
+                                        value={formData.color}
+                                        onChange={(e) => setFormData({ ...formData, color: e.target.value })}
+                                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-white"
+                                        placeholder="#10B981"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <FileUpload
+                                    label="Icon Upload"
+                                    onFileSelect={setIconFile}
+                                    currentUrl={editingType?.iconUrl}
+                                />
+                                <FileUpload
+                                    label="Image Upload"
+                                    onFileSelect={setImageFile}
+                                    currentUrl={editingType?.imageUrl}
+                                />
+                            </div>
+
+                            <div className="flex gap-3 justify-end pt-4 border-t border-slate-700">
                                 <Button
                                     type="button"
                                     onClick={() => {
                                         setShowModal(false);
                                         setEditingType(null);
-                                        setFormData({ name: '', description: '' });
+                                        setFormData({ name: '', description: '', icon: '', color: '' });
+                                        setIconFile(null);
+                                        setImageFile(null);
                                     }}
                                     variant="outline"
                                 >

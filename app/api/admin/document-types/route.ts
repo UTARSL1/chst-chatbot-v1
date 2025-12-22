@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+import { uploadFile, generateFilePath } from '@/lib/supabase/storage';
 
 export async function GET() {
     try {
@@ -31,13 +32,18 @@ export async function POST(req: Request) {
             return new NextResponse('Unauthorized', { status: 401 });
         }
 
-        const body = await req.json();
-        const { name, icon, color } = body;
+        const formData = await req.formData();
+        const name = formData.get('name') as string;
+        const icon = formData.get('icon') as string | null;
+        const color = formData.get('color') as string | null;
+        const iconFile = formData.get('iconFile') as File | null;
+        const imageFile = formData.get('imageFile') as File | null;
 
         if (!name) {
             return new NextResponse('Name is required', { status: 400 });
         }
 
+        // Create document type first to get ID
         const documentType = await prisma.documentType.create({
             data: {
                 name,
@@ -45,6 +51,38 @@ export async function POST(req: Request) {
                 color,
             },
         });
+
+        // Upload files if provided
+        let iconUrl: string | undefined;
+        let imageUrl: string | undefined;
+
+        if (iconFile && iconFile.size > 0) {
+            const iconPath = generateFilePath('icons', documentType.id, iconFile.name);
+            const iconResult = await uploadFile('document-types', iconFile, iconPath);
+            if (iconResult.success) {
+                iconUrl = iconResult.url;
+            }
+        }
+
+        if (imageFile && imageFile.size > 0) {
+            const imagePath = generateFilePath('images', documentType.id, imageFile.name);
+            const imageResult = await uploadFile('document-types', imageFile, imagePath);
+            if (imageResult.success) {
+                imageUrl = imageResult.url;
+            }
+        }
+
+        // Update document type with file URLs if uploaded
+        if (iconUrl || imageUrl) {
+            const updatedDocumentType = await prisma.documentType.update({
+                where: { id: documentType.id },
+                data: {
+                    ...(iconUrl && { iconUrl }),
+                    ...(imageUrl && { imageUrl }),
+                },
+            });
+            return NextResponse.json(updatedDocumentType);
+        }
 
         return NextResponse.json(documentType);
     } catch (error) {
