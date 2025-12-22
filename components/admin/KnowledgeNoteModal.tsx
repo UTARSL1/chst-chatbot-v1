@@ -143,7 +143,7 @@ export default function KnowledgeNoteModal({ isOpen, onClose, onSave, noteId }: 
             // Priority: public > student > member > chairperson
             let documentAccessLevel = 'chairperson'; // Default to most restrictive
             if (accessLevel.includes('public')) {
-                documentAccessLevel = 'student'; // Public maps to student-level access
+                documentAccessLevel = 'public'; // Public access - most accessible
             } else if (accessLevel.includes('student')) {
                 documentAccessLevel = 'student';
             } else if (accessLevel.includes('member')) {

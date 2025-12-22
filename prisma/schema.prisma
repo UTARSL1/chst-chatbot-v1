@@ -23,6 +23,7 @@ enum UserRole {
 
 // Document access level enum
 enum AccessLevel {
+  public
   student
   member
   chairperson
