@@ -840,7 +840,14 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
                 // Store formatted content for later reuse
                 formattedContentMap.set(note.title, formattedContent);
 
-                return `[Priority Knowledge: ${note.title}]\n${formattedContent}`;
+                // Add linked documents info if available
+                let linkedDocsInfo = '';
+                if ((note as any).linkedDocuments && Array.isArray((note as any).linkedDocuments) && (note as any).linkedDocuments.length > 0) {
+                    const docNames = (note as any).linkedDocuments.map((doc: any) => doc.originalName).join(', ');
+                    linkedDocsInfo = `\n\n**Related Documents:** ${docNames}`;
+                }
+
+                return `[Priority Knowledge: ${note.title}]${linkedDocsInfo}\n${formattedContent}`;
             });
 
             // Helper function to convert content to markdown table

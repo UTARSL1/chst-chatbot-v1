@@ -1065,25 +1065,13 @@ export default function ChatPage() {
                                             source.documentId && index === self.findIndex(s => s.documentId === source.documentId)
                                         );
 
-                                        // Filter documents to only show those explicitly mentioned in the content
-                                        // We check if the filename or original name appears in the message (case-insensitive)
-                                        const relevantDocs = uniqueDocs.filter(doc => {
-                                            const content = message.content.toLowerCase();
-                                            const filename = (doc.filename || '').toLowerCase();
-                                            const originalName = (doc.originalName || '').toLowerCase();
-
-                                            // Check for exact filename match or significant part of original name
-                                            const nameWithoutExt = originalName.replace(/\.[^/.]+$/, "");
-                                            return content.includes(filename) || content.includes(originalName) || content.includes(nameWithoutExt);
-                                        });
-
-                                        return relevantDocs.length > 0 && (
+                                        return uniqueDocs.length > 0 && (
                                             <div className="mt-4 p-3 bg-slate-800/50 rounded-lg border border-slate-700">
                                                 <p className="text-sm font-semibold text-slate-300 mb-2">
                                                     Referenced Documents:
                                                 </p>
                                                 <div className="space-y-2">
-                                                    {relevantDocs.map((doc, idx) => (
+                                                    {uniqueDocs.map((doc, idx) => (
                                                         <a
                                                             key={idx}
                                                             href="javascript:void(0)"
