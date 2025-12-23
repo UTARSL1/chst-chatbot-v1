@@ -1065,13 +1065,30 @@ export default function ChatPage() {
                                             source.documentId && index === self.findIndex(s => s.documentId === source.documentId)
                                         );
 
-                                        return uniqueDocs.length > 0 && (
+                                        // Filter documents intelligently:
+                                        // 1. Always show documents with high relevance score (0.9+) - these are from knowledge notes
+                                        // 2. For other documents, only show if mentioned in the content
+                                        const relevantDocs = uniqueDocs.filter(doc => {
+                                            // Knowledge note documents have relevanceScore of 0.9
+                                            if (doc.relevanceScore && doc.relevanceScore >= 0.9) {
+                                                return true; // Always show knowledge note documents
+                                            }
+
+                                            // For regular document chunks, check if mentioned in content
+                                            const content = message.content.toLowerCase();
+                                            const filename = (doc.filename || '').toLowerCase();
+                                            const originalName = (doc.originalName || '').toLowerCase();
+                                            const nameWithoutExt = originalName.replace(/\.[^/.]+$/, "");
+                                            return content.includes(filename) || content.includes(originalName) || content.includes(nameWithoutExt);
+                                        });
+
+                                        return relevantDocs.length > 0 && (
                                             <div className="mt-4 p-3 bg-slate-800/50 rounded-lg border border-slate-700">
                                                 <p className="text-sm font-semibold text-slate-300 mb-2">
                                                     Referenced Documents:
                                                 </p>
                                                 <div className="space-y-2">
-                                                    {uniqueDocs.map((doc, idx) => (
+                                                    {relevantDocs.map((doc, idx) => (
                                                         <a
                                                             key={idx}
                                                             href="javascript:void(0)"
