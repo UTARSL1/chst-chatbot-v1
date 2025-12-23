@@ -1295,9 +1295,21 @@ ${chatHistoryStr}
         }));
 
         // Add linked documents from knowledge notes to sources
-        if (knowledgeNotes.length > 0) {
+        // IMPORTANT: Only add documents from notes that were actually used in the response
+        if (knowledgeNotes.length > 0 && finalResponse) {
             log(`Processing ${knowledgeNotes.length} knowledge notes for linked documents...`);
             knowledgeNotes.forEach((note: any) => {
+                // Check if this knowledge note was actually used in the response
+                // by looking for key terms from the note title in the response
+                const responseLower = finalResponse.toLowerCase();
+                const titleWords = note.title.toLowerCase().split(/\s+/).filter((w: string) => w.length > 4);
+                const noteWasUsed = titleWords.some((word: string) => responseLower.includes(word));
+
+                if (!noteWasUsed) {
+                    log(`  ⏭️  Skipping knowledge note "${note.title}" - not used in response`);
+                    return;
+                }
+
                 if (note.linkedDocuments && Array.isArray(note.linkedDocuments)) {
                     log(`  Knowledge note "${note.title}" has ${note.linkedDocuments.length} linked documents`);
                     note.linkedDocuments.forEach((doc: any) => {
