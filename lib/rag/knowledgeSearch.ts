@@ -44,6 +44,7 @@ export async function searchKnowledgeNotes(
                         id: true,
                         filename: true,
                         originalName: true,
+                        accessLevel: true,
                     },
                 },
             },

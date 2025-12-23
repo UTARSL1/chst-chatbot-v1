@@ -1297,7 +1297,7 @@ ${chatHistoryStr}
                         if (!alreadyInSources) {
                             sourcesToEnrich.push({
                                 filename: doc.filename,
-                                accessLevel: 'member', // Default access level
+                                accessLevel: doc.accessLevel || 'member', // Use document's access level
                                 documentId: doc.id,
                                 originalName: doc.originalName,
                                 relevanceScore: 0.9 // High relevance for knowledge note documents
