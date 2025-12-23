@@ -1289,8 +1289,10 @@ ${chatHistoryStr}
 
         // Add linked documents from knowledge notes to sources
         if (knowledgeNotes.length > 0) {
+            log(`Processing ${knowledgeNotes.length} knowledge notes for linked documents...`);
             knowledgeNotes.forEach((note: any) => {
                 if (note.linkedDocuments && Array.isArray(note.linkedDocuments)) {
+                    log(`  Knowledge note "${note.title}" has ${note.linkedDocuments.length} linked documents`);
                     note.linkedDocuments.forEach((doc: any) => {
                         // Check if document is already in sources
                         const alreadyInSources = sourcesToEnrich.some(s => s.documentId === doc.id);
@@ -1302,9 +1304,13 @@ ${chatHistoryStr}
                                 originalName: doc.originalName,
                                 relevanceScore: 0.9 // High relevance for knowledge note documents
                             });
-                            log(`Added linked document from knowledge note "${note.title}": ${doc.originalName}`);
+                            log(`    ✅ Added linked document: ${doc.originalName} (accessLevel: ${doc.accessLevel})`);
+                        } else {
+                            log(`    ⏭️  Skipped (already in sources): ${doc.originalName}`);
                         }
                     });
+                } else {
+                    log(`  Knowledge note "${note.title}" has NO linked documents`);
                 }
             });
         }
