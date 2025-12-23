@@ -1300,36 +1300,49 @@ ${chatHistoryStr}
             log(`Processing ${knowledgeNotes.length} knowledge notes for linked documents...`);
             knowledgeNotes.forEach((note: any) => {
                 // Check if this knowledge note was actually used in the response
-                // by looking for key terms from the note title in the response
+                // by looking for unique content/phrases from the note in the response
                 const responseLower = finalResponse.toLowerCase();
-                const titleWords = note.title.toLowerCase().split(/\s+/).filter((w: string) => w.length > 4);
-                const noteWasUsed = titleWords.some((word: string) => responseLower.includes(word));
+                const contentLower = note.content.toLowerCase();
+
+                // Extract unique phrases (3+ words) from note content
+                const contentPhrases = contentLower
+                    .split(/[.!?\n]+/)
+                    .map((s: string) => s.trim())
+                    .filter((s: string) => s.split(/\s+/).length >= 3)
+                    .slice(0, 5); // Check first 5 phrases
+
+                // Check if any significant phrase from the note appears in response
+                const noteWasUsed = contentPhrases.some((phrase: string) => {
+                    // For phrases, check if at least 60% of words appear in response
+                    const words = phrase.split(/\s+/).filter((w: string) => w.length > 3);
+                    if (words.length === 0) return false;
+                    const matchCount = words.filter((w: string) => responseLower.includes(w)).length;
+                    return (matchCount / words.length) >= 0.6;
+                });
 
                 if (!noteWasUsed) {
-                    log(`  ⏭️  Skipping knowledge note "${note.title}" - not used in response`);
+                    log(`  ⏭️  Skipping knowledge note "${note.title}" - content not used in response`);
                     return;
                 }
 
+                log(`  ✅ Knowledge note "${note.title}" was used in response`);
+
                 if (note.linkedDocuments && Array.isArray(note.linkedDocuments)) {
-                    log(`  Knowledge note "${note.title}" has ${note.linkedDocuments.length} linked documents`);
+                    log(`     Adding ${note.linkedDocuments.length} linked documents`);
                     note.linkedDocuments.forEach((doc: any) => {
                         // Check if document is already in sources
                         const alreadyInSources = sourcesToEnrich.some(s => s.documentId === doc.id);
                         if (!alreadyInSources) {
                             sourcesToEnrich.push({
                                 filename: doc.filename,
-                                accessLevel: doc.accessLevel || 'member', // Use document's access level
+                                accessLevel: doc.accessLevel || 'member',
                                 documentId: doc.id,
                                 originalName: doc.originalName,
-                                relevanceScore: 0.9 // High relevance for knowledge note documents
+                                relevanceScore: 0.9
                             });
-                            log(`    ✅ Added linked document: ${doc.originalName} (accessLevel: ${doc.accessLevel})`);
-                        } else {
-                            log(`    ⏭️  Skipped (already in sources): ${doc.originalName}`);
+                            log(`       ✅ Added: ${doc.originalName}`);
                         }
                     });
-                } else {
-                    log(`  Knowledge note "${note.title}" has NO linked documents`);
                 }
             });
         }
