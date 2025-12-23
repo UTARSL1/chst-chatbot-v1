@@ -1157,7 +1157,7 @@ Guidelines (Dynamic):
 - Current Date: ${dateStr}
 
 Context from CHST policies and forms:
-${(hasStaffTool || hasJcrTool) ? "Not needed - using live data from tools." : (baseContext.length > 0 ? baseContext : "No relevant policy documents found.")}
+${baseContext.length > 0 ? baseContext : "No relevant policy documents found."}
 
 Previous Conversation:
 ${chatHistoryStr}
