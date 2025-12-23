@@ -1287,6 +1287,28 @@ ${chatHistoryStr}
             relevanceScore: (chunk as any).score
         }));
 
+        // Add linked documents from knowledge notes to sources
+        if (knowledgeNotes.length > 0) {
+            knowledgeNotes.forEach((note: any) => {
+                if (note.linkedDocuments && Array.isArray(note.linkedDocuments)) {
+                    note.linkedDocuments.forEach((doc: any) => {
+                        // Check if document is already in sources
+                        const alreadyInSources = sourcesToEnrich.some(s => s.documentId === doc.id);
+                        if (!alreadyInSources) {
+                            sourcesToEnrich.push({
+                                filename: doc.filename,
+                                accessLevel: 'member', // Default access level
+                                documentId: doc.id,
+                                originalName: doc.originalName,
+                                relevanceScore: 0.9 // High relevance for knowledge note documents
+                            });
+                            log(`Added linked document from knowledge note "${note.title}": ${doc.originalName}`);
+                        }
+                    });
+                }
+            });
+        }
+
         // If this was a recency query, ensure the latest document is in sources
         if (isRecencyQuery && latestDocumentId) {
             try {

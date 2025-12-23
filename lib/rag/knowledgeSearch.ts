@@ -39,6 +39,13 @@ export async function searchKnowledgeNotes(
                 priority: true,
                 category: true,
                 formatType: true,
+                linkedDocuments: {
+                    select: {
+                        id: true,
+                        filename: true,
+                        originalName: true,
+                    },
+                },
             },
             orderBy: [
                 // Order by priority first (critical > high > standard)
