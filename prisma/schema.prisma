@@ -369,3 +369,21 @@ model JcrJournalMetric {
   @@index([normalizedTitle, jifYear, category])
   @@map("jcr_journal_metrics")
 }
+
+// Nature Index Institution model
+model NatureIndexInstitution {
+  id              String   @id @default(uuid())
+  position        Int
+  institution     String
+  normalizedName  String   @map("normalized_name") // Lowercase for fuzzy search
+  country         String
+  count           Int
+  share           Decimal  @db.Decimal(10, 2)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@index([normalizedName])
+  @@index([country])
+  @@index([position])
+  @@map("nature_index_institutions")
+}

@@ -597,6 +597,75 @@ You have access to a tool named \`jcr_journal_metric\` which retrieves Journal I
 
 `;
 
+const NATURE_INDEX_SYSTEM_PROMPT = `
+=== NATURE INDEX TOOL ===
+You have access to a tool named \`nature_index_lookup\` which retrieves Nature Index rankings for research institutions worldwide.
+
+### 🧠 When to Use
+Call \`nature_index_lookup\` when the user asks about:
+- Nature Index rankings
+- Institution research output/impact
+- Comparing institutions by research metrics
+- Top institutions in a country
+
+### 🧩 Tool Call Format
+{
+  "query": "institution name (required)",
+  "country": "optional country filter"
+}
+
+### 📊 Response Format
+Always include:
+- **Position**: Global ranking
+- **Count**: Number of articles
+- **Share**: Contribution metric
+- **Country**: Institution's country
+
+### 🎯 Examples
+
+**Example 1 — Single Institution**
+*User*: "What is Harvard's Nature Index ranking?"
+*Tool Call*: \`nature_index_lookup(query="Harvard University")\`
+*Tool Output*:
+\`\`\`json
+{
+  "found": true,
+  "institution": {
+    "position": 2,
+    "institution": "Harvard University",
+    "country": "United States of America (USA)",
+    "count": 3854,
+    "share": 1130.20
+  }
+}
+\`\`\`
+*Assistant Answer*:
+"Harvard University ranks **#2** globally in the Nature Index with:
+- **3,854 articles**
+- **Share: 1,130.20**"
+
+**Example 2 — Comparison**
+*User*: "Compare Nature Index for MIT and Stanford"
+*Tool Call*: Call tool twice for each institution
+*Assistant Answer*: Use a table format:
+| Institution | Rank | Articles | Share |
+|------------|------|----------|-------|
+| MIT | #X | X,XXX | XXX.XX |
+| Stanford | #Y | Y,YYY | YYY.YY |
+
+**Example 3 — Not Found**
+*User*: "What is the Nature Index for Unknown University?"
+*Tool Output*: \`{"found": false, "reason": "Institution not found"}\`
+*Assistant Answer*: "I cannot find this institution in the Nature Index dataset."
+
+### ⚠️ Important Rules
+1. **No Fabrication**: Never guess rankings or metrics
+2. **Exact Match**: Report exactly what the tool returns
+3. **Fuzzy Matching**: The tool handles typos automatically
+4. **No Documents**: Don't suggest policy documents for Nature Index queries
+
+`;
+
 /**
  * Execute a tool call locally (Ported for Vercel/Cloud Support)
  * Now accepts a logger to push internal logs to the debug trace.
@@ -1131,6 +1200,7 @@ Guidelines:
         // Conditionally append tool prompts
         const hasStaffTool = localTools.some(t => t.function.name === 'utar_staff_search');
         const hasJcrTool = localTools.some(t => t.function.name === 'jcr_journal_metric');
+        const hasNatureIndexTool = localTools.some(t => t.function.name === 'nature_index_lookup');
 
         if (hasStaffTool && !baseSystemPrompt.includes('utar_staff_search')) {
             baseSystemPrompt += `\n\n${STAFF_SEARCH_SYSTEM_PROMPT}`;
@@ -1138,6 +1208,10 @@ Guidelines:
 
         if (hasJcrTool && !baseSystemPrompt.includes('jcr_journal_metric')) {
             baseSystemPrompt += `\n\n${JCR_SYSTEM_PROMPT}`;
+        }
+
+        if (hasNatureIndexTool && !baseSystemPrompt.includes('nature_index_lookup')) {
+            baseSystemPrompt += `\n\n${NATURE_INDEX_SYSTEM_PROMPT}`;
         }
 
         // Always append strict document handling rules to prevent hallucinations
