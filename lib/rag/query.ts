@@ -8,7 +8,7 @@ import { getRelatedDocuments } from './suggestions';
 import { searchKnowledgeNotes } from './knowledgeSearch';
 import { resolveUnit, searchStaff, listDepartments } from '@/lib/tools';
 import { getJournalMetricsByTitle, getJournalMetricsByIssn, ensureJcrCacheLoaded } from '@/lib/jcrCache';
-import { getInstitutionByName, ensureNatureIndexCacheLoaded } from '@/lib/natureIndexCache';
+import { getInstitutionByName, getInstitutionsByCountry, ensureNatureIndexCacheLoaded } from '@/lib/natureIndexCache';
 
 // Initialize OpenAI client
 const openai = new OpenAI({
@@ -206,14 +206,14 @@ const NATURE_INDEX_TOOL = {
     type: 'function' as const,
     function: {
         name: 'nature_index_lookup',
-        description: 'Look up Nature Index rankings for research institutions worldwide. Returns position, article count, and share metrics.',
+        description: 'Look up Nature Index rankings for research institutions worldwide. Can search by institution name or get top N institutions by country.',
         parameters: {
             type: 'object',
             properties: {
-                query: { type: 'string', description: 'Institution name (e.g. "Harvard University", "Chinese Academy of Sciences"). Fuzzy matching supported.' },
-                country: { type: 'string', description: 'Optional: Filter by country (e.g. "China", "United States of America (USA)").' }
-            },
-            required: ['query']
+                query: { type: 'string', description: 'Institution name (e.g. "Harvard University", "Chinese Academy of Sciences"). Fuzzy matching supported. Leave empty if using country filter.' },
+                country: { type: 'string', description: 'Filter by country (e.g. "China", "United States of America (USA)", "Malaysia"). Use exact country name as it appears in the dataset.' },
+                limit: { type: 'integer', description: 'Maximum number of results to return when filtering by country (e.g. 5 for top 5). Default: 10.' }
+            }
         }
     }
 };
@@ -750,11 +750,32 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
             // Ensure data is loaded
             await ensureNatureIndexCacheLoaded();
 
-            if (!args.query) {
-                return { found: false, error: 'No institution name provided' };
+            // Case 1: Country filter (get top N institutions by country)
+            if (args.country && !args.query) {
+                const limit = args.limit || 10;
+                const institutions = getInstitutionsByCountry(args.country, limit);
+
+                if (institutions.length === 0) {
+                    return {
+                        found: false,
+                        reason: `No institutions found for country: ${args.country}. Please check the country name.`
+                    };
+                }
+
+                return {
+                    found: true,
+                    institutions: institutions,
+                    count: institutions.length,
+                    country: args.country
+                };
             }
 
-            return getInstitutionByName(args.query);
+            // Case 2: Institution name lookup
+            if (args.query) {
+                return getInstitutionByName(args.query);
+            }
+
+            return { found: false, error: 'Please provide either an institution name (query) or a country filter' };
         }
         return { error: `Unknown tool: ${name}` };
     } catch (error: any) {
