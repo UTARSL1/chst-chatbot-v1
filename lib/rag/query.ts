@@ -1502,6 +1502,28 @@ ${chatHistoryStr}
                 const noteContentLower = note.content.toLowerCase();
                 const responseLower = finalResponse.toLowerCase();
 
+                // FIRST: Check if the note content was actually used in the response
+                // Extract unique phrases (3+ words) from note content
+                const contentPhrases = noteContentLower
+                    .split(/[.!?\n]+/)
+                    .map((s: string) => s.trim())
+                    .filter((s: string) => s.split(/\s+/).length >= 3)
+                    .slice(0, 5); // Check first 5 phrases
+
+                // Check if any significant phrase from the note appears in response
+                const noteWasUsed = contentPhrases.some((phrase: string) => {
+                    // For phrases, check if at least 60% of words appear in response
+                    const words = phrase.split(/\s+/).filter((w: string) => w.length > 3);
+                    if (words.length === 0) return false;
+                    const matchCount = words.filter((w: string) => responseLower.includes(w)).length;
+                    return (matchCount / words.length) >= 0.6;
+                });
+
+                // Skip tier validation if note wasn't actually used
+                if (!noteWasUsed) {
+                    return;
+                }
+
                 // Detect if this is a tiered/structured knowledge note
                 const hasTiers = note.content.match(/→|:|–|-\s*\d+\s*(year|month|day)/gi);
 
