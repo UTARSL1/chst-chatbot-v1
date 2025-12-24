@@ -8,6 +8,7 @@ import { getRelatedDocuments } from './suggestions';
 import { searchKnowledgeNotes } from './knowledgeSearch';
 import { resolveUnit, searchStaff, listDepartments } from '@/lib/tools';
 import { getJournalMetricsByTitle, getJournalMetricsByIssn, ensureJcrCacheLoaded } from '@/lib/jcrCache';
+import { getInstitutionByName, ensureNatureIndexCacheLoaded } from '@/lib/natureIndexCache';
 
 // Initialize OpenAI client
 const openai = new OpenAI({
@@ -158,7 +159,7 @@ const UTAR_STAFF_TOOLS = [
                     department: { type: 'string', description: 'Department name (optional). WARNING: Do not expand acronyms here. usage: department="Department of Computing".' },
                     name: { type: 'string', description: 'Staff member\'s actual name (e.g., "John Smith"). DO NOT use administrative titles like Dean, Head, Director, Chairperson as names.' },
                     expertise: { type: 'string', description: 'Research area/expertise (optional).' },
-                    role: { type: 'string', description: 'Specific administrative role (e.g. "Dean"). REQUIRED for single-person queries to enable fast search. Do not use for "List all" queries.' },
+                    role: { type: 'string', description: 'Specific administrative role (e.g. "Dean", "Head of Department"). REQUIRED when asking for specific administrative positions, even across multiple departments. Enables fast, targeted search. Do not use for "List all staff" queries.' },
                     acronym: { type: 'string', description: 'Exact acronym found in query (e.g. "D3E"). REQUIRED if user query contains an acronym. This ensures correct department resolution.' }
                 },
                 required: ['faculty']
@@ -201,7 +202,23 @@ const JCR_TOOL = {
     }
 };
 
-const AVAILABLE_TOOLS = [...UTAR_STAFF_TOOLS, JCR_TOOL];
+const NATURE_INDEX_TOOL = {
+    type: 'function' as const,
+    function: {
+        name: 'nature_index_lookup',
+        description: 'Look up Nature Index rankings for research institutions worldwide. Returns position, article count, and share metrics.',
+        parameters: {
+            type: 'object',
+            properties: {
+                query: { type: 'string', description: 'Institution name (e.g. "Harvard University", "Chinese Academy of Sciences"). Fuzzy matching supported.' },
+                country: { type: 'string', description: 'Optional: Filter by country (e.g. "China", "United States of America (USA)").' }
+            },
+            required: ['query']
+        }
+    }
+};
+
+const AVAILABLE_TOOLS = [...UTAR_STAFF_TOOLS, JCR_TOOL, NATURE_INDEX_TOOL];
 
 const STAFF_SEARCH_SYSTEM_PROMPT = `
 === UTAR STAFF SEARCH TOOLS ===
@@ -236,9 +253,10 @@ When asked for staff counts across ALL departments in a faculty (e.g., "how many
 - Words like "Dean", "Deputy Dean", "Head", "Director", "Chairperson", "Chair" are ADMINISTRATIVE POSITIONS, NOT people's names.
 - When user asks "who is the Dean of LKCFES" or "who is the Head of Department of DMBE":
   * DO NOT pass "Dean" or "Head" as the "name" parameter
-  * ✅ CRITICAL OPTIMIZATION: You MUST pass the target title (e.g. "Dean") as the "role" parameter for single-person searches (e.g. "Who is the Dean?"). This makes the search 100x faster.
-  * ❌ DO NOT use "role" parameter if user asks to "list all" or "count" staff.
-  * Instead, search by faculty/department only (leave name empty)
+  * ✅ CRITICAL: You MUST ALWAYS pass the target title (e.g. "Dean", "Head of Department") as the "role" parameter when searching for specific administrative positions
+  * This applies even when asking for multiple departments (e.g., "List Head of Department for DMBE, DC, and DCI")
+  * For each department, call the tool with: {acronym: "DMBE", role: "Head of Department"}
+  * ❌ DO NOT use "role" parameter if user asks to "list all" or "count" staff (without specifying a position)
   * The tool will return staff with their administrative posts
   * Then YOU filter/select the person whose administrativePost EXACTLY matches what user asked for
 
@@ -658,6 +676,16 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
             }
 
             return { found: false, error: 'No query or ISSN provided' };
+        }
+        if (name === 'nature_index_lookup') {
+            // Ensure data is loaded
+            await ensureNatureIndexCacheLoaded();
+
+            if (!args.query) {
+                return { found: false, error: 'No institution name provided' };
+            }
+
+            return getInstitutionByName(args.query);
         }
         return { error: `Unknown tool: ${name}` };
     } catch (error: any) {
