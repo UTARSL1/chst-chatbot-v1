@@ -11,7 +11,8 @@ const KNOWN_TOOLS = [
     { name: 'utar_resolve_unit', description: 'Resolve unit acronyms (e.g. CHST) to full names.' },
     { name: 'utar_list_departments', description: 'List all departments in a faculty.' },
     { name: 'utar_staff_search', description: 'Search UTAR internal staff directory.' },
-    { name: 'jcr_journal_metric', description: 'Query JCR Impact Factors and Quartiles.' }
+    { name: 'jcr_journal_metric', description: 'Query JCR Impact Factors and Quartiles.' },
+    { name: 'nature_index_lookup', description: 'Look up Nature Index rankings for research institutions worldwide.' }
 ];
 
 const ALL_ROLES = ['public', 'student', 'member', 'chairperson'];
