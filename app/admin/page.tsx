@@ -13,7 +13,7 @@ export default async function AdminDashboard() {
     });
 
     // Fetch stats directly on the server (parallelized)
-    const [totalUsers, pendingUsers, totalDocuments, totalChats, totalChunks, pineconeStats, chunkComparison, latestFeedback] = await Promise.all([
+    const [totalUsers, pendingUsers, totalDocuments, totalChats, totalChunks, pineconeStats, latestFeedback] = await Promise.all([
         prisma.user.count(),
         prisma.user.count({ where: { isApproved: false } }),
         prisma.document.count(),
@@ -24,48 +24,6 @@ export default async function AdminDashboard() {
         }).then(result => result._sum.chunkCount || 0),
         // Get Pinecone index stats
         pinecone.index(process.env.PINECONE_INDEX_NAME!).describeIndexStats().catch(() => ({ totalRecordCount: 0 })),
-        // Get detailed chunk comparison
-        (async () => {
-            const documents = await prisma.document.findMany({
-                where: { status: 'processed' },
-                select: { id: true, filename: true, originalName: true, chunkCount: true, vectorIds: true }
-            });
-            const index = pinecone.index(process.env.PINECONE_INDEX_NAME!);
-            const comparison: any[] = [];
-
-            for (const doc of documents) {
-                try {
-                    const dbCount = doc.chunkCount || 0;
-                    let pineconeCount = 0;
-
-                    // Use vectorIds to get accurate count
-                    if (doc.vectorIds && Array.isArray(doc.vectorIds) && doc.vectorIds.length > 0) {
-                        try {
-                            // Fetch vectors by ID to verify they exist
-                            const fetchResult = await index.fetch(doc.vectorIds as string[]);
-                            pineconeCount = Object.keys(fetchResult.records || {}).length;
-                        } catch (fetchError) {
-                            console.error(`Error fetching vectors for ${doc.originalName}:`, fetchError);
-                            // Fallback: assume vectorIds count is accurate
-                            pineconeCount = (doc.vectorIds as string[]).length;
-                        }
-                    }
-
-                    if (dbCount !== pineconeCount) {
-                        comparison.push({
-                            id: doc.id,
-                            originalName: doc.originalName,
-                            dbCount,
-                            pineconeCount,
-                            difference: dbCount - pineconeCount
-                        });
-                    }
-                } catch (error) {
-                    console.error(`Error checking ${doc.originalName}:`, error);
-                }
-            }
-            return comparison;
-        })(),
         prisma.feedback.findMany({
             take: 5,
             orderBy: { createdAt: 'desc' },
@@ -87,7 +45,6 @@ export default async function AdminDashboard() {
         totalChats,
         totalChunks,
         pineconeVectors: pineconeStats.totalRecordCount || 0,
-        mismatchedDocs: chunkComparison,
     };
 
     const dashboardCards = [
@@ -190,51 +147,6 @@ export default async function AdminDashboard() {
                     );
                 })}
             </div>
-
-            {/* Mismatch Details Section */}
-            {stats.mismatchedDocs && stats.mismatchedDocs.length > 0 && (
-                <Card className="bg-yellow-900/20 border-yellow-500/30 backdrop-blur-xl">
-                    <CardHeader>
-                        <CardTitle className="text-yellow-400 flex items-center gap-2">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
-                            Chunk Count Mismatches ({stats.mismatchedDocs.length})
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-gray-400 text-sm mb-4">
-                            The following documents have different chunk counts between the database and Pinecone:
-                        </p>
-                        <div className="space-y-2">
-                            {stats.mismatchedDocs.map((doc: any) => (
-                                <div key={doc.id} className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg border border-yellow-500/20">
-                                    <div className="flex-1">
-                                        <p className="text-white font-medium">{doc.originalName}</p>
-                                        <p className="text-xs text-gray-400 mt-1">
-                                            Database: {doc.dbCount} chunks • Pinecone: {doc.pineconeCount} chunks
-                                        </p>
-                                    </div>
-                                    <div className="text-right">
-                                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${doc.difference > 0
-                                            ? 'bg-red-500/20 text-red-300'
-                                            : 'bg-blue-500/20 text-blue-300'
-                                            }`}>
-                                            {doc.difference > 0 ? `+${doc.difference}` : doc.difference} chunks
-                                        </span>
-                                        <p className="text-xs text-gray-500 mt-1">
-                                            {doc.difference > 0 ? 'Missing in Pinecone' : 'Extra in Pinecone'}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                        <p className="text-xs text-gray-500 mt-4">
-                            💡 Tip: Re-upload affected documents to fix mismatches, or use the cleanup tools to remove orphaned vectors.
-                        </p>
-                    </CardContent>
-                </Card>
-            )}
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <Card className="bg-gray-900/50 border-white/10 backdrop-blur-xl">
