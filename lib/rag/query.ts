@@ -917,7 +917,7 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
             }
 
             // Check if we should suppress knowledge notes
-            const toolNames = localTools.map(t => t.function.name);
+            const toolNames = AVAILABLE_TOOLS.map(t => t.function.name);
             const suppressionDecision = shouldSuppressKnowledgeNotes(
                 intentResult.intent,
                 intentResult.confidence,
