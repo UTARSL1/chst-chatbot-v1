@@ -39,6 +39,8 @@ export async function searchKnowledgeNotes(
                 priority: true,
                 category: true,
                 formatType: true,
+                tags: true,
+                updatedAt: true,
                 linkedDocuments: {
                     select: {
                         id: true,
@@ -67,19 +69,31 @@ export async function searchKnowledgeNotes(
         const scoredNotes = notes.map(note => {
             const titleLower = note.title.toLowerCase();
             const contentLower = note.content.toLowerCase();
+            const tagsLower = (note.tags || []).map((tag: string) => tag.toLowerCase());
 
             let score = 0;
             let titleMatches = 0;
             let contentMatches = 0;
+            let tagMatches = 0;
             const matchedWords: string[] = [];
 
-            // Higher weight for title matches
+            // Check each query word
             queryWords.forEach(word => {
+                // Tag match (highest weight - exact match only)
+                if (tagsLower.includes(word)) {
+                    score += 10;
+                    tagMatches++;
+                    matchedWords.push(`TAG:${word}`);
+                }
+
+                // Title match (high weight)
                 if (titleLower.includes(word)) {
                     score += 3;
                     titleMatches++;
                     matchedWords.push(`T:${word}`);
                 }
+
+                // Content match (base weight)
                 if (contentLower.includes(word)) {
                     score += 1;
                     contentMatches++;
@@ -95,9 +109,9 @@ export async function searchKnowledgeNotes(
             }
 
             // Debug logging
-            console.log(`[KnowledgeSearch] "${note.title}": score=${score}, titleMatches=${titleMatches}, contentMatches=${contentMatches}, matched=[${matchedWords.join(', ')}]`);
+            console.log(`[KnowledgeSearch] "${note.title}": score=${score}, tagMatches=${tagMatches}, titleMatches=${titleMatches}, contentMatches=${contentMatches}, matched=[${matchedWords.join(', ')}]`);
 
-            return { ...note, score, titleMatches, contentMatches };
+            return { ...note, score, titleMatches, contentMatches, tagMatches };
         });
 
         // Filter notes with meaningful relevance:
@@ -107,12 +121,29 @@ export async function searchKnowledgeNotes(
         const relevantNotes = scoredNotes
             .filter(note => {
                 const isRelevant = note.titleMatches >= 2 || note.score >= 6;
-                console.log(`[KnowledgeSearch] "${note.title}": ${isRelevant ? 'INCLUDED' : 'FILTERED OUT'} (titleMatches=${note.titleMatches}, score=${note.score})`);
+                console.log(`[KnowledgeSearch] "${note.title}": ${isRelevant ? 'INCLUDED' : 'FILTERED OUT'} (tagMatches=${note.tagMatches}, titleMatches=${note.titleMatches}, score=${note.score})`);
                 return isRelevant;
             })
-            .sort((a, b) => b.score - a.score)
+            .sort((a, b) => {
+                // Primary: Score (descending)
+                if (b.score !== a.score) return b.score - a.score;
+
+                // Tie-breaker 1: Tag matches (exact tag match = strongest signal)
+                if (b.tagMatches !== a.tagMatches) return b.tagMatches - a.tagMatches;
+
+                // Tie-breaker 2: Title matches (more title matches = more relevant)
+                if (b.titleMatches !== a.titleMatches) return b.titleMatches - a.titleMatches;
+
+                // Tie-breaker 3: Priority
+                const priorityOrder: { [key: string]: number } = { critical: 3, high: 2, standard: 1 };
+                const priorityDiff = (priorityOrder[b.priority] || 0) - (priorityOrder[a.priority] || 0);
+                if (priorityDiff !== 0) return priorityDiff;
+
+                // Tie-breaker 4: Most recently updated
+                return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+            })
             .slice(0, limit)
-            .map(({ score, titleMatches, contentMatches, ...note }) => note);
+            .map(({ score, titleMatches, contentMatches, tagMatches, ...note }) => note);
 
         return relevantNotes;
     } catch (error) {
