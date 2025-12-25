@@ -653,7 +653,27 @@ Always include:
 | MIT | #X | X,XXX | XXX.XX |
 | Stanford | #Y | Y,YYY | YYY.YY |
 
-**Example 3 — Not Found**
+**Example 3 — Country Filtering (Top N)**
+*User*: "Which Malaysia universities are in the top 5 of Nature Index?"
+*Tool Call*: \`nature_index_lookup(country="Malaysia", limit=5)\`
+*Tool Output*:
+\`\`\`json
+{
+  "found": true,
+  "institutions": [
+    {"position": 150, "institution": "University of Malaya", "country": "Malaysia", "count": 500, "share": 120.5},
+    {"position": 250, "institution": "Universiti Sains Malaysia", "country": "Malaysia", "count": 350, "share": 85.2}
+  ],
+  "count": 2,
+  "country": "Malaysia"
+}
+\`\`\`
+*Assistant Answer*:
+"Here are the top Malaysian universities in the Nature Index:
+1. University of Malaya - Rank #150 (500 articles, Share: 120.5)
+2. Universiti Sains Malaysia - Rank #250 (350 articles, Share: 85.2)"
+
+**Example 4 — Not Found**
 *User*: "What is the Nature Index for Unknown University?"
 *Tool Output*: \`{"found": false, "reason": "Institution not found"}\`
 *Assistant Answer*: "I cannot find this institution in the Nature Index dataset."
@@ -884,18 +904,46 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
             log(`⏱️ Steps 2-4 (Skipped for staff query): 0.00s`);
             log('  - Detected staff directory query, bypassing RAG for performance');
         } else {
-            // 2-4. PARALLELIZED: Generate embedding + Search knowledge notes + Vector search
+            // 2. INTENT CLASSIFICATION (Fast regex-based)
             const t2 = Date.now();
+            const { classifyQueryIntent, shouldSuppressKnowledgeNotes } = await import('./intentClassification');
+            const intentResult = classifyQueryIntent(effectiveQuery);
+
+            log(`🎯 Intent Classification: ${intentResult.intent.toUpperCase()}`);
+            log(`   Confidence: ${intentResult.confidence}`);
+            log(`   Reasoning: ${intentResult.reasoning}`);
+            if (intentResult.matchedPatterns.length > 0) {
+                log(`   Matched patterns: ${intentResult.matchedPatterns.join(', ')}`);
+            }
+
+            // Check if we should suppress knowledge notes
+            const toolNames = localTools.map(t => t.function.name);
+            const suppressionDecision = shouldSuppressKnowledgeNotes(
+                intentResult.intent,
+                intentResult.confidence,
+                toolNames
+            );
+
+            log(`📋 Knowledge Note Suppression: ${suppressionDecision.suppress ? 'YES' : 'NO'}`);
+            log(`   Reason: ${suppressionDecision.reason}`);
+            log(`   Available tools: ${toolNames.join(', ')}`);
+
+            // 3-4. PARALLELIZED: Generate embedding + Search knowledge notes + Vector search
+            const t3 = Date.now();
 
             [embedding, knowledgeNotes, relevantChunks] = await Promise.all([
                 generateEmbedding(effectiveQuery),
-                searchKnowledgeNotes(effectiveQuery, accessLevels, 3),
+                // Conditionally skip knowledge note search for data queries with tools
+                suppressionDecision.suppress
+                    ? Promise.resolve([])  // Skip knowledge notes
+                    : searchKnowledgeNotes(effectiveQuery, accessLevels, 3),
                 // Vector search needs embedding, so we do it in a nested promise
                 generateEmbedding(effectiveQuery).then(emb => searchSimilarDocuments(emb, accessLevels, 5))
             ]);
 
-            log(`⏱️ Steps 2-4 (Parallel: Embedding + Knowledge + Vector): ${((Date.now() - t2) / 1000).toFixed(2)}s`);
-            log(`  - Found ${knowledgeNotes.length} knowledge notes`);
+            log(`⏱️ Step 2 (Intent Classification): ${((t3 - t2) / 1000).toFixed(2)}s`);
+            log(`⏱️ Steps 3-4 (Parallel: Embedding + Knowledge + Vector): ${((Date.now() - t3) / 1000).toFixed(2)}s`);
+            log(`  - Found ${knowledgeNotes.length} knowledge notes${suppressionDecision.suppress ? ' (suppressed)' : ''}`);
             log(`  - Found ${relevantChunks.length} document chunks`);
         }
 
