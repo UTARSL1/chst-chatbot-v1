@@ -1466,37 +1466,13 @@ ${chatHistoryStr}
         }));
 
         // Add linked documents from knowledge notes to sources
-        // IMPORTANT: Only add documents from notes that were actually used in the response
-        if (knowledgeNotes.length > 0 && finalResponse) {
+        // ROBUST APPROACH: If a knowledge note was retrieved and sent to LLM,
+        // its linked documents are relevant resources regardless of whether
+        // the LLM explicitly used the note content in the response
+        if (knowledgeNotes.length > 0) {
             log(`Processing ${knowledgeNotes.length} knowledge notes for linked documents...`);
             knowledgeNotes.forEach((note: any) => {
-                // Check if this knowledge note was actually used in the response
-                // by looking for unique content/phrases from the note in the response
-                const responseLower = finalResponse.toLowerCase();
-                const contentLower = note.content.toLowerCase();
-
-                // Extract unique phrases (3+ words) from note content
-                const contentPhrases = contentLower
-                    .split(/[.!?\n]+/)
-                    .map((s: string) => s.trim())
-                    .filter((s: string) => s.split(/\s+/).length >= 3)
-                    .slice(0, 5); // Check first 5 phrases
-
-                // Check if any significant phrase from the note appears in response
-                const noteWasUsed = contentPhrases.some((phrase: string) => {
-                    // For phrases, check if at least 60% of words appear in response
-                    const words = phrase.split(/\s+/).filter((w: string) => w.length > 3);
-                    if (words.length === 0) return false;
-                    const matchCount = words.filter((w: string) => responseLower.includes(w)).length;
-                    return (matchCount / words.length) >= 0.6;
-                });
-
-                if (!noteWasUsed) {
-                    log(`  ⏭️  Skipping knowledge note "${note.title}" - content not used in response`);
-                    return;
-                }
-
-                log(`  ✅ Knowledge note "${note.title}" was used in response`);
+                log(`  📋 Knowledge note: "${note.title}"`);
 
                 if (note.linkedDocuments && Array.isArray(note.linkedDocuments)) {
                     log(`     Adding ${note.linkedDocuments.length} linked documents`);
