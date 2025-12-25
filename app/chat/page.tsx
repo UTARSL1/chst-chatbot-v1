@@ -1148,7 +1148,7 @@ export default function ChatPage() {
                                                     You might also need:
                                                 </p>
                                                 <div className="space-y-2">
-                                                    {message.suggestions.map((doc: any, idx: number) => {
+                                                    {sortedSuggestions.map((doc: any, idx: number) => {
                                                         // Determine styling based on category
                                                         const isForm = doc.category === 'form';
 
@@ -1181,8 +1181,8 @@ export default function ChatPage() {
                                                     })}
                                                 </div>
                                             </div>
-                                        )
-                                    }
+                                        );
+                                    })()}
 
                                     {/* Debug Logs Section - Only for Chairperson */}
                                     {session?.user?.role === 'chairperson' && message.logs && message.logs.length > 0 && (
