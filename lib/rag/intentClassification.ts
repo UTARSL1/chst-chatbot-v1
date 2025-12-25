@@ -27,6 +27,33 @@ export function classifyQueryIntent(query: string): IntentClassificationResult {
     const matchedPatterns: string[] = [];
 
     // ========================================
+    // POLICY/GUIDELINE EXEMPTION PATTERNS
+    // ========================================
+    // These queries should ALWAYS use knowledge notes, even if they match data patterns
+    // This prevents false negatives where policy/guideline content is suppressed
+
+    const policyGuidelinePatterns = [
+        /\b(policy|policies|guideline|guidelines|procedure|procedures)\b/i,
+        /\b(score|scoring)\s+(table|criteria|system|rubric|scheme)\b/i,  // "score table", "scoring criteria"
+        /\b(eligibility|requirement|requirements)\b/i,
+        /\b(form|forms|application)\b/i,
+        /\b(service\s+bond|sponsorship|sabbatical|rps)\b/i,
+        /\b(tier|tiers|tiered)\b/i,  // Tiered structures in policies
+    ];
+
+    for (const pattern of policyGuidelinePatterns) {
+        if (pattern.test(queryLower)) {
+            // Immediately return as explanation query (use knowledge notes)
+            return {
+                intent: 'explanation',
+                confidence: 'high',
+                matchedPatterns: [`policy-guideline: ${pattern.source}`],
+                reasoning: 'Policy/guideline query - should use knowledge notes'
+            };
+        }
+    }
+
+    // ========================================
     // DATA QUERY PATTERNS (High Confidence)
     // ========================================
 
@@ -34,8 +61,9 @@ export function classifyQueryIntent(query: string): IntentClassificationResult {
     const rankingPatterns = [
         /\btop\s+\d+/i,                    // "top 5", "top 10"
         /\brank(ing|ed)?\b/i,              // "ranking", "ranked"
-        /\blist\s+(all|the)/i,             // "list all", "list the"
-        /\bshow\s+me\s+(all|the|top)/i,   // "show me all", "show me top"
+        /\blist\s+(all|the)\s+(staff|professors|lecturers|departments)/i,  // "list all staff"
+        /\bshow\s+me\s+(all|the)\s+(staff|professors|lecturers|departments)/i,  // "show me all staff"
+        /\bshow\s+me\s+top\s+\d+/i,        // "show me top 5" (rankings)
     ];
 
     for (const pattern of rankingPatterns) {
