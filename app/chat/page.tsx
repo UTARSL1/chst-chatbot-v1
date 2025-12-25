@@ -1080,6 +1080,13 @@ export default function ChatPage() {
                                             const originalName = (doc.originalName || '').toLowerCase();
                                             const nameWithoutExt = originalName.replace(/\.[^/.]+$/, "");
                                             return content.includes(filename) || content.includes(originalName) || content.includes(nameWithoutExt);
+                                        }).sort((a, b) => {
+                                            // Sort: policy documents first, then form documents
+                                            const aCategory = a.category || 'policy';
+                                            const bCategory = b.category || 'policy';
+
+                                            if (aCategory === bCategory) return 0;
+                                            return aCategory === 'policy' ? -1 : 1;
                                         });
 
                                         return relevantDocs.length > 0 && (
@@ -1125,46 +1132,57 @@ export default function ChatPage() {
                                     })()}
 
                                     {/* Suggestions Section */}
-                                    {message.suggestions && message.suggestions.length > 0 && (
-                                        <div className="mt-3 p-3 bg-purple-900/20 rounded-lg border border-purple-700">
-                                            <p className="text-sm font-semibold text-purple-300 mb-2">
-                                                You might also need:
-                                            </p>
-                                            <div className="space-y-2">
-                                                {message.suggestions.map((doc: any, idx: number) => {
-                                                    // Determine styling based on category
-                                                    const isForm = doc.category === 'form';
+                                    {message.suggestions && message.suggestions.length > 0 && (() => {
+                                        // Sort suggestions: policy first, then form
+                                        const sortedSuggestions = [...message.suggestions].sort((a, b) => {
+                                            const aCategory = a.category || 'policy';
+                                            const bCategory = b.category || 'policy';
 
-                                                    const linkColor = isForm
-                                                        ? 'text-green-400 hover:text-green-300'
-                                                        : 'text-purple-400 hover:text-purple-300';
+                                            if (aCategory === bCategory) return 0;
+                                            return aCategory === 'policy' ? -1 : 1;
+                                        });
 
-                                                    const badgeStyle = isForm
-                                                        ? 'text-xs text-green-300 px-2 py-0.5 bg-green-900/30 border border-green-700/50 rounded'
-                                                        : 'text-xs text-purple-300 px-2 py-0.5 bg-purple-900/30 border border-purple-700/50 rounded';
+                                        return (
+                                            <div className="mt-3 p-3 bg-purple-900/20 rounded-lg border border-purple-700">
+                                                <p className="text-sm font-semibold text-purple-300 mb-2">
+                                                    You might also need:
+                                                </p>
+                                                <div className="space-y-2">
+                                                    {message.suggestions.map((doc: any, idx: number) => {
+                                                        // Determine styling based on category
+                                                        const isForm = doc.category === 'form';
 
-                                                    return (
-                                                        <a
-                                                            key={idx}
-                                                            href="javascript:void(0)"
-                                                            onClick={(e) => handleDownload(doc.documentId, e)}
-                                                            className={`flex items-center gap-2 text-sm ${linkColor} hover:underline transition-colors cursor-pointer`}
-                                                        >
-                                                            <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                            </svg>
-                                                            <span className="flex-1">{doc.originalName || doc.filename}</span>
-                                                            {doc.category && (
-                                                                <span className={badgeStyle}>
-                                                                    {doc.category}
-                                                                </span>
-                                                            )}
-                                                        </a>
-                                                    );
-                                                })}
+                                                        const linkColor = isForm
+                                                            ? 'text-green-400 hover:text-green-300'
+                                                            : 'text-purple-400 hover:text-purple-300';
+
+                                                        const badgeStyle = isForm
+                                                            ? 'text-xs text-green-300 px-2 py-0.5 bg-green-900/30 border border-green-700/50 rounded'
+                                                            : 'text-xs text-purple-300 px-2 py-0.5 bg-purple-900/30 border border-purple-700/50 rounded';
+
+                                                        return (
+                                                            <a
+                                                                key={idx}
+                                                                href="javascript:void(0)"
+                                                                onClick={(e) => handleDownload(doc.documentId, e)}
+                                                                className={`flex items-center gap-2 text-sm ${linkColor} hover:underline transition-colors cursor-pointer`}
+                                                            >
+                                                                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                                </svg>
+                                                                <span className="flex-1">{doc.originalName || doc.filename}</span>
+                                                                {doc.category && (
+                                                                    <span className={badgeStyle}>
+                                                                        {doc.category}
+                                                                    </span>
+                                                                )}
+                                                            </a>
+                                                        );
+                                                    })}
+                                                </div>
                                             </div>
-                                        </div>
-                                    )}
+                                        )
+                                    }
 
                                     {/* Debug Logs Section - Only for Chairperson */}
                                     {session?.user?.role === 'chairperson' && message.logs && message.logs.length > 0 && (
