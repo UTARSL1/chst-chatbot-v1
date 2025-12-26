@@ -74,7 +74,7 @@ function SignInContent() {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
                 </div>
-                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">Welcome to CHST AI Agent {currentVersion}</CardTitle>
+                <CardTitle className="text-2xl font-bold text-white">Welcome to CHST AI Agent {currentVersion}</CardTitle>
                 <CardDescription>Your intelligent assistant for research and administration</CardDescription>
             </CardHeader>
             <form onSubmit={handleSubmit}>
