@@ -100,6 +100,21 @@ export function classifyQueryIntent(query: string): IntentClassificationResult {
         }
     }
 
+    // Pattern 4: Journal lookup queries (Nature Index, JCR)
+    const journalLookupPatterns = [
+        /\b(is|are)\s+.*\s+(in|within|part\s+of|included\s+in)\s+.*\b(nature\s+index|jcr)\b/i,  // "is X in nature index"
+        /\b(nature\s+index|jcr)\s+(journal|list)\b/i,                                                // "nature index journal list"
+        /\b(check|verify|find)\s+.*\s+(nature\s+index|jcr|journal)\b/i,                           // "check if X is in nature index"
+        /\b(journal|journals)\s+.*\s+(tracked|indexed|listed)\b/i,                                  // "journals tracked by nature index"
+        /\b(impact\s+factor|jif|quartile|q1|q2|q3|q4)\b/i,                                          // JCR-specific terms
+    ];
+
+    for (const pattern of journalLookupPatterns) {
+        if (pattern.test(queryLower)) {
+            matchedPatterns.push(`journal-lookup: ${pattern.source}`);
+        }
+    }
+
     // ========================================
     // EXPLANATION QUERY PATTERNS (High Confidence)
     // ========================================
@@ -126,7 +141,7 @@ export function classifyQueryIntent(query: string): IntentClassificationResult {
 
     // Count pattern matches by type
     const dataMatches = matchedPatterns.filter(p =>
-        p.startsWith('ranking:') || p.startsWith('comparison:') || p.startsWith('interrogative-data:')
+        p.startsWith('ranking:') || p.startsWith('comparison:') || p.startsWith('interrogative-data:') || p.startsWith('journal-lookup:')
     ).length;
 
     const explanationMatches = matchedPatterns.filter(p =>
