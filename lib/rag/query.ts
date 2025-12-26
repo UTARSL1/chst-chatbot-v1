@@ -164,7 +164,8 @@ const UTAR_STAFF_TOOLS = [
                     acronym: { type: 'string', description: 'Exact acronym found in query (e.g. "D3E"). REQUIRED if user query contains an acronym. This ensures correct department resolution.' }
                 }
             }
-        },
+        }
+    },
     {
         type: 'function' as const,
         function: {
