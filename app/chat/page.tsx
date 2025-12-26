@@ -1053,6 +1053,15 @@ export default function ChatPage() {
                                                 td: ({ node, ...props }) => (
                                                     <td {...props} className="px-4 py-3 border-t border-slate-700" />
                                                 ),
+                                                hr: ({ node, ...props }) => (
+                                                    <hr {...props} className="my-4 border-t-2 border-slate-600" />
+                                                ),
+                                                strong: ({ node, ...props }) => (
+                                                    <strong {...props} className="font-bold text-white" />
+                                                ),
+                                                em: ({ node, ...props }) => (
+                                                    <em {...props} className="italic" />
+                                                ),
                                             }}
                                         >
                                             {/* Remove backticks around download links for backward compatibility */}
