@@ -9,6 +9,7 @@ import { searchKnowledgeNotes } from './knowledgeSearch';
 import { resolveUnit, searchStaff, listDepartments } from '@/lib/tools';
 import { getJournalMetricsByTitle, getJournalMetricsByIssn, ensureJcrCacheLoaded } from '@/lib/jcrCache';
 import { getInstitutionByName, getInstitutionsByCountry, ensureNatureIndexCacheLoaded } from '@/lib/natureIndexCache';
+import { checkJournalInNatureIndex, ensureNatureIndexJournalCacheLoaded } from '@/lib/natureIndexJournalCache';
 
 // Initialize OpenAI client
 const openai = new OpenAI({
@@ -218,7 +219,22 @@ const NATURE_INDEX_TOOL = {
     }
 };
 
-const AVAILABLE_TOOLS = [...UTAR_STAFF_TOOLS, JCR_TOOL, NATURE_INDEX_TOOL];
+const NATURE_INDEX_JOURNAL_TOOL = {
+    type: 'function' as const,
+    function: {
+        name: 'nature_index_journal_lookup',
+        description: 'Check if a journal is included in the Nature Index list of 145 elite journals. Returns whether the journal is tracked by Nature Index.',
+        parameters: {
+            type: 'object',
+            properties: {
+                journalName: { type: 'string', description: 'Journal name (e.g. "Nature", "Science", "Cell"). Fuzzy matching supported for typos.' }
+            },
+            required: ['journalName']
+        }
+    }
+};
+
+const AVAILABLE_TOOLS = [...UTAR_STAFF_TOOLS, JCR_TOOL, NATURE_INDEX_TOOL, NATURE_INDEX_JOURNAL_TOOL];
 
 const STAFF_SEARCH_SYSTEM_PROMPT = `
 === UTAR STAFF SEARCH TOOLS ===
@@ -686,6 +702,72 @@ Always include:
 
 `;
 
+const NATURE_INDEX_JOURNAL_SYSTEM_PROMPT = `
+=== NATURE INDEX JOURNAL LOOKUP TOOL ===
+You have access to a tool named \`nature_index_journal_lookup\` which checks if a journal is included in the Nature Index list of 145 elite journals.
+
+### 🧠 When to Use
+Call \`nature_index_journal_lookup\` when the user asks:
+- "Is [journal name] in the Nature Index?"
+- "Is [journal name] tracked by Nature Index?"
+- "Does Nature Index include [journal name]?"
+- "Is [journal name] a Nature Index journal?"
+
+### 🧩 Tool Call Format
+{
+  "journalName": "journal name (required)"
+}
+
+### 📊 Response Format
+The tool returns:
+- **found**: true/false
+- **matchedName**: Exact journal name from the database (if found)
+- **confidence**: Match confidence score (0-1)
+
+### 🎯 Examples
+
+**Example 1 — Journal Found**
+*User*: "Is Nature in the Nature Index?"
+*Tool Call*: \`nature_index_journal_lookup(journalName="Nature")\`
+*Tool Output*:
+\`\`\`json
+{
+  "found": true,
+  "matchedName": "Nature",
+  "confidence": 1.0
+}
+\`\`\`
+*Assistant Answer*:
+"Yes, **Nature** is included in the Nature Index list of 145 elite journals."
+
+**Example 2 — Fuzzy Match**
+*User*: "Is Plos Biology tracked?"
+*Tool Call*: \`nature_index_journal_lookup(journalName="Plos Biology")\`
+*Tool Output*:
+\`\`\`json
+{
+  "found": true,
+  "matchedName": "PLOS Biology",
+  "confidence": 0.95
+}
+\`\`\`
+*Assistant Answer*:
+"Yes, **PLOS Biology** is included in the Nature Index."
+
+**Example 3 — Not Found**
+*User*: "Is Random Journal in Nature Index?"
+*Tool Output*: \`{"found": false}\`
+*Assistant Answer*:
+"No, this journal is not included in the Nature Index list of 145 elite journals."
+
+### ⚠️ Important Rules
+1. **No Fabrication**: Only report what the tool returns
+2. **Fuzzy Matching**: The tool handles typos automatically
+3. **Binary Result**: Journals are either included or not - there's no ranking among the 145 journals
+4. **No Documents**: Don't suggest policy documents for journal lookup queries
+
+
+
 /**
  * Execute a tool call locally (Ported for Vercel/Cloud Support)
  * Now accepts a logger to push internal logs to the debug trace.
@@ -708,7 +790,7 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
             // - Searching by acronym (tool will auto-detect faculty from lookup table)
             if ((faculty === 'All' || !faculty) && !hasName && !hasEmail && !hasExpertise && !hasAcronym) {
                 const errorMsg = "Query too broad: Cannot search all staff across UTAR. Please specify a faculty (e.g., 'Lee Kong Chian Faculty of Engineering and Science') or department (e.g., 'Department of Mechatronics and Biomedical Engineering').";
-                if (logger) logger(`[VALIDATION REJECTED] ${errorMsg}`);
+                if (logger) logger(`[VALIDATION REJECTED]${ errorMsg }`);
                 return {
                     error: errorMsg,
                     validationFailed: true,
@@ -717,8 +799,8 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
             }
 
             // Allow department='All' to search entire faculty (needed for Deans, etc.)
-            const searchType = hasEmail ? `email: ${args.email}` : hasName ? `name: ${args.name}` : hasExpertise ? `expertise: ${args.expertise}` : 'faculty-wide';
-            if (logger) logger(`[VALIDATION PASSED] Staff search for faculty '${faculty}' (${searchType})`);
+            const searchType = hasEmail ? `email: ${ args.email } ` : hasName ? `name: ${ args.name } ` : hasExpertise ? `expertise: ${ args.expertise } ` : 'faculty-wide';
+            if (logger) logger(`[VALIDATION PASSED] Staff search for faculty '${faculty}'(${ searchType })`);
 
             // CODE-BASED ACRONYM DETECTION: Auto-correct when LLM provides department name instead of acronym
             // This prevents the LLM from guessing "Department of Electronic Engineering" when user said "D3E"
@@ -737,7 +819,7 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
 
                 for (const [pattern, acronym] of Object.entries(acronymMappings)) {
                     if (dept.includes(pattern)) {
-                        if (logger) logger(`[AUTO-CORRECTION] Detected department name "${args.department}" → Setting acronym="${acronym}"`);
+                        if (logger) logger(`[AUTO - CORRECTION] Detected department name "${args.department}" → Setting acronym = "${acronym}"`);
                         args.acronym = acronym;
                         args.department = undefined; // Clear department to let acronym resolution handle it
                         break;
@@ -779,7 +861,7 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
                 if (institutions.length === 0) {
                     return {
                         found: false,
-                        reason: `No institutions found for country: ${args.country}. Please check the country name.`
+                        reason: `No institutions found for country: ${ args.country }. Please check the country name.`
                     };
                 }
 
@@ -798,10 +880,20 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
 
             return { found: false, error: 'Please provide either an institution name (query) or a country filter' };
         }
-        return { error: `Unknown tool: ${name}` };
+        if (name === 'nature_index_journal_lookup') {
+            // Ensure data is loaded
+            await ensureNatureIndexJournalCacheLoaded();
+
+            if (!args.journalName) {
+                return { found: false, error: 'Journal name is required' };
+            }
+
+            return checkJournalInNatureIndex(args.journalName);
+        }
+        return { error: `Unknown tool: ${ name } ` };
     } catch (error: any) {
-        console.error(`[RAG] Tool execution error (${name}):`, error);
-        if (logger) logger(`Error executing ${name}: ${error.message}`);
+        console.error(`[RAG] Tool execution error(${ name }): `, error);
+        if (logger) logger(`Error executing ${ name }: ${ error.message } `);
         return { error: error.message || 'Internal tool error' };
     }
 }
@@ -813,12 +905,12 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
     const startTime = Date.now(); // Start timer
     const debugLogs: string[] = []; // Capture activity for debugging
     const log = (msg: string) => {
-        console.log(`[RAG] ${msg}`);
+        console.log(`[RAG] ${ msg } `);
         debugLogs.push(msg);
     };
 
     try {
-        log(`Processing query: "${query.query}" for role: ${query.userRole}`);
+        log(`Processing query: "${query.query}" for role: ${ query.userRole } `);
 
         // 1. Contextualize the query (with smart skip for simple questions)
         const t1 = Date.now();
@@ -842,7 +934,7 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
                 content: m.content
             }));
 
-            chatHistoryStr = history.map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n');
+            chatHistoryStr = history.map(m => `${ m.role === 'user' ? 'User' : 'Assistant' }: ${ m.content } `).join('\n');
 
             if (history.length > 0) {
                 // Skip contextualization if query contains known UTAR acronyms
@@ -876,14 +968,14 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
                 //         log(`Contextualized query: "${effectiveQuery}"`);
                 //     }
                 // } else {
-                //     log(`Skipped contextualization (query contains acronym)`);
+                //     log(`Skipped contextualization(query contains acronym)`);
                 // }
-                log(`Skipped contextualization (disabled for performance)`);
+                log(`Skipped contextualization(disabled for performance)`);
             }
         } else if (isSimpleQuestion) {
-            log(`Skipped contextualization (simple standalone question)`);
+            log(`Skipped contextualization(simple standalone question)`);
         }
-        log(`⏱️ Step 1 (Contextualization): ${((Date.now() - t1) / 1000).toFixed(2)}s`);
+        log(`⏱️ Step 1(Contextualization): ${ ((Date.now() - t1) / 1000).toFixed(2) } s`);
 
         // SMART QUERY DETECTION: Skip RAG for staff directory queries
         // These queries will use staff tools, so RAG/knowledge base is not needed
@@ -902,7 +994,7 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
         const accessLevels = getAccessibleLevels(query.userRole);
 
         if (isStaffQuery) {
-            log(`⏱️ Steps 2-4 (Skipped for staff query): 0.00s`);
+            log(`⏱️ Steps 2 - 4(Skipped for staff query): 0.00s`);
             log('  - Detected staff directory query, bypassing RAG for performance');
         } else {
             // 2. INTENT CLASSIFICATION (Fast regex-based)
@@ -910,11 +1002,11 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
             const { classifyQueryIntent, shouldSuppressKnowledgeNotes } = await import('./intentClassification');
             const intentResult = classifyQueryIntent(effectiveQuery);
 
-            log(`🎯 Intent Classification: ${intentResult.intent.toUpperCase()}`);
-            log(`   Confidence: ${intentResult.confidence}`);
-            log(`   Reasoning: ${intentResult.reasoning}`);
+            log(`🎯 Intent Classification: ${ intentResult.intent.toUpperCase() } `);
+            log(`   Confidence: ${ intentResult.confidence } `);
+            log(`   Reasoning: ${ intentResult.reasoning } `);
             if (intentResult.matchedPatterns.length > 0) {
-                log(`   Matched patterns: ${intentResult.matchedPatterns.join(', ')}`);
+                log(`   Matched patterns: ${ intentResult.matchedPatterns.join(', ') } `);
             }
 
             // Check if we should suppress knowledge notes
@@ -925,9 +1017,9 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
                 toolNames
             );
 
-            log(`📋 Knowledge Note Suppression: ${suppressionDecision.suppress ? 'YES' : 'NO'}`);
-            log(`   Reason: ${suppressionDecision.reason}`);
-            log(`   Available tools: ${toolNames.join(', ')}`);
+            log(`📋 Knowledge Note Suppression: ${ suppressionDecision.suppress ? 'YES' : 'NO' } `);
+            log(`   Reason: ${ suppressionDecision.reason } `);
+            log(`   Available tools: ${ toolNames.join(', ') } `);
 
             // 3-4. PARALLELIZED: Generate embedding + Search knowledge notes + Vector search
             const t3 = Date.now();
@@ -942,10 +1034,10 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
                 generateEmbedding(effectiveQuery).then(emb => searchSimilarDocuments(emb, accessLevels, 5))
             ]);
 
-            log(`⏱️ Step 2 (Intent Classification): ${((t3 - t2) / 1000).toFixed(2)}s`);
-            log(`⏱️ Steps 3-4 (Parallel: Embedding + Knowledge + Vector): ${((Date.now() - t3) / 1000).toFixed(2)}s`);
-            log(`  - Found ${knowledgeNotes.length} knowledge notes${suppressionDecision.suppress ? ' (suppressed)' : ''}`);
-            log(`  - Found ${relevantChunks.length} document chunks`);
+            log(`⏱️ Step 2(Intent Classification): ${ ((t3 - t2) / 1000).toFixed(2) } s`);
+            log(`⏱️ Steps 3 - 4(Parallel: Embedding + Knowledge + Vector): ${ ((Date.now() - t3) / 1000).toFixed(2) } s`);
+            log(`  - Found ${ knowledgeNotes.length } knowledge notes${ suppressionDecision.suppress ? ' (suppressed)' : '' } `);
+            log(`  - Found ${ relevantChunks.length } document chunks`);
         }
 
         // 6. Prepare context
@@ -953,10 +1045,10 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
         const formattedContentMap = new Map<string, string>(); // Store for response validation
 
         if (knowledgeNotes.length > 0) {
-            log(`📝 Knowledge Notes being sent to LLM:`);
+            log(`📝 Knowledge Notes being sent to LLM: `);
             knowledgeNotes.forEach((note, idx) => {
-                log(`  ${idx + 1}. "${note.title}" (${note.content.length} chars)`);
-                log(`     FULL CONTENT:\n${note.content}`);
+                log(`  ${ idx + 1 }."${note.title}"(${ note.content.length } chars)`);
+                log(`     FULL CONTENT: \n${ note.content } `);
             });
 
             // SYSTEMIC SOLUTION: Format knowledge notes based on admin-selected formatType
@@ -965,7 +1057,7 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
                 let formattedContent = note.content;
                 const formatType = (note as any).formatType || 'auto';
 
-                log(`🔧 Formatting "${note.title}" as: ${formatType}`);
+                log(`🔧 Formatting "${note.title}" as: ${ formatType } `);
 
                 switch (formatType) {
                     case 'table':
@@ -975,236 +1067,236 @@ export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
 
                     case 'quote':
                         // Wrap in block quote
-                        formattedContent = `> ${note.content.split('\n').join('\n> ')}`;
+                        formattedContent = `> ${ note.content.split('\n').join('\n> ') } `;
                         break;
 
                     case 'code':
                         // Wrap in code block
                         formattedContent = `\`\`\`\n${note.content}\n\`\`\``;
-                        break;
+break;
 
                     case 'list':
-                        // Convert to bullet list
-                        const lines = note.content.split('\n').filter((l: string) => l.trim().length > 0);
-                        formattedContent = lines.map((l: string) => `- ${l.trim()}`).join('\n');
-                        break;
+// Convert to bullet list
+const lines = note.content.split('\n').filter((l: string) => l.trim().length > 0);
+formattedContent = lines.map((l: string) => `- ${l.trim()}`).join('\n');
+break;
 
                     case 'auto':
-                        // Auto-detect: check for tiers
-                        const hasTiers = note.content.match(/→|–/g);
-                        if (hasTiers && hasTiers.length >= 2) {
-                            formattedContent = convertToTable(note.content);
-                        }
-                        // Otherwise keep as-is
-                        break;
+// Auto-detect: check for tiers
+const hasTiers = note.content.match(/→|–/g);
+if (hasTiers && hasTiers.length >= 2) {
+    formattedContent = convertToTable(note.content);
+}
+// Otherwise keep as-is
+break;
 
                     case 'prose':
                     default:
-                        // No formatting, use as-is
-                        break;
+// No formatting, use as-is
+break;
                 }
 
-                // Store formatted content for later reuse
-                formattedContentMap.set(note.title, formattedContent);
+// Store formatted content for later reuse
+formattedContentMap.set(note.title, formattedContent);
 
-                // Add linked documents info if available
-                let linkedDocsInfo = '';
-                if ((note as any).linkedDocuments && Array.isArray((note as any).linkedDocuments) && (note as any).linkedDocuments.length > 0) {
-                    const docNames = (note as any).linkedDocuments.map((doc: any) => doc.originalName).join(', ');
-                    linkedDocsInfo = `\n\n**Related Documents:** ${docNames}`;
-                }
+// Add linked documents info if available
+let linkedDocsInfo = '';
+if ((note as any).linkedDocuments && Array.isArray((note as any).linkedDocuments) && (note as any).linkedDocuments.length > 0) {
+    const docNames = (note as any).linkedDocuments.map((doc: any) => doc.originalName).join(', ');
+    linkedDocsInfo = `\n\n**Related Documents:** ${docNames}`;
+}
 
-                return `[Priority Knowledge: ${note.title}]${linkedDocsInfo}\n${formattedContent}`;
+return `[Priority Knowledge: ${note.title}]${linkedDocsInfo}\n${formattedContent}`;
             });
 
-            // Helper function to convert content to markdown table
-            function convertToTable(content: string): string {
-                const lines = content.split('\n');
-                const tierLines: string[] = [];
+// Helper function to convert content to markdown table
+function convertToTable(content: string): string {
+    const lines = content.split('\n');
+    const tierLines: string[] = [];
 
-                lines.forEach((line: string) => {
-                    const trimmed = line.trim();
-                    if (!trimmed) return;
+    lines.forEach((line: string) => {
+        const trimmed = line.trim();
+        if (!trimmed) return;
 
-                    // Detect tier patterns (including -> arrows)
-                    if (trimmed.match(/^(\d+\.|Below|RM\s*\d+)/i) || trimmed.includes('→') || trimmed.includes('–') || trimmed.includes('->')) {
-                        tierLines.push(trimmed);
-                    } else if (trimmed.length > 0 && !trimmed.match(/^(Training|Subject|Summary|Multiple|Annual|further|Service bond)/i)) {
-                        // Continuation of previous tier
-                        if (tierLines.length > 0) {
-                            tierLines[tierLines.length - 1] += ' ' + trimmed;
-                        }
-                    }
-                });
-
-                // Build markdown table if we found tiers
-                if (tierLines.length >= 2) {
-                    let tableContent = '\n\n**COMPLETE TIER STRUCTURE (use all rows):**\n\n';
-                    tableContent += '| Tier | Requirement |\n';
-                    tableContent += '|------|-------------|\n';
-
-                    tierLines.forEach((tier: string) => {
-                        // Parse tier into parts (handle both → and ->)
-                        const parts = tier.split(/→|–|->|:/);
-                        if (parts.length >= 2) {
-                            const left = parts[0].replace(/^\d+\.\s*/, '').trim();
-                            const right = parts[1].trim();
-                            tableContent += `| ${left} | ${right} |\n`;
-                        } else {
-                            tableContent += `| ${tier} | - |\n`;
-                        }
-                    });
-
-                    // Return ONLY the table, not the original content (to avoid duplication)
-                    return tableContent;
-                }
-
-                return content;
-            }
-
-            // CRITICAL: Mark knowledge notes as PRIORITY to ensure LLM uses them first
-            baseContextStrings.push(
-                `🔴 PRIORITY KNOWLEDGE (USE THIS FIRST):\n\n` + formattedNotes.join('\n\n---\n\n')
-            );
-        }
-
-        // SYSTEMIC SOLUTION: Filter out document chunks that overlap with knowledge notes
-        // This ensures knowledge base always takes priority, regardless of topic
-        if (knowledgeNotes.length > 0 && relevantChunks.length > 0) {
-            const originalChunkCount = relevantChunks.length;
-
-            // Extract key topics/keywords from knowledge note titles and content
-            const knowledgeKeywords = new Set<string>();
-            knowledgeNotes.forEach(note => {
-                // Extract significant words from title (3+ chars)
-                const titleWords = note.title.toLowerCase()
-                    .split(/\s+/)
-                    .filter((w: string) => w.length > 3);
-                titleWords.forEach((w: string) => knowledgeKeywords.add(w));
-
-                // Extract key phrases from content (e.g., "service bond", "sponsorship")
-                const contentLower = note.content.toLowerCase();
-                const keyPhrases = [
-                    'service bond', 'sponsorship', 'conference', 'training',
-                    'sabbatical', 'research leave', 'publication', 'rps',
-                    'journal', 'impact factor', 'quartile'
-                ];
-                keyPhrases.forEach(phrase => {
-                    if (contentLower.includes(phrase)) {
-                        knowledgeKeywords.add(phrase);
-                    }
-                });
-            });
-
-            // Filter chunks: keep only if they DON'T overlap with knowledge topics
-            relevantChunks = relevantChunks.filter(chunk => {
-                const chunkText = chunk.content.toLowerCase();
-
-                // Check if chunk discusses same topic as any knowledge note
-                let overlapScore = 0;
-                knowledgeKeywords.forEach(keyword => {
-                    if (chunkText.includes(keyword)) {
-                        overlapScore++;
-                    }
-                });
-
-                // If chunk has 2+ keyword matches, it's likely covering same topic
-                const hasSignificantOverlap = overlapScore >= 2;
-
-                if (hasSignificantOverlap) {
-                    log(`  ⚠️ Filtered chunk from "${chunk.metadata.originalName}" (${overlapScore} keyword matches with knowledge notes)`);
-                }
-
-                return !hasSignificantOverlap; // Keep only non-overlapping chunks
-            });
-
-            const filteredCount = originalChunkCount - relevantChunks.length;
-            if (filteredCount > 0) {
-                log(`✂️ Filtered ${filteredCount} overlapping document chunks to prioritize knowledge notes`);
+        // Detect tier patterns (including -> arrows)
+        if (trimmed.match(/^(\d+\.|Below|RM\s*\d+)/i) || trimmed.includes('→') || trimmed.includes('–') || trimmed.includes('->')) {
+            tierLines.push(trimmed);
+        } else if (trimmed.length > 0 && !trimmed.match(/^(Training|Subject|Summary|Multiple|Annual|further|Service bond)/i)) {
+            // Continuation of previous tier
+            if (tierLines.length > 0) {
+                tierLines[tierLines.length - 1] += ' ' + trimmed;
             }
         }
+    });
 
-        if (relevantChunks.length > 0) {
-            log(`📄 Document Chunks being sent to LLM:`);
-            relevantChunks.forEach((chunk, idx) => {
-                const docName = chunk.metadata.originalName || chunk.metadata.filename;
-                log(`  ${idx + 1}. From "${docName}" (${chunk.content.length} chars, similarity: ${chunk.similarity?.toFixed(3)})`);
-                log(`     Preview: ${chunk.content.substring(0, 200).replace(/\n/g, ' ')}...`);
-            });
-            baseContextStrings.push(
-                relevantChunks.map((chunk) => `[Source: ${chunk.metadata.originalName || chunk.metadata.filename}]\n${chunk.content}`).join('\n\n---\n\n')
-            );
+    // Build markdown table if we found tiers
+    if (tierLines.length >= 2) {
+        let tableContent = '\n\n**COMPLETE TIER STRUCTURE (use all rows):**\n\n';
+        tableContent += '| Tier | Requirement |\n';
+        tableContent += '|------|-------------|\n';
+
+        tierLines.forEach((tier: string) => {
+            // Parse tier into parts (handle both → and ->)
+            const parts = tier.split(/→|–|->|:/);
+            if (parts.length >= 2) {
+                const left = parts[0].replace(/^\d+\.\s*/, '').trim();
+                const right = parts[1].trim();
+                tableContent += `| ${left} | ${right} |\n`;
+            } else {
+                tableContent += `| ${tier} | - |\n`;
+            }
+        });
+
+        // Return ONLY the table, not the original content (to avoid duplication)
+        return tableContent;
+    }
+
+    return content;
+}
+
+// CRITICAL: Mark knowledge notes as PRIORITY to ensure LLM uses them first
+baseContextStrings.push(
+    `🔴 PRIORITY KNOWLEDGE (USE THIS FIRST):\n\n` + formattedNotes.join('\n\n---\n\n')
+);
         }
 
-        // Check for inventory question
-        const isInventoryQuestion = /how many|list|inventory|what documents|count|uploaded/i.test(effectiveQuery);
-        if (isInventoryQuestion) {
-            try {
-                const docs = await prisma.document.findMany({
-                    where: { accessLevel: { in: accessLevels as any } },
-                    select: { originalName: true, category: true, department: true }
-                });
-                const total = docs.length;
-                const inventoryInfo = `
+// SYSTEMIC SOLUTION: Filter out document chunks that overlap with knowledge notes
+// This ensures knowledge base always takes priority, regardless of topic
+if (knowledgeNotes.length > 0 && relevantChunks.length > 0) {
+    const originalChunkCount = relevantChunks.length;
+
+    // Extract key topics/keywords from knowledge note titles and content
+    const knowledgeKeywords = new Set<string>();
+    knowledgeNotes.forEach(note => {
+        // Extract significant words from title (3+ chars)
+        const titleWords = note.title.toLowerCase()
+            .split(/\s+/)
+            .filter((w: string) => w.length > 3);
+        titleWords.forEach((w: string) => knowledgeKeywords.add(w));
+
+        // Extract key phrases from content (e.g., "service bond", "sponsorship")
+        const contentLower = note.content.toLowerCase();
+        const keyPhrases = [
+            'service bond', 'sponsorship', 'conference', 'training',
+            'sabbatical', 'research leave', 'publication', 'rps',
+            'journal', 'impact factor', 'quartile'
+        ];
+        keyPhrases.forEach(phrase => {
+            if (contentLower.includes(phrase)) {
+                knowledgeKeywords.add(phrase);
+            }
+        });
+    });
+
+    // Filter chunks: keep only if they DON'T overlap with knowledge topics
+    relevantChunks = relevantChunks.filter(chunk => {
+        const chunkText = chunk.content.toLowerCase();
+
+        // Check if chunk discusses same topic as any knowledge note
+        let overlapScore = 0;
+        knowledgeKeywords.forEach(keyword => {
+            if (chunkText.includes(keyword)) {
+                overlapScore++;
+            }
+        });
+
+        // If chunk has 2+ keyword matches, it's likely covering same topic
+        const hasSignificantOverlap = overlapScore >= 2;
+
+        if (hasSignificantOverlap) {
+            log(`  ⚠️ Filtered chunk from "${chunk.metadata.originalName}" (${overlapScore} keyword matches with knowledge notes)`);
+        }
+
+        return !hasSignificantOverlap; // Keep only non-overlapping chunks
+    });
+
+    const filteredCount = originalChunkCount - relevantChunks.length;
+    if (filteredCount > 0) {
+        log(`✂️ Filtered ${filteredCount} overlapping document chunks to prioritize knowledge notes`);
+    }
+}
+
+if (relevantChunks.length > 0) {
+    log(`📄 Document Chunks being sent to LLM:`);
+    relevantChunks.forEach((chunk, idx) => {
+        const docName = chunk.metadata.originalName || chunk.metadata.filename;
+        log(`  ${idx + 1}. From "${docName}" (${chunk.content.length} chars, similarity: ${chunk.similarity?.toFixed(3)})`);
+        log(`     Preview: ${chunk.content.substring(0, 200).replace(/\n/g, ' ')}...`);
+    });
+    baseContextStrings.push(
+        relevantChunks.map((chunk) => `[Source: ${chunk.metadata.originalName || chunk.metadata.filename}]\n${chunk.content}`).join('\n\n---\n\n')
+    );
+}
+
+// Check for inventory question
+const isInventoryQuestion = /how many|list|inventory|what documents|count|uploaded/i.test(effectiveQuery);
+if (isInventoryQuestion) {
+    try {
+        const docs = await prisma.document.findMany({
+            where: { accessLevel: { in: accessLevels as any } },
+            select: { originalName: true, category: true, department: true }
+        });
+        const total = docs.length;
+        const inventoryInfo = `
 [SYSTEM DATABASE INVENTORY]
 Total Documents Accessible: ${total}
 Full List:
 ${docs.map(d => `- ${d.originalName} (${d.category})`).join('\n')}
 `;
-                baseContextStrings.push(inventoryInfo);
-                log('Added inventory info to context.');
-            } catch (err) { console.error(err); }
-        }
+        baseContextStrings.push(inventoryInfo);
+        log('Added inventory info to context.');
+    } catch (err) { console.error(err); }
+}
 
-        // Check for recency-based query (latest, most recent, newest)
-        const isRecencyQuery = /latest|most recent|newest|last|current/i.test(effectiveQuery);
-        let latestDocumentId: string | null = null;
+// Check for recency-based query (latest, most recent, newest)
+const isRecencyQuery = /latest|most recent|newest|last|current/i.test(effectiveQuery);
+let latestDocumentId: string | null = null;
 
-        if (isRecencyQuery) {
-            try {
-                log('Detected recency query, searching for latest document...');
+if (isRecencyQuery) {
+    try {
+        log('Detected recency query, searching for latest document...');
 
-                // Extract category if mentioned
-                const isMeetingMinute = /meeting\s*minute/i.test(effectiveQuery);
-                const isPolicy = /policy/i.test(effectiveQuery);
-                const isForm = /form/i.test(effectiveQuery);
+        // Extract category if mentioned
+        const isMeetingMinute = /meeting\s*minute/i.test(effectiveQuery);
+        const isPolicy = /policy/i.test(effectiveQuery);
+        const isForm = /form/i.test(effectiveQuery);
 
-                const whereClause: any = {
-                    accessLevel: { in: accessLevels as any },
-                    status: 'processed'
-                };
+        const whereClause: any = {
+            accessLevel: { in: accessLevels as any },
+            status: 'processed'
+        };
 
-                if (isMeetingMinute) whereClause.category = 'Meeting Minute';
-                else if (isPolicy) whereClause.category = 'Policy';
-                else if (isForm) whereClause.category = 'Form';
+        if (isMeetingMinute) whereClause.category = 'Meeting Minute';
+        else if (isPolicy) whereClause.category = 'Policy';
+        else if (isForm) whereClause.category = 'Form';
 
-                const allDocs = await prisma.document.findMany({
-                    where: whereClause,
-                    select: { id: true, originalName: true, category: true, uploadedAt: true }
-                });
+        const allDocs = await prisma.document.findMany({
+            where: whereClause,
+            select: { id: true, originalName: true, category: true, uploadedAt: true }
+        });
 
-                log(`Found ${allDocs.length} documents for recency check`);
+        log(`Found ${allDocs.length} documents for recency check`);
 
-                // Parse dates from filenames (YYYYMMDD format) and sort by document date
-                const docsWithDates = allDocs
-                    .map(doc => {
-                        const dateMatch = doc.originalName.match(/(\d{8})/);
-                        if (dateMatch) {
-                            const dateStr = dateMatch[1];
-                            const year = parseInt(dateStr.substring(0, 4));
-                            const month = parseInt(dateStr.substring(4, 6));
-                            const day = parseInt(dateStr.substring(6, 8));
-                            const docDate = new Date(year, month - 1, day);
-                            return { ...doc, docDate, dateStr };
-                        }
-                        return { ...doc, docDate: doc.uploadedAt, dateStr: 'Unknown' };
-                    })
-                    .sort((a, b) => b.docDate.getTime() - a.docDate.getTime())
-                    .slice(0, 5);
+        // Parse dates from filenames (YYYYMMDD format) and sort by document date
+        const docsWithDates = allDocs
+            .map(doc => {
+                const dateMatch = doc.originalName.match(/(\d{8})/);
+                if (dateMatch) {
+                    const dateStr = dateMatch[1];
+                    const year = parseInt(dateStr.substring(0, 4));
+                    const month = parseInt(dateStr.substring(4, 6));
+                    const day = parseInt(dateStr.substring(6, 8));
+                    const docDate = new Date(year, month - 1, day);
+                    return { ...doc, docDate, dateStr };
+                }
+                return { ...doc, docDate: doc.uploadedAt, dateStr: 'Unknown' };
+            })
+            .sort((a, b) => b.docDate.getTime() - a.docDate.getTime())
+            .slice(0, 5);
 
-                if (docsWithDates.length > 0) {
-                    latestDocumentId = docsWithDates[0].id;
-                    const recencyInfo = `
+        if (docsWithDates.length > 0) {
+            latestDocumentId = docsWithDates[0].id;
+            const recencyInfo = `
 [MOST RECENT DOCUMENTS BY DATE]
 ${docsWithDates.map((d, idx) => `${idx + 1}. ${d.originalName} (${d.category}) - Date: ${d.dateStr}`).join('\n')}
 
@@ -1213,51 +1305,51 @@ The #1 document above is the most recent by date: "${docsWithDates[0].originalNa
 You MUST provide a download link using this EXACT filename.
 Format: [Download ${docsWithDates[0].originalName.replace('.pdf', '')}](download:${docsWithDates[0].originalName})
 `;
-                    baseContextStrings.push(recencyInfo);
-                    log(`Latest document: ${docsWithDates[0].originalName}`);
-                }
-            } catch (err) {
-                console.error('Error in recency detection:', err);
-                log(`Error in recency detection: ${err}`);
-            }
+            baseContextStrings.push(recencyInfo);
+            log(`Latest document: ${docsWithDates[0].originalName}`);
         }
+    } catch (err) {
+        console.error('Error in recency detection:', err);
+        log(`Error in recency detection: ${err}`);
+    }
+}
 
-        // NOW create baseContext after all special checks
-        const baseContext = baseContextStrings.join('\n\n=== === ===\n\n');
+// NOW create baseContext after all special checks
+const baseContext = baseContextStrings.join('\n\n=== === ===\n\n');
 
 
-        // --- TOOL PERMISSION CHECK (CACHED) ---
-        const t5 = Date.now();
-        let localTools = AVAILABLE_TOOLS;
-        try {
-            const permissions = await getCachedToolPermissions(); // ← Using cache!
-            if (permissions.length > 0) {
-                const allowedToolNames = new Set(
-                    permissions
-                        .filter((p: any) => p.allowedRoles.includes(query.userRole))
-                        .map((p: any) => p.toolName)
-                );
-                localTools = AVAILABLE_TOOLS.filter(t => allowedToolNames.has(t.function.name));
-                log(`Tools allowed for role '${query.userRole}': ${localTools.map(t => t.function.name).join(', ') || 'None'}`);
-            } else {
-                log('No tool permissions configured. Defaulting to ALL tools.');
-            }
-        } catch (e) {
-            log(`Failed to fetch tool permissions, defaulting to ALL: ${e}`);
-        }
-        log(`⏱️ Step 5 (Tool permissions): ${((Date.now() - t5) / 1000).toFixed(2)}s`);
+// --- TOOL PERMISSION CHECK (CACHED) ---
+const t5 = Date.now();
+let localTools = AVAILABLE_TOOLS;
+try {
+    const permissions = await getCachedToolPermissions(); // ← Using cache!
+    if (permissions.length > 0) {
+        const allowedToolNames = new Set(
+            permissions
+                .filter((p: any) => p.allowedRoles.includes(query.userRole))
+                .map((p: any) => p.toolName)
+        );
+        localTools = AVAILABLE_TOOLS.filter(t => allowedToolNames.has(t.function.name));
+        log(`Tools allowed for role '${query.userRole}': ${localTools.map(t => t.function.name).join(', ') || 'None'}`);
+    } else {
+        log('No tool permissions configured. Defaulting to ALL tools.');
+    }
+} catch (e) {
+    log(`Failed to fetch tool permissions, defaulting to ALL: ${e}`);
+}
+log(`⏱️ Step 5 (Tool permissions): ${((Date.now() - t5) / 1000).toFixed(2)}s`);
 
-        const dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+const dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
-        // Retrieve System Prompt (CACHED)
-        const t6 = Date.now();
-        let baseSystemPrompt = await getCachedSystemPrompt(); // ← Using cache!
-        if (baseSystemPrompt) {
-            log('Loaded system prompt (from cache or DB).');
-        }
+// Retrieve System Prompt (CACHED)
+const t6 = Date.now();
+let baseSystemPrompt = await getCachedSystemPrompt(); // ← Using cache!
+if (baseSystemPrompt) {
+    log('Loaded system prompt (from cache or DB).');
+}
 
-        if (!baseSystemPrompt) {
-            baseSystemPrompt = `You are a helpful assistant for the CHST research centre at UTAR.
+if (!baseSystemPrompt) {
+    baseSystemPrompt = `You are a helpful assistant for the CHST research centre at UTAR.
 Guidelines:
 - Current Date: ${dateStr}
 - Use this date for deadlines/eligibility.
@@ -1265,28 +1357,28 @@ Guidelines:
 - **General Questions**: Answer directly.
 - **Policies/Forms**: Base answers on the "Context" provided.
 `;
-        }
+}
 
-        // Conditionally append tool prompts
-        const hasStaffTool = localTools.some(t => t.function.name === 'utar_staff_search');
-        const hasJcrTool = localTools.some(t => t.function.name === 'jcr_journal_metric');
-        const hasNatureIndexTool = localTools.some(t => t.function.name === 'nature_index_lookup');
+// Conditionally append tool prompts
+const hasStaffTool = localTools.some(t => t.function.name === 'utar_staff_search');
+const hasJcrTool = localTools.some(t => t.function.name === 'jcr_journal_metric');
+const hasNatureIndexTool = localTools.some(t => t.function.name === 'nature_index_lookup');
 
-        if (hasStaffTool && !baseSystemPrompt.includes('utar_staff_search')) {
-            baseSystemPrompt += `\n\n${STAFF_SEARCH_SYSTEM_PROMPT}`;
-        }
+if (hasStaffTool && !baseSystemPrompt.includes('utar_staff_search')) {
+    baseSystemPrompt += `\n\n${STAFF_SEARCH_SYSTEM_PROMPT}`;
+}
 
-        if (hasJcrTool && !baseSystemPrompt.includes('jcr_journal_metric')) {
-            baseSystemPrompt += `\n\n${JCR_SYSTEM_PROMPT}`;
-        }
+if (hasJcrTool && !baseSystemPrompt.includes('jcr_journal_metric')) {
+    baseSystemPrompt += `\n\n${JCR_SYSTEM_PROMPT}`;
+}
 
-        if (hasNatureIndexTool && !baseSystemPrompt.includes('nature_index_lookup')) {
-            baseSystemPrompt += `\n\n${NATURE_INDEX_SYSTEM_PROMPT}`;
-        }
+if (hasNatureIndexTool && !baseSystemPrompt.includes('nature_index_lookup')) {
+    baseSystemPrompt += `\n\n${NATURE_INDEX_SYSTEM_PROMPT}`;
+}
 
-        // Always append strict document handling rules to prevent hallucinations
-        // This runs regardless of what is in the DB prompt
-        baseSystemPrompt += `
+// Always append strict document handling rules to prevent hallucinations
+// This runs regardless of what is in the DB prompt
+baseSystemPrompt += `
         
 ### 🛡️ STRICT DOCUMENT & FORM RULES (OVERRIDE)
 1. **NO HALLUCINATIONS**: 
@@ -1321,9 +1413,9 @@ Guidelines:
    - When answering, cite the complete information from priority knowledge notes. Don't simplify or generalize tiered/structured information.
 
 `;
-        log(`⏱️ Step 6 (System prompt setup): ${((Date.now() - t6) / 1000).toFixed(2)}s`);
+log(`⏱️ Step 6 (System prompt setup): ${((Date.now() - t6) / 1000).toFixed(2)}s`);
 
-        const systemPrompt = `${baseSystemPrompt}
+const systemPrompt = `${baseSystemPrompt}
         
 Guidelines (Dynamic):
 - Current Date: ${dateStr}
@@ -1335,313 +1427,313 @@ Previous Conversation:
 ${chatHistoryStr}
 `;
 
-        const messages: any[] = [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: effectiveQuery }
-        ];
+const messages: any[] = [
+    { role: 'system', content: systemPrompt },
+    { role: 'user', content: effectiveQuery }
+];
 
-        // 8. Execution Loop
-        let runLoop = true;
-        let loopCount = 0;
-        let finalResponse = '';
-        let totalTokens = 0;
+// 8. Execution Loop
+let runLoop = true;
+let loopCount = 0;
+let finalResponse = '';
+let totalTokens = 0;
 
-        log('Starting LLM inference loop...');
-        const t7 = Date.now();
+log('Starting LLM inference loop...');
+const t7 = Date.now();
 
 
 
-        while (runLoop && loopCount < 5) {
-            const tLoop = Date.now();
+while (runLoop && loopCount < 5) {
+    const tLoop = Date.now();
 
-            // PERFORMANCE OPTIMIZATION: Use GPT-3.5-turbo for formatting tool results
-            // CRITICAL: Only use GPT-3.5 AFTER tools are called (loopCount > 0)
-            // First call (loopCount === 0) must use GPT-4 for smart tool selection
+    // PERFORMANCE OPTIMIZATION: Use GPT-3.5-turbo for formatting tool results
+    // CRITICAL: Only use GPT-3.5 AFTER tools are called (loopCount > 0)
+    // First call (loopCount === 0) must use GPT-4 for smart tool selection
 
-            let activeModel = await getCachedModelConfig(); // Default to GPT-4
+    let activeModel = await getCachedModelConfig(); // Default to GPT-4
 
-            // Check if we're formatting results from simple tools (loop #2+)
-            if (loopCount > 0) {
-                // Check if previous message had only simple tool calls
-                const prevMessage = messages[messages.length - 1];
-                if (prevMessage?.tool_calls) {
-                    const allSimpleTools = prevMessage.tool_calls.every((tc: any) =>
-                        tc.function.name === 'utar_staff_search' ||
-                        tc.function.name === 'utar_resolve_unit' ||
-                        tc.function.name === 'utar_list_departments' ||
-                        tc.function.name === 'jcr_journal_metric'
-                    );
+    // Check if we're formatting results from simple tools (loop #2+)
+    if (loopCount > 0) {
+        // Check if previous message had only simple tool calls
+        const prevMessage = messages[messages.length - 1];
+        if (prevMessage?.tool_calls) {
+            const allSimpleTools = prevMessage.tool_calls.every((tc: any) =>
+                tc.function.name === 'utar_staff_search' ||
+                tc.function.name === 'utar_resolve_unit' ||
+                tc.function.name === 'utar_list_departments' ||
+                tc.function.name === 'jcr_journal_metric'
+            );
 
-                    if (allSimpleTools) {
-                        activeModel = 'gpt-3.5-turbo'; // Fast formatting for simple tool results
-                        log(`Using GPT-3.5-turbo to format simple tool results (3-5x faster than GPT-4)`);
-                    }
+            if (allSimpleTools) {
+                activeModel = 'gpt-3.5-turbo'; // Fast formatting for simple tool results
+                log(`Using GPT-3.5-turbo to format simple tool results (3-5x faster than GPT-4)`);
+            }
+        }
+    }
+
+    const completion = await openai.chat.completions.create({
+        model: activeModel,
+        messages: messages,
+        tools: localTools.length > 0 ? localTools : undefined, // Only pass tools if any are allowed
+        tool_choice: localTools.length > 0 ? 'auto' : undefined,
+
+        temperature: 0.7,
+        max_tokens: 4000,
+    });
+    log(`⏱️ LLM call #${loopCount + 1}: ${((Date.now() - tLoop) / 1000).toFixed(2)}s`);
+
+    totalTokens += completion.usage?.total_tokens || 0;
+    const message = completion.choices[0].message;
+
+    messages.push(message);
+
+    if (message.tool_calls && message.tool_calls.length > 0) {
+        log(`Model requested ${message.tool_calls.length} tool calls.`);
+
+        for (const toolCall of message.tool_calls) {
+            const call = toolCall as any;
+            const toolName = call.function.name;
+            const toolArgs = JSON.parse(call.function.arguments);
+
+            log(`Executing Tool: ${toolName} with args: ${JSON.stringify(toolArgs)}`);
+            const tTool = Date.now();
+
+            const result = await executeToolCall(toolName, toolArgs, log); // Pass logger
+            log(`⏱️ Tool execution (${toolName}): ${((Date.now() - tTool) / 1000).toFixed(2)}s`);
+
+            // Log full tool result for debugging
+            log(`Tool Result (${toolName}): ${JSON.stringify(result, null, 2)}`);
+
+            // For staff search, prepend the count message to force LLM to see it
+            let toolResponse = JSON.stringify(result);
+            if (toolName === 'utar_staff_search' && result && typeof result === 'object') {
+                if ('message' in result) {
+                    // Prepend the message to the response so LLM sees it first
+                    toolResponse = `STAFF COUNT: ${result.message}\n\nFull details: ${toolResponse}`;
                 }
             }
 
-            const completion = await openai.chat.completions.create({
-                model: activeModel,
-                messages: messages,
-                tools: localTools.length > 0 ? localTools : undefined, // Only pass tools if any are allowed
-                tool_choice: localTools.length > 0 ? 'auto' : undefined,
-
-                temperature: 0.7,
-                max_tokens: 4000,
-            });
-            log(`⏱️ LLM call #${loopCount + 1}: ${((Date.now() - tLoop) / 1000).toFixed(2)}s`);
-
-            totalTokens += completion.usage?.total_tokens || 0;
-            const message = completion.choices[0].message;
-
-            messages.push(message);
-
-            if (message.tool_calls && message.tool_calls.length > 0) {
-                log(`Model requested ${message.tool_calls.length} tool calls.`);
-
-                for (const toolCall of message.tool_calls) {
-                    const call = toolCall as any;
-                    const toolName = call.function.name;
-                    const toolArgs = JSON.parse(call.function.arguments);
-
-                    log(`Executing Tool: ${toolName} with args: ${JSON.stringify(toolArgs)}`);
-                    const tTool = Date.now();
-
-                    const result = await executeToolCall(toolName, toolArgs, log); // Pass logger
-                    log(`⏱️ Tool execution (${toolName}): ${((Date.now() - tTool) / 1000).toFixed(2)}s`);
-
-                    // Log full tool result for debugging
-                    log(`Tool Result (${toolName}): ${JSON.stringify(result, null, 2)}`);
-
-                    // For staff search, prepend the count message to force LLM to see it
-                    let toolResponse = JSON.stringify(result);
-                    if (toolName === 'utar_staff_search' && result && typeof result === 'object') {
-                        if ('message' in result) {
-                            // Prepend the message to the response so LLM sees it first
-                            toolResponse = `STAFF COUNT: ${result.message}\n\nFull details: ${toolResponse}`;
-                        }
-                    }
-
-                    messages.push({
-                        role: 'tool',
-                        tool_call_id: call.id,
-                        content: toolResponse
-                    });
-                }
-            } else {
-                finalResponse = message.content || '';
-                runLoop = false;
-                log('Received final response from LLM.');
-            }
-            loopCount++;
-        }
-        log(`⏱️ Step 7 (Total LLM inference): ${((Date.now() - t7) / 1000).toFixed(2)}s`);
-
-
-        // 9. Suggestions (Optional - can be disabled for performance)
-        const t8 = Date.now();
-        const ENABLE_RELATED_DOCS = process.env.ENABLE_RELATED_DOCS === 'true';
-
-        let relatedDocs: DocumentSource[] = [];
-
-        if (ENABLE_RELATED_DOCS) {
-            const referencedDocIds = relevantChunks.map(c => c.metadata.documentId).filter(Boolean);
-            relatedDocs = await getRelatedDocuments({
-                referencedDocIds,
-                userRole: query.userRole,
-                referencedChunks: relevantChunks
-            });
-            log(`⏱️ Step 8 (Related docs): ${((Date.now() - t8) / 1000).toFixed(2)}s - Found ${relatedDocs.length} suggestions`);
-        } else {
-            log(`⏱️ Step 8 (Related docs): 0.00s - Disabled for performance`);
-        }
-
-
-        // 10. Enrich sources
-        const sourcesToEnrich: DocumentSource[] = relevantChunks.map(chunk => ({
-            filename: chunk.metadata.filename,
-            accessLevel: chunk.metadata.accessLevel,
-            documentId: chunk.metadata.documentId,
-            originalName: chunk.metadata.originalName,
-            pageNumber: chunk.metadata.pageNumber,
-            relevanceScore: (chunk as any).score
-        }));
-
-        // Add linked documents from knowledge notes to sources
-        // ROBUST APPROACH: If a knowledge note was retrieved and sent to LLM,
-        // its linked documents are relevant resources regardless of whether
-        // the LLM explicitly used the note content in the response
-        if (knowledgeNotes.length > 0) {
-            log(`Processing ${knowledgeNotes.length} knowledge notes for linked documents...`);
-            knowledgeNotes.forEach((note: any) => {
-                log(`  📋 Knowledge note: "${note.title}"`);
-
-                if (note.linkedDocuments && Array.isArray(note.linkedDocuments)) {
-                    log(`     Adding ${note.linkedDocuments.length} linked documents`);
-                    note.linkedDocuments.forEach((doc: any) => {
-                        // Check if document is already in sources
-                        const alreadyInSources = sourcesToEnrich.some(s => s.documentId === doc.id);
-                        if (!alreadyInSources) {
-                            sourcesToEnrich.push({
-                                filename: doc.filename,
-                                accessLevel: doc.accessLevel || 'member',
-                                documentId: doc.id,
-                                originalName: doc.originalName,
-                                relevanceScore: 0.9
-                            });
-                            log(`       ✅ Added: ${doc.originalName}`);
-                        }
-                    });
-                }
+            messages.push({
+                role: 'tool',
+                tool_call_id: call.id,
+                content: toolResponse
             });
         }
+    } else {
+        finalResponse = message.content || '';
+        runLoop = false;
+        log('Received final response from LLM.');
+    }
+    loopCount++;
+}
+log(`⏱️ Step 7 (Total LLM inference): ${((Date.now() - t7) / 1000).toFixed(2)}s`);
 
-        // If this was a recency query, ensure the latest document is in sources
-        if (isRecencyQuery && latestDocumentId) {
-            try {
-                // Check if latest document is already in sources
-                const alreadyInSources = sourcesToEnrich.some(s => s.documentId === latestDocumentId);
 
+// 9. Suggestions (Optional - can be disabled for performance)
+const t8 = Date.now();
+const ENABLE_RELATED_DOCS = process.env.ENABLE_RELATED_DOCS === 'true';
+
+let relatedDocs: DocumentSource[] = [];
+
+if (ENABLE_RELATED_DOCS) {
+    const referencedDocIds = relevantChunks.map(c => c.metadata.documentId).filter(Boolean);
+    relatedDocs = await getRelatedDocuments({
+        referencedDocIds,
+        userRole: query.userRole,
+        referencedChunks: relevantChunks
+    });
+    log(`⏱️ Step 8 (Related docs): ${((Date.now() - t8) / 1000).toFixed(2)}s - Found ${relatedDocs.length} suggestions`);
+} else {
+    log(`⏱️ Step 8 (Related docs): 0.00s - Disabled for performance`);
+}
+
+
+// 10. Enrich sources
+const sourcesToEnrich: DocumentSource[] = relevantChunks.map(chunk => ({
+    filename: chunk.metadata.filename,
+    accessLevel: chunk.metadata.accessLevel,
+    documentId: chunk.metadata.documentId,
+    originalName: chunk.metadata.originalName,
+    pageNumber: chunk.metadata.pageNumber,
+    relevanceScore: (chunk as any).score
+}));
+
+// Add linked documents from knowledge notes to sources
+// ROBUST APPROACH: If a knowledge note was retrieved and sent to LLM,
+// its linked documents are relevant resources regardless of whether
+// the LLM explicitly used the note content in the response
+if (knowledgeNotes.length > 0) {
+    log(`Processing ${knowledgeNotes.length} knowledge notes for linked documents...`);
+    knowledgeNotes.forEach((note: any) => {
+        log(`  📋 Knowledge note: "${note.title}"`);
+
+        if (note.linkedDocuments && Array.isArray(note.linkedDocuments)) {
+            log(`     Adding ${note.linkedDocuments.length} linked documents`);
+            note.linkedDocuments.forEach((doc: any) => {
+                // Check if document is already in sources
+                const alreadyInSources = sourcesToEnrich.some(s => s.documentId === doc.id);
                 if (!alreadyInSources) {
-                    // Fetch the latest document details
-                    const latestDoc = await prisma.document.findUnique({
-                        where: { id: latestDocumentId },
-                        select: { id: true, originalName: true, filename: true, accessLevel: true }
+                    sourcesToEnrich.push({
+                        filename: doc.filename,
+                        accessLevel: doc.accessLevel || 'member',
+                        documentId: doc.id,
+                        originalName: doc.originalName,
+                        relevanceScore: 0.9
                     });
-
-                    if (latestDoc) {
-                        sourcesToEnrich.push({
-                            filename: latestDoc.filename,
-                            accessLevel: latestDoc.accessLevel,
-                            documentId: latestDoc.id,
-                            originalName: latestDoc.originalName,
-                            relevanceScore: 1.0 // Highest relevance for recency queries
-                        });
-                        log(`Added latest document to sources: ${latestDoc.originalName}`);
-                    }
+                    log(`       ✅ Added: ${doc.originalName}`);
                 }
-            } catch (err) {
-                console.error('Error adding latest doc to sources:', err);
-                log(`Error adding latest doc to sources: ${err}`);
+            });
+        }
+    });
+}
+
+// If this was a recency query, ensure the latest document is in sources
+if (isRecencyQuery && latestDocumentId) {
+    try {
+        // Check if latest document is already in sources
+        const alreadyInSources = sourcesToEnrich.some(s => s.documentId === latestDocumentId);
+
+        if (!alreadyInSources) {
+            // Fetch the latest document details
+            const latestDoc = await prisma.document.findUnique({
+                where: { id: latestDocumentId },
+                select: { id: true, originalName: true, filename: true, accessLevel: true }
+            });
+
+            if (latestDoc) {
+                sourcesToEnrich.push({
+                    filename: latestDoc.filename,
+                    accessLevel: latestDoc.accessLevel,
+                    documentId: latestDoc.id,
+                    originalName: latestDoc.originalName,
+                    relevanceScore: 1.0 // Highest relevance for recency queries
+                });
+                log(`Added latest document to sources: ${latestDoc.originalName}`);
             }
         }
+    } catch (err) {
+        console.error('Error adding latest doc to sources:', err);
+        log(`Error adding latest doc to sources: ${err}`);
+    }
+}
 
-        const t9 = Date.now();
-        const enrichedSources = await enrichSourcesWithMetadata(sourcesToEnrich);
-        log(`⏱️ Step 9 (Enrich sources): ${((Date.now() - t9) / 1000).toFixed(2)}s`);
+const t9 = Date.now();
+const enrichedSources = await enrichSourcesWithMetadata(sourcesToEnrich);
+log(`⏱️ Step 9 (Enrich sources): ${((Date.now() - t9) / 1000).toFixed(2)}s`);
 
-        // Log sources for debugging download links
-        log(`📄 Sources available for download links:`);
-        enrichedSources.forEach((src, idx) => {
-            log(`  ${idx + 1}. "${src.originalName}" (filename: ${src.filename})`);
+// Log sources for debugging download links
+log(`📄 Sources available for download links:`);
+enrichedSources.forEach((src, idx) => {
+    log(`  ${idx + 1}. "${src.originalName}" (filename: ${src.filename})`);
+});
+
+
+if (!finalResponse) {
+    finalResponse = "I apologize, but I was unable to generate a response. This may be because I do not have permission to access the necessary tools or data to answer your question.";
+}
+
+// SYSTEMIC SOLUTION: Validate response completeness against knowledge notes
+// If LLM gives incomplete answer for tiered information, inject the complete structure
+if (knowledgeNotes.length > 0 && finalResponse) {
+    knowledgeNotes.forEach(note => {
+        const noteTitleLower = note.title.toLowerCase();
+        const noteContentLower = note.content.toLowerCase();
+        const responseLower = finalResponse.toLowerCase();
+
+        // FIRST: Check if the note content was actually used in the response
+        // Extract unique phrases (3+ words) from note content
+        const contentPhrases = noteContentLower
+            .split(/[.!?\n]+/)
+            .map((s: string) => s.trim())
+            .filter((s: string) => s.split(/\s+/).length >= 3)
+            .slice(0, 5); // Check first 5 phrases
+
+        // Check if any significant phrase from the note appears in response
+        const noteWasUsed = contentPhrases.some((phrase: string) => {
+            // For phrases, check if at least 60% of words appear in response
+            const words = phrase.split(/\s+/).filter((w: string) => w.length > 3);
+            if (words.length === 0) return false;
+            const matchCount = words.filter((w: string) => responseLower.includes(w)).length;
+            return (matchCount / words.length) >= 0.6;
         });
 
-
-        if (!finalResponse) {
-            finalResponse = "I apologize, but I was unable to generate a response. This may be because I do not have permission to access the necessary tools or data to answer your question.";
+        // Skip tier validation if note wasn't actually used
+        if (!noteWasUsed) {
+            return;
         }
 
-        // SYSTEMIC SOLUTION: Validate response completeness against knowledge notes
-        // If LLM gives incomplete answer for tiered information, inject the complete structure
-        if (knowledgeNotes.length > 0 && finalResponse) {
-            knowledgeNotes.forEach(note => {
-                const noteTitleLower = note.title.toLowerCase();
-                const noteContentLower = note.content.toLowerCase();
-                const responseLower = finalResponse.toLowerCase();
+        // Detect if this is a tiered/structured knowledge note
+        const hasTiers = note.content.match(/→|:|–|-\s*\d+\s*(year|month|day)/gi);
 
-                // FIRST: Check if the note content was actually used in the response
-                // Extract unique phrases (3+ words) from note content
-                const contentPhrases = noteContentLower
-                    .split(/[.!?\n]+/)
-                    .map((s: string) => s.trim())
-                    .filter((s: string) => s.split(/\s+/).length >= 3)
-                    .slice(0, 5); // Check first 5 phrases
+        if (hasTiers && hasTiers.length >= 2) {
+            // Check if response mentions this topic
+            const topicWords = noteTitleLower.split(/\s+/).filter((w: string) => w.length > 4);
+            const mentionsTopic = topicWords.some((word: string) => responseLower.includes(word));
 
-                // Check if any significant phrase from the note appears in response
-                const noteWasUsed = contentPhrases.some((phrase: string) => {
-                    // For phrases, check if at least 60% of words appear in response
-                    const words = phrase.split(/\s+/).filter((w: string) => w.length > 3);
-                    if (words.length === 0) return false;
-                    const matchCount = words.filter((w: string) => responseLower.includes(w)).length;
-                    return (matchCount / words.length) >= 0.6;
-                });
+            if (mentionsTopic) {
+                // Count how many tiers are mentioned in the response
+                const tiersInNote = hasTiers.length;
+                let tiersInResponse = 0;
 
-                // Skip tier validation if note wasn't actually used
-                if (!noteWasUsed) {
-                    return;
+                // Check for common tier indicators
+                if (responseLower.includes('below') || responseLower.includes('less than') || responseLower.includes('under')) tiersInResponse++;
+                if (responseLower.match(/rm\s*\d+,?\d*/gi)) {
+                    tiersInResponse += (responseLower.match(/rm\s*\d+,?\d*/gi) || []).length;
                 }
 
-                // Detect if this is a tiered/structured knowledge note
-                const hasTiers = note.content.match(/→|:|–|-\s*\d+\s*(year|month|day)/gi);
+                // If response has fewer than half the tiers, it's incomplete
+                if (tiersInResponse < tiersInNote / 2) {
+                    log(`⚠️ Detected incomplete response for "${note.title}" (${tiersInResponse}/${tiersInNote} tiers mentioned)`);
+                    log(`🔧 Injecting complete tiered structure from knowledge note`);
 
-                if (hasTiers && hasTiers.length >= 2) {
-                    // Check if response mentions this topic
-                    const topicWords = noteTitleLower.split(/\s+/).filter((w: string) => w.length > 4);
-                    const mentionsTopic = topicWords.some((word: string) => responseLower.includes(word));
+                    // Extract the tiered structure from knowledge note
+                    const lines = note.content.split('\n').filter((l: string) => l.trim().length > 0);
+                    const tierLines = lines.filter((l: string) =>
+                        l.match(/→|:|–/) ||
+                        l.match(/^\d+\./) ||
+                        l.match(/^-\s/) ||
+                        l.match(/rm\s*\d+/i)
+                    );
 
-                    if (mentionsTopic) {
-                        // Count how many tiers are mentioned in the response
-                        const tiersInNote = hasTiers.length;
-                        let tiersInResponse = 0;
-
-                        // Check for common tier indicators
-                        if (responseLower.includes('below') || responseLower.includes('less than') || responseLower.includes('under')) tiersInResponse++;
-                        if (responseLower.match(/rm\s*\d+,?\d*/gi)) {
-                            tiersInResponse += (responseLower.match(/rm\s*\d+,?\d*/gi) || []).length;
-                        }
-
-                        // If response has fewer than half the tiers, it's incomplete
-                        if (tiersInResponse < tiersInNote / 2) {
-                            log(`⚠️ Detected incomplete response for "${note.title}" (${tiersInResponse}/${tiersInNote} tiers mentioned)`);
-                            log(`🔧 Injecting complete tiered structure from knowledge note`);
-
-                            // Extract the tiered structure from knowledge note
-                            const lines = note.content.split('\n').filter((l: string) => l.trim().length > 0);
-                            const tierLines = lines.filter((l: string) =>
-                                l.match(/→|:|–/) ||
-                                l.match(/^\d+\./) ||
-                                l.match(/^-\s/) ||
-                                l.match(/rm\s*\d+/i)
-                            );
-
-                            if (tierLines.length > 0) {
-                                // Use the formatted content that was already generated
-                                const formattedContent = formattedContentMap.get(note.title);
-                                if (formattedContent) {
-                                    const completeAnswer = `Based on the policy, here is the complete breakdown:\n\n${formattedContent}\n\nFor more details, please refer to the official policy document.`;
-                                    finalResponse = completeAnswer;
-                                    log(`✅ Response corrected with complete formatted structure`);
-                                } else {
-                                    // Fallback to plain text if formatted content not found
-                                    const completeAnswer = `Based on the policy, here is the complete breakdown:\n\n${tierLines.join('\n')}\n\n` +
-                                        `For more details, please refer to the official policy document.`;
-                                    finalResponse = completeAnswer;
-                                    log(`✅ Response corrected with complete tiered structure`);
-                                }
-                            }
+                    if (tierLines.length > 0) {
+                        // Use the formatted content that was already generated
+                        const formattedContent = formattedContentMap.get(note.title);
+                        if (formattedContent) {
+                            const completeAnswer = `Based on the policy, here is the complete breakdown:\n\n${formattedContent}\n\nFor more details, please refer to the official policy document.`;
+                            finalResponse = completeAnswer;
+                            log(`✅ Response corrected with complete formatted structure`);
+                        } else {
+                            // Fallback to plain text if formatted content not found
+                            const completeAnswer = `Based on the policy, here is the complete breakdown:\n\n${tierLines.join('\n')}\n\n` +
+                                `For more details, please refer to the official policy document.`;
+                            finalResponse = completeAnswer;
+                            log(`✅ Response corrected with complete tiered structure`);
                         }
                     }
                 }
-            });
+            }
         }
+    });
+}
 
 
-        // Calculate elapsed time
-        const endTime = Date.now();
-        const elapsedSeconds = ((endTime - startTime) / 1000).toFixed(2);
-        log(`⏱️ Total processing time: ${elapsedSeconds} seconds`);
+// Calculate elapsed time
+const endTime = Date.now();
+const elapsedSeconds = ((endTime - startTime) / 1000).toFixed(2);
+log(`⏱️ Total processing time: ${elapsedSeconds} seconds`);
 
-        return {
-            answer: finalResponse,
-            sources: enrichedSources,
-            suggestions: relatedDocs,
-            logs: debugLogs
-        };
+return {
+    answer: finalResponse,
+    sources: enrichedSources,
+    suggestions: relatedDocs,
+    logs: debugLogs
+};
 
     } catch (error: any) {
-        log(`Error processing RAG query: ${error.message}`);
-        console.error('Error processing RAG query:', error);
-        throw error;
-    }
+    log(`Error processing RAG query: ${error.message}`);
+    console.error('Error processing RAG query:', error);
+    throw error;
+}
 }
 
 /**
