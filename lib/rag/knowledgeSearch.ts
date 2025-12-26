@@ -75,7 +75,10 @@ export async function searchKnowledgeNotes(
 
         // Simple keyword matching - check if query keywords appear in title or content
         const queryLower = query.toLowerCase();
-        const queryWords = queryLower.split(/\s+/).filter(word => word.length > 2);
+        const queryWords = queryLower
+            .split(/\s+/)
+            .map(word => word.replace(/[^\w]/g, '')) // Remove punctuation
+            .filter(word => word.length > 2);
 
         // Stem query words for better matching (e.g., "apply" matches "application")
         const stemmedQueryWords = queryWords.map(word => stemmer.stem(word));
