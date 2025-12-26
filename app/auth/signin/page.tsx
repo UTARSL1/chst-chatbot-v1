@@ -68,13 +68,22 @@ function SignInContent() {
     return (
         <Card className="w-full max-w-md glassmorphism">
             <CardHeader className="space-y-1 text-center">
-                <div className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex flex-col items-center justify-center gap-0.5 mb-4">
-                    {/* Chat bubble with 3 dots */}
-                    <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
-                    {/* CHST text */}
-                    <span className="text-[10px] font-bold text-white tracking-tight">CHST</span>
+                <div className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex flex-col items-center justify-center gap-1.5 mb-4">
+                    {/* Filled chat bubble with cutout dots (matching favicon) */}
+                    <div className="relative">
+                        {/* Chat bubble background */}
+                        <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        {/* 3 dots cutout effect */}
+                        <div className="absolute inset-0 flex items-center justify-center gap-0.5">
+                            <div className="w-1 h-1 bg-blue-500 rounded-full"></div>
+                            <div className="w-1 h-1 bg-blue-500 rounded-full"></div>
+                            <div className="w-1 h-1 bg-blue-500 rounded-full"></div>
+                        </div>
+                    </div>
+                    {/* CHST text - larger */}
+                    <span className="text-xs font-bold text-white tracking-wide">CHST</span>
                 </div>
                 <CardTitle className="text-2xl font-bold text-white">
                     Welcome to CHST AI Agent{' '}
