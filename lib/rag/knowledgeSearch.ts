@@ -1,4 +1,7 @@
 import { prisma } from '@/lib/db';
+import natural from 'natural';
+
+const stemmer = natural.PorterStemmer;
 
 interface KnowledgeNoteResult {
     id: string;
@@ -65,11 +68,22 @@ export async function searchKnowledgeNotes(
         const queryLower = query.toLowerCase();
         const queryWords = queryLower.split(/\s+/).filter(word => word.length > 2);
 
+        // Stem query words for better matching (e.g., "apply" matches "application")
+        const stemmedQueryWords = queryWords.map(word => stemmer.stem(word));
+
+        console.log(`[KnowledgeSearch] Query: "${query}"`);
+        console.log(`[KnowledgeSearch] Query words: [${queryWords.join(', ')}]`);
+        console.log(`[KnowledgeSearch] Stemmed query words: [${stemmedQueryWords.join(', ')}]`);
+
         // Score each note based on keyword matches
         const scoredNotes = notes.map(note => {
             const titleLower = note.title.toLowerCase();
             const contentLower = note.content.toLowerCase();
             const tagsLower = (note.tags || []).map((tag: string) => tag.toLowerCase());
+
+            // Stem title and content words for matching
+            const titleWords = titleLower.split(/\s+/).map(w => stemmer.stem(w));
+            const contentWords = contentLower.split(/\s+/).map(w => stemmer.stem(w));
 
             let score = 0;
             let titleMatches = 0;
@@ -77,27 +91,29 @@ export async function searchKnowledgeNotes(
             let tagMatches = 0;
             const matchedWords: string[] = [];
 
-            // Check each query word
-            queryWords.forEach(word => {
-                // Tag match (highest weight - exact match only)
+            // Check each query word (both original and stemmed)
+            queryWords.forEach((word, index) => {
+                const stemmedWord = stemmedQueryWords[index];
+
+                // Tag match (highest weight - exact match only, no stemming)
                 if (tagsLower.includes(word)) {
                     score += 10;
                     tagMatches++;
                     matchedWords.push(`TAG:${word}`);
                 }
 
-                // Title match (high weight)
-                if (titleLower.includes(word)) {
+                // Title match (high weight) - use stemmed words
+                if (titleWords.includes(stemmedWord)) {
                     score += 3;
                     titleMatches++;
-                    matchedWords.push(`T:${word}`);
+                    matchedWords.push(`T:${word}→${stemmedWord}`);
                 }
 
-                // Content match (base weight)
-                if (contentLower.includes(word)) {
+                // Content match (base weight) - use stemmed words
+                if (contentWords.includes(stemmedWord)) {
                     score += 1;
                     contentMatches++;
-                    matchedWords.push(`C:${word}`);
+                    matchedWords.push(`C:${word}→${stemmedWord}`);
                 }
             });
 
@@ -109,7 +125,7 @@ export async function searchKnowledgeNotes(
             }
 
             // Debug logging
-            console.log(`[KnowledgeSearch] "${note.title}": score=${score}, tagMatches=${tagMatches}, titleMatches=${titleMatches}, contentMatches=${contentMatches}, matched=[${matchedWords.join(', ')}]`);
+            console.log(`[KnowledgeSearch] "${note.title}": score=${score.toFixed(1)}, tagMatches=${tagMatches}, titleMatches=${titleMatches}, contentMatches=${contentMatches}, matched=[${matchedWords.join(', ')}]`);
 
             return { ...note, score, titleMatches, contentMatches, tagMatches };
         });
