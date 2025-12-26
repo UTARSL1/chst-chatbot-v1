@@ -1363,6 +1363,7 @@ Guidelines:
         const hasStaffTool = localTools.some(t => t.function.name === 'utar_staff_search');
         const hasJcrTool = localTools.some(t => t.function.name === 'jcr_journal_metric');
         const hasNatureIndexTool = localTools.some(t => t.function.name === 'nature_index_lookup');
+        const hasNatureIndexJournalTool = localTools.some(t => t.function.name === 'nature_index_journal_lookup');
 
         if (hasStaffTool && !baseSystemPrompt.includes('utar_staff_search')) {
             baseSystemPrompt += `\n\n${STAFF_SEARCH_SYSTEM_PROMPT}`;
@@ -1375,6 +1376,11 @@ Guidelines:
         if (hasNatureIndexTool && !baseSystemPrompt.includes('nature_index_lookup')) {
             baseSystemPrompt += `\n\n${NATURE_INDEX_SYSTEM_PROMPT}`;
         }
+
+        if (hasNatureIndexJournalTool && !baseSystemPrompt.includes('nature_index_journal_lookup')) {
+            baseSystemPrompt += `\n\n${NATURE_INDEX_JOURNAL_SYSTEM_PROMPT}`;
+        }
+
 
         // Always append strict document handling rules to prevent hallucinations
         // This runs regardless of what is in the DB prompt

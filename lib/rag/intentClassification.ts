@@ -184,6 +184,7 @@ export function shouldSuppressKnowledgeNotes(
         // Check if we have tools that can answer data queries
         const hasDataTools = availableTools.some(tool =>
             tool === 'nature_index_lookup' ||
+            tool === 'nature_index_journal_lookup' ||
             tool === 'jcr_journal_metric' ||
             tool === 'utar_staff_search'
         );

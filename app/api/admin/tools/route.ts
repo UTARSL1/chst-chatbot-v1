@@ -12,7 +12,8 @@ const KNOWN_TOOLS = [
     { name: 'utar_list_departments', description: 'List all departments in a faculty.' },
     { name: 'utar_staff_search', description: 'Search UTAR internal staff directory.' },
     { name: 'jcr_journal_metric', description: 'Query JCR Impact Factors and Quartiles.' },
-    { name: 'nature_index_lookup', description: 'Look up Nature Index rankings for research institutions worldwide.' }
+    { name: 'nature_index_lookup', description: 'Look up Nature Index rankings for research institutions worldwide.' },
+    { name: 'nature_index_journal_lookup', description: 'Check if a journal is in the Nature Index list of 145 elite journals.' }
 ];
 
 const ALL_ROLES = ['public', 'student', 'member', 'chairperson'];
