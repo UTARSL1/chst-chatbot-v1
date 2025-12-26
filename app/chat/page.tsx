@@ -855,6 +855,7 @@ export default function ChatPage() {
                                     <div className="markdown-content">
                                         <ReactMarkdown
                                             remarkPlugins={[remarkGfm]}
+                                            rehypePlugins={[require('rehype-raw')]}
                                             urlTransform={(uri) => {
                                                 if (uri.startsWith('download:')) return uri;
                                                 return uri;
@@ -1062,6 +1063,11 @@ export default function ChatPage() {
                                                 em: ({ node, ...props }) => (
                                                     <em {...props} className="italic" />
                                                 ),
+                                                span: ({ node, ...props }: any) => {
+                                                    // Support inline color styles
+                                                    const style = props.style || {};
+                                                    return <span {...props} style={style} />;
+                                                },
                                             }}
                                         >
                                             {/* Remove backticks around download links for backward compatibility */}
