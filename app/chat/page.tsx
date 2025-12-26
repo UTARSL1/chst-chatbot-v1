@@ -816,7 +816,7 @@ export default function ChatPage() {
                                 </svg>
                             </div>
                             <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">Welcome to CHST AI Agent</h2>
-                            <p className="text-white text-lg">
+                            <p className="text-gray-300 text-lg font-light tracking-wide">
                                 Your intelligent assistant for CHST research, administration, and knowledge discovery
                             </p>
 
