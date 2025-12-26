@@ -68,7 +68,7 @@ function SignInContent() {
     return (
         <Card className="w-full max-w-md glassmorphism">
             <CardHeader className="space-y-1 text-center">
-                <div className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex flex-col items-center justify-center gap-1.5 mb-4">
+                <div className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex flex-col items-center justify-center gap-1 mb-4">
                     {/* White chat bubble with colorful dots */}
                     <div className="relative">
                         {/* White chat bubble background */}
@@ -83,7 +83,7 @@ function SignInContent() {
                         </div>
                     </div>
                     {/* CHST text */}
-                    <span className="text-xs font-bold text-white tracking-wide">CHST</span>
+                    <span className="text-sm font-bold text-white tracking-wide">CHST</span>
                 </div>
                 <CardTitle className="text-2xl font-bold text-white">
                     Welcome to CHST AI Agent{' '}

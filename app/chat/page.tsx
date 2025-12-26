@@ -809,7 +809,7 @@ export default function ChatPage() {
                 <div className="flex-1 overflow-y-auto p-6 space-y-4">
                     {messages.length === 0 ? (
                         <div className="max-w-3xl mx-auto text-center space-y-6 mt-12">
-                            <div className="w-24 h-24 mx-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex flex-col items-center justify-center gap-2">
+                            <div className="w-24 h-24 mx-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex flex-col items-center justify-center gap-1">
                                 {/* White chat bubble with colorful dots */}
                                 <div className="relative">
                                     {/* White chat bubble background */}
@@ -824,7 +824,7 @@ export default function ChatPage() {
                                     </div>
                                 </div>
                                 {/* CHST text */}
-                                <span className="text-sm font-bold text-white tracking-wide">CHST</span>
+                                <span className="text-base font-bold text-white tracking-wide">CHST</span>
                             </div>
                             <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">Welcome to CHST AI Agent</h2>
                             <p className="text-gray-300 text-lg font-light tracking-wide">
