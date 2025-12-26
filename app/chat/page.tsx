@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 import { TermsOfUseModal } from '@/components/TermsOfUseModal';
 import { CopyButton } from '@/components/CopyButton';
 import { Linkedin, Globe, FolderOpen, Users, ChevronDown, BookOpen, GraduationCap, Briefcase, FileText, DollarSign, TrendingUp, UserPlus, Plus, ExternalLink, Pencil, Trash2, MessageSquare, MoreVertical, Check, X } from 'lucide-react';
@@ -855,7 +856,7 @@ export default function ChatPage() {
                                     <div className="markdown-content">
                                         <ReactMarkdown
                                             remarkPlugins={[remarkGfm]}
-                                            rehypePlugins={[require('rehype-raw')]}
+                                            rehypePlugins={[rehypeRaw]}
                                             urlTransform={(uri) => {
                                                 if (uri.startsWith('download:')) return uri;
                                                 return uri;
