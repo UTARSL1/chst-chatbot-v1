@@ -11,6 +11,7 @@ export function searchStaffFromDirectory(
         faculty?: string;
         department?: string;
         name?: string;
+        email?: string;
         expertise?: string;
         role?: string;
         acronym?: string;
@@ -105,6 +106,15 @@ export function searchStaffFromDirectory(
 
     // Apply filters
     let results = allStaff;
+
+    // Filter by email (exact match, case-insensitive)
+    if (params.email) {
+        const emailQuery = params.email.toLowerCase().trim();
+        results = results.filter(staff =>
+            staff.email?.toLowerCase() === emailQuery
+        );
+        log(`After email filter: ${results.length} staff`);
+    }
 
     // Filter by name (fuzzy search)
     if (params.name) {

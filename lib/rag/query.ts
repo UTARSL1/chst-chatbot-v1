@@ -151,13 +151,14 @@ const UTAR_STAFF_TOOLS = [
         type: 'function' as const,
         function: {
             name: 'utar_staff_search',
-            description: 'Performs live staff lookups from the UTAR Staff Directory. Search by faculty, department, name, or expertise.',
+            description: 'Performs live staff lookups from the UTAR Staff Directory. Search by faculty, department, name, email, or expertise.',
             parameters: {
                 type: 'object',
                 properties: {
                     faculty: { type: 'string', description: 'Canonical faculty name from utar_resolve_unit (or "All").' },
                     department: { type: 'string', description: 'Department name (optional). WARNING: Do not expand acronyms here. usage: department="Department of Computing".' },
                     name: { type: 'string', description: 'Staff member\'s actual name (e.g., "John Smith"). DO NOT use administrative titles like Dean, Head, Director, Chairperson as names.' },
+                    email: { type: 'string', description: 'Staff member\'s email address (e.g., "johndoe@utar.edu.my"). Use for exact email lookups.' },
                     expertise: { type: 'string', description: 'Research area/expertise (optional).' },
                     role: { type: 'string', description: 'Specific administrative role (e.g. "Dean", "Head of Department"). REQUIRED when asking for specific administrative positions, even across multiple departments. Enables fast, targeted search. Do not use for "List all staff" queries.' },
                     acronym: { type: 'string', description: 'Exact acronym found in query (e.g. "D3E"). REQUIRED if user query contains an acronym. This ensures correct department resolution.' }
@@ -699,13 +700,14 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
             // HARD VALIDATION: Reject overly broad queries
             const faculty = args.faculty || 'All';
             const hasName = args.name && args.name.trim().length > 0;
+            const hasEmail = args.email && args.email.trim().length > 0;
             const hasExpertise = args.expertise && args.expertise.trim().length > 0;
             const hasAcronym = args.acronym && args.acronym.trim().length > 0;
 
             // Reject if searching ALL of UTAR (no faculty specified) UNLESS:
-            // - Searching by name or expertise (allowed to search all of UTAR)
+            // - Searching by name, email, or expertise (allowed to search all of UTAR)
             // - Searching by acronym (tool will auto-detect faculty from lookup table)
-            if ((faculty === 'All' || !faculty) && !hasName && !hasExpertise && !hasAcronym) {
+            if ((faculty === 'All' || !faculty) && !hasName && !hasEmail && !hasExpertise && !hasAcronym) {
                 const errorMsg = "Query too broad: Cannot search all staff across UTAR. Please specify a faculty (e.g., 'Lee Kong Chian Faculty of Engineering and Science') or department (e.g., 'Department of Mechatronics and Biomedical Engineering').";
                 if (logger) logger(`[VALIDATION REJECTED] ${errorMsg}`);
                 return {
@@ -716,7 +718,7 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
             }
 
             // Allow department='All' to search entire faculty (needed for Deans, etc.)
-            const searchType = hasName ? `name: ${args.name}` : hasExpertise ? `expertise: ${args.expertise}` : 'faculty-wide';
+            const searchType = hasEmail ? `email: ${args.email}` : hasName ? `name: ${args.name}` : hasExpertise ? `expertise: ${args.expertise}` : 'faculty-wide';
             if (logger) logger(`[VALIDATION PASSED] Staff search for faculty '${faculty}' (${searchType})`);
 
             // CODE-BASED ACRONYM DETECTION: Auto-correct when LLM provides department name instead of acronym

@@ -119,6 +119,7 @@ export async function searchStaff(
         faculty?: string;
         department?: string;
         name?: string;
+        email?: string;
         expertise?: string;
         role?: string;
         acronym?: string;
@@ -134,8 +135,8 @@ export async function searchStaff(
         log(`Searching staff with params: ${JSON.stringify(params)}`);
 
         // **OPTIMIZATION: Use pre-calculated metadata if possible**
-        // If query is just for counts (no name/expertise/role filters), use metadata directly
-        const isCountOnlyQuery = !params.name && !params.expertise && !params.role;
+        // If query is just for counts (no name/email/expertise/role filters), use metadata directly
+        const isCountOnlyQuery = !params.name && !params.email && !params.expertise && !params.role;
 
         if (isCountOnlyQuery && params.acronym) {
             log('Attempting to use pre-calculated metadata counts...');
@@ -191,8 +192,8 @@ export async function searchStaff(
 
                 const message = `There are ${staffFromDirectory.length} staff members (${breakdown.join(', ')}).`;
 
-                // Check if this is a detail query (role/name/expertise) or count-only query
-                const isDetailQuery = params.role || params.name || params.expertise;
+                // Check if this is a detail query (role/name/email/expertise) or count-only query
+                const isDetailQuery = params.role || params.name || params.email || params.expertise;
 
                 if (isDetailQuery) {
                     // Return full staff details for role/name/expertise queries
