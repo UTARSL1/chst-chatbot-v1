@@ -30,18 +30,19 @@ export function shouldAutoApprove(email: string): boolean {
 
 /**
  * Get accessible document levels based on user role
- * Hierarchy: student < member < chairperson
+ * Hierarchy: public (accessible to all) < student < member < chairperson
+ * Each role can access their own level + all levels below + public
  */
 export function getAccessibleLevels(role: string): string[] {
     switch (role) {
         case 'student':
-            return ['student'];
+            return ['public', 'student'];
         case 'member':
-            return ['student', 'member'];
+            return ['public', 'student', 'member'];
         case 'chairperson':
-            return ['student', 'member', 'chairperson'];
+            return ['public', 'student', 'member', 'chairperson'];
         default:
-            return [];
+            return ['public']; // Default: only public access
     }
 }
 
