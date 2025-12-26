@@ -815,9 +815,9 @@ export default function ChatPage() {
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                 </svg>
                             </div>
-                            <h2 className="text-2xl font-bold">Welcome to CHST-Chatbot</h2>
+                            <h2 className="text-2xl font-bold">Welcome to CHST AI Agent</h2>
                             <p className="text-white text-lg">
-                                Your AI Assistant for CHST Administration and Research Support
+                                Your intelligent assistant for CHST research, administration, and knowledge discovery
                             </p>
 
                             <div className="mt-8">
