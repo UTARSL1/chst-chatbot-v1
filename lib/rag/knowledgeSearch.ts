@@ -26,6 +26,9 @@ export async function searchKnowledgeNotes(
     limit: number = 3
 ): Promise<KnowledgeNoteResult[]> {
     try {
+        // DEBUG: Log the access levels being used for the query
+        console.log(`[KnowledgeSearch] Searching with accessLevels: [${accessLevels.join(', ')}]`);
+
         // Get all active knowledge notes that the user can access
         const notes = await prisma.knowledgeNote.findMany({
             where: {
@@ -60,7 +63,13 @@ export async function searchKnowledgeNotes(
             ],
         });
 
+        console.log(`[KnowledgeSearch] Database returned ${notes.length} notes`);
+        if (notes.length > 0) {
+            console.log(`[KnowledgeSearch] Note titles: [${notes.map(n => `"${n.title}"`).join(', ')}]`);
+        }
+
         if (notes.length === 0) {
+            console.log(`[KnowledgeSearch] No notes found - returning empty array`);
             return [];
         }
 
