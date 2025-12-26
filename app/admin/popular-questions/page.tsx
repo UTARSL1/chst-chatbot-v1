@@ -140,7 +140,7 @@ export default function PopularQuestionsAdmin() {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-white mb-2">Popular Questions</h1>
+                    <h1 className="text-3xl font-bold text-white mb-2">Quick Start Questions</h1>
                     <p className="text-gray-400">Manage common questions displayed to users based on their role.</p>
                 </div>
                 <Button onClick={() => setShowAddModal(true)} variant="gradient">

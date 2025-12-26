@@ -821,7 +821,7 @@ export default function ChatPage() {
                             </p>
 
                             <div className="mt-8">
-                                <h3 className="text-sm font-semibold text-muted-foreground mb-4">Popular Questions</h3>
+                                <h3 className="text-sm font-semibold text-muted-foreground mb-4">Quick Start Questions</h3>
                                 <div className="grid grid-cols-2 gap-3">
                                     {popularQuestions.length > 0 ? (
                                         popularQuestions.map((question, index) => (

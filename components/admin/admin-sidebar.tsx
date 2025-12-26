@@ -46,7 +46,7 @@ export function AdminSidebar() {
             ),
         },
         {
-            name: 'Popular Questions',
+            name: 'Quick Start Questions',
             href: '/admin/popular-questions',
             icon: (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
