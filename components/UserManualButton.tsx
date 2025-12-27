@@ -186,7 +186,38 @@ export default function UserManualButton() {
                                             thead: ({ children }) => <thead className="bg-gray-800">{children}</thead>,
                                             th: ({ children }) => <th className="px-4 py-2 bg-purple-900 text-white text-left font-semibold">{children}</th>,
                                             td: ({ children }) => <td className="px-4 py-2 border-t border-gray-700 text-gray-300">{children}</td>,
-                                            a: ({ children, href }) => <a href={href} className="text-purple-400 hover:text-purple-300 underline" target="_blank" rel="noopener noreferrer">{children}</a>,
+                                            a: ({ children, href }) => {
+                                                // Handle internal hash links (Table of Contents)
+                                                if (href?.startsWith('#')) {
+                                                    return (
+                                                        <a
+                                                            href={href}
+                                                            className="text-purple-400 hover:text-purple-300 underline cursor-pointer"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                const targetId = href.substring(1);
+                                                                const element = document.getElementById(targetId);
+                                                                if (element) {
+                                                                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                                                }
+                                                            }}
+                                                        >
+                                                            {children}
+                                                        </a>
+                                                    );
+                                                }
+                                                // External links open in new tab
+                                                return (
+                                                    <a
+                                                        href={href}
+                                                        className="text-purple-400 hover:text-purple-300 underline"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                    >
+                                                        {children}
+                                                    </a>
+                                                );
+                                            },
                                             hr: () => <hr className="my-6 border-gray-700" />,
                                         }}
                                     >
