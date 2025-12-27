@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useCurrentVersion } from '@/hooks/useCurrentVersion';
 import { Suspense } from 'react';
+import UserManualButton from '@/components/UserManualButton';
 
 function SignInContent() {
     const router = useRouter();
@@ -201,6 +202,10 @@ function SignInContent() {
                             Sign up
                         </Link>
                     </p>
+
+                    <div className="flex justify-center">
+                        <UserManualButton />
+                    </div>
                 </CardFooter>
             </form>
         </Card>
