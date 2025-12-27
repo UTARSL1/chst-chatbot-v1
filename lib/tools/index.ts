@@ -708,3 +708,108 @@ export function listDepartments(facultyName: string, logger?: (msg: string) => v
         departments: departmentList
     };
 }
+
+// --- Tool 4: Get Nature Index Journals Ranked by JIF ---
+export async function getNatureIndexJournalsRankedByJif(
+    params: { limit?: number; year?: number },
+    logger?: (msg: string) => void
+): Promise<{
+    journals: Array<{
+        rank: number;
+        journalName: string;
+        jif: number | null;
+        quartile: string | null;
+        year: number;
+        categories?: string[];
+    }>;
+    totalNatureIndexJournals: number;
+    year: number | string;
+    message: string;
+}> {
+    const log = (msg: string) => {
+        console.log(`[Tools] ${msg}`);
+        if (logger) logger(`[Tools] ${msg}`);
+    };
+
+    try {
+        const { getAllNatureIndexJournals } = await import('@/lib/natureIndexJournalCache');
+        const { getJournalMetricsByTitle } = await import('@/lib/jcrCache');
+
+        const limit = params.limit || 10;
+        const targetYear = params.year; // If undefined, we'll use latest available
+
+        log(`Ranking Nature Index journals by JIF (limit: ${limit}, year: ${targetYear || 'latest'})`);
+
+        // Get all Nature Index journals
+        const natureIndexJournals = getAllNatureIndexJournals();
+        log(`Found ${natureIndexJournals.length} Nature Index journals`);
+
+        // Fetch JIF data for each journal
+        const journalsWithJif: Array<{
+            journalName: string;
+            jif: number | null;
+            quartile: string | null;
+            year: number;
+            categories: string[];
+        }> = [];
+
+        for (const journal of natureIndexJournals) {
+            const result = getJournalMetricsByTitle(journal.journalName, targetYear ? [targetYear] : undefined);
+
+            if (result.found && result.metrics && result.metrics.length > 0) {
+                // Use the most recent year if multiple years available
+                const latestMetric = result.metrics[result.metrics.length - 1];
+
+                if (latestMetric.jifValue !== null) {
+                    journalsWithJif.push({
+                        journalName: result.journal?.fullTitle || journal.journalName,
+                        jif: latestMetric.jifValue,
+                        quartile: latestMetric.bestQuartile,
+                        year: latestMetric.year,
+                        categories: latestMetric.categories.map(c => c.category)
+                    });
+                }
+            }
+        }
+
+        log(`Found JIF data for ${journalsWithJif.length} Nature Index journals`);
+
+        // Sort by JIF descending
+        journalsWithJif.sort((a, b) => (b.jif || 0) - (a.jif || 0));
+
+        // Take top N
+        const topJournals = journalsWithJif.slice(0, limit);
+
+        // Add rank
+        const rankedJournals = topJournals.map((journal, index) => ({
+            rank: index + 1,
+            ...journal
+        }));
+
+        // Determine the year range in the results
+        const years = new Set(rankedJournals.map(j => j.year));
+        const yearDisplay = years.size === 1
+            ? Array.from(years)[0].toString()
+            : `${Math.min(...years)}-${Math.max(...years)}`;
+
+        const message = `Found ${rankedJournals.length} Nature Index journals with JIF data (out of ${natureIndexJournals.length} total Nature Index journals). Results are ranked by JIF for year ${yearDisplay}.`;
+
+        log(message);
+
+        return {
+            journals: rankedJournals,
+            totalNatureIndexJournals: natureIndexJournals.length,
+            year: yearDisplay,
+            message
+        };
+
+    } catch (error: any) {
+        log(`Error: ${error.message}`);
+        return {
+            journals: [],
+            totalNatureIndexJournals: 0,
+            year: 'unknown',
+            message: `Error fetching Nature Index journals ranked by JIF: ${error.message}`
+        };
+    }
+}

@@ -234,7 +234,28 @@ const NATURE_INDEX_JOURNAL_TOOL = {
     }
 };
 
-const AVAILABLE_TOOLS = [...UTAR_STAFF_TOOLS, JCR_TOOL, NATURE_INDEX_TOOL, NATURE_INDEX_JOURNAL_TOOL];
+const NATURE_INDEX_JIF_RANKING_TOOL = {
+    type: 'function' as const,
+    function: {
+        name: 'nature_index_journals_ranked_by_jif',
+        description: 'Get top N Nature Index journals ranked by Journal Impact Factor (JIF). Use this when user asks for "top journals", "best journals", "highest JIF", or "ranked by impact factor" among Nature Index journals.',
+        parameters: {
+            type: 'object',
+            properties: {
+                limit: {
+                    type: 'integer',
+                    description: 'Number of top journals to return (e.g., 10 for top 10). Default: 10.'
+                },
+                year: {
+                    type: 'integer',
+                    description: 'Year for JIF data (e.g., 2024). If omitted, uses latest available year for each journal.'
+                }
+            }
+        }
+    }
+};
+
+const AVAILABLE_TOOLS = [...UTAR_STAFF_TOOLS, JCR_TOOL, NATURE_INDEX_TOOL, NATURE_INDEX_JOURNAL_TOOL, NATURE_INDEX_JIF_RANKING_TOOL];
 
 const STAFF_SEARCH_SYSTEM_PROMPT = `
 === UTAR STAFF SEARCH TOOLS ===
@@ -768,6 +789,46 @@ The tool returns:
 
 `;
 
+const NATURE_INDEX_JIF_RANKING_SYSTEM_PROMPT = `
+=== NATURE INDEX JIF RANKING TOOL ===
+You have access to \`nature_index_journals_ranked_by_jif\` which ranks all 145 Nature Index journals by their Journal Impact Factor (JIF).
+
+### 🧠 When to Use
+Call this tool when the user asks:
+- "List top N nature index journals by JIF"
+- "Which nature index journals have the highest impact factor?"
+- "Best nature index journals ranked by JIF"
+- "Top 10 nature index journals"
+- "Rank nature index journals by impact factor"
+
+### 🧩 Tool Call Format
+{
+  "limit": 10,  // Number of top journals to return
+  "year": 2024  // Optional: specific year for JIF data
+}
+
+### 📊 Response Format
+Present results as a numbered list or table with:
+- Rank
+- Journal Name
+- JIF value
+- Quartile
+- Year
+
+**Example Table:**
+| Rank | Journal | JIF (Year) | Quartile |
+|------|---------|------------|----------|
+| 1    | CA: A Cancer Journal for Clinicians | 286.1 (2024) | Q1 |
+| 2    | Nature Reviews Molecular Cell Biology | 113.9 (2024) | Q1 |
+
+### ⚠️ Important Rules
+1. **Always mention the year**: JIF values change yearly, so always include the year
+2. **Explain the scope**: Make clear these are ranked among the 145 Nature Index journals only, not all journals
+3. **No Fabrication**: Only report what the tool returns
+4. **No Documents**: Don't suggest policy documents for this query
+
+`;
+
 /**
  * Execute a tool call locally (Ported for Vercel/Cloud Support)
  * Now accepts a logger to push internal logs to the debug trace.
@@ -889,6 +950,14 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
             }
 
             return checkJournalInNatureIndex(args.journalName);
+        }
+        if (name === 'nature_index_journals_ranked_by_jif') {
+            // Ensure both caches are loaded
+            await ensureNatureIndexJournalCacheLoaded();
+            await ensureJcrCacheLoaded();
+
+            const { getNatureIndexJournalsRankedByJif } = await import('@/lib/tools');
+            return await getNatureIndexJournalsRankedByJif(args, logger);
         }
         return { error: `Unknown tool: ${name} ` };
     } catch (error: any) {
@@ -1364,6 +1433,7 @@ Guidelines:
         const hasJcrTool = localTools.some(t => t.function.name === 'jcr_journal_metric');
         const hasNatureIndexTool = localTools.some(t => t.function.name === 'nature_index_lookup');
         const hasNatureIndexJournalTool = localTools.some(t => t.function.name === 'nature_index_journal_lookup');
+        const hasNatureIndexJifRankingTool = localTools.some(t => t.function.name === 'nature_index_journals_ranked_by_jif');
 
         if (hasStaffTool && !baseSystemPrompt.includes('utar_staff_search')) {
             baseSystemPrompt += `\n\n${STAFF_SEARCH_SYSTEM_PROMPT}`;
@@ -1379,6 +1449,10 @@ Guidelines:
 
         if (hasNatureIndexJournalTool && !baseSystemPrompt.includes('nature_index_journal_lookup')) {
             baseSystemPrompt += `\n\n${NATURE_INDEX_JOURNAL_SYSTEM_PROMPT}`;
+        }
+
+        if (hasNatureIndexJifRankingTool && !baseSystemPrompt.includes('nature_index_journals_ranked_by_jif')) {
+            baseSystemPrompt += `\n\n${NATURE_INDEX_JIF_RANKING_SYSTEM_PROMPT}`;
         }
 
 
