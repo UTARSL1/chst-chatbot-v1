@@ -13,7 +13,6 @@ export default function UserManualButton() {
     const [error, setError] = useState<string | null>(null);
     const [selectedRole, setSelectedRole] = useState<string | null>(null);
 
-    // Determine user's role or show role selector
     const userRole = session?.user?.role;
     const isAuthenticated = !!session;
 
@@ -56,7 +55,6 @@ export default function UserManualButton() {
         return roleNames[role] || role;
     };
 
-    // Role selection modal for unauthenticated users
     const RoleSelector = () => (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
             <div className="bg-gray-900 rounded-lg shadow-xl w-full max-w-md p-6 border border-gray-700">
@@ -100,7 +98,6 @@ export default function UserManualButton() {
 
     return (
         <>
-            {/* Button */}
             <button
                 onClick={() => {
                     if (isAuthenticated) {
@@ -116,14 +113,11 @@ export default function UserManualButton() {
                 <span className="hidden sm:inline">Manual</span>
             </button>
 
-            {/* Role Selector for unauthenticated users */}
             {isOpen && !isAuthenticated && !selectedRole && <RoleSelector />}
 
-            {/* Manual Viewer Modal */}
             {isOpen && (isAuthenticated || selectedRole) && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
                     <div className="bg-gray-900 rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col border border-gray-700">
-                        {/* Header */}
                         <div className="flex items-center justify-between p-6 border-b border-gray-700">
                             <div>
                                 <h2 className="text-2xl font-bold text-white">User Manual</h2>
@@ -151,7 +145,6 @@ export default function UserManualButton() {
                             </div>
                         </div>
 
-                        {/* Content */}
                         <div className="flex-1 overflow-y-auto p-6 bg-gray-900">
                             {isLoading && (
                                 <div className="flex items-center justify-center py-12">
@@ -160,41 +153,66 @@ export default function UserManualButton() {
                             )}
 
                             {error && (
-                                <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-800">
+                                <div className="bg-red-900/30 border border-red-700 rounded-lg p-4 text-red-300">
                                     {error}
                                 </div>
                             )}
 
                             {!isLoading && !error && manualContent && (
-                                <div className="prose prose-blue max-w-none">
+                                <div className="prose prose-invert max-w-none text-gray-300">
                                     <ReactMarkdown
                                         components={{
-                                            h1: ({ children }) => (
-                                                { manualContent }
+                                            h1: ({ children }) => <h1 className="text-3xl font-bold text-blue-400 border-b-2 border-blue-600 pb-2 mt-8 mb-4">{children}</h1>,
+                                            h2: ({ children }) => <h2 className="text-2xl font-bold text-blue-300 border-b border-blue-700 pb-2 mt-6 mb-3">{children}</h2>,
+                                            h3: ({ children }) => <h3 className="text-xl font-semibold text-blue-200 mt-5 mb-2">{children}</h3>,
+                                            h4: ({ children }) => <h4 className="text-lg font-semibold text-blue-100 mt-4 mb-2">{children}</h4>,
+                                            p: ({ children }) => <p className="text-gray-300 mb-4 leading-relaxed">{children}</p>,
+                                            ul: ({ children }) => <ul className="list-disc pl-5 mb-4 space-y-2 text-gray-300">{children}</ul>,
+                                            ol: ({ children }) => <ol className="list-decimal pl-5 mb-4 space-y-2 text-gray-300">{children}</ol>,
+                                            li: ({ children }) => <li className="text-gray-300">{children}</li>,
+                                            strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
+                                            code: ({ inline, children, ...props }: any) =>
+                                                inline ? (
+                                                    <code className="bg-gray-800 px-1.5 py-0.5 rounded text-sm font-mono text-pink-400" {...props}>{children}</code>
+                                                ) : (
+                                                    <code className="block bg-gray-800 p-4 rounded-lg overflow-x-auto text-sm font-mono text-gray-200 border border-gray-700" {...props}>{children}</code>
+                                                ),
+                                            blockquote: ({ children }) => <blockquote className="border-l-4 border-blue-500 pl-4 italic text-gray-400 my-4 bg-gray-800/50 py-2">{children}</blockquote>,
+                                            table: ({ children }) => (
+                                                <div className="overflow-x-auto my-4">
+                                                    <table className="min-w-full divide-y divide-gray-700 border border-gray-700">{children}</table>
+                                                </div>
+                                            ),
+                                            thead: ({ children }) => <thead className="bg-gray-800">{children}</thead>,
+                                            th: ({ children }) => <th className="px-4 py-2 bg-blue-900 text-white text-left font-semibold">{children}</th>,
+                                            td: ({ children }) => <td className="px-4 py-2 border-t border-gray-700 text-gray-300">{children}</td>,
+                                            a: ({ children, href }) => <a href={href} className="text-blue-400 hover:text-blue-300 underline" target="_blank" rel="noopener noreferrer">{children}</a>,
+                                            hr: () => <hr className="my-6 border-gray-700" />,
+                                        }}
+                                    >
+                                        {manualContent}
                                     </ReactMarkdown>
                                 </div>
                             )}
-                    </div>
+                        </div>
 
-                    {/* Footer */}
-                    <div className="flex items-center justify-between p-6 border-t border-gray-700 bg-gray-800">
-                        <p className="text-sm text-gray-400">
-                            Last updated: December 2025
-                        </p>
-                        <button
-                            onClick={() => {
-                                setIsOpen(false);
-                                setSelectedRole(null);
-                            }}
-                            className="px-4 py-2 text-sm font-medium text-gray-300 bg-gray-700 border border-gray-600 rounded-lg hover:bg-gray-600 transition-colors"
-                        >
-                            Close
-                        </button>
+                        <div className="flex items-center justify-between p-6 border-t border-gray-700 bg-gray-800">
+                            <p className="text-sm text-gray-400">
+                                Last updated: December 2025
+                            </p>
+                            <button
+                                onClick={() => {
+                                    setIsOpen(false);
+                                    setSelectedRole(null);
+                                }}
+                                className="px-4 py-2 text-sm font-medium text-gray-300 bg-gray-700 border border-gray-600 rounded-lg hover:bg-gray-600 transition-colors"
+                            >
+                                Close
+                            </button>
+                        </div>
                     </div>
                 </div>
-                </div >
-            )
-}
+            )}
         </>
     );
 }
