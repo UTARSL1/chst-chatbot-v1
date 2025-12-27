@@ -59,17 +59,17 @@ export default function UserManualButton() {
     // Role selection modal for unauthenticated users
     const RoleSelector = () => (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-            <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+            <div className="bg-gray-900 rounded-lg shadow-xl w-full max-w-md p-6 border border-gray-700">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-2xl font-bold text-gray-900">Select Your Role</h2>
+                    <h2 className="text-2xl font-bold text-white">Select Your Role</h2>
                     <button
                         onClick={() => setIsOpen(false)}
-                        className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
+                        className="p-2 text-gray-400 hover:text-gray-200 rounded-lg hover:bg-gray-800 transition-colors"
                     >
                         <X className="w-5 h-5" />
                     </button>
                 </div>
-                <p className="text-sm text-gray-600 mb-6">
+                <p className="text-sm text-gray-300 mb-6">
                     Choose which user manual you'd like to view:
                 </p>
                 <div className="space-y-3">
@@ -77,20 +77,20 @@ export default function UserManualButton() {
                         <button
                             key={role}
                             onClick={() => handleOpenManual(role)}
-                            className="w-full flex items-center justify-between p-4 text-left border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all group"
+                            className="w-full flex items-center justify-between p-4 text-left border-2 border-gray-700 rounded-lg hover:border-blue-500 hover:bg-gray-800 transition-all group"
                         >
                             <div>
-                                <div className="font-semibold text-gray-900 group-hover:text-blue-600">
+                                <div className="font-semibold text-white group-hover:text-blue-400">
                                     {getRoleDisplayName(role)}
                                 </div>
-                                <div className="text-sm text-gray-500">
+                                <div className="text-sm text-gray-400">
                                     {role === 'public' && 'Basic features and getting started'}
                                     {role === 'student' && 'All tools and academic support'}
                                     {role === 'member' && 'Research tools and JCR metrics'}
                                     {role === 'chairperson' && 'Admin dashboard and technical docs'}
                                 </div>
                             </div>
-                            <BookOpen className="w-5 h-5 text-gray-400 group-hover:text-blue-600" />
+                            <BookOpen className="w-5 h-5 text-gray-500 group-hover:text-blue-400" />
                         </button>
                     ))}
                 </div>
@@ -122,12 +122,12 @@ export default function UserManualButton() {
             {/* Manual Viewer Modal */}
             {isOpen && (isAuthenticated || selectedRole) && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-                    <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
+                    <div className="bg-gray-900 rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col border border-gray-700">
                         {/* Header */}
-                        <div className="flex items-center justify-between p-6 border-b">
+                        <div className="flex items-center justify-between p-6 border-b border-gray-700">
                             <div>
-                                <h2 className="text-2xl font-bold text-gray-900">User Manual</h2>
-                                <p className="text-sm text-gray-600 mt-1">
+                                <h2 className="text-2xl font-bold text-white">User Manual</h2>
+                                <p className="text-sm text-gray-400 mt-1">
                                     {getRoleDisplayName(selectedRole || userRole || 'public')} Guide
                                 </p>
                             </div>
@@ -144,7 +144,7 @@ export default function UserManualButton() {
                                         setIsOpen(false);
                                         setSelectedRole(null);
                                     }}
-                                    className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
+                                    className="p-2 text-gray-400 hover:text-gray-200 rounded-lg hover:bg-gray-800 transition-colors"
                                 >
                                     <X className="w-5 h-5" />
                                 </button>
@@ -152,7 +152,7 @@ export default function UserManualButton() {
                         </div>
 
                         {/* Content */}
-                        <div className="flex-1 overflow-y-auto p-6">
+                        <div className="flex-1 overflow-y-auto p-6 bg-gray-900">
                             {isLoading && (
                                 <div className="flex items-center justify-center py-12">
                                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -170,78 +170,31 @@ export default function UserManualButton() {
                                     <ReactMarkdown
                                         components={{
                                             h1: ({ children }) => (
-                                                <h1 className="text-3xl font-bold text-blue-900 border-b-2 border-blue-200 pb-2 mt-8 mb-4">
-                                                    {children}
-                                                </h1>
-                                            ),
-                                            h2: ({ children }) => (
-                                                <h2 className="text-2xl font-bold text-blue-800 border-b border-blue-100 pb-2 mt-6 mb-3">
-                                                    {children}
-                                                </h2>
-                                            ),
-                                            h3: ({ children }) => (
-                                                <h3 className="text-xl font-semibold text-blue-700 mt-5 mb-2">
-                                                    {children}
-                                                </h3>
-                                            ),
-                                            code: ({ inline, children, ...props }: any) =>
-                                                inline ? (
-                                                    <code className="bg-gray-100 px-1.5 py-0.5 rounded text-sm font-mono text-red-600" {...props}>
-                                                        {children}
-                                                    </code>
-                                                ) : (
-                                                    <code className="block bg-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono" {...props}>
-                                                        {children}
-                                                    </code>
-                                                ),
-                                            blockquote: ({ children }) => (
-                                                <blockquote className="border-l-4 border-blue-500 pl-4 italic text-gray-700 my-4">
-                                                    {children}
-                                                </blockquote>
-                                            ),
-                                            table: ({ children }) => (
-                                                <div className="overflow-x-auto my-4">
-                                                    <table className="min-w-full divide-y divide-gray-200 border">
-                                                        {children}
-                                                    </table>
-                                                </div>
-                                            ),
-                                            th: ({ children }) => (
-                                                <th className="px-4 py-2 bg-blue-600 text-white text-left font-semibold">
-                                                    {children}
-                                                </th>
-                                            ),
-                                            td: ({ children }) => (
-                                                <td className="px-4 py-2 border-t">
-                                                    {children}
-                                                </td>
-                                            ),
-                                        }}
-                                    >
-                                        {manualContent}
+                                                { manualContent }
                                     </ReactMarkdown>
                                 </div>
                             )}
-                        </div>
+                    </div>
 
-                        {/* Footer */}
-                        <div className="flex items-center justify-between p-6 border-t bg-gray-50">
-                            <p className="text-sm text-gray-600">
-                                Last updated: December 2025
-                            </p>
-                            <button
-                                onClick={() => {
-                                    setIsOpen(false);
-                                    setSelectedRole(null);
-                                }}
-                                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                            >
-                                Close
-                            </button>
-                        </div>
+                    {/* Footer */}
+                    <div className="flex items-center justify-between p-6 border-t border-gray-700 bg-gray-800">
+                        <p className="text-sm text-gray-400">
+                            Last updated: December 2025
+                        </p>
+                        <button
+                            onClick={() => {
+                                setIsOpen(false);
+                                setSelectedRole(null);
+                            }}
+                            className="px-4 py-2 text-sm font-medium text-gray-300 bg-gray-700 border border-gray-600 rounded-lg hover:bg-gray-600 transition-colors"
+                        >
+                            Close
+                        </button>
                     </div>
                 </div>
-            )}
+                </div >
+            )
+}
         </>
     );
 }
