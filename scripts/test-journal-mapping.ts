@@ -25,10 +25,10 @@ async function testMappings() {
 
     for (const journal of testJournals) {
         const result = getJournalMetricsByTitle(journal, [2024]);
-        if (result.found) {
+        if (result.found && result.journal) {
             console.log(`✓ ${journal}`);
             console.log(`  -> Matched: ${result.journal.fullTitle}`);
-            console.log(`  -> JIF 2024: ${result.metrics[0]?.jifValue || 'N/A'}\n`);
+            console.log(`  -> JIF 2024: ${result.metrics?.[0]?.jifValue || 'N/A'}\n`);
         } else {
             console.log(`✗ ${journal}`);
             console.log(`  -> ${result.reason}\n`);
