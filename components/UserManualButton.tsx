@@ -162,10 +162,26 @@ export default function UserManualButton() {
                                 <div className="prose prose-invert max-w-none text-gray-300">
                                     <ReactMarkdown
                                         components={{
-                                            h1: ({ children }) => <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 bg-clip-text text-transparent border-b-2 border-purple-600 pb-2 mt-8 mb-4">{children}</h1>,
-                                            h2: ({ children }) => <h2 className="text-2xl font-bold text-purple-300 border-b border-purple-700 pb-2 mt-6 mb-3">{children}</h2>,
-                                            h3: ({ children }) => <h3 className="text-xl font-semibold text-purple-200 mt-5 mb-2">{children}</h3>,
-                                            h4: ({ children }) => <h4 className="text-lg font-semibold text-purple-100 mt-4 mb-2">{children}</h4>,
+                                            h1: ({ children }) => {
+                                                const text = String(children);
+                                                const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+                                                return <h1 id={id} className="text-3xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 bg-clip-text text-transparent border-b-2 border-purple-600 pb-2 mt-8 mb-4">{children}</h1>;
+                                            },
+                                            h2: ({ children }) => {
+                                                const text = String(children);
+                                                const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+                                                return <h2 id={id} className="text-2xl font-bold text-purple-300 border-b border-purple-700 pb-2 mt-6 mb-3">{children}</h2>;
+                                            },
+                                            h3: ({ children }) => {
+                                                const text = String(children);
+                                                const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+                                                return <h3 id={id} className="text-xl font-semibold text-purple-200 mt-5 mb-2">{children}</h3>;
+                                            },
+                                            h4: ({ children }) => {
+                                                const text = String(children);
+                                                const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+                                                return <h4 id={id} className="text-lg font-semibold text-purple-100 mt-4 mb-2">{children}</h4>;
+                                            },
                                             p: ({ children }) => <p className="text-gray-300 mb-4 leading-relaxed">{children}</p>,
                                             ul: ({ children }) => <ul className="list-disc pl-5 mb-4 space-y-2 text-gray-300">{children}</ul>,
                                             ol: ({ children }) => <ol className="list-decimal pl-5 mb-4 space-y-2 text-gray-300">{children}</ol>,
