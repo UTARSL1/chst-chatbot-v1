@@ -214,41 +214,132 @@ export function getJournalMetricsByIssn(issn: string, years?: number[]): Journal
     return wrapResult(records || [], years, 'issn');
 }
 
+// Direct mapping for Nature Index journal names to Clarivate database names
+// This handles known inconsistencies between the two sources
+const NATURE_INDEX_TO_CLARIVATE_MAP: Record<string, string> = {
+    // Exact mappings from user-provided list
+    'angewandte chemie international edition': 'angewandte chemie-international edition',
+    'british journal of surgery': 'bjs-british journal of surgery',
+    'environmental science and technology': 'environmental science & technology',
+    'jama: the journal of the american medical association': 'jama-journal of the american medical association',
+    'journal of bone and joint surgery american volume': 'journal of bone and joint surgery-american volume',
+    'journal of geophysical research: atmospheres': 'journal of geophysical research-atmospheres',
+    'journal of geophysical research: solid earth': 'journal of geophysical research-solid earth',
+    'journal of physiology': 'journal of physiology london',
+    'journal of the american society of nephrology': 'journal of the american society of nephrology',
+    'journal of the national cancer institute': 'jnci-journal of the national cancer institute',
+    'monthly notices of the royal astronomical society: letters': 'monthly notices of the royal astronomical society',
+    'proceedings of the royal society b': 'proceedings of the royal society b-biological sciences',
+    'the astrophysical journal letters': 'astrophysical journal letters',
+    'the embo journal': 'embo journal',
+    'the isme journal: multidisciplinary journal of microbial ecology': 'isme journal',
+    'the journal of allergy and clinical immunology': 'journal of allergy and clinical immunology',
+    'the journal of physical chemistry letters': 'journal of physical chemistry letters',
+    'the lancet': 'lancet',
+    'the lancet diabetes & endocrinology': 'lancet diabetes & endocrinology',
+    'the lancet global health': 'lancet global health',
+    'the lancet neurology': 'lancet neurology',
+    'the lancet oncology': 'lancet oncology',
+    'the lancet psychiatry': 'lancet psychiatry',
+    'the new england journal of medicine': 'new england journal of medicine',
+    'the plant cell': 'plant cell',
+};
+
 export function getJournalMetricsByTitle(title: string, years?: number[]): JournalMatchResult {
     if (!title) return { found: false, reason: 'No title provided' };
     const tKey = title.trim().toLowerCase().replace(/\s+/g, ' ');
 
-    // 1. Exact match
+    // 1. Check direct mapping table first (for known Nature Index variations)
+    if (NATURE_INDEX_TO_CLARIVATE_MAP[tKey]) {
+        const mappedTitle = NATURE_INDEX_TO_CLARIVATE_MAP[tKey];
+        if (byTitleMap.has(mappedTitle)) {
+            console.log(`[JCR Cache] Direct mapping: "${title}" -> "${mappedTitle}"`);
+            return wrapResult(byTitleMap.get(mappedTitle)!, years, 'title', `Mapped from "${title}"`);
+        }
+    }
+
+    // 2. Exact match
     if (byTitleMap.has(tKey)) {
         return wrapResult(byTitleMap.get(tKey)!, years, 'title');
     }
 
-    // 2. Fuzzy match (Find best close match)
-    // Only search if length > 3 to avoid noise
+    // Helper: Normalize title by removing common prefixes/suffixes and punctuation
+    const normalizeTitle = (t: string): string => {
+        return t
+            .replace(/^(the|a|an)\s+/i, '') // Remove leading articles
+            .replace(/[:\-–—]/g, ' ') // Replace punctuation with spaces
+            .replace(/\s+/g, ' ') // Normalize spaces
+            .trim();
+    };
+
+    // 2. Enhanced fuzzy match with multiple strategies
     if (tKey.length > 3) {
         let bestMatch: string | null = null;
-        let minDist = 999;
-        const threshold = Math.max(3, Math.floor(tKey.length * 0.2)); // Allow 20% typos
+        let bestScore = 0;
+        const minScore = 0.65; // 65% similarity threshold (lowered to catch more variations)
+
+        const tNormalized = normalizeTitle(tKey);
+        const tWords = new Set(tNormalized.split(' ').filter(w => w.length > 2));
 
         for (const knownTitle of byTitleMap.keys()) {
-            // Optimization: Skip if length diff is too big
-            if (Math.abs(knownTitle.length - tKey.length) > threshold) continue;
+            const kNormalized = normalizeTitle(knownTitle);
+            const kWords = new Set(kNormalized.split(' ').filter(w => w.length > 2));
 
-            const dist = levenshtein(tKey, knownTitle);
-            if (dist < minDist && dist <= threshold) {
-                minDist = dist;
-                bestMatch = knownTitle;
+            // Strategy 1: Levenshtein distance (for typos)
+            const threshold = Math.max(3, Math.floor(tKey.length * 0.2));
+            if (Math.abs(knownTitle.length - tKey.length) <= threshold) {
+                const dist = levenshtein(tKey, knownTitle);
+                if (dist <= threshold) {
+                    const score = 1 - (dist / Math.max(tKey.length, knownTitle.length));
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestMatch = knownTitle;
+                    }
+                }
+            }
+
+            // Strategy 2: Word-based matching (handles extra words, prefixes, suffixes)
+            const intersection = new Set([...tWords].filter(w => kWords.has(w)));
+            const union = new Set([...tWords, ...kWords]);
+
+            if (intersection.size > 0 && union.size > 0) {
+                // Base word overlap score
+                let wordScore = intersection.size / union.size;
+
+                // Boost 1: If one is a substring of the other
+                const isSubstring = kNormalized.includes(tNormalized) || tNormalized.includes(kNormalized);
+                if (isSubstring) {
+                    wordScore = Math.max(wordScore, 0.85);
+                }
+
+                // Boost 2: If all words from the shorter title are in the longer one
+                // (handles "British Journal of Surgery" vs "BJS-British Journal of Surgery")
+                const shorterWords = tWords.size <= kWords.size ? tWords : kWords;
+                const longerWords = tWords.size > kWords.size ? tWords : kWords;
+                const allShorterInLonger = [...shorterWords].every(w => longerWords.has(w));
+
+                if (allShorterInLonger) {
+                    // High confidence if all words match
+                    wordScore = Math.max(wordScore, 0.90);
+                }
+
+                if (wordScore > bestScore && wordScore >= minScore) {
+                    bestScore = wordScore;
+                    bestMatch = knownTitle;
+                }
             }
         }
 
         if (bestMatch) {
-            console.log(`[JCR Cache] Fuzzy match: "${title}" -> "${bestMatch}"`);
+            console.log(`[JCR Cache] Fuzzy match: "${title}" -> "${bestMatch}" (score: ${bestScore.toFixed(2)})`);
             return wrapResult(byTitleMap.get(bestMatch)!, years, 'title', `Fuzzy matched from "${title}"`);
         }
     }
 
     return { found: false, reason: 'Journal not found' };
 }
+
+
 
 export function getJournalInfo(titleOrIssn: string): { fullTitle: string, issnPrint: string | null, issnElectronic: string | null } | null {
     // Helper to get basic info from cache if we have a match
