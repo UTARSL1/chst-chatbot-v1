@@ -1,4 +1,4 @@
-# CHST Chatbot - Student User Manual
+# CHST AI Agent - Student User Manual
 
 ## Welcome UTAR Students!
 
@@ -435,8 +435,9 @@ A: Currently, chat history is viewable only within the interface. Export functio
 
 ---
 
-**Welcome to CHST Chatbot!**
+**Welcome to CHST AI Agent!**
 
 We're here to support your academic journey at UTAR. If you have questions or need assistance, don't hesitate to ask!
 
 Happy chatting! 🎓
+

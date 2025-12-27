@@ -1,8 +1,8 @@
-# CHST Chatbot - Admin/Chairperson Manual
+# CHST AI Agent - Admin/Chairperson Manual
 
 ## Welcome, Administrator!
 
-This comprehensive manual is designed for **Chairpersons and Administrators** of the CHST Chatbot system. It covers all user features, administrative dashboard functions, technical architecture, and maintenance procedures.
+This comprehensive manual is designed for **Chairpersons and Administrators** of the CHST AI Agent system. It covers all user features, administrative dashboard functions, technical architecture, and maintenance procedures.
 
 ---
 
@@ -971,7 +971,7 @@ View and analyze user conversations for quality assurance and insights.
 
 ### Overview
 
-The CHST Chatbot is built on a modern, scalable architecture:
+The CHST AI Agent is built on a modern, scalable architecture:
 
 **Technology Stack:**
 - **Frontend**: Next.js 14 (App Router), React, TypeScript, Tailwind CSS
@@ -1902,10 +1902,11 @@ When transitioning to a new administrator:
 
 ---
 
-**Thank you for administering the CHST Chatbot!**
+**Thank you for administering the CHST AI Agent!**
 
 This system is designed to serve the UTAR community with accurate, helpful information. Your role as administrator is crucial to maintaining quality and reliability.
 
 If you have questions or need assistance, refer to this manual first, then consult the resources listed above.
 
 **Good luck, and happy administrating!** 🚀
+

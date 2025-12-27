@@ -128,7 +128,7 @@ export default function UserManualButton() {
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={handleDownload}
-                                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all shadow-md"
                                 >
                                     <Download className="w-4 h-4" />
                                     Download
@@ -162,10 +162,10 @@ export default function UserManualButton() {
                                 <div className="prose prose-invert max-w-none text-gray-300">
                                     <ReactMarkdown
                                         components={{
-                                            h1: ({ children }) => <h1 className="text-3xl font-bold text-blue-400 border-b-2 border-blue-600 pb-2 mt-8 mb-4">{children}</h1>,
-                                            h2: ({ children }) => <h2 className="text-2xl font-bold text-blue-300 border-b border-blue-700 pb-2 mt-6 mb-3">{children}</h2>,
-                                            h3: ({ children }) => <h3 className="text-xl font-semibold text-blue-200 mt-5 mb-2">{children}</h3>,
-                                            h4: ({ children }) => <h4 className="text-lg font-semibold text-blue-100 mt-4 mb-2">{children}</h4>,
+                                            h1: ({ children }) => <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 bg-clip-text text-transparent border-b-2 border-purple-600 pb-2 mt-8 mb-4">{children}</h1>,
+                                            h2: ({ children }) => <h2 className="text-2xl font-bold text-purple-300 border-b border-purple-700 pb-2 mt-6 mb-3">{children}</h2>,
+                                            h3: ({ children }) => <h3 className="text-xl font-semibold text-purple-200 mt-5 mb-2">{children}</h3>,
+                                            h4: ({ children }) => <h4 className="text-lg font-semibold text-purple-100 mt-4 mb-2">{children}</h4>,
                                             p: ({ children }) => <p className="text-gray-300 mb-4 leading-relaxed">{children}</p>,
                                             ul: ({ children }) => <ul className="list-disc pl-5 mb-4 space-y-2 text-gray-300">{children}</ul>,
                                             ol: ({ children }) => <ol className="list-decimal pl-5 mb-4 space-y-2 text-gray-300">{children}</ol>,
@@ -177,16 +177,16 @@ export default function UserManualButton() {
                                                 ) : (
                                                     <code className="block bg-gray-800 p-4 rounded-lg overflow-x-auto text-sm font-mono text-gray-200 border border-gray-700" {...props}>{children}</code>
                                                 ),
-                                            blockquote: ({ children }) => <blockquote className="border-l-4 border-blue-500 pl-4 italic text-gray-400 my-4 bg-gray-800/50 py-2">{children}</blockquote>,
+                                            blockquote: ({ children }) => <blockquote className="border-l-4 border-purple-500 pl-4 italic text-gray-400 my-4 bg-gray-800/50 py-2">{children}</blockquote>,
                                             table: ({ children }) => (
                                                 <div className="overflow-x-auto my-4">
                                                     <table className="min-w-full divide-y divide-gray-700 border border-gray-700">{children}</table>
                                                 </div>
                                             ),
                                             thead: ({ children }) => <thead className="bg-gray-800">{children}</thead>,
-                                            th: ({ children }) => <th className="px-4 py-2 bg-blue-900 text-white text-left font-semibold">{children}</th>,
+                                            th: ({ children }) => <th className="px-4 py-2 bg-purple-900 text-white text-left font-semibold">{children}</th>,
                                             td: ({ children }) => <td className="px-4 py-2 border-t border-gray-700 text-gray-300">{children}</td>,
-                                            a: ({ children, href }) => <a href={href} className="text-blue-400 hover:text-blue-300 underline" target="_blank" rel="noopener noreferrer">{children}</a>,
+                                            a: ({ children, href }) => <a href={href} className="text-purple-400 hover:text-purple-300 underline" target="_blank" rel="noopener noreferrer">{children}</a>,
                                             hr: () => <hr className="my-6 border-gray-700" />,
                                         }}
                                     >

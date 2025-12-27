@@ -1,6 +1,6 @@
-# CHST Chatbot - Public User Manual
+# CHST AI Agent - Public User Manual
 
-## Welcome to CHST Chatbot
+## Welcome to CHST AI Agent
 
 Welcome to the **Centre for Healthcare Science and Technology (CHST) Chatbot**, your intelligent assistant for accessing UTAR information, research resources, and institutional knowledge.
 
@@ -25,7 +25,7 @@ This manual will guide you through using the chatbot as a **public user**.
 ### Creating Your Account
 
 1. **Visit the Registration Page**
-   - Navigate to the CHST Chatbot website
+   - Navigate to the CHST AI Agent website
    - Click on "Sign Up" or "Register"
 
 2. **Fill in Your Details**
@@ -287,6 +287,7 @@ A: The chatbot is optimized for desktop and mobile. Try updating your browser.
 
 ---
 
-**Thank you for using CHST Chatbot!**
+**Thank you for using CHST AI Agent!**
 
 We're committed to providing you with accurate, helpful information. If you have any questions or feedback, please don't hesitate to reach out.
+

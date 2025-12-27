@@ -1,4 +1,4 @@
-# CHST Chatbot - Member User Manual
+# CHST AI Agent - Member User Manual
 
 ## Welcome UTAR Faculty & Staff!
 
@@ -458,6 +458,7 @@ Explore journals in your field:
 
 **Empowering Your Research!**
 
-The CHST Chatbot is designed to support your research excellence. Use the JCR and Nature Index tools to make informed publication decisions and build a strong research profile.
+The CHST AI Agent is designed to support your research excellence. Use the JCR and Nature Index tools to make informed publication decisions and build a strong research profile.
 
 Happy researching! 🔬📊
+
