@@ -11,6 +11,7 @@ import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import { TermsOfUseModal } from '@/components/TermsOfUseModal';
 import { CopyButton } from '@/components/CopyButton';
+import UserManualButton from '@/components/UserManualButton';
 import { Linkedin, Globe, FolderOpen, Users, ChevronDown, BookOpen, GraduationCap, Briefcase, FileText, DollarSign, TrendingUp, UserPlus, Plus, ExternalLink, Pencil, Trash2, MessageSquare, MoreVertical, Check, X } from 'lucide-react';
 import { useCurrentVersion } from '@/hooks/useCurrentVersion';
 
@@ -1276,6 +1277,9 @@ export default function ChatPage() {
                 open={termsModalOpen}
                 onOpenChange={setTermsModalOpen}
             />
+
+            {/* User Manual Button - Next to Terms */}
+            <UserManualButton />
 
             {/* Add Quick Access Link Modal */}
             {

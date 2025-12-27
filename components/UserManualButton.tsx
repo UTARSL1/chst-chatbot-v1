@@ -11,16 +11,21 @@ export default function UserManualButton() {
     const [manualContent, setManualContent] = useState<string>('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [selectedRole, setSelectedRole] = useState<string | null>(null);
 
-    const userRole = session?.user?.role || 'public';
+    // Determine user's role or show role selector
+    const userRole = session?.user?.role;
+    const isAuthenticated = !!session;
 
-    const handleOpenManual = async () => {
+    const handleOpenManual = async (role?: string) => {
+        const roleToFetch = role || userRole || 'public';
+        setSelectedRole(roleToFetch);
         setIsOpen(true);
         setIsLoading(true);
         setError(null);
 
         try {
-            const response = await fetch(`/api/manual?role=${userRole}`);
+            const response = await fetch(`/api/manual?role=${roleToFetch}`);
 
             if (!response.ok) {
                 throw new Error('Failed to load manual');
@@ -37,8 +42,8 @@ export default function UserManualButton() {
     };
 
     const handleDownload = () => {
-        // Open download endpoint in new tab
-        window.open(`/api/manual/download?role=${userRole}`, '_blank');
+        const roleToDownload = selectedRole || userRole || 'public';
+        window.open(`/api/manual/download?role=${roleToDownload}`, '_blank');
     };
 
     const getRoleDisplayName = (role: string) => {
@@ -51,19 +56,71 @@ export default function UserManualButton() {
         return roleNames[role] || role;
     };
 
+    // Role selection modal for unauthenticated users
+    const RoleSelector = () => (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-2xl font-bold text-gray-900">Select Your Role</h2>
+                    <button
+                        onClick={() => setIsOpen(false)}
+                        className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
+                    >
+                        <X className="w-5 h-5" />
+                    </button>
+                </div>
+                <p className="text-sm text-gray-600 mb-6">
+                    Choose which user manual you'd like to view:
+                </p>
+                <div className="space-y-3">
+                    {['public', 'student', 'member', 'chairperson'].map((role) => (
+                        <button
+                            key={role}
+                            onClick={() => handleOpenManual(role)}
+                            className="w-full flex items-center justify-between p-4 text-left border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all group"
+                        >
+                            <div>
+                                <div className="font-semibold text-gray-900 group-hover:text-blue-600">
+                                    {getRoleDisplayName(role)}
+                                </div>
+                                <div className="text-sm text-gray-500">
+                                    {role === 'public' && 'Basic features and getting started'}
+                                    {role === 'student' && 'All tools and academic support'}
+                                    {role === 'member' && 'Research tools and JCR metrics'}
+                                    {role === 'chairperson' && 'Admin dashboard and technical docs'}
+                                </div>
+                            </div>
+                            <BookOpen className="w-5 h-5 text-gray-400 group-hover:text-blue-600" />
+                        </button>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+
     return (
         <>
             {/* Button */}
             <button
-                onClick={handleOpenManual}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                onClick={() => {
+                    if (isAuthenticated) {
+                        handleOpenManual();
+                    } else {
+                        setIsOpen(true);
+                    }
+                }}
+                className="fixed bottom-6 right-24 p-2 bg-background/50 hover:bg-accent border border-border/50 text-muted-foreground hover:text-foreground text-xs rounded-full shadow-sm transition-all duration-200 flex items-center gap-2 z-40 opacity-70 hover:opacity-100"
+                title="View User Manual"
             >
-                <BookOpen className="w-4 h-4" />
-                User Manual
+                <BookOpen className="w-3 h-3" />
+                <span className="hidden sm:inline">Manual</span>
             </button>
 
-            {/* Modal */}
-            {isOpen && (
+            {/* Role Selector for unauthenticated users */}
+            {isOpen && !isAuthenticated && !selectedRole && <RoleSelector />}
+
+            {/* Manual Viewer Modal */}
+            {isOpen && (isAuthenticated || selectedRole) && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
                     <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
                         {/* Header */}
@@ -71,7 +128,7 @@ export default function UserManualButton() {
                             <div>
                                 <h2 className="text-2xl font-bold text-gray-900">User Manual</h2>
                                 <p className="text-sm text-gray-600 mt-1">
-                                    {getRoleDisplayName(userRole)} Guide
+                                    {getRoleDisplayName(selectedRole || userRole || 'public')} Guide
                                 </p>
                             </div>
                             <div className="flex items-center gap-2">
@@ -83,7 +140,10 @@ export default function UserManualButton() {
                                     Download
                                 </button>
                                 <button
-                                    onClick={() => setIsOpen(false)}
+                                    onClick={() => {
+                                        setIsOpen(false);
+                                        setSelectedRole(null);
+                                    }}
                                     className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
                                 >
                                     <X className="w-5 h-5" />
@@ -109,7 +169,6 @@ export default function UserManualButton() {
                                 <div className="prose prose-blue max-w-none">
                                     <ReactMarkdown
                                         components={{
-                                            // Custom styling for markdown elements
                                             h1: ({ children }) => (
                                                 <h1 className="text-3xl font-bold text-blue-900 border-b-2 border-blue-200 pb-2 mt-8 mb-4">
                                                     {children}
@@ -171,7 +230,10 @@ export default function UserManualButton() {
                                 Last updated: December 2025
                             </p>
                             <button
-                                onClick={() => setIsOpen(false)}
+                                onClick={() => {
+                                    setIsOpen(false);
+                                    setSelectedRole(null);
+                                }}
                                 className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                             >
                                 Close

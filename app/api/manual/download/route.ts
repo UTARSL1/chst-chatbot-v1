@@ -7,17 +7,6 @@ import { marked } from 'marked';
 
 export async function GET(request: NextRequest) {
   try {
-    // Verify authentication
-    const session = await getServerSession(authOptions);
-
-    if (!session || !session.user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
-    const user = session.user;
     const { searchParams } = new URL(request.url);
     const requestedRole = searchParams.get('role');
 
@@ -29,13 +18,28 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Ensure user can only access their own role's manual
-    // (chairperson can access all manuals for review purposes)
-    if (user.role !== requestedRole && user.role !== 'chairperson') {
-      return NextResponse.json(
-        { error: 'Forbidden: You can only access your role\'s manual' },
-        { status: 403 }
-      );
+    // For public manual, allow unauthenticated access
+    if (requestedRole !== 'public') {
+      // For other roles, require authentication
+      const session = await getServerSession(authOptions);
+
+      if (!session || !session.user) {
+        return NextResponse.json(
+          { error: 'Unauthorized' },
+          { status: 401 }
+        );
+      }
+
+      const user = session.user;
+
+      // Ensure user can only access their own role's manual
+      // (chairperson can access all manuals for review purposes)
+      if (user.role !== requestedRole && user.role !== 'chairperson') {
+        return NextResponse.json(
+          { error: 'Forbidden: You can only access your role\'s manual' },
+          { status: 403 }
+        );
+      }
     }
 
     // Map role to filename
