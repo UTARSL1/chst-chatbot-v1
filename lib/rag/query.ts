@@ -9,7 +9,7 @@ import { searchKnowledgeNotes } from './knowledgeSearch';
 import { resolveUnit, searchStaff, listDepartments } from '@/lib/tools';
 import { getJournalMetricsByTitle, getJournalMetricsByIssn, ensureJcrCacheLoaded } from '@/lib/jcrCache';
 import { getInstitutionByName, getInstitutionsByCountry, ensureNatureIndexCacheLoaded } from '@/lib/natureIndexCache';
-import { checkJournalInNatureIndex, ensureNatureIndexJournalCacheLoaded } from '@/lib/natureIndexJournalCache';
+import { checkJournalInNatureIndex, getAllNatureIndexJournals, ensureNatureIndexJournalCacheLoaded } from '@/lib/natureIndexJournalCache';
 
 // Initialize OpenAI client
 const openai = new OpenAI({
@@ -234,7 +234,22 @@ const NATURE_INDEX_JOURNAL_TOOL = {
     }
 };
 
-const AVAILABLE_TOOLS = [...UTAR_STAFF_TOOLS, JCR_TOOL, NATURE_INDEX_TOOL, NATURE_INDEX_JOURNAL_TOOL];
+const NATURE_INDEX_JOURNAL_LIST_TOOL = {
+    type: 'function' as const,
+    function: {
+        name: 'nature_index_journal_list_with_jif',
+        description: 'Get a list of Nature Index journals with their JIF (Journal Impact Factor) values from JCR. Returns journals sorted by JIF (highest first). Use this when asked to rank or list Nature Index journals by impact factor.',
+        parameters: {
+            type: 'object',
+            properties: {
+                year: { type: 'integer', description: 'JCR year to retrieve (e.g. 2024). Defaults to 2024.' },
+                limit: { type: 'integer', description: 'Maximum number of journals to return (e.g. 10 for top 10). Defaults to 10.' }
+            }
+        }
+    }
+};
+
+const AVAILABLE_TOOLS = [...UTAR_STAFF_TOOLS, JCR_TOOL, NATURE_INDEX_TOOL, NATURE_INDEX_JOURNAL_TOOL, NATURE_INDEX_JOURNAL_LIST_TOOL];
 
 const STAFF_SEARCH_SYSTEM_PROMPT = `
 === UTAR STAFF SEARCH TOOLS ===
@@ -768,6 +783,73 @@ The tool returns:
 
 `;
 
+const NATURE_INDEX_JOURNAL_RANKING_SYSTEM_PROMPT = `
+=== NATURE INDEX JOURNALS RANKED BY JIF TOOL ===
+You have access to a tool named \`nature_index_journal_list_with_jif\` which retrieves ALL 145 Nature Index journals with their JIF values and ranks them.
+
+### 🧠 When to Use
+Call \`nature_index_journal_list_with_jif\` when the user asks to:
+- **Rank** Nature Index journals by JIF/Impact Factor
+- **List top N** Nature Index journals by JIF
+- **Compare** Nature Index journals by impact factor
+- Get the **highest JIF** journals in Nature Index
+
+### 🧩 Tool Call Format
+{
+  "year": 2024,  // JCR year (optional, defaults to 2024)
+  "limit": 10    // Number of journals to return (optional, defaults to 10)
+}
+
+### 📊 Response Format
+The tool returns journals **already sorted by JIF (highest first)**. You do NOT need to sort them yourself.
+
+Always include:
+- **Rank**: Position in the list (1 = highest JIF)
+- **Journal Name**: Full journal name
+- **JIF**: Impact Factor value
+- **Quartile**: Q1-Q4 classification
+
+### 🎯 Examples
+
+**Example 1 — Top 10 by JIF**
+*User*: "List top 10 Nature Index journals by JIF for 2024"
+*Tool Call*: \`nature_index_journal_list_with_jif(year=2024, limit=10)\`
+*Tool Output*:
+\`\`\`json
+{
+  "found": true,
+  "year": 2024,
+  "journals": [
+    {"journalName": "CA-A CANCER JOURNAL FOR CLINICIANS", "jifValue": 232.4, "jifQuartile": "Q1"},
+    {"journalName": "NATURE REVIEWS MOLECULAR CELL BIOLOGY", "jifValue": 90.2, "jifQuartile": "Q1"},
+    {"journalName": "THE LANCET", "jifValue": 88.5, "jifQuartile": "Q1"},
+    ...
+  ]
+}
+\`\`\`
+*Assistant Answer*:
+"Here are the top 10 Nature Index journals ranked by Journal Impact Factor (JIF) for 2024:
+
+| Rank | Journal | JIF | Quartile |
+|------|---------|-----|----------|
+| 1 | CA-A CANCER JOURNAL FOR CLINICIANS | 232.4 | Q1 |
+| 2 | NATURE REVIEWS MOLECULAR CELL BIOLOGY | 90.2 | Q1 |
+| 3 | THE LANCET | 88.5 | Q1 |
+..."
+
+**Example 2 — Top 5 by JIF**
+*User*: "What are the 5 highest impact factor journals in Nature Index?"
+*Tool Call*: \`nature_index_journal_list_with_jif(year=2024, limit=5)\`
+
+### ⚠️ Critical Rules
+1. **Use This Tool for Ranking**: When user asks to rank/list Nature Index journals by JIF, ALWAYS use this tool
+2. **DO NOT Guess Journals**: Never manually select journals like "Nature", "Science", "Cell" - use the tool
+3. **Results Are Pre-Sorted**: The tool returns journals sorted by JIF (highest first) - present them in that order
+4. **Table Format**: Use a table to display rankings clearly
+5. **No Documents**: Don't suggest policy documents for journal ranking queries
+
+`;
+
 /**
  * Execute a tool call locally (Ported for Vercel/Cloud Support)
  * Now accepts a logger to push internal logs to the debug trace.
@@ -879,6 +961,75 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
             }
 
             return { found: false, error: 'Please provide either an institution name (query) or a country filter' };
+        }
+        if (name === 'nature_index_journal_list_with_jif') {
+            // Ensure both caches are loaded
+            await ensureNatureIndexJournalCacheLoaded();
+            await ensureJcrCacheLoaded();
+
+            const year = args.year || 2024;
+            const limit = args.limit || 10;
+
+            if (logger) logger(`[nature_index_journal_list_with_jif] Getting Nature Index journals with JIF for year ${year}, limit ${limit}`);
+
+            // Get all Nature Index journals
+            const natureIndexJournals = getAllNatureIndexJournals();
+
+            if (natureIndexJournals.length === 0) {
+                return { found: false, error: 'No Nature Index journals found in cache' };
+            }
+
+            // Look up JIF for each journal
+            const journalsWithJif: Array<{
+                journalName: string;
+                jifValue: number | null;
+                jifQuartile: string | null;
+                categories: string[];
+            }> = [];
+
+            for (const journal of natureIndexJournals) {
+                const jcrResult = getJournalMetricsByTitle(journal.journalName, [year]);
+
+                if (jcrResult.found && jcrResult.metrics && jcrResult.metrics.length > 0) {
+                    const metric = jcrResult.metrics[0];
+                    journalsWithJif.push({
+                        journalName: journal.journalName,
+                        jifValue: metric.jifValue,
+                        jifQuartile: metric.bestQuartile,
+                        categories: metric.categories.map(c => c.category)
+                    });
+                } else {
+                    // Journal not found in JCR or no data for this year
+                    journalsWithJif.push({
+                        journalName: journal.journalName,
+                        jifValue: null,
+                        jifQuartile: null,
+                        categories: []
+                    });
+                }
+            }
+
+            // Sort by JIF (highest first), null values go to the end
+            journalsWithJif.sort((a, b) => {
+                if (a.jifValue === null && b.jifValue === null) return 0;
+                if (a.jifValue === null) return 1;
+                if (b.jifValue === null) return -1;
+                return b.jifValue - a.jifValue;
+            });
+
+            // Limit results
+            const topJournals = journalsWithJif.slice(0, limit);
+
+            if (logger) logger(`[nature_index_journal_list_with_jif] Returning top ${topJournals.length} journals`);
+
+            return {
+                found: true,
+                year,
+                totalNatureIndexJournals: natureIndexJournals.length,
+                journalsWithJif: topJournals.length,
+                journalsWithoutJif: journalsWithJif.filter(j => j.jifValue === null).length,
+                journals: topJournals
+            };
         }
         if (name === 'nature_index_journal_lookup') {
             // Ensure data is loaded
