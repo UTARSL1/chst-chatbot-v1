@@ -142,6 +142,100 @@ export async function searchStaff(
             log('Attempting to use pre-calculated metadata counts...');
             try {
                 const { getStaffCountsFromMetadata } = await import('./get-staff-counts');
+
+                // **DISAMBIGUATION: Check if acronym exists in multiple faculties**
+                if (!params.faculty || params.faculty.toLowerCase() === 'all') {
+                    // Load staff directory to check for multiple matches
+                    const { loadStaffDirectory } = await import('./staff-directory');
+                    const directory = loadStaffDirectory();
+
+                    if (directory) {
+                        // Find all faculties that have this department acronym
+                        const matches: Array<{
+                            facultyAcronym: string;
+                            facultyName: string;
+                            departmentName: string;
+                            counts: any;
+                        }> = [];
+
+                        for (const [facAcronym, fac] of Object.entries(directory.faculties)) {
+                            const dept = fac.departments[params.acronym];
+                            if (dept) {
+                                matches.push({
+                                    facultyAcronym: facAcronym,
+                                    facultyName: fac.canonical,
+                                    departmentName: dept.canonical,
+                                    counts: {
+                                        staffCount: dept.staffCount,
+                                        fullTimeCount: dept.fullTimeCount,
+                                        adjunctCount: dept.adjunctCount,
+                                        partTimeCount: dept.partTimeCount,
+                                        expatriateCount: dept.expatriateCount,
+                                        emeritusCount: dept.emeritusCount
+                                    }
+                                });
+                            }
+                        }
+
+                        if (matches.length > 1) {
+                            // **AMBIGUOUS: Multiple faculties have this department**
+                            log(`✓ Found ${params.acronym} in ${matches.length} faculties - aggregating results`);
+
+                            // Aggregate totals
+                            const totalCounts = matches.reduce((acc, match) => ({
+                                staffCount: acc.staffCount + match.counts.staffCount,
+                                fullTimeCount: acc.fullTimeCount + match.counts.fullTimeCount,
+                                adjunctCount: acc.adjunctCount + match.counts.adjunctCount,
+                                partTimeCount: acc.partTimeCount + match.counts.partTimeCount,
+                                expatriateCount: acc.expatriateCount + match.counts.expatriateCount,
+                                emeritusCount: acc.emeritusCount + match.counts.emeritusCount
+                            }), {
+                                staffCount: 0,
+                                fullTimeCount: 0,
+                                adjunctCount: 0,
+                                partTimeCount: 0,
+                                expatriateCount: 0,
+                                emeritusCount: 0
+                            });
+
+                            // Build breakdown message
+                            const facultyBreakdown = matches.map(m => {
+                                const parts: string[] = [];
+                                if (m.counts.fullTimeCount > 0) parts.push(`${m.counts.fullTimeCount} full-time`);
+                                if (m.counts.adjunctCount > 0) parts.push(`${m.counts.adjunctCount} adjunct`);
+                                if (m.counts.partTimeCount > 0) parts.push(`${m.counts.partTimeCount} part-time`);
+                                if (m.counts.expatriateCount > 0) parts.push(`${m.counts.expatriateCount} expatriate`);
+                                return `${m.facultyAcronym}: ${m.counts.staffCount} staff (${parts.join(', ')})`;
+                            }).join('; ');
+
+                            const totalBreakdown: string[] = [];
+                            if (totalCounts.fullTimeCount > 0) totalBreakdown.push(`${totalCounts.fullTimeCount} full-time`);
+                            if (totalCounts.adjunctCount > 0) totalBreakdown.push(`${totalCounts.adjunctCount} adjunct`);
+                            if (totalCounts.partTimeCount > 0) totalBreakdown.push(`${totalCounts.partTimeCount} part-time`);
+                            if (totalCounts.expatriateCount > 0) totalBreakdown.push(`${totalCounts.expatriateCount} expatriate`);
+
+                            const message = `${params.acronym} has ${totalCounts.staffCount} staff across ${matches.length} faculties (${totalBreakdown.join(', ')}). Breakdown: ${facultyBreakdown}`;
+
+                            return {
+                                message,
+                                totalCount: totalCounts.staffCount,
+                                fullTimeCount: totalCounts.fullTimeCount,
+                                adjunctCount: totalCounts.adjunctCount,
+                                partTimeCount: totalCounts.partTimeCount,
+                                expatriateCount: totalCounts.expatriateCount,
+                                isAggregated: true,
+                                breakdown: matches.map(m => ({
+                                    faculty: m.facultyName,
+                                    facultyAcronym: m.facultyAcronym,
+                                    department: m.departmentName,
+                                    ...m.counts
+                                }))
+                            } as any;
+                        }
+                    }
+                }
+
+                // Single match or faculty specified - use normal metadata lookup
                 const counts = getStaffCountsFromMetadata(params, logger);
 
                 if (counts) {
