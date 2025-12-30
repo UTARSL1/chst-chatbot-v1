@@ -1795,5 +1795,16 @@
       "FLO"
     ],
     "departmentId": "2345"
+  },
+  {
+    "acronym": "DCL",
+    "canonical": "Department of Chemical Engineering",
+    "type": "Academic Department",
+    "parent": "Faculty of Engineering and Green Technology",
+    "aliases": [
+      "Department of Chemical Engineering",
+      "DCL"
+    ],
+    "departmentId": "3352"
   }
 ]
