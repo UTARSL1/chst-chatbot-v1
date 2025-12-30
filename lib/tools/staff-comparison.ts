@@ -249,9 +249,9 @@ export function compareStaffDirectories(dir1: StaffDirectory, dir2: StaffDirecto
         year1,
         year2,
         summary: {
-            totalStaffYear1: dir1.metadata.uniqueStaffCount,
-            totalStaffYear2: dir2.metadata.uniqueStaffCount,
-            netChange: dir2.metadata.uniqueStaffCount - dir1.metadata.uniqueStaffCount,
+            totalStaffYear1: dir1.metadata.uniqueStaffCount || 0,
+            totalStaffYear2: dir2.metadata.uniqueStaffCount || 0,
+            netChange: (dir2.metadata.uniqueStaffCount || 0) - (dir1.metadata.uniqueStaffCount || 0),
             promotions,
             demotions,
             lateralMoves,
