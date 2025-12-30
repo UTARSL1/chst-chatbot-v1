@@ -44,18 +44,54 @@ export function getStaffCountsFromMetadata(
         }
 
         // Check if it's a department
-        for (const fac of Object.values(directory.faculties)) {
-            const dept = fac.departments[params.acronym];
-            if (dept) {
-                log(`Found department metadata: ${dept.canonical}`);
-                return {
-                    staffCount: dept.staffCount,
-                    fullTimeCount: dept.fullTimeCount,
-                    adjunctCount: dept.adjunctCount,
-                    partTimeCount: dept.partTimeCount,
-                    expatriateCount: dept.expatriateCount,
-                    emeritusCount: dept.emeritusCount
-                };
+        // If faculty is specified, search only in that faculty
+        if (params.faculty) {
+            // Find the faculty by name or acronym
+            let targetFaculty = null;
+            const facultyQuery = params.faculty.toLowerCase();
+
+            for (const [facAcronym, fac] of Object.entries(directory.faculties)) {
+                const facultyMatches =
+                    fac.canonical.toLowerCase() === facultyQuery ||
+                    fac.canonical.toLowerCase().includes(facultyQuery) ||
+                    facAcronym.toLowerCase() === facultyQuery ||
+                    fac.aliases.some(a => a.toLowerCase() === facultyQuery || a.toLowerCase().includes(facultyQuery));
+
+                if (facultyMatches) {
+                    targetFaculty = fac;
+                    break;
+                }
+            }
+
+            if (targetFaculty) {
+                const dept = targetFaculty.departments[params.acronym];
+                if (dept) {
+                    log(`Found department metadata: ${dept.canonical} in ${targetFaculty.canonical}`);
+                    return {
+                        staffCount: dept.staffCount,
+                        fullTimeCount: dept.fullTimeCount,
+                        adjunctCount: dept.adjunctCount,
+                        partTimeCount: dept.partTimeCount,
+                        expatriateCount: dept.expatriateCount,
+                        emeritusCount: dept.emeritusCount
+                    };
+                }
+            }
+        } else {
+            // No faculty specified, search across all faculties (return first match)
+            for (const fac of Object.values(directory.faculties)) {
+                const dept = fac.departments[params.acronym];
+                if (dept) {
+                    log(`Found department metadata: ${dept.canonical}`);
+                    return {
+                        staffCount: dept.staffCount,
+                        fullTimeCount: dept.fullTimeCount,
+                        adjunctCount: dept.adjunctCount,
+                        partTimeCount: dept.partTimeCount,
+                        expatriateCount: dept.expatriateCount,
+                        emeritusCount: dept.emeritusCount
+                    };
+                }
             }
         }
     }
