@@ -136,7 +136,8 @@ export async function searchStaff(
 
         // **OPTIMIZATION: Use pre-calculated metadata if possible**
         // If query is just for counts (no name/email/expertise/role filters), use metadata directly
-        const isCountOnlyQuery = !params.name && !params.email && !params.expertise && !params.role;
+        // BUT: If department is specified (not just acronym), user likely wants staff list, not just counts
+        const isCountOnlyQuery = !params.name && !params.email && !params.expertise && !params.role && !params.department;
 
         if (isCountOnlyQuery && params.acronym) {
             log('Attempting to use pre-calculated metadata counts...');
