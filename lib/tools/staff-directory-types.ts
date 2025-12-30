@@ -113,6 +113,17 @@ export interface StaffDirectory {
         description: string;
         patterns: Record<string, string>;
     };
+    legacyMetadata?: {
+        snapshotYear: number;
+        snapshotDate: string;
+        snapshotTimestamp: string;
+        purpose: string;
+        totalStaffAtSnapshot: number;
+        uniqueStaffAtSnapshot: number;
+        facultiesAtSnapshot: string[];
+        departmentsAtSnapshot: number;
+        note: string;
+    };
 }
 
 // Utility: Detect employment type from searchId
