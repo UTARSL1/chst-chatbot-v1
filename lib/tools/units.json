@@ -1617,5 +1617,183 @@
       "Xinwei Institute",
       "XI"
     ]
+  },
+  {
+    "acronym": "FGO",
+    "canonical": "Faculty General Office",
+    "type": "Administrative Department",
+    "parent": "Faculty of Accountancy and Management",
+    "aliases": [
+      "Faculty General Office",
+      "FGO"
+    ],
+    "departmentId": "88"
+  },
+  {
+    "acronym": "FGO",
+    "canonical": "Faculty General Office",
+    "type": "Administrative Department",
+    "parent": "Faculty of Arts and Social Science",
+    "aliases": [
+      "Faculty General Office",
+      "FGO"
+    ],
+    "departmentId": "87"
+  },
+  {
+    "acronym": "FGO",
+    "canonical": "Faculty General Office (Kampar Campus)",
+    "type": "Administrative Department",
+    "parent": "Faculty of Chinese Studies",
+    "aliases": [
+      "Faculty General Office (Kampar Campus)",
+      "FGO (Kampar)",
+      "FGO"
+    ],
+    "departmentId": "7391"
+  },
+  {
+    "acronym": "FGO",
+    "canonical": "Faculty General Office (Sungai Long Campus)",
+    "type": "Administrative Department",
+    "parent": "Faculty of Chinese Studies",
+    "aliases": [
+      "Faculty General Office (Sungai Long Campus)",
+      "FGO (Sungai Long)",
+      "FGO"
+    ],
+    "departmentId": "7392"
+  },
+  {
+    "acronym": "FGO",
+    "canonical": "Faculty General Office",
+    "type": "Administrative Department",
+    "parent": "Faculty of Creative Industries",
+    "aliases": [
+      "Faculty General Office",
+      "FGO"
+    ],
+    "departmentId": "94"
+  },
+  {
+    "acronym": "FGO",
+    "canonical": "Faculty General Office",
+    "type": "Administrative Department",
+    "parent": "Faculty of Education",
+    "aliases": [
+      "Faculty General Office",
+      "FGO"
+    ],
+    "departmentId": "6391"
+  },
+  {
+    "acronym": "FGO",
+    "canonical": "Faculty General Office",
+    "type": "Administrative Department",
+    "parent": "Faculty of Engineering and Green Technology",
+    "aliases": [
+      "Faculty General Office",
+      "FGO"
+    ],
+    "departmentId": "199"
+  },
+  {
+    "acronym": "FGO",
+    "canonical": "Faculty General Office",
+    "type": "Administrative Department",
+    "parent": "Faculty of Information and Communication Technology",
+    "aliases": [
+      "Faculty General Office",
+      "FGO"
+    ],
+    "departmentId": "86"
+  },
+  {
+    "acronym": "FGO",
+    "canonical": "Faculty General Office",
+    "type": "Administrative Department",
+    "parent": "Faculty of Science",
+    "aliases": [
+      "Faculty General Office",
+      "FGO"
+    ],
+    "departmentId": "200"
+  },
+  {
+    "acronym": "FGO",
+    "canonical": "Faculty General Office",
+    "type": "Administrative Department",
+    "parent": "Lee Kong Chian Faculty of Engineering and Science",
+    "aliases": [
+      "Faculty General Office",
+      "FGO"
+    ],
+    "departmentId": "89"
+  },
+  {
+    "acronym": "FGO",
+    "canonical": "Faculty of General Office",
+    "type": "Administrative Department",
+    "parent": "M. Kandiah Faculty of Medicine and Health Sciences",
+    "aliases": [
+      "Faculty of General Office",
+      "FGO"
+    ],
+    "departmentId": "2344"
+  },
+  {
+    "acronym": "FGO",
+    "canonical": "Faculty General Office",
+    "type": "Administrative Department",
+    "parent": "Teh Hong Piow Faculty of Business and Finance",
+    "aliases": [
+      "Faculty General Office",
+      "FGO"
+    ],
+    "departmentId": "6385"
+  },
+  {
+    "acronym": "DLMSA",
+    "canonical": "Department of Laboratory Management and Safety Administration",
+    "type": "Administrative Department",
+    "parent": "Faculty of Engineering and Green Technology",
+    "aliases": [
+      "Department of Laboratory Management and Safety Administration",
+      "DLMSA"
+    ],
+    "departmentId": "1297"
+  },
+  {
+    "acronym": "DLMSA",
+    "canonical": "Department of Laboratory Management and Safety Administration",
+    "type": "Administrative Department",
+    "parent": "Faculty of Science",
+    "aliases": [
+      "Department of Laboratory Management and Safety Administration",
+      "DLMSA"
+    ],
+    "departmentId": "1296"
+  },
+  {
+    "acronym": "DLMSA",
+    "canonical": "Department of Laboratory Management and Safety Administration",
+    "type": "Administrative Department",
+    "parent": "Lee Kong Chian Faculty of Engineering and Science",
+    "aliases": [
+      "Department of Laboratory Management and Safety Administration",
+      "DLMSA"
+    ],
+    "departmentId": "1295"
+  },
+  {
+    "acronym": "FLO",
+    "canonical": "Faculty Laboratory Office",
+    "type": "Administrative Department",
+    "parent": "M. Kandiah Faculty of Medicine and Health Sciences",
+    "aliases": [
+      "Faculty Laboratory Office",
+      "FLO"
+    ],
+    "departmentId": "2345"
   }
 ]
