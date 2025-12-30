@@ -272,6 +272,17 @@ When asked for staff counts across ALL departments in a faculty (e.g., "how many
 - The retrieved documents are NOT relevant to tool-based queries
 - DO recommend documents for policy/procedure questions (sabbatical, grants, RPS, etc.) where tools are NOT used
 
+**CRITICAL: WHEN USER SPECIFIES BOTH DEPARTMENT AND FACULTY**
+- If user mentions a department with a faculty in parentheses (e.g., \"Department of Industrial Engineering (FEGT)\"):
+  1. Use the faculty acronym from parentheses: {\"faculty\": \"FEGT\"}
+  2. Use utar_resolve_unit to get the department acronym if you don't know it
+  3. Then use the department acronym: {\"acronym\": \"DIE\"}
+  4. Example: \"How many staff in Department of Industrial Engineering (FEGT)?\"
+     - Step 1: Call utar_resolve_unit({\"query\": \"Department of Industrial Engineering\"}) → Returns \"DIE\"
+     - Step 2: Call utar_staff_search({\"faculty\": \"FEGT\", \"acronym\": \"DIE\"})
+- If user mentions department without faculty, use faculty=\"All\" and acronym parameter
+- NEVER use department full name in the search - always resolve to acronym first
+
 **CRITICAL: HANDLING ACRONYMS - MANDATORY WORKFLOW**
 - If the user uses an acronym (e.g., "D3E", "DMBE", "LKC FES"), you MUST put it in the \`acronym\` parameter.
 - ❌ NEVER guess or expand the acronym yourself - let the system resolve it.
