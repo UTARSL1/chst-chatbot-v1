@@ -344,7 +344,10 @@ async function scrapeUnitStaff(
 
 // Main sync function - sync specific faculties only
 export async function syncStaffDirectory(
-    facultiesToSync: string[] = ['LKC FES'], // Default to LKC FES for testing
+    facultiesToSync: string[] = [
+        'FAM', 'FAS', 'FCS', 'FCI', 'FEd', 'FEGT',
+        'FICT', 'FSc', 'LKC FES', 'MK FMHS', 'THP FBF'
+    ], // All UTAR faculties
     logger?: (msg: string) => void
 ): Promise<SyncHistoryEntry> {
     const log = (msg: string) => {

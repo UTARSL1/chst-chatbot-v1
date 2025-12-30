@@ -29386,5 +29386,28 @@
       "expatriate": "EP or E prefix (e.g., EP1801, E2001)",
       "emeritus": "EM prefix (e.g., EM1501)"
     }
+  },
+  "legacyMetadata": {
+    "snapshotYear": 2025,
+    "snapshotDate": "2025-12-30",
+    "snapshotTimestamp": "2025-12-30T05:59:45.223Z",
+    "purpose": "End-of-year 2025 staff directory snapshot for year-over-year comparison and historical tracking",
+    "totalStaffAtSnapshot": 1112,
+    "uniqueStaffAtSnapshot": 1042,
+    "facultiesAtSnapshot": [
+      "FAM",
+      "FAS",
+      "FCI",
+      "FCS",
+      "FEGT",
+      "FEd",
+      "FICT",
+      "FSc",
+      "LKC FES",
+      "MK FMHS",
+      "THP FBF"
+    ],
+    "departmentsAtSnapshot": 49,
+    "note": "This is a permanent historical record. Use for queries like: Was staff X with UTAR in 2025? What was the position of staff Y in 2025?"
   }
 }

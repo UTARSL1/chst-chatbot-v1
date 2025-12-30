@@ -7,8 +7,20 @@ import { syncStaffDirectory } from './staff-directory';
 console.log('=== Starting Local Staff Directory Sync ===\n');
 console.log('This will update lib/tools/staff_directory.json\n');
 
-// Sync LKC FES (add more faculties as needed)
-const faculties = ['LKC FES'];
+// Sync all UTAR faculties
+const faculties = [
+    'FAM',      // Faculty of Accountancy and Management
+    'FAS',      // Faculty of Arts and Social Science
+    'FCS',      // Faculty of Chinese Studies
+    'FCI',      // Faculty of Creative Industries
+    'FEd',      // Faculty of Education
+    'FEGT',     // Faculty of Engineering and Green Technology
+    'FICT',     // Faculty of Information and Communication Technology
+    'FSc',      // Faculty of Science
+    'LKC FES',  // Lee Kong Chian Faculty of Engineering and Science
+    'MK FMHS',  // M. Kandiah Faculty of Medicine and Health Sciences
+    'THP FBF'   // Teh Hong Piow Faculty of Business and Finance
+];
 
 console.log(`Syncing faculties: ${faculties.join(', ')}\n`);
 

@@ -105,7 +105,7 @@ export default function ToolManagementPage() {
     };
 
     const handleSyncStaff = async () => {
-        if (!confirm('This will sync staff data from UTAR website. This may take 5-10 minutes. Continue?')) {
+        if (!confirm('This will sync staff data from all 11 UTAR faculties. This may take 15-30 minutes. Continue?')) {
             return;
         }
 
@@ -114,7 +114,12 @@ export default function ToolManagementPage() {
             const res = await fetch('/api/admin/sync-staff', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ faculties: ['LKC FES'] }) // TODO: Add UI to select faculties
+                body: JSON.stringify({
+                    faculties: [
+                        'FAM', 'FAS', 'FCS', 'FCI', 'FEd', 'FEGT',
+                        'FICT', 'FSc', 'LKC FES', 'MK FMHS', 'THP FBF'
+                    ]
+                })
             });
 
             if (!res.ok) {
