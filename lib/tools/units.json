@@ -1721,17 +1721,6 @@
   },
   {
     "acronym": "FGO",
-    "canonical": "Faculty General Office",
-    "type": "Admin Department",
-    "parent": "Lee Kong Chian Faculty of Engineering and Science",
-    "aliases": [
-      "Faculty General Office",
-      "FGO"
-    ],
-    "departmentId": "89"
-  },
-  {
-    "acronym": "FGO",
     "canonical": "Faculty of General Office",
     "type": "Admin Department",
     "parent": "M. Kandiah Faculty of Medicine and Health Sciences",
@@ -1775,17 +1764,6 @@
     "departmentId": "1296"
   },
   {
-    "acronym": "DLMSA",
-    "canonical": "Department of Laboratory Management and Safety Administration",
-    "type": "Admin Department",
-    "parent": "Lee Kong Chian Faculty of Engineering and Science",
-    "aliases": [
-      "Department of Laboratory Management and Safety Administration",
-      "DLMSA"
-    ],
-    "departmentId": "1295"
-  },
-  {
     "acronym": "FLO",
     "canonical": "Faculty Laboratory Office",
     "type": "Admin Department",
@@ -1806,5 +1784,127 @@
       "DCL"
     ],
     "departmentId": "3352"
+  },
+  {
+    "acronym": "DET",
+    "canonical": "Department of Digital Economy Technology",
+    "type": "Academic Department",
+    "parent": "Faculty of Information and Communication Technology",
+    "aliases": [
+      "Department of Digital Economy Technology",
+      "DET"
+    ],
+    "departmentId": "2317"
+  },
+  {
+    "acronym": "DCIT",
+    "canonical": "Department of Curriculum and Instructional Technology",
+    "type": "Academic Department",
+    "parent": "Faculty of Education",
+    "aliases": [
+      "Department of Curriculum and Instructional Technology",
+      "DCIT"
+    ],
+    "departmentId": "6388"
+  },
+  {
+    "acronym": "DECE",
+    "canonical": "Department of Early Childhood Education",
+    "type": "Academic Department",
+    "parent": "Faculty of Education",
+    "aliases": [
+      "Department of Early Childhood Education",
+      "DECE"
+    ],
+    "departmentId": "6390"
+  },
+  {
+    "acronym": "DEE",
+    "canonical": "Department of English Education",
+    "type": "Academic Department",
+    "parent": "Faculty of Education",
+    "aliases": [
+      "Department of English Education",
+      "DEE"
+    ],
+    "departmentId": "6389"
+  },
+  {
+    "acronym": "DPMS",
+    "canonical": "Department of Physical and Mathematical Science",
+    "type": "Academic Department",
+    "parent": "Faculty of Science",
+    "aliases": [
+      "Department of Physical and Mathematical Science",
+      "DPMS"
+    ],
+    "departmentId": "191"
+  },
+  {
+    "acronym": "DECS",
+    "canonical": "Department of Early Childhood Studies",
+    "type": "Academic Department",
+    "parent": "Faculty of Creative Industries",
+    "aliases": [
+      "Department of Early Childhood Studies",
+      "DECS"
+    ],
+    "departmentId": "277"
+  },
+  {
+    "acronym": "DLMSA",
+    "canonical": "Department of Laboratory Management and Safety Administration",
+    "type": "Academic Department",
+    "parent": "Faculty of Creative Industries",
+    "aliases": [
+      "Department of Laboratory Management and Safety Administration",
+      "DLMSA"
+    ],
+    "departmentId": "238"
+  },
+  {
+    "acronym": "DML",
+    "canonical": "Department of Modern Languages",
+    "type": "Academic Department",
+    "parent": "Faculty of Creative Industries",
+    "aliases": [
+      "Department of Modern Languages",
+      "DML"
+    ],
+    "departmentId": "82"
+  },
+  {
+    "acronym": "DMDA",
+    "canonical": "Department of Multimedia Design & Animation",
+    "type": "Academic Department",
+    "parent": "Faculty of Creative Industries",
+    "aliases": [
+      "Department of Multimedia Design & Animation",
+      "Department of Multimedia Design and Animation",
+      "DMDA"
+    ],
+    "departmentId": "126"
+  },
+  {
+    "acronym": "DF",
+    "canonical": "Department of Finance",
+    "type": "Academic Department",
+    "parent": "Faculty of Accountancy and Management",
+    "aliases": [
+      "Department of Finance",
+      "DF"
+    ],
+    "departmentId": "2324"
+  },
+  {
+    "acronym": "DLL",
+    "canonical": "Department of Languages and Linguistics",
+    "type": "Academic Department",
+    "parent": "Faculty of Arts and Social Science",
+    "aliases": [
+      "Department of Languages and Linguistics",
+      "DLL"
+    ],
+    "departmentId": "162"
   }
 ]
