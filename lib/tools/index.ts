@@ -287,46 +287,32 @@ export async function searchStaff(
 
                 const message = `There are ${staffFromDirectory.length} staff members (${breakdown.join(', ')}).`;
 
-                // Check if this is a detail query (role/name/email/expertise) or count-only query
-                const isDetailQuery = params.role || params.name || params.email || params.expertise;
-
-                if (isDetailQuery) {
-                    // Return full staff details for role/name/expertise queries
-                    return {
-                        message,
-                        totalCount: staffFromDirectory.length,
-                        fullTimeCount,
-                        adjunctCount,
-                        partTimeCount,
-                        expatriateCount,
-                        staff: staffFromDirectory.map(s => ({
-                            searchId: s.searchId,
-                            staffType: s.staffType,
-                            name: s.name,
-                            position: s.position,
-                            email: s.email,
-                            faculty: s.faculty,
-                            department: s.department,
-                            designation: s.designation,
-                            administrativePosts: s.administrativePosts,
-                            areasOfExpertise: s.areasOfExpertise,
-                            googleScholarUrl: s.googleScholarUrl,
-                            scopusUrl: s.scopusUrl,
-                            orcidUrl: s.orcidUrl,
-                            homepageUrl: s.homepageUrl
-                        }))
-                    } as any;
-                } else {
-                    // Return summary only for count queries
-                    return {
-                        message,
-                        totalCount: staffFromDirectory.length,
-                        fullTimeCount,
-                        adjunctCount,
-                        partTimeCount,
-                        expatriateCount
-                    } as any;
-                }
+                // Always return full staff details from lookup table
+                // The LLM can decide whether to use names or just counts
+                return {
+                    message,
+                    totalCount: staffFromDirectory.length,
+                    fullTimeCount,
+                    adjunctCount,
+                    partTimeCount,
+                    expatriateCount,
+                    staff: staffFromDirectory.map(s => ({
+                        searchId: s.searchId,
+                        staffType: s.staffType,
+                        name: s.name,
+                        position: s.position,
+                        email: s.email,
+                        faculty: s.faculty,
+                        department: s.department,
+                        designation: s.designation,
+                        administrativePosts: s.administrativePosts,
+                        areasOfExpertise: s.areasOfExpertise,
+                        googleScholarUrl: s.googleScholarUrl,
+                        scopusUrl: s.scopusUrl,
+                        orcidUrl: s.orcidUrl,
+                        homepageUrl: s.homepageUrl
+                    }))
+                } as any;
             } else {
                 log('No results from lookup table, falling back to live scraping...');
             }
