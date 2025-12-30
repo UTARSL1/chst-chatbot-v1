@@ -96,9 +96,9 @@ chst-chatbot-v1/
 
 | Role | Email Domain | Access Level | Auto-Approved |
 |------|-------------|--------------|---------------|
-| **Student** | @1utar.my | Student documents only | ✅ Yes |
-| **Member** (Staff) | @utar.edu.my | Student + Member documents | ✅ Yes |
-| **Chairperson** | Any (with code) | All documents + admin access | ✅ Yes |
+| **Student** | @1utar.my | Student documents only | ❌ Requires approval |
+| **Member** (Staff) | @utar.edu.my | Student + Member documents | ❌ Requires approval |
+| **Chairperson** | Any (with code) | All documents + admin access | ❌ Requires approval |
 | **Public** | Other domains | Student documents | ❌ Requires approval |
 
 ## 🎨 Features Implemented

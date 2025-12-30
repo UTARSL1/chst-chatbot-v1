@@ -89,13 +89,13 @@
 ```javascript
 if (email.endsWith('@utar.edu.my')) {
   role = 'member';
-  autoApprove = true;
+  autoApprove = false; // All users require admin approval
 } else if (email.endsWith('@1utar.my')) {
   role = 'student';
-  autoApprove = true;
+  autoApprove = false; // All users require admin approval
 } else {
   role = 'public';
-  autoApprove = false; // Requires chairperson approval
+  autoApprove = false; // All users require admin approval
 }
 ```
 
@@ -108,8 +108,8 @@ if (email.endsWith('@utar.edu.my')) {
 **Behavior:**
 - Auto-detect role as user types email
 - Show/hide chairperson code section
-- For public users → Show message "Your account will be reviewed by admin"
-- On successful signup → Redirect to `/chat` (if auto-approved) or `/pending` (if public)
+- For all users → Show message "Your account will be reviewed by admin for approval"
+- On successful signup → Redirect to `/pending` (all users require approval)
 
 ---
 

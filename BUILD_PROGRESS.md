@@ -16,7 +16,7 @@
 - ✅ Sign in page with password visibility toggle
 - ✅ Chairperson signup code validation
 - ✅ Role-based access control (Student, Member, Chairperson, Public)
-- ✅ Auto-approval for @utar.edu.my and @1utar.my emails
+- ✅ Admin approval required for all user roles
 - ✅ JWT session management (30-day expiry)
 
 ### 2. Full RAG Pipeline
@@ -137,14 +137,14 @@
 ## 🎯 Current Capabilities
 
 ### For Students
-- ✅ Sign up with @1utar.my email (auto-approved)
+- ✅ Sign up with @1utar.my email (requires admin approval)
 - ✅ Access student-level documents
 - ✅ Ask questions about policies and forms
 - ✅ View chat history
 - ✅ Get AI-powered answers with sources
 
 ### For Members (Staff)
-- ✅ Sign up with @utar.edu.my email (auto-approved)
+- ✅ Sign up with @utar.edu.my email (requires admin approval)
 - ✅ Access student + member-level documents
 - ✅ All student capabilities
 - ✅ Access to staff-specific policies
