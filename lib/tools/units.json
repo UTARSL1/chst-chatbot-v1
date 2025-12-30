@@ -79,7 +79,7 @@
   {
     "acronym": "DIA",
     "canonical": "Department of Internal Audit",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "aliases": [
       "Department of Internal Audit",
       "Internal Audit"
@@ -88,7 +88,7 @@
   {
     "acronym": "DQA",
     "canonical": "Department of Quality Assurance",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "aliases": [
       "Department of Quality Assurance",
       "Quality Assurance"
@@ -417,7 +417,7 @@
   {
     "acronym": "DARP",
     "canonical": "Department of Alumni Relations and Placement",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "aliases": [
       "Department of Alumni Relations and Placement",
       "Alumni Relations and Placement Department",
@@ -427,7 +427,7 @@
   {
     "acronym": "DCC",
     "canonical": "Department of Consultancy and Commercialisation",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "aliases": [
       "Department of Consultancy and Commercialisation",
       "Consultancy and Commercialisation Department",
@@ -437,7 +437,7 @@
   {
     "acronym": "DEF-KPR",
     "canonical": "Department of Estate and Facilities (Kampar Campus)",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "aliases": [
       "Department of Estate and Facilities (Kampar Campus)",
       "Estate and Facilities Kampar",
@@ -448,7 +448,7 @@
   {
     "acronym": "DEF-SL",
     "canonical": "Department of Estates and Facilities (Sungai Long Campus)",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "aliases": [
       "Department of Estates and Facilities (Sungai Long Campus)",
       "Estate and Facilities Sungai Long",
@@ -458,7 +458,7 @@
   {
     "acronym": "DGS-KPR",
     "canonical": "Department of General Services (Kampar Campus)",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "aliases": [
       "Department of General Services (Kampar Campus)",
       "General Services Kampar",
@@ -468,7 +468,7 @@
   {
     "acronym": "DGS-SL",
     "canonical": "Department of General Services (Sungai Long Campus)",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "aliases": [
       "Department of General Services (Sungai Long Campus)",
       "General Services Sungai Long",
@@ -478,7 +478,7 @@
   {
     "acronym": "DISS-KPR",
     "canonical": "Department of International Student Services (Kampar Campus)",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "aliases": [
       "Department of International Student Services (Kampar Campus)",
       "International Student Services Kampar",
@@ -488,7 +488,7 @@
   {
     "acronym": "DISS-SL",
     "canonical": "Department of International Student Services (Sungai Long Campus)",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "aliases": [
       "Department of International Student Services (Sungai Long Campus)",
       "International Student Services Sungai Long",
@@ -498,7 +498,7 @@
   {
     "acronym": "DSA-KPR",
     "canonical": "Department of Student Affairs (Kampar Campus)",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "aliases": [
       "Department of Student Affairs (Kampar Campus)",
       "Student Affairs Kampar",
@@ -508,7 +508,7 @@
   {
     "acronym": "DSA-SL",
     "canonical": "Department of Student Affairs (Sungai Long Campus)",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "aliases": [
       "Department of Student Affairs (Sungai Long Campus)",
       "Student Affairs Sungai Long",
@@ -518,7 +518,7 @@
   {
     "acronym": "DSFA",
     "canonical": "Department of Scholarships and Financial Aid",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "aliases": [
       "Department of Scholarships and Financial Aid",
       "Scholarships and Financial Aid Department",
@@ -528,7 +528,7 @@
   {
     "acronym": "DSS-KPR",
     "canonical": "Department of Safety and Security (Kampar Campus)",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "aliases": [
       "Department of Safety and Security (Kampar Campus)",
       "Safety and Security Kampar",
@@ -538,7 +538,7 @@
   {
     "acronym": "DSS-SL",
     "canonical": "Department of Safety and Security (Sungai Long Campus)",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "aliases": [
       "Department of Safety and Security (Sungai Long Campus)",
       "Safety and Security Sungai Long",
@@ -548,7 +548,7 @@
   {
     "acronym": "DSSC-KPR",
     "canonical": "Department of Soft Skills Competency (Kampar Campus)",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "aliases": [
       "Department of Soft Skills Competency (Kampar Campus)",
       "Soft Skills Competency Kampar",
@@ -558,7 +558,7 @@
   {
     "acronym": "DSSC-SL",
     "canonical": "Department of Soft Skills Competency (Sungai Long Campus)",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "aliases": [
       "Department of Soft Skills Competency (Sungai Long Campus)",
       "Soft Skills Competency Sungai Long",
@@ -1621,7 +1621,7 @@
   {
     "acronym": "FGO",
     "canonical": "Faculty General Office",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "parent": "Faculty of Accountancy and Management",
     "aliases": [
       "Faculty General Office",
@@ -1632,7 +1632,7 @@
   {
     "acronym": "FGO",
     "canonical": "Faculty General Office",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "parent": "Faculty of Arts and Social Science",
     "aliases": [
       "Faculty General Office",
@@ -1643,7 +1643,7 @@
   {
     "acronym": "FGO",
     "canonical": "Faculty General Office (Kampar Campus)",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "parent": "Faculty of Chinese Studies",
     "aliases": [
       "Faculty General Office (Kampar Campus)",
@@ -1655,7 +1655,7 @@
   {
     "acronym": "FGO",
     "canonical": "Faculty General Office (Sungai Long Campus)",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "parent": "Faculty of Chinese Studies",
     "aliases": [
       "Faculty General Office (Sungai Long Campus)",
@@ -1667,7 +1667,7 @@
   {
     "acronym": "FGO",
     "canonical": "Faculty General Office",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "parent": "Faculty of Creative Industries",
     "aliases": [
       "Faculty General Office",
@@ -1678,7 +1678,7 @@
   {
     "acronym": "FGO",
     "canonical": "Faculty General Office",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "parent": "Faculty of Education",
     "aliases": [
       "Faculty General Office",
@@ -1689,7 +1689,7 @@
   {
     "acronym": "FGO",
     "canonical": "Faculty General Office",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "parent": "Faculty of Engineering and Green Technology",
     "aliases": [
       "Faculty General Office",
@@ -1700,7 +1700,7 @@
   {
     "acronym": "FGO",
     "canonical": "Faculty General Office",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "parent": "Faculty of Information and Communication Technology",
     "aliases": [
       "Faculty General Office",
@@ -1711,7 +1711,7 @@
   {
     "acronym": "FGO",
     "canonical": "Faculty General Office",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "parent": "Faculty of Science",
     "aliases": [
       "Faculty General Office",
@@ -1722,7 +1722,7 @@
   {
     "acronym": "FGO",
     "canonical": "Faculty General Office",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "parent": "Lee Kong Chian Faculty of Engineering and Science",
     "aliases": [
       "Faculty General Office",
@@ -1733,7 +1733,7 @@
   {
     "acronym": "FGO",
     "canonical": "Faculty of General Office",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "parent": "M. Kandiah Faculty of Medicine and Health Sciences",
     "aliases": [
       "Faculty of General Office",
@@ -1744,7 +1744,7 @@
   {
     "acronym": "FGO",
     "canonical": "Faculty General Office",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "parent": "Teh Hong Piow Faculty of Business and Finance",
     "aliases": [
       "Faculty General Office",
@@ -1755,7 +1755,7 @@
   {
     "acronym": "DLMSA",
     "canonical": "Department of Laboratory Management and Safety Administration",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "parent": "Faculty of Engineering and Green Technology",
     "aliases": [
       "Department of Laboratory Management and Safety Administration",
@@ -1766,7 +1766,7 @@
   {
     "acronym": "DLMSA",
     "canonical": "Department of Laboratory Management and Safety Administration",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "parent": "Faculty of Science",
     "aliases": [
       "Department of Laboratory Management and Safety Administration",
@@ -1777,7 +1777,7 @@
   {
     "acronym": "DLMSA",
     "canonical": "Department of Laboratory Management and Safety Administration",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "parent": "Lee Kong Chian Faculty of Engineering and Science",
     "aliases": [
       "Department of Laboratory Management and Safety Administration",
@@ -1788,7 +1788,7 @@
   {
     "acronym": "FLO",
     "canonical": "Faculty Laboratory Office",
-    "type": "Administrative Department",
+    "type": "Admin Department",
     "parent": "M. Kandiah Faculty of Medicine and Health Sciences",
     "aliases": [
       "Faculty Laboratory Office",
