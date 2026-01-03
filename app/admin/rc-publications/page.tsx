@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Upload, Users, BarChart3, Download } from 'lucide-react';
+import { Upload, Users, BarChart3, Download, Trash2 } from 'lucide-react';
 
 interface Member {
     id: string;
@@ -141,6 +141,40 @@ export default function RCPublicationsPage() {
         }
     };
 
+    const handleDeleteMember = async (memberId: string, memberName: string) => {
+        if (!confirm(`Are you sure you want to delete ${memberName} and all their publications? This action cannot be undone.`)) {
+            return;
+        }
+
+        try {
+            const res = await fetch(`/api/admin/rc-publications/members/${memberId}`, {
+                method: 'DELETE'
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                alert(`Successfully deleted ${memberName}`);
+                // Clear cache for this member
+                setStatsCache(prev => {
+                    const newCache = { ...prev };
+                    Object.keys(newCache).forEach(key => {
+                        if (key.startsWith(memberId)) {
+                            delete newCache[key];
+                        }
+                    });
+                    return newCache;
+                });
+                // Refresh member list
+                fetchMembers();
+            } else {
+                alert(`Error: ${data.error}`);
+            }
+        } catch (error) {
+            console.error('Error deleting member:', error);
+            alert('Failed to delete member');
+        }
+    };
+
     const calculatePercentage = (value: number, total: number) => {
         if (total === 0) return 0;
         return parseFloat(((value / total) * 100).toFixed(1));
@@ -204,48 +238,64 @@ export default function RCPublicationsPage() {
 
                             <div className="space-y-2 max-h-[600px] overflow-y-auto">
                                 {members.map((member) => (
-                                    <button
+                                    <div
                                         key={member.id}
-                                        onClick={() => setSelectedMember(member)}
-                                        onMouseEnter={() => {
-                                            // Prefetch stats on hover for instant switching
-                                            const cacheKey = `${member.id}-${selectedYear}`;
-                                            if (!statsCache[cacheKey]) {
-                                                fetchMemberStats(member.id, selectedYear);
-                                            }
-                                        }}
-                                        className={`w-full text-left p-4 rounded-lg transition border ${selectedMember?.id === member.id
+                                        className={`relative group rounded-lg transition border ${selectedMember?.id === member.id
                                             ? 'bg-blue-900/30 border-blue-500'
                                             : 'bg-gray-700/50 hover:bg-gray-700 border-gray-600'
                                             }`}
                                     >
-                                        <div className="font-medium text-base text-white mb-1">{member.name}</div>
-                                        <div className="text-sm text-gray-400 mb-2">
-                                            {member.totalPublications} publications
-                                        </div>
-                                        <div className="flex gap-2 flex-wrap">
-                                            {member.q1Publications > 0 && (
-                                                <span className="px-2 py-1 bg-green-900/50 text-green-300 text-xs rounded border border-green-700">
-                                                    Q1: {member.q1Publications}
-                                                </span>
-                                            )}
-                                            {member.q2Publications > 0 && (
-                                                <span className="px-2 py-1 bg-blue-900/50 text-blue-300 text-xs rounded border border-blue-700">
-                                                    Q2: {member.q2Publications}
-                                                </span>
-                                            )}
-                                            {member.q3Publications > 0 && (
-                                                <span className="px-2 py-1 bg-orange-900/50 text-orange-300 text-xs rounded border border-orange-700">
-                                                    Q3: {member.q3Publications}
-                                                </span>
-                                            )}
-                                            {member.q4Publications > 0 && (
-                                                <span className="px-2 py-1 bg-red-900/50 text-red-300 text-xs rounded border border-red-700">
-                                                    Q4: {member.q4Publications}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </button>
+                                        <button
+                                            onClick={() => setSelectedMember(member)}
+                                            onMouseEnter={() => {
+                                                // Prefetch stats on hover for instant switching
+                                                const cacheKey = `${member.id}-${selectedYear}`;
+                                                if (!statsCache[cacheKey]) {
+                                                    fetchMemberStats(member.id, selectedYear);
+                                                }
+                                            }}
+                                            className="w-full text-left p-4"
+                                        >
+                                            <div className="font-medium text-base text-white mb-1">{member.name}</div>
+                                            <div className="text-sm text-gray-400 mb-2">
+                                                {member.totalPublications} publications
+                                            </div>
+                                            <div className="flex gap-2 flex-wrap">
+                                                {member.q1Publications > 0 && (
+                                                    <span className="px-2 py-1 bg-green-900/50 text-green-300 text-xs rounded border border-green-700">
+                                                        Q1: {member.q1Publications}
+                                                    </span>
+                                                )}
+                                                {member.q2Publications > 0 && (
+                                                    <span className="px-2 py-1 bg-blue-900/50 text-blue-300 text-xs rounded border border-blue-700">
+                                                        Q2: {member.q2Publications}
+                                                    </span>
+                                                )}
+                                                {member.q3Publications > 0 && (
+                                                    <span className="px-2 py-1 bg-orange-900/50 text-orange-300 text-xs rounded border border-orange-700">
+                                                        Q3: {member.q3Publications}
+                                                    </span>
+                                                )}
+                                                {member.q4Publications > 0 && (
+                                                    <span className="px-2 py-1 bg-red-900/50 text-red-300 text-xs rounded border border-red-700">
+                                                        Q4: {member.q4Publications}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </button>
+
+                                        {/* Delete Button */}
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDeleteMember(member.id, member.name);
+                                            }}
+                                            className="absolute top-3 right-3 p-2 rounded-lg bg-red-900/50 hover:bg-red-900 border border-red-700 text-red-300 hover:text-red-100 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            title="Delete member"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
+                                    </div>
                                 ))}
                             </div>
                         </div>
