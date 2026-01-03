@@ -336,17 +336,12 @@ export default function RCPublicationsPage() {
 
                                     <div className="space-y-4">
                                         {/* Q1 Bar */}
-                                        <div>
-                                            <div className="flex items-center justify-between mb-2">
-                                                <span className="text-sm font-medium text-white">Q1</span>
-                                                <span className="text-sm text-gray-400">
-                                                    {stats.q1Publications} ({calculatePercentage(stats.q1Publications, stats.journalArticles)}%)
-                                                </span>
-                                            </div>
-                                            <div className="relative h-6">
+                                        <div className="flex items-center gap-4">
+                                            <div className="text-lg font-bold text-white w-12">Q1</div>
+                                            <div className="flex-1 relative h-8">
                                                 <div
-                                                    className="absolute left-0 h-6 bg-slate-700/80 rounded-lg overflow-hidden flex"
-                                                    style={{ width: `${calculatePercentage(stats.q1Publications, stats.journalArticles)}%` }}
+                                                    className="absolute left-0 h-8 bg-slate-700/80 rounded-full overflow-hidden flex"
+                                                    style={{ width: `${Math.max(calculatePercentage(stats.q1Publications, stats.journalArticles), 20)}%` }}
                                                 >
                                                     {stats.q1FirstAuthor > 0 && (
                                                         <div
@@ -374,20 +369,19 @@ export default function RCPublicationsPage() {
                                                     )}
                                                 </div>
                                             </div>
+                                            <div className="text-right min-w-[120px]">
+                                                <div className="text-2xl font-bold text-white">{calculatePercentage(stats.q1Publications, stats.journalArticles)}%</div>
+                                                <div className="text-xs text-gray-400">{stats.q1Publications} publications</div>
+                                            </div>
                                         </div>
 
                                         {/* Q2 Bar */}
-                                        <div>
-                                            <div className="flex items-center justify-between mb-2">
-                                                <span className="text-sm font-medium text-white">Q2</span>
-                                                <span className="text-sm text-gray-400">
-                                                    {stats.q2Publications} ({calculatePercentage(stats.q2Publications, stats.journalArticles)}%)
-                                                </span>
-                                            </div>
-                                            <div className="relative h-10">
+                                        <div className="flex items-center gap-4">
+                                            <div className="text-lg font-bold text-white w-12">Q2</div>
+                                            <div className="flex-1 relative h-8">
                                                 <div
-                                                    className="absolute left-0 h-10 bg-gray-700 rounded-lg overflow-hidden flex"
-                                                    style={{ width: `${calculatePercentage(stats.q2Publications, stats.journalArticles)}%` }}
+                                                    className="absolute left-0 h-8 bg-slate-700/80 rounded-full overflow-hidden flex"
+                                                    style={{ width: `${Math.max(calculatePercentage(stats.q2Publications, stats.journalArticles), 20)}%` }}
                                                 >
                                                     {stats.q2FirstAuthor > 0 && (
                                                         <div
@@ -415,24 +409,23 @@ export default function RCPublicationsPage() {
                                                     )}
                                                 </div>
                                             </div>
+                                            <div className="text-right min-w-[120px]">
+                                                <div className="text-2xl font-bold text-white">{calculatePercentage(stats.q2Publications, stats.journalArticles)}%</div>
+                                                <div className="text-xs text-gray-400">{stats.q2Publications} publications</div>
+                                            </div>
                                         </div>
 
                                         {/* Q3 Bar */}
-                                        <div>
-                                            <div className="flex items-center justify-between mb-2">
-                                                <span className="text-sm font-medium text-white">Q3</span>
-                                                <span className="text-sm text-gray-400">
-                                                    {stats.q3Publications} ({calculatePercentage(stats.q3Publications, stats.journalArticles)}%)
-                                                </span>
-                                            </div>
-                                            <div className="relative h-10">
+                                        <div className="flex items-center gap-4">
+                                            <div className="text-lg font-bold text-white w-12">Q3</div>
+                                            <div className="flex-1 relative h-8">
                                                 <div
-                                                    className="absolute left-0 h-10 bg-gray-700 rounded-lg overflow-hidden flex"
-                                                    style={{ width: `${calculatePercentage(stats.q3Publications, stats.journalArticles)}%` }}
+                                                    className="absolute left-0 h-8 bg-slate-700/80 rounded-full overflow-hidden flex"
+                                                    style={{ width: `${Math.max(calculatePercentage(stats.q3Publications, stats.journalArticles), 20)}%` }}
                                                 >
                                                     {stats.q3FirstAuthor > 0 && (
                                                         <div
-                                                            className="bg-orange-600 flex items-center justify-center text-white text-xs font-medium flex-shrink-0"
+                                                            className="bg-amber-500 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
                                                             style={{ minWidth: '60px', width: `${(stats.q3FirstAuthor / stats.q3Publications) * 100}%` }}
                                                         >
                                                             1st: {stats.q3FirstAuthor}
@@ -440,7 +433,7 @@ export default function RCPublicationsPage() {
                                                     )}
                                                     {stats.q3Corresponding > 0 && (
                                                         <div
-                                                            className="bg-orange-500 flex items-center justify-center text-white text-xs font-medium flex-shrink-0"
+                                                            className="bg-amber-400 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
                                                             style={{ minWidth: '70px', width: `${(stats.q3Corresponding / stats.q3Publications) * 100}%` }}
                                                         >
                                                             Corr: {stats.q3Corresponding}
@@ -448,7 +441,7 @@ export default function RCPublicationsPage() {
                                                     )}
                                                     {stats.q3CoAuthor > 0 && (
                                                         <div
-                                                            className="bg-orange-400 flex items-center justify-center text-orange-900 text-xs font-medium flex-shrink-0"
+                                                            className="bg-amber-300 flex items-center justify-center text-amber-900 text-xs font-semibold flex-shrink-0"
                                                             style={{ minWidth: '60px', width: `${(stats.q3CoAuthor / stats.q3Publications) * 100}%` }}
                                                         >
                                                             Co: {stats.q3CoAuthor}
@@ -456,24 +449,23 @@ export default function RCPublicationsPage() {
                                                     )}
                                                 </div>
                                             </div>
+                                            <div className="text-right min-w-[120px]">
+                                                <div className="text-2xl font-bold text-white">{calculatePercentage(stats.q3Publications, stats.journalArticles)}%</div>
+                                                <div className="text-xs text-gray-400">{stats.q3Publications} publications</div>
+                                            </div>
                                         </div>
 
                                         {/* Q4 Bar */}
-                                        <div>
-                                            <div className="flex items-center justify-between mb-2">
-                                                <span className="text-sm font-medium text-white">Q4</span>
-                                                <span className="text-sm text-gray-400">
-                                                    {stats.q4Publications} ({calculatePercentage(stats.q4Publications, stats.journalArticles)}%)
-                                                </span>
-                                            </div>
-                                            <div className="relative h-10">
+                                        <div className="flex items-center gap-4">
+                                            <div className="text-lg font-bold text-white w-12">Q4</div>
+                                            <div className="flex-1 relative h-8">
                                                 <div
-                                                    className="absolute left-0 h-10 bg-gray-700 rounded-lg overflow-hidden flex"
-                                                    style={{ width: `${calculatePercentage(stats.q4Publications, stats.journalArticles)}%` }}
+                                                    className="absolute left-0 h-8 bg-slate-700/80 rounded-full overflow-hidden flex"
+                                                    style={{ width: `${Math.max(calculatePercentage(stats.q4Publications, stats.journalArticles), 20)}%` }}
                                                 >
                                                     {stats.q4FirstAuthor > 0 && (
                                                         <div
-                                                            className="bg-red-600 flex items-center justify-center text-white text-xs font-medium flex-shrink-0"
+                                                            className="bg-rose-500 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
                                                             style={{ minWidth: '60px', width: `${(stats.q4FirstAuthor / stats.q4Publications) * 100}%` }}
                                                         >
                                                             1st: {stats.q4FirstAuthor}
@@ -481,7 +473,7 @@ export default function RCPublicationsPage() {
                                                     )}
                                                     {stats.q4Corresponding > 0 && (
                                                         <div
-                                                            className="bg-red-500 flex items-center justify-center text-white text-xs font-medium flex-shrink-0"
+                                                            className="bg-rose-400 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
                                                             style={{ minWidth: '70px', width: `${(stats.q4Corresponding / stats.q4Publications) * 100}%` }}
                                                         >
                                                             Corr: {stats.q4Corresponding}
@@ -489,13 +481,17 @@ export default function RCPublicationsPage() {
                                                     )}
                                                     {stats.q4CoAuthor > 0 && (
                                                         <div
-                                                            className="bg-red-400 flex items-center justify-center text-red-900 text-xs font-medium flex-shrink-0"
+                                                            className="bg-rose-300 flex items-center justify-center text-rose-900 text-xs font-semibold flex-shrink-0"
                                                             style={{ minWidth: '60px', width: `${(stats.q4CoAuthor / stats.q4Publications) * 100}%` }}
                                                         >
                                                             Co: {stats.q4CoAuthor}
                                                         </div>
                                                     )}
                                                 </div>
+                                            </div>
+                                            <div className="text-right min-w-[120px]">
+                                                <div className="text-2xl font-bold text-white">{calculatePercentage(stats.q4Publications, stats.journalArticles)}%</div>
+                                                <div className="text-xs text-gray-400">{stats.q4Publications} publications</div>
                                             </div>
                                         </div>
                                     </div>
