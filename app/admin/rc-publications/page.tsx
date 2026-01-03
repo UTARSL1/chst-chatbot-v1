@@ -438,19 +438,8 @@ export default function RCPublicationsPage() {
                                         </div>
                                     </div>
 
-                                    <div className="mt-6 flex gap-6 text-sm text-gray-400">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-4 h-4 bg-gray-600 rounded"></div>
-                                            <span>1st Author</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-4 h-4 bg-gray-500 rounded"></div>
-                                            <span>Corresponding</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-4 h-4 bg-gray-400 rounded"></div>
-                                            <span>Co-author</span>
-                                        </div>
+                                    <div className="mt-6 text-sm text-gray-400">
+                                        <span>1st = 1st Author, Corr = Corresponding Author, Co = Co-author</span>
                                     </div>
                                 </div>
                             </div>
