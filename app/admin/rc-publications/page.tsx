@@ -243,23 +243,35 @@ export default function RCPublicationsPage() {
                                             </div>
 
                                             {/* Mini Bar Chart */}
-                                            <div className="flex items-end gap-1 h-3 w-12">
-                                                <div
-                                                    className="w-2 rounded-t-[1px] bg-emerald-500/80"
-                                                    style={{ height: `${member.journalArticles > 0 ? Math.max((member.q1Publications / member.journalArticles) * 100, 15) : 0}%` }}
-                                                />
-                                                <div
-                                                    className="w-2 rounded-t-[1px] bg-sky-500/80"
-                                                    style={{ height: `${member.journalArticles > 0 ? Math.max((member.q2Publications / member.journalArticles) * 100, 15) : 0}%` }}
-                                                />
-                                                <div
-                                                    className="w-2 rounded-t-[1px] bg-amber-500/80"
-                                                    style={{ height: `${member.journalArticles > 0 ? Math.max((member.q3Publications / member.journalArticles) * 100, 15) : 0}%` }}
-                                                />
-                                                <div
-                                                    className="w-2 rounded-t-[1px] bg-rose-500/80"
-                                                    style={{ height: `${member.journalArticles > 0 ? Math.max((member.q4Publications / member.journalArticles) * 100, 15) : 0}%` }}
-                                                />
+                                            <div className="flex items-end gap-1 h-5 w-14">
+                                                <div className="flex flex-col items-center gap-[1px] w-2.5">
+                                                    <div className="text-[8px] text-gray-500 leading-none mb-0.5">{member.q1Publications}</div>
+                                                    <div
+                                                        className="w-full rounded-t-[1px] bg-emerald-500/80"
+                                                        style={{ height: `${member.journalArticles > 0 ? Math.max((member.q1Publications / member.journalArticles) * 100, 20) : 0}%`, minHeight: '4px' }}
+                                                    />
+                                                </div>
+                                                <div className="flex flex-col items-center gap-[1px] w-2.5">
+                                                    <div className="text-[8px] text-gray-500 leading-none mb-0.5">{member.q2Publications}</div>
+                                                    <div
+                                                        className="w-full rounded-t-[1px] bg-sky-500/80"
+                                                        style={{ height: `${member.journalArticles > 0 ? Math.max((member.q2Publications / member.journalArticles) * 100, 20) : 0}%`, minHeight: '4px' }}
+                                                    />
+                                                </div>
+                                                <div className="flex flex-col items-center gap-[1px] w-2.5">
+                                                    <div className="text-[8px] text-gray-500 leading-none mb-0.5">{member.q3Publications}</div>
+                                                    <div
+                                                        className="w-full rounded-t-[1px] bg-amber-500/80"
+                                                        style={{ height: `${member.journalArticles > 0 ? Math.max((member.q3Publications / member.journalArticles) * 100, 20) : 0}%`, minHeight: '4px' }}
+                                                    />
+                                                </div>
+                                                <div className="flex flex-col items-center gap-[1px] w-2.5">
+                                                    <div className="text-[8px] text-gray-500 leading-none mb-0.5">{member.q4Publications}</div>
+                                                    <div
+                                                        className="w-full rounded-t-[1px] bg-rose-500/80"
+                                                        style={{ height: `${member.journalArticles > 0 ? Math.max((member.q4Publications / member.journalArticles) * 100, 20) : 0}%`, minHeight: '4px' }}
+                                                    />
+                                                </div>
                                             </div>
                                         </button>
 
@@ -344,19 +356,19 @@ export default function RCPublicationsPage() {
 
                                     {/* Key Metrics */}
                                     <div className="grid grid-cols-4 gap-4">
-                                        <div className="bg-white/5 backdrop-blur-md p-4 rounded-lg border border-white/10 hover:bg-white/10 transition-colors">
+                                        <div className="bg-white/10 backdrop-blur-md p-4 rounded-lg border border-white/20 hover:bg-white/20 transition-colors shadow-lg">
                                             <div className="text-3xl font-bold text-white">{stats.totalPublications}</div>
                                             <div className="text-sm text-slate-400 mt-1">Total Publications</div>
                                         </div>
-                                        <div className="bg-white/5 backdrop-blur-md p-4 rounded-lg border border-white/10 hover:bg-white/10 transition-colors">
+                                        <div className="bg-white/10 backdrop-blur-md p-4 rounded-lg border border-white/20 hover:bg-white/20 transition-colors shadow-lg">
                                             <div className="text-3xl font-bold text-blue-400">{stats.journalArticles}</div>
                                             <div className="text-sm text-slate-400 mt-1">Journal Articles</div>
                                         </div>
-                                        <div className="bg-white/5 backdrop-blur-md p-4 rounded-lg border border-white/10 hover:bg-white/10 transition-colors">
+                                        <div className="bg-white/10 backdrop-blur-md p-4 rounded-lg border border-white/20 hover:bg-white/20 transition-colors shadow-lg">
                                             <div className="text-3xl font-bold text-white">{stats.conferencePapers}</div>
                                             <div className="text-sm text-slate-400 mt-1">Conference Papers</div>
                                         </div>
-                                        <div className="bg-white/5 backdrop-blur-md p-4 rounded-lg border border-white/10 hover:bg-white/10 transition-colors">
+                                        <div className="bg-white/10 backdrop-blur-md p-4 rounded-lg border border-white/20 hover:bg-white/20 transition-colors shadow-lg">
                                             <div className="text-3xl font-bold text-emerald-400">{stats.q1Publications}</div>
                                             <div className="text-sm text-slate-400 mt-1">Q1 Publications</div>
                                         </div>
