@@ -254,30 +254,30 @@ export default function RCPublicationsPage() {
                                                     fetchMemberStats(member.id, selectedYear);
                                                 }
                                             }}
-                                            className="w-full text-left p-4"
+                                            className="w-full text-left p-3"
                                         >
-                                            <div className="font-medium text-base text-white mb-1">{member.name}</div>
-                                            <div className="text-sm text-gray-400 mb-2">
+                                            <div className="font-medium text-sm text-white mb-1">{member.name}</div>
+                                            <div className="text-xs text-gray-400 mb-1.5">
                                                 {member.totalPublications} publications
                                             </div>
-                                            <div className="flex gap-2 flex-wrap">
+                                            <div className="flex gap-1.5 flex-wrap">
                                                 {member.q1Publications > 0 && (
-                                                    <span className="px-2 py-1 bg-green-900/50 text-green-300 text-xs rounded border border-green-700">
+                                                    <span className="px-1.5 py-0.5 bg-green-900/50 text-green-300 text-xs rounded border border-green-700">
                                                         Q1: {member.q1Publications}
                                                     </span>
                                                 )}
                                                 {member.q2Publications > 0 && (
-                                                    <span className="px-2 py-1 bg-blue-900/50 text-blue-300 text-xs rounded border border-blue-700">
+                                                    <span className="px-1.5 py-0.5 bg-blue-900/50 text-blue-300 text-xs rounded border border-blue-700">
                                                         Q2: {member.q2Publications}
                                                     </span>
                                                 )}
                                                 {member.q3Publications > 0 && (
-                                                    <span className="px-2 py-1 bg-orange-900/50 text-orange-300 text-xs rounded border border-orange-700">
+                                                    <span className="px-1.5 py-0.5 bg-orange-900/50 text-orange-300 text-xs rounded border border-orange-700">
                                                         Q3: {member.q3Publications}
                                                     </span>
                                                 )}
                                                 {member.q4Publications > 0 && (
-                                                    <span className="px-2 py-1 bg-red-900/50 text-red-300 text-xs rounded border border-red-700">
+                                                    <span className="px-1.5 py-0.5 bg-red-900/50 text-red-300 text-xs rounded border border-red-700">
                                                         Q4: {member.q4Publications}
                                                     </span>
                                                 )}
@@ -290,10 +290,10 @@ export default function RCPublicationsPage() {
                                                 e.stopPropagation();
                                                 handleDeleteMember(member.id, member.name);
                                             }}
-                                            className="absolute top-3 right-3 p-2 rounded-lg bg-red-900/50 hover:bg-red-900 border border-red-700 text-red-300 hover:text-red-100 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            className="absolute top-2 right-2 p-1.5 rounded-lg bg-red-900/50 hover:bg-red-900 border border-red-700 text-red-300 hover:text-red-100 opacity-0 group-hover:opacity-100 transition-opacity"
                                             title="Delete member"
                                         >
-                                            <Trash2 className="w-4 h-4" />
+                                            <Trash2 className="w-3.5 h-3.5" />
                                         </button>
                                     </div>
                                 ))}
