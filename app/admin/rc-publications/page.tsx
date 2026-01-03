@@ -467,35 +467,10 @@ export default function RCPublicationsPage() {
                                         </div>
                                     </div>
 
-                                    {/* Q1 Threshold */}
-                                    <div>
-                                        <label className="text-xs text-gray-400 mb-1 block">Q1 Publications ≥</label>
-                                        <div className="flex gap-2">
-                                            {[1, 3, 5].map(val => (
-                                                <button
-                                                    key={val}
-                                                    onClick={() => setFilters(prev => ({ ...prev, q1Threshold: prev.q1Threshold === val ? 0 : val }))}
-                                                    className={`px-3 py-1 rounded text-xs font-medium transition-colors ${filters.q1Threshold === val
-                                                        ? 'bg-emerald-500/30 text-emerald-300 border border-emerald-500/50'
-                                                        : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
-                                                        }`}
-                                                >
-                                                    {val}
-                                                </button>
-                                            ))}
-                                            <input
-                                                type="number"
-                                                placeholder="Custom"
-                                                value={filters.q1Threshold > 0 && ![1, 3, 5].includes(filters.q1Threshold) ? filters.q1Threshold : ''}
-                                                onChange={(e) => setFilters(prev => ({ ...prev, q1Threshold: parseInt(e.target.value) || 0 }))}
-                                                className="w-20 px-2 py-1 bg-white/5 border border-white/10 rounded text-xs text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Q2-Q4 Thresholds (Compact) */}
-                                    <div className="grid grid-cols-3 gap-2">
+                                    {/* Q1-Q4 Thresholds (Unified Grid) */}
+                                    <div className="grid grid-cols-4 gap-2">
                                         {[
+                                            { key: 'q1Threshold' as keyof FilterState, label: 'Q1 ≥', color: 'emerald' },
                                             { key: 'q2Threshold' as keyof FilterState, label: 'Q2 ≥', color: 'sky' },
                                             { key: 'q3Threshold' as keyof FilterState, label: 'Q3 ≥', color: 'amber' },
                                             { key: 'q4Threshold' as keyof FilterState, label: 'Q4 ≥', color: 'rose' },
@@ -748,13 +723,14 @@ export default function RCPublicationsPage() {
                                 <div
                                     className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)]"
                                 >
-                                    <h3 className="text-lg font-semibold text-white mb-4">Journal Quartile Distribution</h3>
+                                    <h3 className="text-lg font-semibold text-white mb-1">Journal Quartile Distribution</h3>
+                                    <p className="text-[10px] text-gray-500 mb-4 italic">* Percentages based on journal articles only</p>
 
                                     <div className="space-y-6">
                                         {/* Q1 Bar */}
                                         <div className="flex items-center gap-4">
                                             <div className="text-xl font-bold text-white w-8">Q1</div>
-                                            <div className="flex-1 relative h-14 bg-slate-900/20 backdrop-blur-md rounded-full border border-white/10 shadow-inner overflow-hidden">
+                                            <div className="flex-1 relative h-14 bg-slate-800/40 backdrop-blur-sm rounded-full border border-slate-600 shadow-inner overflow-hidden">
                                                 {/* Progress Bar */}
                                                 <div
                                                     className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full"
@@ -789,7 +765,7 @@ export default function RCPublicationsPage() {
                                         {/* Q2 Bar */}
                                         <div className="flex items-center gap-4">
                                             <div className="text-xl font-bold text-white w-8">Q2</div>
-                                            <div className="flex-1 relative h-14 bg-slate-900/20 backdrop-blur-md rounded-full border border-white/10 shadow-inner overflow-hidden">
+                                            <div className="flex-1 relative h-14 bg-slate-800/40 backdrop-blur-sm rounded-full border border-slate-600 shadow-inner overflow-hidden">
                                                 {/* Progress Bar */}
                                                 <div
                                                     className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-sky-500 to-sky-400 rounded-full"
@@ -824,7 +800,7 @@ export default function RCPublicationsPage() {
                                         {/* Q3 Bar */}
                                         <div className="flex items-center gap-4">
                                             <div className="text-xl font-bold text-white w-8">Q3</div>
-                                            <div className="flex-1 relative h-14 bg-slate-900/20 backdrop-blur-md rounded-full border border-white/10 shadow-inner overflow-hidden">
+                                            <div className="flex-1 relative h-14 bg-slate-800/40 backdrop-blur-sm rounded-full border border-slate-600 shadow-inner overflow-hidden">
                                                 {/* Progress Bar */}
                                                 <div
                                                     className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-amber-500 to-amber-400 rounded-full"
