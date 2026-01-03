@@ -189,11 +189,11 @@ export default function RCPublicationsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
+        <div className="min-h-screen bg-slate-950 p-6">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-blue-200 mb-2">
+                    <h1 className="text-3xl font-bold text-[#818cf8] mb-2">
                         RC Members Publication Analysis
                     </h1>
                     <p className="text-gray-300">
@@ -205,7 +205,7 @@ export default function RCPublicationsPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Left Panel - Members List */}
                     <div className="lg:col-span-1">
-                        <div className="bg-slate-800/70 backdrop-blur-sm rounded-lg border border-slate-600/50 p-4">
+                        <div className="bg-slate-900/50 backdrop-blur-sm rounded-lg border border-slate-600 p-4">
                             <div className="flex items-center gap-2 mb-4">
                                 <Users className="w-5 h-5 text-gray-300" />
                                 <h3 className="font-semibold text-white">RC Members ({members.length})</h3>
@@ -216,8 +216,8 @@ export default function RCPublicationsPage() {
                                     <div
                                         key={member.id}
                                         className={`relative group rounded-lg transition-all duration-300 border ${selectedMember?.id === member.id
-                                            ? 'bg-blue-800/60 border-blue-400 shadow-lg shadow-blue-500/50'
-                                            : 'bg-slate-700/60 hover:bg-slate-600/70 border-slate-500/50 hover:shadow-lg hover:shadow-blue-400/30'
+                                            ? 'bg-blue-900/40 border-blue-400 shadow-lg shadow-blue-500/20'
+                                            : 'bg-slate-800/40 hover:bg-slate-700/60 border-slate-600 hover:border-slate-500'
                                             }`}
                                     >
                                         <button
@@ -237,22 +237,22 @@ export default function RCPublicationsPage() {
                                             </div>
                                             <div className="flex gap-1.5 flex-wrap">
                                                 {member.q1Publications > 0 && (
-                                                    <span className="px-1.5 py-0.5 bg-green-900/50 text-green-300 text-xs rounded border border-green-700">
+                                                    <span className="px-1.5 py-0.5 bg-green-900/30 text-green-300 text-xs rounded border border-green-700/50">
                                                         Q1: {member.q1Publications}
                                                     </span>
                                                 )}
                                                 {member.q2Publications > 0 && (
-                                                    <span className="px-1.5 py-0.5 bg-blue-900/50 text-blue-300 text-xs rounded border border-blue-700">
+                                                    <span className="px-1.5 py-0.5 bg-blue-900/30 text-blue-300 text-xs rounded border border-blue-700/50">
                                                         Q2: {member.q2Publications}
                                                     </span>
                                                 )}
                                                 {member.q3Publications > 0 && (
-                                                    <span className="px-1.5 py-0.5 bg-orange-900/50 text-orange-300 text-xs rounded border border-orange-700">
+                                                    <span className="px-1.5 py-0.5 bg-orange-900/30 text-orange-300 text-xs rounded border border-orange-700/50">
                                                         Q3: {member.q3Publications}
                                                     </span>
                                                 )}
                                                 {member.q4Publications > 0 && (
-                                                    <span className="px-1.5 py-0.5 bg-red-900/50 text-red-300 text-xs rounded border border-red-700">
+                                                    <span className="px-1.5 py-0.5 bg-red-900/30 text-red-300 text-xs rounded border border-red-700/50">
                                                         Q4: {member.q4Publications}
                                                     </span>
                                                 )}
@@ -274,6 +274,31 @@ export default function RCPublicationsPage() {
                                 ))}
                             </div>
                         </div>
+
+                        {/* Upload Section */}
+                        <div className="mt-4 bg-slate-900/50 backdrop-blur-sm rounded-lg border border-slate-600 p-4">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <Upload className="w-5 h-5 text-blue-400" />
+                                    <div>
+                                        <h2 className="text-sm font-semibold text-white">Upload Member Publication</h2>
+                                        <p className="text-xs text-gray-400">Upload CSV file containing publication data</p>
+                                    </div>
+                                </div>
+                                <label className="cursor-pointer">
+                                    <input
+                                        type="file"
+                                        accept=".csv"
+                                        onChange={handleFileUpload}
+                                        className="hidden"
+                                        disabled={uploading}
+                                    />
+                                    <div className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition font-medium text-sm shadow-lg">
+                                        {uploading ? 'Uploading...' : 'Choose CSV File'}
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
                     </div>
 
                     {/* Right Panel - Analysis */}
@@ -289,7 +314,7 @@ export default function RCPublicationsPage() {
                         {!loadingStats && selectedMember && stats && (
                             <div className="space-y-6">
                                 {/* Header with Year Selector */}
-                                <div className="bg-slate-800/70 backdrop-blur-sm rounded-lg border border-slate-600/50 p-6">
+                                <div className="bg-slate-900/50 backdrop-blur-sm rounded-lg border border-slate-600 p-6">
                                     <div className="flex items-center justify-between mb-6">
                                         <div>
                                             <h2 className="text-2xl font-bold text-white">{selectedMember.name}</h2>
@@ -298,7 +323,7 @@ export default function RCPublicationsPage() {
                                         <select
                                             value={selectedYear}
                                             onChange={(e) => setSelectedYear(e.target.value)}
-                                            className="px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="px-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         >
                                             <option value="all">All Years</option>
                                             <option value="2024">2024</option>
@@ -311,19 +336,19 @@ export default function RCPublicationsPage() {
 
                                     {/* Key Metrics */}
                                     <div className="grid grid-cols-4 gap-4">
-                                        <div className="bg-slate-700/60 p-4 rounded-lg border border-slate-500/50">
+                                        <div className="bg-slate-800/40 p-4 rounded-lg border border-slate-600">
                                             <div className="text-3xl font-bold text-white">{stats.totalPublications}</div>
                                             <div className="text-sm text-gray-400 mt-1">Total Publications</div>
                                         </div>
-                                        <div className="bg-blue-800/50 p-4 rounded-lg border border-blue-600/50">
+                                        <div className="bg-blue-900/20 p-4 rounded-lg border border-blue-500/30">
                                             <div className="text-3xl font-bold text-blue-300">{stats.journalArticles}</div>
                                             <div className="text-sm text-blue-400 mt-1">Journal Articles</div>
                                         </div>
-                                        <div className="bg-slate-700/60 p-4 rounded-lg border border-slate-500/50">
+                                        <div className="bg-slate-800/40 p-4 rounded-lg border border-slate-600">
                                             <div className="text-3xl font-bold text-white">{stats.conferencePapers}</div>
                                             <div className="text-sm text-gray-400 mt-1">Conference Papers</div>
                                         </div>
-                                        <div className="bg-emerald-800/40 p-4 rounded-lg border border-emerald-600/50">
+                                        <div className="bg-emerald-900/20 p-4 rounded-lg border border-emerald-500/30">
                                             <div className="text-3xl font-bold text-green-300">{stats.q1Publications}</div>
                                             <div className="text-sm text-green-400 mt-1">Q1 Publications</div>
                                         </div>
@@ -331,55 +356,21 @@ export default function RCPublicationsPage() {
                                 </div>
 
                                 {/* Quartile Distribution Chart */}
-                                <div className="bg-slate-800/70 backdrop-blur-sm rounded-lg border border-slate-600/50 p-6">
+                                <div className="bg-slate-900/50 backdrop-blur-sm rounded-lg border border-slate-600 p-6">
                                     <h3 className="text-lg font-semibold text-white mb-4">Journal Quartile Distribution</h3>
 
                                     <div className="space-y-4">
                                         {/* Q1 Bar */}
-                                        <div className="bg-slate-700/80 backdrop-blur-sm rounded-full p-2 border border-slate-600/50 shadow-lg flex items-center gap-3">
+                                        <div className="bg-slate-800/40 backdrop-blur-sm rounded-full p-2 border border-slate-600 shadow-lg flex items-center gap-3">
                                             <div className="text-lg font-bold text-white pl-4 w-16">Q1</div>
                                             <div className="flex-1 relative h-8">
                                                 <div
-                                                    className="absolute left-0 h-8 rounded-full overflow-hidden flex"
-                                                    style={{ width: `${Math.max(calculatePercentage(stats.q1Publications, stats.journalArticles), 20)}%` }}
-                                                >
-                                                    {stats.q1FirstAuthor > 0 && (
-                                                        <div
-                                                            className="bg-emerald-500 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
-                                                            style={{
-                                                                minWidth: '60px',
-                                                                width: `${(stats.q1FirstAuthor / stats.q1Publications) * 100}%`,
-                                                                boxShadow: '0 0 20px rgba(16, 185, 129, 0.6)'
-                                                            }}
-                                                        >
-                                                            1st: {stats.q1FirstAuthor}
-                                                        </div>
-                                                    )}
-                                                    {stats.q1Corresponding > 0 && (
-                                                        <div
-                                                            className="bg-emerald-400 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
-                                                            style={{
-                                                                minWidth: '70px',
-                                                                width: `${(stats.q1Corresponding / stats.q1Publications) * 100}%`,
-                                                                boxShadow: '0 0 20px rgba(52, 211, 153, 0.6)'
-                                                            }}
-                                                        >
-                                                            Corr: {stats.q1Corresponding}
-                                                        </div>
-                                                    )}
-                                                    {stats.q1CoAuthor > 0 && (
-                                                        <div
-                                                            className="bg-emerald-300 flex items-center justify-center text-emerald-900 text-xs font-semibold flex-shrink-0"
-                                                            style={{
-                                                                minWidth: '60px',
-                                                                width: `${(stats.q1CoAuthor / stats.q1Publications) * 100}%`,
-                                                                boxShadow: '0 0 20px rgba(110, 231, 183, 0.6)'
-                                                            }}
-                                                        >
-                                                            Co: {stats.q1CoAuthor}
-                                                        </div>
-                                                    )}
-                                                </div>
+                                                    className="absolute left-0 h-8 bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full shadow-lg"
+                                                    style={{
+                                                        width: `${Math.max(calculatePercentage(stats.q1Publications, stats.journalArticles), 20)}%`,
+                                                        boxShadow: '0 0 20px rgba(16, 185, 129, 0.5)'
+                                                    }}
+                                                />
                                             </div>
                                             <div className="pr-4 min-w-[140px]">
                                                 <div className="text-2xl font-bold text-white text-right">{calculatePercentage(stats.q1Publications, stats.journalArticles)}%</div>
@@ -388,50 +379,16 @@ export default function RCPublicationsPage() {
                                         </div>
 
                                         {/* Q2 Bar */}
-                                        <div className="bg-slate-700/80 backdrop-blur-sm rounded-full p-2 border border-slate-600/50 shadow-lg flex items-center gap-3">
+                                        <div className="bg-slate-800/40 backdrop-blur-sm rounded-full p-2 border border-slate-600 shadow-lg flex items-center gap-3">
                                             <div className="text-lg font-bold text-white pl-4 w-16">Q2</div>
                                             <div className="flex-1 relative h-8">
                                                 <div
-                                                    className="absolute left-0 h-8 rounded-full overflow-hidden flex"
-                                                    style={{ width: `${Math.max(calculatePercentage(stats.q2Publications, stats.journalArticles), 20)}%` }}
-                                                >
-                                                    {stats.q2FirstAuthor > 0 && (
-                                                        <div
-                                                            className="bg-sky-500 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
-                                                            style={{
-                                                                minWidth: '60px',
-                                                                width: `${(stats.q2FirstAuthor / stats.q2Publications) * 100}%`,
-                                                                boxShadow: '0 0 20px rgba(14, 165, 233, 0.6)'
-                                                            }}
-                                                        >
-                                                            1st: {stats.q2FirstAuthor}
-                                                        </div>
-                                                    )}
-                                                    {stats.q2Corresponding > 0 && (
-                                                        <div
-                                                            className="bg-sky-400 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
-                                                            style={{
-                                                                minWidth: '70px',
-                                                                width: `${(stats.q2Corresponding / stats.q2Publications) * 100}%`,
-                                                                boxShadow: '0 0 20px rgba(56, 189, 248, 0.6)'
-                                                            }}
-                                                        >
-                                                            Corr: {stats.q2Corresponding}
-                                                        </div>
-                                                    )}
-                                                    {stats.q2CoAuthor > 0 && (
-                                                        <div
-                                                            className="bg-sky-300 flex items-center justify-center text-sky-900 text-xs font-semibold flex-shrink-0"
-                                                            style={{
-                                                                minWidth: '60px',
-                                                                width: `${(stats.q2CoAuthor / stats.q2Publications) * 100}%`,
-                                                                boxShadow: '0 0 20px rgba(125, 211, 252, 0.6)'
-                                                            }}
-                                                        >
-                                                            Co: {stats.q2CoAuthor}
-                                                        </div>
-                                                    )}
-                                                </div>
+                                                    className="absolute left-0 h-8 bg-gradient-to-r from-sky-500 to-sky-400 rounded-full shadow-lg"
+                                                    style={{
+                                                        width: `${Math.max(calculatePercentage(stats.q2Publications, stats.journalArticles), 20)}%`,
+                                                        boxShadow: '0 0 20px rgba(14, 165, 233, 0.5)'
+                                                    }}
+                                                />
                                             </div>
                                             <div className="pr-4 min-w-[140px]">
                                                 <div className="text-2xl font-bold text-white text-right">{calculatePercentage(stats.q2Publications, stats.journalArticles)}%</div>
@@ -440,50 +397,16 @@ export default function RCPublicationsPage() {
                                         </div>
 
                                         {/* Q3 Bar */}
-                                        <div className="bg-slate-700/80 backdrop-blur-sm rounded-full p-2 border border-slate-600/50 shadow-lg flex items-center gap-3">
+                                        <div className="bg-slate-800/40 backdrop-blur-sm rounded-full p-2 border border-slate-600 shadow-lg flex items-center gap-3">
                                             <div className="text-lg font-bold text-white pl-4 w-16">Q3</div>
                                             <div className="flex-1 relative h-8">
                                                 <div
-                                                    className="absolute left-0 h-8 rounded-full overflow-hidden flex"
-                                                    style={{ width: `${Math.max(calculatePercentage(stats.q3Publications, stats.journalArticles), 20)}%` }}
-                                                >
-                                                    {stats.q3FirstAuthor > 0 && (
-                                                        <div
-                                                            className="bg-amber-500 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
-                                                            style={{
-                                                                minWidth: '60px',
-                                                                width: `${(stats.q3FirstAuthor / stats.q3Publications) * 100}%`,
-                                                                boxShadow: '0 0 20px rgba(245, 158, 11, 0.6)'
-                                                            }}
-                                                        >
-                                                            1st: {stats.q3FirstAuthor}
-                                                        </div>
-                                                    )}
-                                                    {stats.q3Corresponding > 0 && (
-                                                        <div
-                                                            className="bg-amber-400 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
-                                                            style={{
-                                                                minWidth: '70px',
-                                                                width: `${(stats.q3Corresponding / stats.q3Publications) * 100}%`,
-                                                                boxShadow: '0 0 20px rgba(251, 191, 36, 0.6)'
-                                                            }}
-                                                        >
-                                                            Corr: {stats.q3Corresponding}
-                                                        </div>
-                                                    )}
-                                                    {stats.q3CoAuthor > 0 && (
-                                                        <div
-                                                            className="bg-amber-300 flex items-center justify-center text-amber-900 text-xs font-semibold flex-shrink-0"
-                                                            style={{
-                                                                minWidth: '60px',
-                                                                width: `${(stats.q3CoAuthor / stats.q3Publications) * 100}%`,
-                                                                boxShadow: '0 0 20px rgba(252, 211, 77, 0.6)'
-                                                            }}
-                                                        >
-                                                            Co: {stats.q3CoAuthor}
-                                                        </div>
-                                                    )}
-                                                </div>
+                                                    className="absolute left-0 h-8 bg-gradient-to-r from-amber-500 to-amber-400 rounded-full shadow-lg"
+                                                    style={{
+                                                        width: `${Math.max(calculatePercentage(stats.q3Publications, stats.journalArticles), 20)}%`,
+                                                        boxShadow: '0 0 20px rgba(245, 158, 11, 0.5)'
+                                                    }}
+                                                />
                                             </div>
                                             <div className="pr-4 min-w-[140px]">
                                                 <div className="text-2xl font-bold text-white text-right">{calculatePercentage(stats.q3Publications, stats.journalArticles)}%</div>
@@ -492,50 +415,16 @@ export default function RCPublicationsPage() {
                                         </div>
 
                                         {/* Q4 Bar */}
-                                        <div className="bg-slate-700/80 backdrop-blur-sm rounded-full p-2 border border-slate-600/50 shadow-lg flex items-center gap-3">
+                                        <div className="bg-slate-800/40 backdrop-blur-sm rounded-full p-2 border border-slate-600 shadow-lg flex items-center gap-3">
                                             <div className="text-lg font-bold text-white pl-4 w-16">Q4</div>
                                             <div className="flex-1 relative h-8">
                                                 <div
-                                                    className="absolute left-0 h-8 rounded-full overflow-hidden flex"
-                                                    style={{ width: `${Math.max(calculatePercentage(stats.q4Publications, stats.journalArticles), 20)}%` }}
-                                                >
-                                                    {stats.q4FirstAuthor > 0 && (
-                                                        <div
-                                                            className="bg-rose-500 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
-                                                            style={{
-                                                                minWidth: '60px',
-                                                                width: `${(stats.q4FirstAuthor / stats.q4Publications) * 100}%`,
-                                                                boxShadow: '0 0 20px rgba(244, 63, 94, 0.6)'
-                                                            }}
-                                                        >
-                                                            1st: {stats.q4FirstAuthor}
-                                                        </div>
-                                                    )}
-                                                    {stats.q4Corresponding > 0 && (
-                                                        <div
-                                                            className="bg-rose-400 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
-                                                            style={{
-                                                                minWidth: '70px',
-                                                                width: `${(stats.q4Corresponding / stats.q4Publications) * 100}%`,
-                                                                boxShadow: '0 0 20px rgba(251, 113, 133, 0.6)'
-                                                            }}
-                                                        >
-                                                            Corr: {stats.q4Corresponding}
-                                                        </div>
-                                                    )}
-                                                    {stats.q4CoAuthor > 0 && (
-                                                        <div
-                                                            className="bg-rose-300 flex items-center justify-center text-rose-900 text-xs font-semibold flex-shrink-0"
-                                                            style={{
-                                                                minWidth: '60px',
-                                                                width: `${(stats.q4CoAuthor / stats.q4Publications) * 100}%`,
-                                                                boxShadow: '0 0 20px rgba(252, 165, 165, 0.6)'
-                                                            }}
-                                                        >
-                                                            Co: {stats.q4CoAuthor}
-                                                        </div>
-                                                    )}
-                                                </div>
+                                                    className="absolute left-0 h-8 bg-gradient-to-r from-rose-500 to-rose-400 rounded-full shadow-lg"
+                                                    style={{
+                                                        width: `${Math.max(calculatePercentage(stats.q4Publications, stats.journalArticles), 20)}%`,
+                                                        boxShadow: '0 0 20px rgba(244, 63, 94, 0.5)'
+                                                    }}
+                                                />
                                             </div>
                                             <div className="pr-4 min-w-[140px]">
                                                 <div className="text-2xl font-bold text-white text-right">{calculatePercentage(stats.q4Publications, stats.journalArticles)}%</div>
@@ -543,50 +432,10 @@ export default function RCPublicationsPage() {
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div className="mt-6 flex gap-6 text-sm text-gray-400">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-4 h-4 bg-gray-600 rounded"></div>
-                                            <span>1st Author</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-4 h-4 bg-gray-500 rounded"></div>
-                                            <span>Corresponding</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-4 h-4 bg-gray-400 rounded"></div>
-                                            <span>Co-author</span>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         )}
                     </div>
-                </div>
-            </div>
-
-            {/* Upload Section - Moved to Bottom */}
-            <div className="mt-6 bg-slate-800/50 rounded-lg border border-slate-700/50 p-4">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <Upload className="w-5 h-5 text-blue-400" />
-                        <div>
-                            <h2 className="text-sm font-semibold text-white">Upload Member Publication</h2>
-                            <p className="text-xs text-gray-400">Upload CSV file containing publication data</p>
-                        </div>
-                    </div>
-                    <label className="cursor-pointer">
-                        <input
-                            type="file"
-                            accept=".csv"
-                            onChange={handleFileUpload}
-                            className="hidden"
-                            disabled={uploading}
-                        />
-                        <div className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition font-medium text-sm shadow-lg">
-                            {uploading ? 'Uploading...' : 'Choose CSV File'}
-                        </div>
-                    </label>
                 </div>
             </div>
         </div>
