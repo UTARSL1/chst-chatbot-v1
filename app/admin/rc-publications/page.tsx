@@ -47,6 +47,10 @@ export default function RCPublicationsPage() {
     const [stats, setStats] = useState<Stats | null>(null);
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
+    const [loadingStats, setLoadingStats] = useState(false);
+
+    // Cache for member stats to avoid repeated API calls
+    const [statsCache, setStatsCache] = useState<Record<string, Stats>>({});
 
     // Fetch members on mount
     useEffect(() => {
@@ -56,7 +60,16 @@ export default function RCPublicationsPage() {
     // Fetch stats when member or year changes
     useEffect(() => {
         if (selectedMember) {
-            fetchMemberStats(selectedMember.id, selectedYear);
+            const cacheKey = `${selectedMember.id}-${selectedYear}`;
+
+            // Check cache first for instant display
+            if (statsCache[cacheKey]) {
+                setStats(statsCache[cacheKey]);
+                setLoadingStats(false);
+            } else {
+                setLoadingStats(true);
+                fetchMemberStats(selectedMember.id, selectedYear);
+            }
         }
     }, [selectedMember, selectedYear]);
 
@@ -83,9 +96,18 @@ export default function RCPublicationsPage() {
             const data = await res.json();
             if (data.success) {
                 setStats(data.stats);
+
+                // Cache the stats for instant future access
+                const cacheKey = `${memberId}-${year}`;
+                setStatsCache(prev => ({
+                    ...prev,
+                    [cacheKey]: data.stats
+                }));
             }
         } catch (error) {
             console.error('Error fetching stats:', error);
+        } finally {
+            setLoadingStats(false);
         }
     };
 
@@ -185,6 +207,13 @@ export default function RCPublicationsPage() {
                                     <button
                                         key={member.id}
                                         onClick={() => setSelectedMember(member)}
+                                        onMouseEnter={() => {
+                                            // Prefetch stats on hover for instant switching
+                                            const cacheKey = `${member.id}-${selectedYear}`;
+                                            if (!statsCache[cacheKey]) {
+                                                fetchMemberStats(member.id, selectedYear);
+                                            }
+                                        }}
                                         className={`w-full text-left p-4 rounded-lg transition border ${selectedMember?.id === member.id
                                             ? 'bg-blue-900/30 border-blue-500'
                                             : 'bg-gray-700/50 hover:bg-gray-700 border-gray-600'
@@ -224,7 +253,15 @@ export default function RCPublicationsPage() {
 
                     {/* Right Panel - Analysis */}
                     <div className="lg:col-span-2">
-                        {selectedMember && stats && (
+                        {loadingStats && (
+                            <div className="bg-gray-800 rounded-lg border border-gray-700 p-12 flex items-center justify-center">
+                                <div className="text-center">
+                                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                                    <p className="text-gray-400">Loading statistics...</p>
+                                </div>
+                            </div>
+                        )}
+                        {!loadingStats && selectedMember && stats && (
                             <div className="space-y-6">
                                 {/* Header with Year Selector */}
                                 <div className="bg-gray-800 rounded-lg border border-gray-700 p-6">
