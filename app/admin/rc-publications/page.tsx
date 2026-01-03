@@ -215,9 +215,9 @@ export default function RCPublicationsPage() {
                                 {members.map((member) => (
                                     <div
                                         key={member.id}
-                                        className={`relative group rounded-lg transition border ${selectedMember?.id === member.id
-                                            ? 'bg-blue-900/30 border-blue-500'
-                                            : 'bg-gray-700/50 hover:bg-gray-700 border-gray-600'
+                                        className={`relative group rounded-lg transition-all duration-300 border ${selectedMember?.id === member.id
+                                            ? 'bg-blue-900/30 border-blue-500 shadow-lg shadow-blue-500/50'
+                                            : 'bg-gray-700/50 hover:bg-gray-700 border-gray-600 hover:shadow-lg hover:shadow-blue-400/30'
                                             }`}
                                     >
                                         <button
@@ -340,13 +340,17 @@ export default function RCPublicationsPage() {
                                             <div className="text-lg font-bold text-white w-12">Q1</div>
                                             <div className="flex-1 relative h-8">
                                                 <div
-                                                    className="absolute left-0 h-8 bg-slate-700/80 rounded-full overflow-hidden flex"
+                                                    className="absolute left-0 h-8 bg-slate-700/80 rounded-full overflow-hidden flex shadow-lg"
                                                     style={{ width: `${Math.max(calculatePercentage(stats.q1Publications, stats.journalArticles), 20)}%` }}
                                                 >
                                                     {stats.q1FirstAuthor > 0 && (
                                                         <div
                                                             className="bg-emerald-500 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
-                                                            style={{ minWidth: '60px', width: `${(stats.q1FirstAuthor / stats.q1Publications) * 100}%` }}
+                                                            style={{
+                                                                minWidth: '60px',
+                                                                width: `${(stats.q1FirstAuthor / stats.q1Publications) * 100}%`,
+                                                                boxShadow: '0 0 20px rgba(16, 185, 129, 0.6)'
+                                                            }}
                                                         >
                                                             1st: {stats.q1FirstAuthor}
                                                         </div>
@@ -354,7 +358,11 @@ export default function RCPublicationsPage() {
                                                     {stats.q1Corresponding > 0 && (
                                                         <div
                                                             className="bg-emerald-400 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
-                                                            style={{ minWidth: '70px', width: `${(stats.q1Corresponding / stats.q1Publications) * 100}%` }}
+                                                            style={{
+                                                                minWidth: '70px',
+                                                                width: `${(stats.q1Corresponding / stats.q1Publications) * 100}%`,
+                                                                boxShadow: '0 0 20px rgba(52, 211, 153, 0.6)'
+                                                            }}
                                                         >
                                                             Corr: {stats.q1Corresponding}
                                                         </div>
@@ -362,7 +370,11 @@ export default function RCPublicationsPage() {
                                                     {stats.q1CoAuthor > 0 && (
                                                         <div
                                                             className="bg-emerald-300 flex items-center justify-center text-emerald-900 text-xs font-semibold flex-shrink-0"
-                                                            style={{ minWidth: '60px', width: `${(stats.q1CoAuthor / stats.q1Publications) * 100}%` }}
+                                                            style={{
+                                                                minWidth: '60px',
+                                                                width: `${(stats.q1CoAuthor / stats.q1Publications) * 100}%`,
+                                                                boxShadow: '0 0 20px rgba(110, 231, 183, 0.6)'
+                                                            }}
                                                         >
                                                             Co: {stats.q1CoAuthor}
                                                         </div>
@@ -386,7 +398,11 @@ export default function RCPublicationsPage() {
                                                     {stats.q2FirstAuthor > 0 && (
                                                         <div
                                                             className="bg-sky-500 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
-                                                            style={{ minWidth: '60px', width: `${(stats.q2FirstAuthor / stats.q2Publications) * 100}%` }}
+                                                            style={{
+                                                                minWidth: '60px',
+                                                                width: `${(stats.q2FirstAuthor / stats.q2Publications) * 100}%`,
+                                                                boxShadow: '0 0 20px rgba(14, 165, 233, 0.6)'
+                                                            }}
                                                         >
                                                             1st: {stats.q2FirstAuthor}
                                                         </div>
@@ -394,7 +410,11 @@ export default function RCPublicationsPage() {
                                                     {stats.q2Corresponding > 0 && (
                                                         <div
                                                             className="bg-sky-400 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
-                                                            style={{ minWidth: '70px', width: `${(stats.q2Corresponding / stats.q2Publications) * 100}%` }}
+                                                            style={{
+                                                                minWidth: '70px',
+                                                                width: `${(stats.q2Corresponding / stats.q2Publications) * 100}%`,
+                                                                boxShadow: '0 0 20px rgba(56, 189, 248, 0.6)'
+                                                            }}
                                                         >
                                                             Corr: {stats.q2Corresponding}
                                                         </div>
@@ -402,7 +422,11 @@ export default function RCPublicationsPage() {
                                                     {stats.q2CoAuthor > 0 && (
                                                         <div
                                                             className="bg-sky-300 flex items-center justify-center text-sky-900 text-xs font-semibold flex-shrink-0"
-                                                            style={{ minWidth: '60px', width: `${(stats.q2CoAuthor / stats.q2Publications) * 100}%` }}
+                                                            style={{
+                                                                minWidth: '60px',
+                                                                width: `${(stats.q2CoAuthor / stats.q2Publications) * 100}%`,
+                                                                boxShadow: '0 0 20px rgba(125, 211, 252, 0.6)'
+                                                            }}
                                                         >
                                                             Co: {stats.q2CoAuthor}
                                                         </div>
@@ -426,7 +450,11 @@ export default function RCPublicationsPage() {
                                                     {stats.q3FirstAuthor > 0 && (
                                                         <div
                                                             className="bg-amber-500 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
-                                                            style={{ minWidth: '60px', width: `${(stats.q3FirstAuthor / stats.q3Publications) * 100}%` }}
+                                                            style={{
+                                                                minWidth: '60px',
+                                                                width: `${(stats.q3FirstAuthor / stats.q3Publications) * 100}%`,
+                                                                boxShadow: '0 0 20px rgba(245, 158, 11, 0.6)'
+                                                            }}
                                                         >
                                                             1st: {stats.q3FirstAuthor}
                                                         </div>
@@ -434,7 +462,11 @@ export default function RCPublicationsPage() {
                                                     {stats.q3Corresponding > 0 && (
                                                         <div
                                                             className="bg-amber-400 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
-                                                            style={{ minWidth: '70px', width: `${(stats.q3Corresponding / stats.q3Publications) * 100}%` }}
+                                                            style={{
+                                                                minWidth: '70px',
+                                                                width: `${(stats.q3Corresponding / stats.q3Publications) * 100}%`,
+                                                                boxShadow: '0 0 20px rgba(251, 191, 36, 0.6)'
+                                                            }}
                                                         >
                                                             Corr: {stats.q3Corresponding}
                                                         </div>
@@ -442,7 +474,11 @@ export default function RCPublicationsPage() {
                                                     {stats.q3CoAuthor > 0 && (
                                                         <div
                                                             className="bg-amber-300 flex items-center justify-center text-amber-900 text-xs font-semibold flex-shrink-0"
-                                                            style={{ minWidth: '60px', width: `${(stats.q3CoAuthor / stats.q3Publications) * 100}%` }}
+                                                            style={{
+                                                                minWidth: '60px',
+                                                                width: `${(stats.q3CoAuthor / stats.q3Publications) * 100}%`,
+                                                                boxShadow: '0 0 20px rgba(252, 211, 77, 0.6)'
+                                                            }}
                                                         >
                                                             Co: {stats.q3CoAuthor}
                                                         </div>
@@ -466,7 +502,11 @@ export default function RCPublicationsPage() {
                                                     {stats.q4FirstAuthor > 0 && (
                                                         <div
                                                             className="bg-rose-500 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
-                                                            style={{ minWidth: '60px', width: `${(stats.q4FirstAuthor / stats.q4Publications) * 100}%` }}
+                                                            style={{
+                                                                minWidth: '60px',
+                                                                width: `${(stats.q4FirstAuthor / stats.q4Publications) * 100}%`,
+                                                                boxShadow: '0 0 20px rgba(244, 63, 94, 0.6)'
+                                                            }}
                                                         >
                                                             1st: {stats.q4FirstAuthor}
                                                         </div>
@@ -474,7 +514,11 @@ export default function RCPublicationsPage() {
                                                     {stats.q4Corresponding > 0 && (
                                                         <div
                                                             className="bg-rose-400 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
-                                                            style={{ minWidth: '70px', width: `${(stats.q4Corresponding / stats.q4Publications) * 100}%` }}
+                                                            style={{
+                                                                minWidth: '70px',
+                                                                width: `${(stats.q4Corresponding / stats.q4Publications) * 100}%`,
+                                                                boxShadow: '0 0 20px rgba(251, 113, 133, 0.6)'
+                                                            }}
                                                         >
                                                             Corr: {stats.q4Corresponding}
                                                         </div>
@@ -482,7 +526,11 @@ export default function RCPublicationsPage() {
                                                     {stats.q4CoAuthor > 0 && (
                                                         <div
                                                             className="bg-rose-300 flex items-center justify-center text-rose-900 text-xs font-semibold flex-shrink-0"
-                                                            style={{ minWidth: '60px', width: `${(stats.q4CoAuthor / stats.q4Publications) * 100}%` }}
+                                                            style={{
+                                                                minWidth: '60px',
+                                                                width: `${(stats.q4CoAuthor / stats.q4Publications) * 100}%`,
+                                                                boxShadow: '0 0 20px rgba(252, 165, 165, 0.6)'
+                                                            }}
                                                         >
                                                             Co: {stats.q4CoAuthor}
                                                         </div>
