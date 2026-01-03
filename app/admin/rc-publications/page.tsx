@@ -206,8 +206,7 @@ export default function RCPublicationsPage() {
                     {/* Left Panel - Members List */}
                     <div className="lg:col-span-1">
                         <div
-                            className="bg-slate-900/40 backdrop-blur-md rounded-lg border border-white/5 p-4"
-                            style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)' }}
+                            className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-4 shadow-[0_0_15px_rgba(255,255,255,0.07)]"
                         >
                             <div className="flex items-center gap-2 mb-4">
                                 <Users className="w-5 h-5 text-gray-300" />
@@ -282,8 +281,7 @@ export default function RCPublicationsPage() {
 
                         {/* Upload Section */}
                         <div
-                            className="mt-4 bg-slate-900/40 backdrop-blur-md rounded-lg border border-white/5 p-4"
-                            style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)' }}
+                            className="mt-4 bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-4 shadow-[0_0_15px_rgba(255,255,255,0.07)]"
                         >
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
@@ -323,8 +321,7 @@ export default function RCPublicationsPage() {
                             <div className="space-y-6">
                                 {/* Header with Year Selector */}
                                 <div
-                                    className="bg-slate-900/40 backdrop-blur-md rounded-lg border border-white/5 p-6"
-                                    style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)' }}
+                                    className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)]"
                                 >
                                     <div className="flex items-center justify-between mb-6">
                                         <div>
@@ -347,19 +344,19 @@ export default function RCPublicationsPage() {
 
                                     {/* Key Metrics */}
                                     <div className="grid grid-cols-4 gap-4">
-                                        <div className="bg-slate-800/40 backdrop-blur-md p-4 rounded-lg border border-white/5" style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)' }}>
+                                        <div className="bg-slate-800/60 backdrop-blur-md p-4 rounded-lg border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.05)]">
                                             <div className="text-3xl font-bold text-white">{stats.totalPublications}</div>
                                             <div className="text-sm text-gray-400 mt-1">Total Publications</div>
                                         </div>
-                                        <div className="bg-blue-900/20 backdrop-blur-md p-4 rounded-lg border border-white/5" style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)' }}>
+                                        <div className="bg-blue-900/20 backdrop-blur-md p-4 rounded-lg border border-blue-400/30 shadow-[0_0_15px_rgba(59,130,246,0.15)]">
                                             <div className="text-3xl font-bold text-blue-300">{stats.journalArticles}</div>
                                             <div className="text-sm text-blue-400 mt-1">Journal Articles</div>
                                         </div>
-                                        <div className="bg-slate-800/40 backdrop-blur-md p-4 rounded-lg border border-white/5" style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)' }}>
+                                        <div className="bg-slate-800/60 backdrop-blur-md p-4 rounded-lg border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.05)]">
                                             <div className="text-3xl font-bold text-white">{stats.conferencePapers}</div>
                                             <div className="text-sm text-gray-400 mt-1">Conference Papers</div>
                                         </div>
-                                        <div className="bg-emerald-900/20 backdrop-blur-md p-4 rounded-lg border border-white/5" style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)' }}>
+                                        <div className="bg-emerald-900/20 backdrop-blur-md p-4 rounded-lg border border-emerald-400/30 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
                                             <div className="text-3xl font-bold text-green-300">{stats.q1Publications}</div>
                                             <div className="text-sm text-green-400 mt-1">Q1 Publications</div>
                                         </div>
@@ -368,8 +365,7 @@ export default function RCPublicationsPage() {
 
                                 {/* Quartile Distribution Chart */}
                                 <div
-                                    className="bg-slate-900/40 backdrop-blur-md rounded-lg border border-white/5 p-6"
-                                    style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)' }}
+                                    className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)]"
                                 >
                                     <h3 className="text-lg font-semibold text-white mb-4">Journal Quartile Distribution</h3>
 
@@ -403,8 +399,8 @@ export default function RCPublicationsPage() {
                                                 </div>
                                                 {/* Stats Overlay */}
                                                 <div className="absolute right-6 top-0 bottom-0 flex flex-col justify-center text-right z-10">
-                                                    <div className="text-xl font-bold text-white leading-none mb-1">{calculatePercentage(stats.q1Publications, stats.journalArticles)}%</div>
-                                                    <div className="text-xs text-slate-300 font-medium">{stats.q1Publications} publications</div>
+                                                    <div className="text-2xl font-bold text-white leading-none mb-1 drop-shadow-md">{calculatePercentage(stats.q1Publications, stats.journalArticles)}%</div>
+                                                    <div className="text-sm font-medium text-slate-200 drop-shadow-sm">{stats.q1Publications} publications</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -438,8 +434,8 @@ export default function RCPublicationsPage() {
                                                 </div>
                                                 {/* Stats Overlay */}
                                                 <div className="absolute right-6 top-0 bottom-0 flex flex-col justify-center text-right z-10">
-                                                    <div className="text-xl font-bold text-white leading-none mb-1">{calculatePercentage(stats.q2Publications, stats.journalArticles)}%</div>
-                                                    <div className="text-xs text-slate-300 font-medium">{stats.q2Publications} publications</div>
+                                                    <div className="text-2xl font-bold text-white leading-none mb-1 drop-shadow-md">{calculatePercentage(stats.q2Publications, stats.journalArticles)}%</div>
+                                                    <div className="text-sm font-medium text-slate-200 drop-shadow-sm">{stats.q2Publications} publications</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -473,8 +469,8 @@ export default function RCPublicationsPage() {
                                                 </div>
                                                 {/* Stats Overlay */}
                                                 <div className="absolute right-6 top-0 bottom-0 flex flex-col justify-center text-right z-10">
-                                                    <div className="text-xl font-bold text-white leading-none mb-1">{calculatePercentage(stats.q3Publications, stats.journalArticles)}%</div>
-                                                    <div className="text-xs text-slate-300 font-medium">{stats.q3Publications} publications</div>
+                                                    <div className="text-2xl font-bold text-white leading-none mb-1 drop-shadow-md">{calculatePercentage(stats.q3Publications, stats.journalArticles)}%</div>
+                                                    <div className="text-sm font-medium text-slate-200 drop-shadow-sm">{stats.q3Publications} publications</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -508,8 +504,8 @@ export default function RCPublicationsPage() {
                                                 </div>
                                                 {/* Stats Overlay */}
                                                 <div className="absolute right-6 top-0 bottom-0 flex flex-col justify-center text-right z-10">
-                                                    <div className="text-xl font-bold text-white leading-none mb-1">{calculatePercentage(stats.q4Publications, stats.journalArticles)}%</div>
-                                                    <div className="text-xs text-slate-300 font-medium">{stats.q4Publications} publications</div>
+                                                    <div className="text-2xl font-bold text-white leading-none mb-1 drop-shadow-md">{calculatePercentage(stats.q4Publications, stats.journalArticles)}%</div>
+                                                    <div className="text-sm font-medium text-slate-200 drop-shadow-sm">{stats.q4Publications} publications</div>
                                                 </div>
                                             </div>
                                         </div>
