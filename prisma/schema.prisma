@@ -387,3 +387,84 @@ model NatureIndexInstitution {
   @@index([position])
   @@map("nature_index_institutions")
 }
+
+// RC Member model (for publication analysis)
+model RCMember {
+  id                  String              @id @default(uuid())
+  name                String
+  staffId             String?
+  totalPublications   Int                 @default(0)
+  journalArticles     Int                 @default(0)
+  conferencePapers    Int                 @default(0)
+  q1Publications      Int                 @default(0)
+  q2Publications      Int                 @default(0)
+  q3Publications      Int                 @default(0)
+  q4Publications      Int                 @default(0)
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  
+  // Relations
+  publications        Publication[]
+  groupMemberships    WorkingGroupMember[]
+  
+  @@index([name])
+  @@map("rc_members")
+}
+
+// Publication model
+model Publication {
+  id              String    @id @default(uuid())
+  memberId        String
+  title           String    @db.Text
+  journalName     String?
+  publicationType String?   // JOURNAL ARTICLE, CONFERENCE, etc.
+  wosQuartile     String?   // Q1, Q2, Q3, Q4
+  authorshipRole  String?   // 1st Author, Corresponding Author, Co-author
+  publicationYear Int?      // Extracted from Publication Date
+  publicationDate String?   // Original: Jul-17, Dec-17, etc.
+  role            String?   // Original Role column value
+  issn            String?
+  doi             String?
+  createdAt       DateTime  @default(now())
+  
+  // Relations
+  member          RCMember  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  
+  @@index([memberId])
+  @@index([wosQuartile])
+  @@index([publicationYear])
+  @@index([authorshipRole])
+  @@map("publications")
+}
+
+// Working Group model
+model WorkingGroup {
+  id          String              @id @default(uuid())
+  name        String
+  description String?             @db.Text
+  createdBy   String              // User ID of chairperson
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  
+  // Relations
+  members     WorkingGroupMember[]
+  
+  @@index([createdBy])
+  @@map("working_groups")
+}
+
+// Working Group Member (junction table)
+model WorkingGroupMember {
+  groupId   String
+  memberId  String
+  addedAt   DateTime     @default(now())
+  
+  // Relations
+  group     WorkingGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  member    RCMember     @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  
+  @@id([groupId, memberId])
+  @@index([groupId])
+  @@index([memberId])
+  @@map("working_group_members")
+}
