@@ -381,9 +381,9 @@ export default function RCPublicationsPage() {
                                                     )}
                                                 </div>
                                             </div>
-                                            <div className="text-right min-w-[120px]">
-                                                <div className="text-2xl font-bold text-white">{calculatePercentage(stats.q1Publications, stats.journalArticles)}%</div>
-                                                <div className="text-xs text-gray-400">{stats.q1Publications} publications</div>
+                                            <div className="bg-slate-700/80 rounded-full px-6 py-2 min-w-[140px] backdrop-blur-sm border border-slate-600/50">
+                                                <div className="text-2xl font-bold text-white text-right">{calculatePercentage(stats.q1Publications, stats.journalArticles)}%</div>
+                                                <div className="text-xs text-gray-300 text-right">{stats.q1Publications} publications</div>
                                             </div>
                                         </div>
 
@@ -433,9 +433,9 @@ export default function RCPublicationsPage() {
                                                     )}
                                                 </div>
                                             </div>
-                                            <div className="text-right min-w-[120px]">
-                                                <div className="text-2xl font-bold text-white">{calculatePercentage(stats.q2Publications, stats.journalArticles)}%</div>
-                                                <div className="text-xs text-gray-400">{stats.q2Publications} publications</div>
+                                            <div className="bg-slate-700/80 rounded-full px-6 py-2 min-w-[140px] backdrop-blur-sm border border-slate-600/50">
+                                                <div className="text-2xl font-bold text-white text-right">{calculatePercentage(stats.q2Publications, stats.journalArticles)}%</div>
+                                                <div className="text-xs text-gray-300 text-right">{stats.q2Publications} publications</div>
                                             </div>
                                         </div>
 
@@ -485,9 +485,9 @@ export default function RCPublicationsPage() {
                                                     )}
                                                 </div>
                                             </div>
-                                            <div className="text-right min-w-[120px]">
-                                                <div className="text-2xl font-bold text-white">{calculatePercentage(stats.q3Publications, stats.journalArticles)}%</div>
-                                                <div className="text-xs text-gray-400">{stats.q3Publications} publications</div>
+                                            <div className="bg-slate-700/80 rounded-full px-6 py-2 min-w-[140px] backdrop-blur-sm border border-slate-600/50">
+                                                <div className="text-2xl font-bold text-white text-right">{calculatePercentage(stats.q3Publications, stats.journalArticles)}%</div>
+                                                <div className="text-xs text-gray-300 text-right">{stats.q3Publications} publications</div>
                                             </div>
                                         </div>
 
@@ -537,9 +537,9 @@ export default function RCPublicationsPage() {
                                                     )}
                                                 </div>
                                             </div>
-                                            <div className="text-right min-w-[120px]">
-                                                <div className="text-2xl font-bold text-white">{calculatePercentage(stats.q4Publications, stats.journalArticles)}%</div>
-                                                <div className="text-xs text-gray-400">{stats.q4Publications} publications</div>
+                                            <div className="bg-slate-700/80 rounded-full px-6 py-2 min-w-[140px] backdrop-blur-sm border border-slate-600/50">
+                                                <div className="text-2xl font-bold text-white text-right">{calculatePercentage(stats.q4Publications, stats.journalArticles)}%</div>
+                                                <div className="text-xs text-gray-300 text-right">{stats.q4Publications} publications</div>
                                             </div>
                                         </div>
                                     </div>
