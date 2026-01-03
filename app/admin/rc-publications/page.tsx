@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Upload, Users, BarChart3, Download, Trash2 } from 'lucide-react';
+import { Upload, Users, BarChart3, Download, Trash2, GripVertical } from 'lucide-react';
 
 interface Member {
     id: string;
@@ -205,7 +205,10 @@ export default function RCPublicationsPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Left Panel - Members List */}
                     <div className="lg:col-span-1">
-                        <div className="bg-slate-900/50 backdrop-blur-sm rounded-lg border border-slate-600 p-4">
+                        <div
+                            className="bg-slate-900/40 backdrop-blur-md rounded-lg border border-white/5 p-4"
+                            style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)' }}
+                        >
                             <div className="flex items-center gap-2 mb-4">
                                 <Users className="w-5 h-5 text-gray-300" />
                                 <h3 className="font-semibold text-white">RC Members ({members.length})</h3>
@@ -215,47 +218,49 @@ export default function RCPublicationsPage() {
                                 {members.map((member) => (
                                     <div
                                         key={member.id}
-                                        className={`relative group rounded-lg transition-all duration-300 border ${selectedMember?.id === member.id
-                                            ? 'bg-blue-900/40 border-blue-400 shadow-lg shadow-blue-500/20'
-                                            : 'bg-slate-800/40 hover:bg-slate-700/60 border-slate-600 hover:border-slate-500'
+                                        className={`relative group rounded-md transition-all duration-300 border ${selectedMember?.id === member.id
+                                            ? 'bg-blue-900/40 border-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.5)]'
+                                            : 'bg-white/5 border-transparent hover:border-blue-400/30 hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:bg-slate-800/60'
                                             }`}
                                     >
                                         <button
                                             onClick={() => setSelectedMember(member)}
                                             onMouseEnter={() => {
-                                                // Prefetch stats on hover for instant switching
                                                 const cacheKey = `${member.id}-${selectedYear}`;
                                                 if (!statsCache[cacheKey]) {
                                                     fetchMemberStats(member.id, selectedYear);
                                                 }
                                             }}
-                                            className="w-full text-left p-3"
+                                            className="w-full flex items-center gap-3 p-2.5"
                                         >
-                                            <div className="font-medium text-sm text-white mb-1">{member.name}</div>
-                                            <div className="text-xs text-gray-400 mb-1.5">
-                                                {member.totalPublications} publications
+                                            <div className="text-gray-600 group-hover:text-gray-400 transition-colors">
+                                                <GripVertical size={14} />
                                             </div>
-                                            <div className="flex gap-1.5 flex-wrap">
-                                                {member.q1Publications > 0 && (
-                                                    <span className="px-1.5 py-0.5 bg-green-900/30 text-green-300 text-xs rounded border border-green-700/50">
-                                                        Q1: {member.q1Publications}
-                                                    </span>
-                                                )}
-                                                {member.q2Publications > 0 && (
-                                                    <span className="px-1.5 py-0.5 bg-blue-900/30 text-blue-300 text-xs rounded border border-blue-700/50">
-                                                        Q2: {member.q2Publications}
-                                                    </span>
-                                                )}
-                                                {member.q3Publications > 0 && (
-                                                    <span className="px-1.5 py-0.5 bg-orange-900/30 text-orange-300 text-xs rounded border border-orange-700/50">
-                                                        Q3: {member.q3Publications}
-                                                    </span>
-                                                )}
-                                                {member.q4Publications > 0 && (
-                                                    <span className="px-1.5 py-0.5 bg-red-900/30 text-red-300 text-xs rounded border border-red-700/50">
-                                                        Q4: {member.q4Publications}
-                                                    </span>
-                                                )}
+
+                                            <div className="flex-1 font-medium text-sm text-white truncate text-left">{member.name}</div>
+
+                                            <div className="px-2 py-0.5 rounded-full bg-blue-950/50 text-[10px] font-medium text-blue-300 border border-blue-500/20 whitespace-nowrap">
+                                                {member.totalPublications} pubs
+                                            </div>
+
+                                            {/* Mini Bar Chart */}
+                                            <div className="flex items-end gap-1 h-3 w-12">
+                                                <div
+                                                    className="w-2 rounded-t-[1px] bg-emerald-500/80"
+                                                    style={{ height: `${member.journalArticles > 0 ? Math.max((member.q1Publications / member.journalArticles) * 100, 15) : 0}%` }}
+                                                />
+                                                <div
+                                                    className="w-2 rounded-t-[1px] bg-sky-500/80"
+                                                    style={{ height: `${member.journalArticles > 0 ? Math.max((member.q2Publications / member.journalArticles) * 100, 15) : 0}%` }}
+                                                />
+                                                <div
+                                                    className="w-2 rounded-t-[1px] bg-amber-500/80"
+                                                    style={{ height: `${member.journalArticles > 0 ? Math.max((member.q3Publications / member.journalArticles) * 100, 15) : 0}%` }}
+                                                />
+                                                <div
+                                                    className="w-2 rounded-t-[1px] bg-rose-500/80"
+                                                    style={{ height: `${member.journalArticles > 0 ? Math.max((member.q4Publications / member.journalArticles) * 100, 15) : 0}%` }}
+                                                />
                                             </div>
                                         </button>
 
@@ -265,10 +270,10 @@ export default function RCPublicationsPage() {
                                                 e.stopPropagation();
                                                 handleDeleteMember(member.id, member.name);
                                             }}
-                                            className="absolute top-2 right-3 p-1.5 rounded-lg bg-red-900/50 hover:bg-red-900 border border-red-700 text-red-300 hover:text-red-100 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                                            className="absolute top-2 right-2 p-1 rounded bg-red-900/80 hover:bg-red-900 text-red-100 opacity-0 group-hover:opacity-100 transition-all z-20"
                                             title="Delete member"
                                         >
-                                            <Trash2 className="w-3.5 h-3.5" />
+                                            <Trash2 className="w-3 h-3" />
                                         </button>
                                     </div>
                                 ))}
@@ -276,7 +281,10 @@ export default function RCPublicationsPage() {
                         </div>
 
                         {/* Upload Section */}
-                        <div className="mt-4 bg-slate-900/50 backdrop-blur-sm rounded-lg border border-slate-600 p-4">
+                        <div
+                            className="mt-4 bg-slate-900/40 backdrop-blur-md rounded-lg border border-white/5 p-4"
+                            style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)' }}
+                        >
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <Upload className="w-5 h-5 text-blue-400" />
@@ -314,7 +322,10 @@ export default function RCPublicationsPage() {
                         {!loadingStats && selectedMember && stats && (
                             <div className="space-y-6">
                                 {/* Header with Year Selector */}
-                                <div className="bg-slate-900/50 backdrop-blur-sm rounded-lg border border-slate-600 p-6">
+                                <div
+                                    className="bg-slate-900/40 backdrop-blur-md rounded-lg border border-white/5 p-6"
+                                    style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)' }}
+                                >
                                     <div className="flex items-center justify-between mb-6">
                                         <div>
                                             <h2 className="text-2xl font-bold text-white">{selectedMember.name}</h2>
@@ -336,19 +347,19 @@ export default function RCPublicationsPage() {
 
                                     {/* Key Metrics */}
                                     <div className="grid grid-cols-4 gap-4">
-                                        <div className="bg-slate-800/40 p-4 rounded-lg border border-slate-600">
+                                        <div className="bg-slate-800/40 backdrop-blur-md p-4 rounded-lg border border-white/5" style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)' }}>
                                             <div className="text-3xl font-bold text-white">{stats.totalPublications}</div>
                                             <div className="text-sm text-gray-400 mt-1">Total Publications</div>
                                         </div>
-                                        <div className="bg-blue-900/20 p-4 rounded-lg border border-blue-500/30">
+                                        <div className="bg-blue-900/20 backdrop-blur-md p-4 rounded-lg border border-white/5" style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)' }}>
                                             <div className="text-3xl font-bold text-blue-300">{stats.journalArticles}</div>
                                             <div className="text-sm text-blue-400 mt-1">Journal Articles</div>
                                         </div>
-                                        <div className="bg-slate-800/40 p-4 rounded-lg border border-slate-600">
+                                        <div className="bg-slate-800/40 backdrop-blur-md p-4 rounded-lg border border-white/5" style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)' }}>
                                             <div className="text-3xl font-bold text-white">{stats.conferencePapers}</div>
                                             <div className="text-sm text-gray-400 mt-1">Conference Papers</div>
                                         </div>
-                                        <div className="bg-emerald-900/20 p-4 rounded-lg border border-emerald-500/30">
+                                        <div className="bg-emerald-900/20 backdrop-blur-md p-4 rounded-lg border border-white/5" style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)' }}>
                                             <div className="text-3xl font-bold text-green-300">{stats.q1Publications}</div>
                                             <div className="text-sm text-green-400 mt-1">Q1 Publications</div>
                                         </div>
@@ -356,14 +367,17 @@ export default function RCPublicationsPage() {
                                 </div>
 
                                 {/* Quartile Distribution Chart */}
-                                <div className="bg-slate-900/50 backdrop-blur-sm rounded-lg border border-slate-600 p-6">
+                                <div
+                                    className="bg-slate-900/40 backdrop-blur-md rounded-lg border border-white/5 p-6"
+                                    style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)' }}
+                                >
                                     <h3 className="text-lg font-semibold text-white mb-4">Journal Quartile Distribution</h3>
 
                                     <div className="space-y-6">
                                         {/* Q1 Bar */}
                                         <div className="flex items-center gap-4">
                                             <div className="text-xl font-bold text-white w-8">Q1</div>
-                                            <div className="flex-1 relative h-14 bg-slate-800/40 backdrop-blur-sm rounded-full border border-slate-600 shadow-inner overflow-hidden">
+                                            <div className="flex-1 relative h-14 bg-slate-900/20 backdrop-blur-md rounded-full border border-white/10 shadow-inner overflow-hidden">
                                                 {/* Progress Bar */}
                                                 <div
                                                     className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full"
@@ -398,7 +412,7 @@ export default function RCPublicationsPage() {
                                         {/* Q2 Bar */}
                                         <div className="flex items-center gap-4">
                                             <div className="text-xl font-bold text-white w-8">Q2</div>
-                                            <div className="flex-1 relative h-14 bg-slate-800/40 backdrop-blur-sm rounded-full border border-slate-600 shadow-inner overflow-hidden">
+                                            <div className="flex-1 relative h-14 bg-slate-900/20 backdrop-blur-md rounded-full border border-white/10 shadow-inner overflow-hidden">
                                                 {/* Progress Bar */}
                                                 <div
                                                     className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-sky-500 to-sky-400 rounded-full"
@@ -433,7 +447,7 @@ export default function RCPublicationsPage() {
                                         {/* Q3 Bar */}
                                         <div className="flex items-center gap-4">
                                             <div className="text-xl font-bold text-white w-8">Q3</div>
-                                            <div className="flex-1 relative h-14 bg-slate-800/40 backdrop-blur-sm rounded-full border border-slate-600 shadow-inner overflow-hidden">
+                                            <div className="flex-1 relative h-14 bg-slate-900/20 backdrop-blur-md rounded-full border border-white/10 shadow-inner overflow-hidden">
                                                 {/* Progress Bar */}
                                                 <div
                                                     className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-amber-500 to-amber-400 rounded-full"
