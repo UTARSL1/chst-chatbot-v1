@@ -81,9 +81,9 @@ export async function parsePublicationCSV(fileContent: string): Promise<ParsedCS
             skip_empty_lines: true,
             trim: true,
             relax_column_count: true, // Handle malformed rows
-            on_record: (record) => {
+            on_record: (record: Record<string, unknown>) => {
                 // Clean up record - remove empty values
-                const cleaned: any = {};
+                const cleaned: Record<string, string> = {};
                 for (const [key, value] of Object.entries(record)) {
                     if (value && typeof value === 'string' && value.trim()) {
                         cleaned[key] = value.trim();
@@ -97,8 +97,12 @@ export async function parsePublicationCSV(fileContent: string): Promise<ParsedCS
             throw new Error('CSV file is empty or invalid');
         }
 
+        // Type the records properly
+        type CSVRecord = Record<string, string>;
+        const typedRecords = records as CSVRecord[];
+
         // Extract staff name from first row
-        const staffName = records[0]['Staff Name'] || 'Unknown';
+        const staffName = typedRecords[0]['Staff Name'] || 'Unknown';
 
         // Parse publications
         const publications: ParsedPublication[] = [];
@@ -106,7 +110,7 @@ export async function parsePublicationCSV(fileContent: string): Promise<ParsedCS
         let conferenceCount = 0;
         let q1 = 0, q2 = 0, q3 = 0, q4 = 0;
 
-        for (const row of records) {
+        for (const row of typedRecords) {
             const title = row['Title of Publication'] || '';
             if (!title) continue; // Skip rows without title
 
@@ -119,7 +123,7 @@ export async function parsePublicationCSV(fileContent: string): Promise<ParsedCS
                 conferenceCount++;
             }
 
-            const wosQuartile = row['WOS'] || null;
+            const wosQuartile = row['WOS'] || undefined;
             const role = row['Role'] || '';
             const authorshipRole = categorizeAuthorship(role);
             const publicationDate = row['Publication Date'] || '';
@@ -137,9 +141,9 @@ export async function parsePublicationCSV(fileContent: string): Promise<ParsedCS
                 title,
                 journalName: row['Name of Journal'] || undefined,
                 publicationType: publicationType || undefined,
-                wosQuartile: wosQuartile || undefined,
+                wosQuartile: wosQuartile,
                 authorshipRole,
-                publicationYear,
+                publicationYear: publicationYear || undefined,
                 publicationDate: publicationDate || undefined,
                 role: role || undefined,
                 issn: row['ISSN No.'] || undefined,
