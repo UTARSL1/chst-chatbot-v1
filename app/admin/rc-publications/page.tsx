@@ -368,9 +368,9 @@ export default function RCPublicationsPage() {
                                                     {stats.q1Publications} ({calculatePercentage(stats.q1Publications, stats.journalArticles)}%)
                                                 </span>
                                             </div>
-                                            <div className="relative h-10">
+                                            <div className="relative h-6">
                                                 <div
-                                                    className="absolute left-0 h-10 bg-gray-700 rounded-lg overflow-hidden flex"
+                                                    className="absolute left-0 h-6 bg-gray-700 rounded-lg overflow-hidden flex"
                                                     style={{ width: `${calculatePercentage(stats.q1Publications, stats.journalArticles)}%` }}
                                                 >
                                                     {stats.q1FirstAuthor > 0 && (
