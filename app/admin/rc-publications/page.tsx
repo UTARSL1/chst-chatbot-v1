@@ -189,41 +189,16 @@ export default function RCPublicationsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-900 p-6">
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-6">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-white mb-2">
                         RC Members Publication Analysis
                     </h1>
-                    <p className="text-gray-400">
+                    <p className="text-gray-300">
                         Analyze publication quality and quartile distribution for research centre members
                     </p>
-                </div>
-
-                {/* Upload Section */}
-                <div className="bg-gray-800 rounded-lg border border-gray-700 p-6 mb-6">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <Upload className="w-6 h-6 text-blue-400" />
-                            <div>
-                                <h2 className="text-lg font-semibold text-white">Upload Member Publication</h2>
-                                <p className="text-sm text-gray-400">Upload CSV file containing publication data</p>
-                            </div>
-                        </div>
-                        <label className="cursor-pointer">
-                            <input
-                                type="file"
-                                accept=".csv"
-                                onChange={handleFileUpload}
-                                className="hidden"
-                                disabled={uploading}
-                            />
-                            <div className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
-                                {uploading ? 'Uploading...' : 'Choose CSV File'}
-                            </div>
-                        </label>
-                    </div>
                 </div>
 
                 {/* Main Content */}
@@ -370,12 +345,12 @@ export default function RCPublicationsPage() {
                                             </div>
                                             <div className="relative h-6">
                                                 <div
-                                                    className="absolute left-0 h-6 bg-gray-700 rounded-lg overflow-hidden flex"
+                                                    className="absolute left-0 h-6 bg-slate-700/80 rounded-lg overflow-hidden flex"
                                                     style={{ width: `${calculatePercentage(stats.q1Publications, stats.journalArticles)}%` }}
                                                 >
                                                     {stats.q1FirstAuthor > 0 && (
                                                         <div
-                                                            className="bg-green-600 flex items-center justify-center text-white text-xs font-medium flex-shrink-0"
+                                                            className="bg-emerald-500 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
                                                             style={{ minWidth: '60px', width: `${(stats.q1FirstAuthor / stats.q1Publications) * 100}%` }}
                                                         >
                                                             1st: {stats.q1FirstAuthor}
@@ -383,7 +358,7 @@ export default function RCPublicationsPage() {
                                                     )}
                                                     {stats.q1Corresponding > 0 && (
                                                         <div
-                                                            className="bg-green-500 flex items-center justify-center text-white text-xs font-medium flex-shrink-0"
+                                                            className="bg-emerald-400 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
                                                             style={{ minWidth: '70px', width: `${(stats.q1Corresponding / stats.q1Publications) * 100}%` }}
                                                         >
                                                             Corr: {stats.q1Corresponding}
@@ -391,7 +366,7 @@ export default function RCPublicationsPage() {
                                                     )}
                                                     {stats.q1CoAuthor > 0 && (
                                                         <div
-                                                            className="bg-green-400 flex items-center justify-center text-green-900 text-xs font-medium flex-shrink-0"
+                                                            className="bg-emerald-300 flex items-center justify-center text-emerald-900 text-xs font-semibold flex-shrink-0"
                                                             style={{ minWidth: '60px', width: `${(stats.q1CoAuthor / stats.q1Publications) * 100}%` }}
                                                         >
                                                             Co: {stats.q1CoAuthor}
@@ -416,7 +391,7 @@ export default function RCPublicationsPage() {
                                                 >
                                                     {stats.q2FirstAuthor > 0 && (
                                                         <div
-                                                            className="bg-blue-600 flex items-center justify-center text-white text-xs font-medium flex-shrink-0"
+                                                            className="bg-sky-500 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
                                                             style={{ minWidth: '60px', width: `${(stats.q2FirstAuthor / stats.q2Publications) * 100}%` }}
                                                         >
                                                             1st: {stats.q2FirstAuthor}
@@ -424,7 +399,7 @@ export default function RCPublicationsPage() {
                                                     )}
                                                     {stats.q2Corresponding > 0 && (
                                                         <div
-                                                            className="bg-blue-500 flex items-center justify-center text-white text-xs font-medium flex-shrink-0"
+                                                            className="bg-sky-400 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
                                                             style={{ minWidth: '70px', width: `${(stats.q2Corresponding / stats.q2Publications) * 100}%` }}
                                                         >
                                                             Corr: {stats.q2Corresponding}
@@ -432,7 +407,7 @@ export default function RCPublicationsPage() {
                                                     )}
                                                     {stats.q2CoAuthor > 0 && (
                                                         <div
-                                                            className="bg-blue-400 flex items-center justify-center text-blue-900 text-xs font-medium flex-shrink-0"
+                                                            className="bg-sky-300 flex items-center justify-center text-sky-900 text-xs font-semibold flex-shrink-0"
                                                             style={{ minWidth: '60px', width: `${(stats.q2CoAuthor / stats.q2Publications) * 100}%` }}
                                                         >
                                                             Co: {stats.q2CoAuthor}
@@ -543,6 +518,31 @@ export default function RCPublicationsPage() {
                             </div>
                         )}
                     </div>
+                </div>
+            </div>
+
+            {/* Upload Section - Moved to Bottom */}
+            <div className="mt-6 bg-slate-800/50 rounded-lg border border-slate-700/50 p-4">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <Upload className="w-5 h-5 text-blue-400" />
+                        <div>
+                            <h2 className="text-sm font-semibold text-white">Upload Member Publication</h2>
+                            <p className="text-xs text-gray-400">Upload CSV file containing publication data</p>
+                        </div>
+                    </div>
+                    <label className="cursor-pointer">
+                        <input
+                            type="file"
+                            accept=".csv"
+                            onChange={handleFileUpload}
+                            className="hidden"
+                            disabled={uploading}
+                        />
+                        <div className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium text-sm">
+                            {uploading ? 'Uploading...' : 'Choose CSV File'}
+                        </div>
+                    </label>
                 </div>
             </div>
         </div>
