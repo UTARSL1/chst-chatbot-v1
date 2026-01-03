@@ -293,8 +293,8 @@ export default function RCPublicationsPage() {
                                         className="hidden"
                                         disabled={uploading}
                                     />
-                                    <div className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition font-medium text-sm shadow-lg">
-                                        {uploading ? 'Uploading...' : 'Choose CSV File'}
+                                    <div className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition font-medium text-sm shadow-lg">
+                                        {uploading ? 'Uploading...' : 'Upload'}
                                     </div>
                                 </label>
                             </div>
@@ -359,76 +359,144 @@ export default function RCPublicationsPage() {
                                 <div className="bg-slate-900/50 backdrop-blur-sm rounded-lg border border-slate-600 p-6">
                                     <h3 className="text-lg font-semibold text-white mb-4">Journal Quartile Distribution</h3>
 
-                                    <div className="space-y-4">
+                                    <div className="space-y-6">
                                         {/* Q1 Bar */}
-                                        <div className="bg-slate-800/40 backdrop-blur-sm rounded-full p-2 border border-slate-600 shadow-lg flex items-center gap-3">
-                                            <div className="text-lg font-bold text-white pl-4 w-16">Q1</div>
-                                            <div className="flex-1 relative h-8">
+                                        <div className="flex items-center gap-4">
+                                            <div className="text-xl font-bold text-white w-8">Q1</div>
+                                            <div className="flex-1 relative h-14 bg-slate-800/40 backdrop-blur-sm rounded-full border border-slate-600 shadow-inner overflow-hidden">
+                                                {/* Progress Bar */}
                                                 <div
-                                                    className="absolute left-0 h-8 bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full shadow-lg"
+                                                    className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full"
                                                     style={{
-                                                        width: `${Math.max(calculatePercentage(stats.q1Publications, stats.journalArticles), 20)}%`,
-                                                        boxShadow: '0 0 20px rgba(16, 185, 129, 0.5)'
+                                                        width: `${Math.max(calculatePercentage(stats.q1Publications, stats.journalArticles), 0)}%`,
+                                                        boxShadow: '0 0 25px 4px rgba(16, 185, 129, 0.6)'
                                                     }}
                                                 />
-                                            </div>
-                                            <div className="pr-4 min-w-[140px]">
-                                                <div className="text-2xl font-bold text-white text-right">{calculatePercentage(stats.q1Publications, stats.journalArticles)}%</div>
-                                                <div className="text-xs text-gray-300 text-right">{stats.q1Publications} publications</div>
+                                                {/* Author Stats Overlay */}
+                                                <div className="absolute left-4 top-0 bottom-0 flex items-center gap-3 z-10">
+                                                    {stats.q1FirstAuthor > 0 && (
+                                                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/20 backdrop-blur-md border border-white/5 transition-transform hover:scale-105">
+                                                            <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">1st</span>
+                                                            <span className="text-sm font-bold text-white">{stats.q1FirstAuthor}</span>
+                                                        </div>
+                                                    )}
+                                                    {stats.q1Corresponding > 0 && (
+                                                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/20 backdrop-blur-md border border-white/5 transition-transform hover:scale-105">
+                                                            <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">Corr</span>
+                                                            <span className="text-sm font-bold text-white">{stats.q1Corresponding}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                {/* Stats Overlay */}
+                                                <div className="absolute right-6 top-0 bottom-0 flex flex-col justify-center text-right z-10">
+                                                    <div className="text-xl font-bold text-white leading-none mb-1">{calculatePercentage(stats.q1Publications, stats.journalArticles)}%</div>
+                                                    <div className="text-xs text-slate-300 font-medium">{stats.q1Publications} publications</div>
+                                                </div>
                                             </div>
                                         </div>
 
                                         {/* Q2 Bar */}
-                                        <div className="bg-slate-800/40 backdrop-blur-sm rounded-full p-2 border border-slate-600 shadow-lg flex items-center gap-3">
-                                            <div className="text-lg font-bold text-white pl-4 w-16">Q2</div>
-                                            <div className="flex-1 relative h-8">
+                                        <div className="flex items-center gap-4">
+                                            <div className="text-xl font-bold text-white w-8">Q2</div>
+                                            <div className="flex-1 relative h-14 bg-slate-800/40 backdrop-blur-sm rounded-full border border-slate-600 shadow-inner overflow-hidden">
+                                                {/* Progress Bar */}
                                                 <div
-                                                    className="absolute left-0 h-8 bg-gradient-to-r from-sky-500 to-sky-400 rounded-full shadow-lg"
+                                                    className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-sky-500 to-sky-400 rounded-full"
                                                     style={{
-                                                        width: `${Math.max(calculatePercentage(stats.q2Publications, stats.journalArticles), 20)}%`,
-                                                        boxShadow: '0 0 20px rgba(14, 165, 233, 0.5)'
+                                                        width: `${Math.max(calculatePercentage(stats.q2Publications, stats.journalArticles), 0)}%`,
+                                                        boxShadow: '0 0 25px 4px rgba(14, 165, 233, 0.6)'
                                                     }}
                                                 />
-                                            </div>
-                                            <div className="pr-4 min-w-[140px]">
-                                                <div className="text-2xl font-bold text-white text-right">{calculatePercentage(stats.q2Publications, stats.journalArticles)}%</div>
-                                                <div className="text-xs text-gray-300 text-right">{stats.q2Publications} publications</div>
+                                                {/* Author Stats Overlay */}
+                                                <div className="absolute left-4 top-0 bottom-0 flex items-center gap-3 z-10">
+                                                    {stats.q2FirstAuthor > 0 && (
+                                                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/20 backdrop-blur-md border border-white/5 transition-transform hover:scale-105">
+                                                            <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">1st</span>
+                                                            <span className="text-sm font-bold text-white">{stats.q2FirstAuthor}</span>
+                                                        </div>
+                                                    )}
+                                                    {stats.q2Corresponding > 0 && (
+                                                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/20 backdrop-blur-md border border-white/5 transition-transform hover:scale-105">
+                                                            <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">Corr</span>
+                                                            <span className="text-sm font-bold text-white">{stats.q2Corresponding}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                {/* Stats Overlay */}
+                                                <div className="absolute right-6 top-0 bottom-0 flex flex-col justify-center text-right z-10">
+                                                    <div className="text-xl font-bold text-white leading-none mb-1">{calculatePercentage(stats.q2Publications, stats.journalArticles)}%</div>
+                                                    <div className="text-xs text-slate-300 font-medium">{stats.q2Publications} publications</div>
+                                                </div>
                                             </div>
                                         </div>
 
                                         {/* Q3 Bar */}
-                                        <div className="bg-slate-800/40 backdrop-blur-sm rounded-full p-2 border border-slate-600 shadow-lg flex items-center gap-3">
-                                            <div className="text-lg font-bold text-white pl-4 w-16">Q3</div>
-                                            <div className="flex-1 relative h-8">
+                                        <div className="flex items-center gap-4">
+                                            <div className="text-xl font-bold text-white w-8">Q3</div>
+                                            <div className="flex-1 relative h-14 bg-slate-800/40 backdrop-blur-sm rounded-full border border-slate-600 shadow-inner overflow-hidden">
+                                                {/* Progress Bar */}
                                                 <div
-                                                    className="absolute left-0 h-8 bg-gradient-to-r from-amber-500 to-amber-400 rounded-full shadow-lg"
+                                                    className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-amber-500 to-amber-400 rounded-full"
                                                     style={{
-                                                        width: `${Math.max(calculatePercentage(stats.q3Publications, stats.journalArticles), 20)}%`,
-                                                        boxShadow: '0 0 20px rgba(245, 158, 11, 0.5)'
+                                                        width: `${Math.max(calculatePercentage(stats.q3Publications, stats.journalArticles), 0)}%`,
+                                                        boxShadow: '0 0 25px 4px rgba(245, 158, 11, 0.6)'
                                                     }}
                                                 />
-                                            </div>
-                                            <div className="pr-4 min-w-[140px]">
-                                                <div className="text-2xl font-bold text-white text-right">{calculatePercentage(stats.q3Publications, stats.journalArticles)}%</div>
-                                                <div className="text-xs text-gray-300 text-right">{stats.q3Publications} publications</div>
+                                                {/* Author Stats Overlay */}
+                                                <div className="absolute left-4 top-0 bottom-0 flex items-center gap-3 z-10">
+                                                    {stats.q3FirstAuthor > 0 && (
+                                                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/20 backdrop-blur-md border border-white/5 transition-transform hover:scale-105">
+                                                            <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">1st</span>
+                                                            <span className="text-sm font-bold text-white">{stats.q3FirstAuthor}</span>
+                                                        </div>
+                                                    )}
+                                                    {stats.q3Corresponding > 0 && (
+                                                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/20 backdrop-blur-md border border-white/5 transition-transform hover:scale-105">
+                                                            <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">Corr</span>
+                                                            <span className="text-sm font-bold text-white">{stats.q3Corresponding}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                {/* Stats Overlay */}
+                                                <div className="absolute right-6 top-0 bottom-0 flex flex-col justify-center text-right z-10">
+                                                    <div className="text-xl font-bold text-white leading-none mb-1">{calculatePercentage(stats.q3Publications, stats.journalArticles)}%</div>
+                                                    <div className="text-xs text-slate-300 font-medium">{stats.q3Publications} publications</div>
+                                                </div>
                                             </div>
                                         </div>
 
                                         {/* Q4 Bar */}
-                                        <div className="bg-slate-800/40 backdrop-blur-sm rounded-full p-2 border border-slate-600 shadow-lg flex items-center gap-3">
-                                            <div className="text-lg font-bold text-white pl-4 w-16">Q4</div>
-                                            <div className="flex-1 relative h-8">
+                                        <div className="flex items-center gap-4">
+                                            <div className="text-xl font-bold text-white w-8">Q4</div>
+                                            <div className="flex-1 relative h-14 bg-slate-800/40 backdrop-blur-sm rounded-full border border-slate-600 shadow-inner overflow-hidden">
+                                                {/* Progress Bar */}
                                                 <div
-                                                    className="absolute left-0 h-8 bg-gradient-to-r from-rose-500 to-rose-400 rounded-full shadow-lg"
+                                                    className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-rose-500 to-rose-400 rounded-full"
                                                     style={{
-                                                        width: `${Math.max(calculatePercentage(stats.q4Publications, stats.journalArticles), 20)}%`,
-                                                        boxShadow: '0 0 20px rgba(244, 63, 94, 0.5)'
+                                                        width: `${Math.max(calculatePercentage(stats.q4Publications, stats.journalArticles), 0)}%`,
+                                                        boxShadow: '0 0 25px 4px rgba(244, 63, 94, 0.6)'
                                                     }}
                                                 />
-                                            </div>
-                                            <div className="pr-4 min-w-[140px]">
-                                                <div className="text-2xl font-bold text-white text-right">{calculatePercentage(stats.q4Publications, stats.journalArticles)}%</div>
-                                                <div className="text-xs text-gray-300 text-right">{stats.q4Publications} publications</div>
+                                                {/* Author Stats Overlay */}
+                                                <div className="absolute left-4 top-0 bottom-0 flex items-center gap-3 z-10">
+                                                    {stats.q4FirstAuthor > 0 && (
+                                                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/20 backdrop-blur-md border border-white/5 transition-transform hover:scale-105">
+                                                            <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">1st</span>
+                                                            <span className="text-sm font-bold text-white">{stats.q4FirstAuthor}</span>
+                                                        </div>
+                                                    )}
+                                                    {stats.q4Corresponding > 0 && (
+                                                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/20 backdrop-blur-md border border-white/5 transition-transform hover:scale-105">
+                                                            <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">Corr</span>
+                                                            <span className="text-sm font-bold text-white">{stats.q4Corresponding}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                {/* Stats Overlay */}
+                                                <div className="absolute right-6 top-0 bottom-0 flex flex-col justify-center text-right z-10">
+                                                    <div className="text-xl font-bold text-white leading-none mb-1">{calculatePercentage(stats.q4Publications, stats.journalArticles)}%</div>
+                                                    <div className="text-xs text-slate-300 font-medium">{stats.q4Publications} publications</div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
