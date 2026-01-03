@@ -209,8 +209,8 @@ export default function RCPublicationsPage() {
                             className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-4 shadow-[0_0_15px_rgba(255,255,255,0.07)]"
                         >
                             <div className="flex items-center gap-2 mb-4">
-                                <Users className="w-5 h-5 text-gray-300" />
-                                <h3 className="font-semibold text-white">RC Members ({members.length})</h3>
+                                <Users className="w-5 h-5 text-blue-300" />
+                                <h3 className="font-semibold text-blue-300">RC Members ({members.length})</h3>
                             </div>
 
                             <div className="space-y-2 max-h-[600px] overflow-y-auto pr-2">
@@ -344,21 +344,21 @@ export default function RCPublicationsPage() {
 
                                     {/* Key Metrics */}
                                     <div className="grid grid-cols-4 gap-4">
-                                        <div className="bg-slate-800/60 backdrop-blur-md p-4 rounded-lg border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.05)]">
+                                        <div className="bg-white/5 backdrop-blur-md p-4 rounded-lg border border-white/10 hover:bg-white/10 transition-colors">
                                             <div className="text-3xl font-bold text-white">{stats.totalPublications}</div>
-                                            <div className="text-sm text-gray-400 mt-1">Total Publications</div>
+                                            <div className="text-sm text-slate-400 mt-1">Total Publications</div>
                                         </div>
-                                        <div className="bg-blue-900/20 backdrop-blur-md p-4 rounded-lg border border-blue-400/30 shadow-[0_0_15px_rgba(59,130,246,0.15)]">
-                                            <div className="text-3xl font-bold text-blue-300">{stats.journalArticles}</div>
-                                            <div className="text-sm text-blue-400 mt-1">Journal Articles</div>
+                                        <div className="bg-white/5 backdrop-blur-md p-4 rounded-lg border border-white/10 hover:bg-white/10 transition-colors">
+                                            <div className="text-3xl font-bold text-blue-400">{stats.journalArticles}</div>
+                                            <div className="text-sm text-slate-400 mt-1">Journal Articles</div>
                                         </div>
-                                        <div className="bg-slate-800/60 backdrop-blur-md p-4 rounded-lg border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.05)]">
+                                        <div className="bg-white/5 backdrop-blur-md p-4 rounded-lg border border-white/10 hover:bg-white/10 transition-colors">
                                             <div className="text-3xl font-bold text-white">{stats.conferencePapers}</div>
-                                            <div className="text-sm text-gray-400 mt-1">Conference Papers</div>
+                                            <div className="text-sm text-slate-400 mt-1">Conference Papers</div>
                                         </div>
-                                        <div className="bg-emerald-900/20 backdrop-blur-md p-4 rounded-lg border border-emerald-400/30 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
-                                            <div className="text-3xl font-bold text-green-300">{stats.q1Publications}</div>
-                                            <div className="text-sm text-green-400 mt-1">Q1 Publications</div>
+                                        <div className="bg-white/5 backdrop-blur-md p-4 rounded-lg border border-white/10 hover:bg-white/10 transition-colors">
+                                            <div className="text-3xl font-bold text-emerald-400">{stats.q1Publications}</div>
+                                            <div className="text-sm text-slate-400 mt-1">Q1 Publications</div>
                                         </div>
                                     </div>
                                 </div>
@@ -400,7 +400,7 @@ export default function RCPublicationsPage() {
                                                 {/* Stats Overlay */}
                                                 <div className="absolute right-6 top-0 bottom-0 flex flex-col justify-center text-right z-10">
                                                     <div className="text-2xl font-bold text-white leading-none mb-1 drop-shadow-md">{calculatePercentage(stats.q1Publications, stats.journalArticles)}%</div>
-                                                    <div className="text-sm font-medium text-slate-200 drop-shadow-sm">{stats.q1Publications} publications</div>
+                                                    <div className="text-sm font-medium text-slate-400 drop-shadow-sm">{stats.q1Publications} publications</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -435,7 +435,7 @@ export default function RCPublicationsPage() {
                                                 {/* Stats Overlay */}
                                                 <div className="absolute right-6 top-0 bottom-0 flex flex-col justify-center text-right z-10">
                                                     <div className="text-2xl font-bold text-white leading-none mb-1 drop-shadow-md">{calculatePercentage(stats.q2Publications, stats.journalArticles)}%</div>
-                                                    <div className="text-sm font-medium text-slate-200 drop-shadow-sm">{stats.q2Publications} publications</div>
+                                                    <div className="text-sm font-medium text-slate-400 drop-shadow-sm">{stats.q2Publications} publications</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -470,7 +470,7 @@ export default function RCPublicationsPage() {
                                                 {/* Stats Overlay */}
                                                 <div className="absolute right-6 top-0 bottom-0 flex flex-col justify-center text-right z-10">
                                                     <div className="text-2xl font-bold text-white leading-none mb-1 drop-shadow-md">{calculatePercentage(stats.q3Publications, stats.journalArticles)}%</div>
-                                                    <div className="text-sm font-medium text-slate-200 drop-shadow-sm">{stats.q3Publications} publications</div>
+                                                    <div className="text-sm font-medium text-slate-400 drop-shadow-sm">{stats.q3Publications} publications</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -505,7 +505,7 @@ export default function RCPublicationsPage() {
                                                 {/* Stats Overlay */}
                                                 <div className="absolute right-6 top-0 bottom-0 flex flex-col justify-center text-right z-10">
                                                     <div className="text-2xl font-bold text-white leading-none mb-1 drop-shadow-md">{calculatePercentage(stats.q4Publications, stats.journalArticles)}%</div>
-                                                    <div className="text-sm font-medium text-slate-200 drop-shadow-sm">{stats.q4Publications} publications</div>
+                                                    <div className="text-sm font-medium text-slate-400 drop-shadow-sm">{stats.q4Publications} publications</div>
                                                 </div>
                                             </div>
                                         </div>
