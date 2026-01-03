@@ -189,7 +189,7 @@ export default function RCPublicationsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-6">
+        <div className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-700 to-blue-800 p-6">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
@@ -205,7 +205,7 @@ export default function RCPublicationsPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Left Panel - Members List */}
                     <div className="lg:col-span-1">
-                        <div className="bg-gray-800 rounded-lg border border-gray-700 p-4">
+                        <div className="bg-slate-800/70 backdrop-blur-sm rounded-lg border border-slate-600/50 p-4">
                             <div className="flex items-center gap-2 mb-4">
                                 <Users className="w-5 h-5 text-gray-300" />
                                 <h3 className="font-semibold text-white">RC Members ({members.length})</h3>
@@ -216,8 +216,8 @@ export default function RCPublicationsPage() {
                                     <div
                                         key={member.id}
                                         className={`relative group rounded-lg transition-all duration-300 border ${selectedMember?.id === member.id
-                                            ? 'bg-blue-900/30 border-blue-500 shadow-lg shadow-blue-500/50'
-                                            : 'bg-gray-700/50 hover:bg-gray-700 border-gray-600 hover:shadow-lg hover:shadow-blue-400/30'
+                                            ? 'bg-blue-800/60 border-blue-400 shadow-lg shadow-blue-500/50'
+                                            : 'bg-slate-700/60 hover:bg-slate-600/70 border-slate-500/50 hover:shadow-lg hover:shadow-blue-400/30'
                                             }`}
                                     >
                                         <button
@@ -289,7 +289,7 @@ export default function RCPublicationsPage() {
                         {!loadingStats && selectedMember && stats && (
                             <div className="space-y-6">
                                 {/* Header with Year Selector */}
-                                <div className="bg-gray-800 rounded-lg border border-gray-700 p-6">
+                                <div className="bg-slate-800/70 backdrop-blur-sm rounded-lg border border-slate-600/50 p-6">
                                     <div className="flex items-center justify-between mb-6">
                                         <div>
                                             <h2 className="text-2xl font-bold text-white">{selectedMember.name}</h2>
@@ -311,19 +311,19 @@ export default function RCPublicationsPage() {
 
                                     {/* Key Metrics */}
                                     <div className="grid grid-cols-4 gap-4">
-                                        <div className="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
+                                        <div className="bg-slate-700/60 p-4 rounded-lg border border-slate-500/50">
                                             <div className="text-3xl font-bold text-white">{stats.totalPublications}</div>
                                             <div className="text-sm text-gray-400 mt-1">Total Publications</div>
                                         </div>
-                                        <div className="bg-blue-900/30 p-4 rounded-lg border border-blue-700">
+                                        <div className="bg-blue-800/50 p-4 rounded-lg border border-blue-600/50">
                                             <div className="text-3xl font-bold text-blue-300">{stats.journalArticles}</div>
                                             <div className="text-sm text-blue-400 mt-1">Journal Articles</div>
                                         </div>
-                                        <div className="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
+                                        <div className="bg-slate-700/60 p-4 rounded-lg border border-slate-500/50">
                                             <div className="text-3xl font-bold text-white">{stats.conferencePapers}</div>
                                             <div className="text-sm text-gray-400 mt-1">Conference Papers</div>
                                         </div>
-                                        <div className="bg-green-900/30 p-4 rounded-lg border border-green-700">
+                                        <div className="bg-emerald-800/40 p-4 rounded-lg border border-emerald-600/50">
                                             <div className="text-3xl font-bold text-green-300">{stats.q1Publications}</div>
                                             <div className="text-sm text-green-400 mt-1">Q1 Publications</div>
                                         </div>
@@ -331,7 +331,7 @@ export default function RCPublicationsPage() {
                                 </div>
 
                                 {/* Quartile Distribution Chart */}
-                                <div className="bg-gray-800 rounded-lg border border-gray-700 p-6">
+                                <div className="bg-slate-800/70 backdrop-blur-sm rounded-lg border border-slate-600/50 p-6">
                                     <h3 className="text-lg font-semibold text-white mb-4">Journal Quartile Distribution</h3>
 
                                     <div className="space-y-4">
