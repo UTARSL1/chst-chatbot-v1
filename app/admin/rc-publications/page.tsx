@@ -336,11 +336,11 @@ export default function RCPublicationsPage() {
 
                                     <div className="space-y-4">
                                         {/* Q1 Bar */}
-                                        <div className="flex items-center gap-4">
-                                            <div className="text-lg font-bold text-white w-12">Q1</div>
+                                        <div className="bg-slate-700/80 backdrop-blur-sm rounded-full p-2 border border-slate-600/50 shadow-lg flex items-center gap-3">
+                                            <div className="text-lg font-bold text-white pl-4 w-16">Q1</div>
                                             <div className="flex-1 relative h-8">
                                                 <div
-                                                    className="absolute left-0 h-8 bg-slate-700/80 rounded-full overflow-hidden flex shadow-lg"
+                                                    className="absolute left-0 h-8 rounded-full overflow-hidden flex"
                                                     style={{ width: `${Math.max(calculatePercentage(stats.q1Publications, stats.journalArticles), 20)}%` }}
                                                 >
                                                     {stats.q1FirstAuthor > 0 && (
@@ -381,18 +381,18 @@ export default function RCPublicationsPage() {
                                                     )}
                                                 </div>
                                             </div>
-                                            <div className="bg-slate-700/80 rounded-full px-6 py-2 min-w-[140px] backdrop-blur-sm border border-slate-600/50">
+                                            <div className="pr-4 min-w-[140px]">
                                                 <div className="text-2xl font-bold text-white text-right">{calculatePercentage(stats.q1Publications, stats.journalArticles)}%</div>
                                                 <div className="text-xs text-gray-300 text-right">{stats.q1Publications} publications</div>
                                             </div>
                                         </div>
 
                                         {/* Q2 Bar */}
-                                        <div className="flex items-center gap-4">
-                                            <div className="text-lg font-bold text-white w-12">Q2</div>
+                                        <div className="bg-slate-700/80 backdrop-blur-sm rounded-full p-2 border border-slate-600/50 shadow-lg flex items-center gap-3">
+                                            <div className="text-lg font-bold text-white pl-4 w-16">Q2</div>
                                             <div className="flex-1 relative h-8">
                                                 <div
-                                                    className="absolute left-0 h-8 bg-slate-700/80 rounded-full overflow-hidden flex"
+                                                    className="absolute left-0 h-8 rounded-full overflow-hidden flex"
                                                     style={{ width: `${Math.max(calculatePercentage(stats.q2Publications, stats.journalArticles), 20)}%` }}
                                                 >
                                                     {stats.q2FirstAuthor > 0 && (
@@ -433,18 +433,18 @@ export default function RCPublicationsPage() {
                                                     )}
                                                 </div>
                                             </div>
-                                            <div className="bg-slate-700/80 rounded-full px-6 py-2 min-w-[140px] backdrop-blur-sm border border-slate-600/50">
+                                            <div className="pr-4 min-w-[140px]">
                                                 <div className="text-2xl font-bold text-white text-right">{calculatePercentage(stats.q2Publications, stats.journalArticles)}%</div>
                                                 <div className="text-xs text-gray-300 text-right">{stats.q2Publications} publications</div>
                                             </div>
                                         </div>
 
                                         {/* Q3 Bar */}
-                                        <div className="flex items-center gap-4">
-                                            <div className="text-lg font-bold text-white w-12">Q3</div>
+                                        <div className="bg-slate-700/80 backdrop-blur-sm rounded-full p-2 border border-slate-600/50 shadow-lg flex items-center gap-3">
+                                            <div className="text-lg font-bold text-white pl-4 w-16">Q3</div>
                                             <div className="flex-1 relative h-8">
                                                 <div
-                                                    className="absolute left-0 h-8 bg-slate-700/80 rounded-full overflow-hidden flex"
+                                                    className="absolute left-0 h-8 rounded-full overflow-hidden flex"
                                                     style={{ width: `${Math.max(calculatePercentage(stats.q3Publications, stats.journalArticles), 20)}%` }}
                                                 >
                                                     {stats.q3FirstAuthor > 0 && (
@@ -485,18 +485,18 @@ export default function RCPublicationsPage() {
                                                     )}
                                                 </div>
                                             </div>
-                                            <div className="bg-slate-700/80 rounded-full px-6 py-2 min-w-[140px] backdrop-blur-sm border border-slate-600/50">
+                                            <div className="pr-4 min-w-[140px]">
                                                 <div className="text-2xl font-bold text-white text-right">{calculatePercentage(stats.q3Publications, stats.journalArticles)}%</div>
                                                 <div className="text-xs text-gray-300 text-right">{stats.q3Publications} publications</div>
                                             </div>
                                         </div>
 
                                         {/* Q4 Bar */}
-                                        <div className="flex items-center gap-4">
-                                            <div className="text-lg font-bold text-white w-12">Q4</div>
+                                        <div className="bg-slate-700/80 backdrop-blur-sm rounded-full p-2 border border-slate-600/50 shadow-lg flex items-center gap-3">
+                                            <div className="text-lg font-bold text-white pl-4 w-16">Q4</div>
                                             <div className="flex-1 relative h-8">
                                                 <div
-                                                    className="absolute left-0 h-8 bg-slate-700/80 rounded-full overflow-hidden flex"
+                                                    className="absolute left-0 h-8 rounded-full overflow-hidden flex"
                                                     style={{ width: `${Math.max(calculatePercentage(stats.q4Publications, stats.journalArticles), 20)}%` }}
                                                 >
                                                     {stats.q4FirstAuthor > 0 && (
@@ -537,7 +537,7 @@ export default function RCPublicationsPage() {
                                                     )}
                                                 </div>
                                             </div>
-                                            <div className="bg-slate-700/80 rounded-full px-6 py-2 min-w-[140px] backdrop-blur-sm border border-slate-600/50">
+                                            <div className="pr-4 min-w-[140px]">
                                                 <div className="text-2xl font-bold text-white text-right">{calculatePercentage(stats.q4Publications, stats.journalArticles)}%</div>
                                                 <div className="text-xs text-gray-300 text-right">{stats.q4Publications} publications</div>
                                             </div>
