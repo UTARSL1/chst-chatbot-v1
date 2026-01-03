@@ -211,7 +211,7 @@ export default function RCPublicationsPage() {
                                 <h3 className="font-semibold text-white">RC Members ({members.length})</h3>
                             </div>
 
-                            <div className="space-y-2 max-h-[600px] overflow-y-auto">
+                            <div className="space-y-2 max-h-[600px] overflow-y-auto pr-2">
                                 {members.map((member) => (
                                     <div
                                         key={member.id}
@@ -265,7 +265,7 @@ export default function RCPublicationsPage() {
                                                 e.stopPropagation();
                                                 handleDeleteMember(member.id, member.name);
                                             }}
-                                            className="absolute top-2 right-2 p-1.5 rounded-lg bg-red-900/50 hover:bg-red-900 border border-red-700 text-red-300 hover:text-red-100 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            className="absolute top-2 right-3 p-1.5 rounded-lg bg-red-900/50 hover:bg-red-900 border border-red-700 text-red-300 hover:text-red-100 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                                             title="Delete member"
                                         >
                                             <Trash2 className="w-3.5 h-3.5" />
