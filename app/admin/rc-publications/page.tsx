@@ -375,26 +375,26 @@ export default function RCPublicationsPage() {
                                                 >
                                                     {stats.q1FirstAuthor > 0 && (
                                                         <div
-                                                            className="bg-green-600 flex items-center justify-center text-white text-xs font-medium"
-                                                            style={{ width: `${(stats.q1FirstAuthor / stats.q1Publications) * 100}%` }}
+                                                            className="bg-green-600 flex items-center justify-center text-white text-xs font-medium flex-shrink-0"
+                                                            style={{ minWidth: '60px', width: `${(stats.q1FirstAuthor / stats.q1Publications) * 100}%` }}
                                                         >
-                                                            {stats.q1FirstAuthor > 0 && `1st: ${stats.q1FirstAuthor}`}
+                                                            1st: {stats.q1FirstAuthor}
                                                         </div>
                                                     )}
                                                     {stats.q1Corresponding > 0 && (
                                                         <div
-                                                            className="bg-green-500 flex items-center justify-center text-white text-xs font-medium"
-                                                            style={{ width: `${(stats.q1Corresponding / stats.q1Publications) * 100}%` }}
+                                                            className="bg-green-500 flex items-center justify-center text-white text-xs font-medium flex-shrink-0"
+                                                            style={{ minWidth: '70px', width: `${(stats.q1Corresponding / stats.q1Publications) * 100}%` }}
                                                         >
-                                                            {stats.q1Corresponding > 0 && `Corr: ${stats.q1Corresponding}`}
+                                                            Corr: {stats.q1Corresponding}
                                                         </div>
                                                     )}
                                                     {stats.q1CoAuthor > 0 && (
                                                         <div
-                                                            className="bg-green-400 flex items-center justify-center text-green-900 text-xs font-medium"
-                                                            style={{ width: `${(stats.q1CoAuthor / stats.q1Publications) * 100}%` }}
+                                                            className="bg-green-400 flex items-center justify-center text-green-900 text-xs font-medium flex-shrink-0"
+                                                            style={{ minWidth: '60px', width: `${(stats.q1CoAuthor / stats.q1Publications) * 100}%` }}
                                                         >
-                                                            {stats.q1CoAuthor > 0 && `Co: ${stats.q1CoAuthor}`}
+                                                            Co: {stats.q1CoAuthor}
                                                         </div>
                                                     )}
                                                 </div>
@@ -416,26 +416,26 @@ export default function RCPublicationsPage() {
                                                 >
                                                     {stats.q2FirstAuthor > 0 && (
                                                         <div
-                                                            className="bg-blue-600 flex items-center justify-center text-white text-xs font-medium"
-                                                            style={{ width: `${(stats.q2FirstAuthor / stats.q2Publications) * 100}%` }}
+                                                            className="bg-blue-600 flex items-center justify-center text-white text-xs font-medium flex-shrink-0"
+                                                            style={{ minWidth: '60px', width: `${(stats.q2FirstAuthor / stats.q2Publications) * 100}%` }}
                                                         >
-                                                            {stats.q2FirstAuthor > 0 && `1st: ${stats.q2FirstAuthor}`}
+                                                            1st: {stats.q2FirstAuthor}
                                                         </div>
                                                     )}
                                                     {stats.q2Corresponding > 0 && (
                                                         <div
-                                                            className="bg-blue-500 flex items-center justify-center text-white text-xs font-medium"
-                                                            style={{ width: `${(stats.q2Corresponding / stats.q2Publications) * 100}%` }}
+                                                            className="bg-blue-500 flex items-center justify-center text-white text-xs font-medium flex-shrink-0"
+                                                            style={{ minWidth: '70px', width: `${(stats.q2Corresponding / stats.q2Publications) * 100}%` }}
                                                         >
-                                                            {stats.q2Corresponding > 0 && `Corr: ${stats.q2Corresponding}`}
+                                                            Corr: {stats.q2Corresponding}
                                                         </div>
                                                     )}
                                                     {stats.q2CoAuthor > 0 && (
                                                         <div
-                                                            className="bg-blue-400 flex items-center justify-center text-blue-900 text-xs font-medium"
-                                                            style={{ width: `${(stats.q2CoAuthor / stats.q2Publications) * 100}%` }}
+                                                            className="bg-blue-400 flex items-center justify-center text-blue-900 text-xs font-medium flex-shrink-0"
+                                                            style={{ minWidth: '60px', width: `${(stats.q2CoAuthor / stats.q2Publications) * 100}%` }}
                                                         >
-                                                            {stats.q2CoAuthor > 0 && `Co: ${stats.q2CoAuthor}`}
+                                                            Co: {stats.q2CoAuthor}
                                                         </div>
                                                     )}
                                                 </div>
@@ -457,26 +457,26 @@ export default function RCPublicationsPage() {
                                                 >
                                                     {stats.q3FirstAuthor > 0 && (
                                                         <div
-                                                            className="bg-orange-600 flex items-center justify-center text-white text-xs font-medium"
-                                                            style={{ width: `${(stats.q3FirstAuthor / stats.q3Publications) * 100}%` }}
+                                                            className="bg-orange-600 flex items-center justify-center text-white text-xs font-medium flex-shrink-0"
+                                                            style={{ minWidth: '60px', width: `${(stats.q3FirstAuthor / stats.q3Publications) * 100}%` }}
                                                         >
-                                                            {stats.q3FirstAuthor > 0 && `1st: ${stats.q3FirstAuthor}`}
+                                                            1st: {stats.q3FirstAuthor}
                                                         </div>
                                                     )}
                                                     {stats.q3Corresponding > 0 && (
                                                         <div
-                                                            className="bg-orange-500 flex items-center justify-center text-white text-xs font-medium"
-                                                            style={{ width: `${(stats.q3Corresponding / stats.q3Publications) * 100}%` }}
+                                                            className="bg-orange-500 flex items-center justify-center text-white text-xs font-medium flex-shrink-0"
+                                                            style={{ minWidth: '70px', width: `${(stats.q3Corresponding / stats.q3Publications) * 100}%` }}
                                                         >
-                                                            {stats.q3Corresponding > 0 && `Corr: ${stats.q3Corresponding}`}
+                                                            Corr: {stats.q3Corresponding}
                                                         </div>
                                                     )}
                                                     {stats.q3CoAuthor > 0 && (
                                                         <div
-                                                            className="bg-orange-400 flex items-center justify-center text-orange-900 text-xs font-medium"
-                                                            style={{ width: `${(stats.q3CoAuthor / stats.q3Publications) * 100}%` }}
+                                                            className="bg-orange-400 flex items-center justify-center text-orange-900 text-xs font-medium flex-shrink-0"
+                                                            style={{ minWidth: '60px', width: `${(stats.q3CoAuthor / stats.q3Publications) * 100}%` }}
                                                         >
-                                                            {stats.q3CoAuthor > 0 && `Co: ${stats.q3CoAuthor}`}
+                                                            Co: {stats.q3CoAuthor}
                                                         </div>
                                                     )}
                                                 </div>
@@ -498,26 +498,26 @@ export default function RCPublicationsPage() {
                                                 >
                                                     {stats.q4FirstAuthor > 0 && (
                                                         <div
-                                                            className="bg-red-600 flex items-center justify-center text-white text-xs font-medium"
-                                                            style={{ width: `${(stats.q4FirstAuthor / stats.q4Publications) * 100}%` }}
+                                                            className="bg-red-600 flex items-center justify-center text-white text-xs font-medium flex-shrink-0"
+                                                            style={{ minWidth: '60px', width: `${(stats.q4FirstAuthor / stats.q4Publications) * 100}%` }}
                                                         >
-                                                            {stats.q4FirstAuthor > 0 && `1st: ${stats.q4FirstAuthor}`}
+                                                            1st: {stats.q4FirstAuthor}
                                                         </div>
                                                     )}
                                                     {stats.q4Corresponding > 0 && (
                                                         <div
-                                                            className="bg-red-500 flex items-center justify-center text-white text-xs font-medium"
-                                                            style={{ width: `${(stats.q4Corresponding / stats.q4Publications) * 100}%` }}
+                                                            className="bg-red-500 flex items-center justify-center text-white text-xs font-medium flex-shrink-0"
+                                                            style={{ minWidth: '70px', width: `${(stats.q4Corresponding / stats.q4Publications) * 100}%` }}
                                                         >
-                                                            {stats.q4Corresponding > 0 && `Corr: ${stats.q4Corresponding}`}
+                                                            Corr: {stats.q4Corresponding}
                                                         </div>
                                                     )}
                                                     {stats.q4CoAuthor > 0 && (
                                                         <div
-                                                            className="bg-red-400 flex items-center justify-center text-red-900 text-xs font-medium"
-                                                            style={{ width: `${(stats.q4CoAuthor / stats.q4Publications) * 100}%` }}
+                                                            className="bg-red-400 flex items-center justify-center text-red-900 text-xs font-medium flex-shrink-0"
+                                                            style={{ minWidth: '60px', width: `${(stats.q4CoAuthor / stats.q4Publications) * 100}%` }}
                                                         >
-                                                            {stats.q4CoAuthor > 0 && `Co: ${stats.q4CoAuthor}`}
+                                                            Co: {stats.q4CoAuthor}
                                                         </div>
                                                     )}
                                                 </div>
