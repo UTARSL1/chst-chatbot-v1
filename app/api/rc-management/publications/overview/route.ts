@@ -14,14 +14,13 @@ export async function GET(request: NextRequest) {
             );
         }
 
-        // Get all publications with member info (Journal Only)
-        // User requested to include ONLY journal papers
+        // Get all publications with member info (Journal Only - defined by having Q1-Q4)
+        // User requested: "basically you can just find those rows with Q1-Q4"
         const publications = await prisma.publication.findMany({
             where: {
-                OR: [
-                    { publicationType: { contains: 'Journal' } },
-                    { publicationType: { contains: 'journal' } }
-                ]
+                wosQuartile: {
+                    in: ['Q1', 'Q2', 'Q3', 'Q4']
+                }
             },
             include: {
                 member: {
