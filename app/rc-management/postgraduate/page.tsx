@@ -418,7 +418,7 @@ export default function RCPostgraduatePage() {
                                                 <div className="font-medium text-sm text-white truncate">{member.name}</div>
                                                 {member.staffId && (
                                                     <div className="px-1.5 py-0.5 rounded bg-slate-700/50 text-[9px] font-medium text-slate-300 border border-slate-600/30">
-                                                        {member.staffId}
+                                                        {member.staffId.replace(/^\?\s*/, '')}
                                                     </div>
                                                 )}
                                             </div>
@@ -507,15 +507,6 @@ export default function RCPostgraduatePage() {
                                         </div>
 
                                         <div className="flex items-center gap-3">
-                                            {/* Delete Button */}
-                                            <button
-                                                onClick={() => handleDeleteMember(selectedMember.id, selectedMember.name)}
-                                                className="p-2 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 hover:bg-red-500/20 transition-colors"
-                                                title="Delete Member"
-                                            >
-                                                <Trash2 size={16} />
-                                            </button>
-
                                             {/* Year Filter Dropdown/Checkboxes */}
                                             <div className="relative group">
                                                 <button className="flex items-center gap-2 px-3 py-1.5 bg-slate-800 border border-slate-600 rounded-lg text-sm text-white hover:bg-slate-700">
