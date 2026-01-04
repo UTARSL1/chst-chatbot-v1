@@ -110,58 +110,90 @@ export default function RCOverview() {
 
             {/* Charts Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Publications by Year */}
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-lg">
-                    <h3 className="text-lg font-semibold text-white mb-4">Publications by Year</h3>
-                    <div className="space-y-3">
+                {/* Publications by Year (Vertical Bars) */}
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-lg flex flex-col">
+                    <h3 className="text-lg font-semibold text-white mb-6">Publications by Year</h3>
+                    <div className="flex-1 flex items-end justify-between gap-4 min-h-[200px] border-b border-white/10 pb-2 relative">
+                        {/* Grid lines */}
+                        <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
+                            {[0, 0.25, 0.5, 0.75, 1].map((tick) => (
+                                <div key={tick} className="w-full border-t border-white/30 h-0" style={{ bottom: `${tick * 100}%` }}></div>
+                            ))}
+                        </div>
+
                         {stats.publicationsByYear.slice(-5).map(({ year, count }) => {
-                            const maxCount = Math.max(...stats.publicationsByYear.map(y => y.count));
+                            const maxCount = Math.max(...stats.publicationsByYear.map(y => y.count)) * 1.1; // Add 10% buffering
                             const percentage = (count / maxCount) * 100;
 
                             return (
-                                <div key={year} className="flex items-center gap-3">
-                                    <div className="text-sm text-gray-400 w-12">{year}</div>
-                                    <div className="flex-1 bg-slate-800 rounded-full h-8 overflow-hidden">
-                                        <div
-                                            className="bg-gradient-to-r from-blue-500 to-blue-600 h-full flex items-center justify-end pr-3 transition-all"
-                                            style={{ width: `${percentage}%` }}
-                                        >
-                                            <span className="text-xs font-bold text-white">{count}</span>
+                                <div key={year} className="flex-1 flex flex-col items-center group relative z-10">
+                                    <div className="mb-2 text-sm font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 px-2 py-0.5 rounded border border-white/10 absolute -top-8">
+                                        {count}
+                                    </div>
+                                    <div
+                                        className="w-full max-w-[40px] rounded-t-sm bg-gradient-to-t from-blue-600 to-cyan-400 relative hover:from-blue-500 hover:to-cyan-300 transition-all duration-300 shadow-[0_0_15px_rgba(56,189,248,0.3)]"
+                                        style={{ height: `${percentage}%` }}
+                                    >
+                                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-sm font-bold text-cyan-100">
+                                            {count}
                                         </div>
                                     </div>
+                                    <div className="mt-3 text-sm text-gray-400 font-medium">{year}</div>
                                 </div>
                             );
                         })}
                     </div>
                 </div>
 
-                {/* Quartile Distribution */}
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-lg">
-                    <h3 className="text-lg font-semibold text-white mb-4">Quartile Distribution</h3>
-                    <div className="space-y-4">
-                        {[
-                            { label: 'Q1', count: stats.quartileCounts.q1, color: 'bg-emerald-500' },
-                            { label: 'Q2', count: stats.quartileCounts.q2, color: 'bg-blue-500' },
-                            { label: 'Q3', count: stats.quartileCounts.q3, color: 'bg-amber-500' },
-                            { label: 'Q4', count: stats.quartileCounts.q4, color: 'bg-rose-500' }
-                        ].map(({ label, count, color }) => {
-                            const percentage = totalQuartile > 0 ? (count / totalQuartile) * 100 : 0;
-
-                            return (
-                                <div key={label}>
-                                    <div className="flex items-center justify-between mb-1">
-                                        <span className="text-sm text-gray-300">{label}</span>
-                                        <span className="text-sm font-bold text-white">{count}</span>
-                                    </div>
-                                    <div className="bg-slate-800 rounded-full h-3 overflow-hidden">
-                                        <div
-                                            className={`${color} h-full transition-all`}
-                                            style={{ width: `${percentage}%` }}
-                                        />
-                                    </div>
+                {/* Quartile Distribution (Donut Chart) */}
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-lg flex flex-col">
+                    <h3 className="text-lg font-semibold text-white mb-6">Quartile Distribution</h3>
+                    <div className="flex items-center justify-center gap-8 h-full">
+                        {/* Donut Chart */}
+                        <div className="relative w-48 h-48">
+                            <div
+                                className="w-full h-full rounded-full"
+                                style={{
+                                    background: `conic-gradient(
+                                        #10b981 0% ${(stats.quartileCounts.q1 / totalQuartile) * 100}%,
+                                        #3b82f6 ${(stats.quartileCounts.q1 / totalQuartile) * 100}% ${((stats.quartileCounts.q1 + stats.quartileCounts.q2) / totalQuartile) * 100}%,
+                                        #f59e0b ${((stats.quartileCounts.q1 + stats.quartileCounts.q2) / totalQuartile) * 100}% ${((stats.quartileCounts.q1 + stats.quartileCounts.q2 + stats.quartileCounts.q3) / totalQuartile) * 100}%,
+                                        #f43f5e ${((stats.quartileCounts.q1 + stats.quartileCounts.q2 + stats.quartileCounts.q3) / totalQuartile) * 100}% 100%
+                                    )`
+                                }}
+                            ></div>
+                            {/* Inner Circle (Hole) */}
+                            <div className="absolute inset-4 rounded-full bg-[#0f172a] flex items-center justify-center border border-white/5">
+                                <div className="text-center">
+                                    <div className="text-3xl font-bold text-white">{totalQuartile}</div>
+                                    <div className="text-xs text-gray-400">Total</div>
                                 </div>
-                            );
-                        })}
+                            </div>
+                        </div>
+
+                        {/* Legend */}
+                        <div className="space-y-3">
+                            {[
+                                { label: 'Q1', count: stats.quartileCounts.q1, color: 'bg-emerald-500', text: 'text-emerald-400' },
+                                { label: 'Q2', count: stats.quartileCounts.q2, color: 'bg-blue-500', text: 'text-blue-400' },
+                                { label: 'Q3', count: stats.quartileCounts.q3, color: 'bg-amber-500', text: 'text-amber-400' },
+                                { label: 'Q4', count: stats.quartileCounts.q4, color: 'bg-rose-500', text: 'text-rose-400' }
+                            ].map(({ label, count, color, text }) => {
+                                const percentage = totalQuartile > 0 ? Math.round((count / totalQuartile) * 100) : 0;
+                                return (
+                                    <div key={label} className="flex items-center gap-3">
+                                        <div className={`w-3 h-3 rounded-full ${color}`}></div>
+                                        <div className="flex flex-col">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-sm font-medium text-gray-300">{label}</span>
+                                                <span className="text-xs text-gray-500">({percentage}%)</span>
+                                            </div>
+                                            <span className={`text-lg font-bold ${text}`}>{count}</span>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
                     </div>
                 </div>
             </div>
