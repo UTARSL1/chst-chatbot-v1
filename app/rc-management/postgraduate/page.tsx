@@ -546,213 +546,212 @@ export default function RCPostgraduatePage() {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                        {/* Charts Row */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div className="md:col-span-2 bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-lg min-h-[300px] flex flex-col">
-                                <h3 className="text-sm font-semibold text-white mb-6">Student Intake History</h3>
-                                <div className="flex-1 flex items-end gap-3 pb-6 relative min-h-[200px]">
-                                    {/* Y-axis lines (visual only) */}
-                                    <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
-                                        <div className="border-t border-gray-400 w-full"></div>
-                                        <div className="border-t border-gray-400 w-full"></div>
-                                        <div className="border-t border-gray-400 w-full"></div>
-                                        <div className="border-t border-gray-400 w-full"></div>
+                                {/* Charts Row */}
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div className="md:col-span-2 bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-lg min-h-[300px] flex flex-col">
+                                        <h3 className="text-sm font-semibold text-white mb-6">Student Intake History</h3>
+                                        <div className="flex-1 flex items-end gap-3 pb-6 relative min-h-[200px]">
+                                            {/* Y-axis lines (visual only) */}
+                                            <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
+                                                <div className="border-t border-gray-400 w-full"></div>
+                                                <div className="border-t border-gray-400 w-full"></div>
+                                                <div className="border-t border-gray-400 w-full"></div>
+                                                <div className="border-t border-gray-400 w-full"></div>
+                                            </div>
+
+                                            {(() => {
+                                                const maxVal = Math.max(...chartData.map(d => d.InProgress + d.Completed), 1);
+                                                return chartData.map((data, idx) => {
+                                                    const total = data.InProgress + data.Completed;
+                                                    const heightPct = (total / maxVal) * 100;
+                                                    const ipHeight = (data.InProgress / total) * 100;
+                                                    const compHeight = (data.Completed / total) * 100;
+
+                                                    return (
+                                                        <div key={data.year} className="flex-1 flex flex-col items-center group relative h-full justify-end">
+                                                            <div className="w-full max-w-[40px] flex flex-col-reverse rounded overflow-hidden transition-all hover:brightness-110" style={{ height: `${heightPct}%`, minHeight: '4px' }}>
+                                                                <div
+                                                                    style={{ height: `${ipHeight}%` }}
+                                                                    className="w-full bg-sky-500 relative group-hover:bg-sky-400 transition-colors"
+                                                                    title={`In Progress: ${data.InProgress}`}
+                                                                ></div>
+                                                                <div
+                                                                    style={{ height: `${compHeight}%` }}
+                                                                    className="w-full bg-emerald-500 relative group-hover:bg-emerald-400 transition-colors"
+                                                                    title={`Graduated: ${data.Completed}`}
+                                                                ></div>
+                                                            </div>
+                                                            <div className="mt-3 text-xs text-gray-400 rotate-0">{data.year}</div>
+
+                                                            {/* Tooltip on hover */}
+                                                            <div className="absolute bottom-full mb-2 bg-slate-800 text-xs text-white p-2 rounded shadow-xl border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity z-10 whitespace-nowrap pointer-events-none">
+                                                                <div className="font-bold mb-1">{data.year}</div>
+                                                                <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-sky-500"></div> In Progress: {data.InProgress}</div>
+                                                                <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-emerald-500"></div> Graduated: {data.Completed}</div>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                });
+                                            })()}
+                                        </div>
+                                        <div className="flex items-center justify-center gap-6 mt-2">
+                                            <div className="flex items-center gap-2 text-xs text-gray-400">
+                                                <div className="w-3 h-3 rounded bg-sky-500"></div> In Progress
+                                            </div>
+                                            <div className="flex items-center gap-2 text-xs text-gray-400">
+                                                <div className="w-3 h-3 rounded bg-emerald-500"></div> Graduated
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    {(() => {
-                                        const maxVal = Math.max(...chartData.map(d => d.InProgress + d.Completed), 1);
-                                        return chartData.map((data, idx) => {
-                                            const total = data.InProgress + data.Completed;
-                                            const heightPct = (total / maxVal) * 100;
-                                            const ipHeight = (data.InProgress / total) * 100;
-                                            const compHeight = (data.Completed / total) * 100;
+                                    <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-lg flex flex-col items-center">
+                                        {/* Level Distribution */}
+                                        <h3 className="text-sm font-semibold text-white mb-6 w-full text-left">Level Distribution</h3>
+                                        <div className="relative w-40 h-40 mb-6">
+                                            {(() => {
+                                                if (!stats) return null;
+                                                const total = stats.totalStudents || 1;
+                                                const phdPct = (stats.phdCount / total) * 100;
+                                                const gap = 2; // 2% gap for border
 
-                                            return (
-                                                <div key={data.year} className="flex-1 flex flex-col items-center group relative h-full justify-end">
-                                                    <div className="w-full max-w-[40px] flex flex-col-reverse rounded overflow-hidden transition-all hover:brightness-110" style={{ height: `${heightPct}%`, minHeight: '4px' }}>
-                                                        <div
-                                                            style={{ height: `${ipHeight}%` }}
-                                                            className="w-full bg-sky-500 relative group-hover:bg-sky-400 transition-colors"
-                                                            title={`In Progress: ${data.InProgress}`}
-                                                        ></div>
-                                                        <div
-                                                            style={{ height: `${compHeight}%` }}
-                                                            className="w-full bg-emerald-500 relative group-hover:bg-emerald-400 transition-colors"
-                                                            title={`Graduated: ${data.Completed}`}
-                                                        ></div>
+                                                // Colors: PhD = Purple (#a855f7), Master = Orange (#f97316)
+                                                // If one value is 0 or 100, no gap needed
+                                                const gradient = (phdPct <= 0 || phdPct >= 100)
+                                                    ? `conic-gradient(#a855f7 0% ${phdPct}%, #f97316 ${phdPct}% 100%)`
+                                                    : `conic-gradient(#a855f7 0% ${phdPct}%, rgba(0,0,0,0) ${phdPct}% ${phdPct + gap}%, #f97316 ${phdPct + gap}% 100%)`;
+
+                                                return (
+                                                    <div
+                                                        className="w-full h-full rounded-full relative"
+                                                        style={{ background: gradient }}
+                                                    >
+                                                        <div className="absolute inset-4 bg-slate-900/90 rounded-full flex flex-col items-center justify-center">
+                                                            <div className="text-3xl font-bold text-white">{stats.totalStudents}</div>
+                                                            <div className="text-xs text-gray-400">Students</div>
+                                                        </div>
                                                     </div>
-                                                    <div className="mt-3 text-xs text-gray-400 rotate-0">{data.year}</div>
+                                                );
+                                            })()}
+                                        </div>
+                                        <div className="w-full space-y-3 mb-8">
+                                            <div className="flex justify-between items-center text-sm">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-3 h-3 rounded-full bg-purple-500"></div>
+                                                    <span className="text-gray-300">PhD</span>
+                                                </div>
+                                                <span className="font-bold text-white">{stats.phdCount}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center text-sm">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-3 h-3 rounded-full bg-orange-500"></div>
+                                                    <span className="text-gray-300">Master</span>
+                                                </div>
+                                                <span className="font-bold text-white">{stats.masterCount}</span>
+                                            </div>
+                                        </div>
 
-                                                    {/* Tooltip on hover */}
-                                                    <div className="absolute bottom-full mb-2 bg-slate-800 text-xs text-white p-2 rounded shadow-xl border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity z-10 whitespace-nowrap pointer-events-none">
-                                                        <div className="font-bold mb-1">{data.year}</div>
-                                                        <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-sky-500"></div> In Progress: {data.InProgress}</div>
-                                                        <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-emerald-500"></div> Graduated: {data.Completed}</div>
+                                        {/* Role Distribution */}
+                                        <div className="w-full pt-6 border-t border-white/10">
+                                            <h3 className="text-sm font-semibold text-white mb-4 text-left">Supervision Role</h3>
+
+                                            <div className="space-y-4">
+                                                {/* Bar */}
+                                                <div className="h-4 w-full bg-slate-800 rounded-full overflow-hidden flex shadow-inner">
+                                                    <div
+                                                        style={{ width: `${(stats?.mainSupervisorCount || 0) / (stats?.totalStudents || 1) * 100}%` }}
+                                                        className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 relative group"
+                                                    >
+                                                        <div className="absolute opacity-0 group-hover:opacity-100 bottom-full mb-2 left-1/2 -translate-x-1/2 bg-slate-800 text-[10px] text-cyan-200 px-2 py-1 rounded border border-cyan-500/30 whitespace-nowrap pointer-events-none">
+                                                            Main: {stats.mainSupervisorCount}
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        style={{ width: `${(stats?.coSupervisorCount || 0) / (stats?.totalStudents || 1) * 100}%` }}
+                                                        className="h-full bg-slate-700 relative group"
+                                                    >
+                                                        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNCIgaGVpZ2h0PSI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik00IDBMMCA0IiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9zdmc+')] opacity-50"></div>
+                                                        <div className="absolute opacity-0 group-hover:opacity-100 bottom-full mb-2 left-1/2 -translate-x-1/2 bg-slate-800 text-[10px] text-gray-300 px-2 py-1 rounded border border-white/10 whitespace-nowrap pointer-events-none">
+                                                            Co-Sup: {stats.coSupervisorCount}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            );
-                                        });
-                                    })()}
-                                </div>
-                                <div className="flex items-center justify-center gap-6 mt-2">
-                                    <div className="flex items-center gap-2 text-xs text-gray-400">
-                                        <div className="w-3 h-3 rounded bg-sky-500"></div> In Progress
-                                    </div>
-                                    <div className="flex items-center gap-2 text-xs text-gray-400">
-                                        <div className="w-3 h-3 rounded bg-emerald-500"></div> Graduated
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-lg flex flex-col items-center">
-                                {/* Level Distribution */}
-                                <h3 className="text-sm font-semibold text-white mb-6 w-full text-left">Level Distribution</h3>
-                                <div className="relative w-40 h-40 mb-6">
-                                    {(() => {
-                                        if (!stats) return null;
-                                        const total = stats.totalStudents || 1;
-                                        const phdPct = (stats.phdCount / total) * 100;
-                                        const gap = 2; // 2% gap for border
-
-                                        // Colors: PhD = Purple (#a855f7), Master = Orange (#f97316)
-                                        // If one value is 0 or 100, no gap needed
-                                        const gradient = (phdPct <= 0 || phdPct >= 100)
-                                            ? `conic-gradient(#a855f7 0% ${phdPct}%, #f97316 ${phdPct}% 100%)`
-                                            : `conic-gradient(#a855f7 0% ${phdPct}%, rgba(0,0,0,0) ${phdPct}% ${phdPct + gap}%, #f97316 ${phdPct + gap}% 100%)`;
-
-                                        return (
-                                            <div
-                                                className="w-full h-full rounded-full relative"
-                                                style={{ background: gradient }}
-                                            >
-                                                <div className="absolute inset-4 bg-slate-900/90 rounded-full flex flex-col items-center justify-center">
-                                                    <div className="text-3xl font-bold text-white">{stats.totalStudents}</div>
-                                                    <div className="text-xs text-gray-400">Students</div>
-                                                </div>
-                                            </div>
-                                        );
-                                    })()}
-                                </div>
-                                <div className="w-full space-y-3 mb-8">
-                                    <div className="flex justify-between items-center text-sm">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 rounded-full bg-purple-500"></div>
-                                            <span className="text-gray-300">PhD</span>
-                                        </div>
-                                        <span className="font-bold text-white">{stats.phdCount}</span>
-                                    </div>
-                                    <div className="flex justify-between items-center text-sm">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-                                            <span className="text-gray-300">Master</span>
-                                        </div>
-                                        <span className="font-bold text-white">{stats.masterCount}</span>
-                                    </div>
-                                </div>
-
-                                {/* Role Distribution */}
-                                <div className="w-full pt-6 border-t border-white/10">
-                                    <h3 className="text-sm font-semibold text-white mb-4 text-left">Supervision Role</h3>
-
-                                    <div className="space-y-4">
-                                        {/* Bar */}
-                                        <div className="h-4 w-full bg-slate-800 rounded-full overflow-hidden flex shadow-inner">
-                                            <div
-                                                style={{ width: `${(stats?.mainSupervisorCount || 0) / (stats?.totalStudents || 1) * 100}%` }}
-                                                className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 relative group"
-                                            >
-                                                <div className="absolute opacity-0 group-hover:opacity-100 bottom-full mb-2 left-1/2 -translate-x-1/2 bg-slate-800 text-[10px] text-cyan-200 px-2 py-1 rounded border border-cyan-500/30 whitespace-nowrap pointer-events-none">
-                                                    Main: {stats.mainSupervisorCount}
-                                                </div>
-                                            </div>
-                                            <div
-                                                style={{ width: `${(stats?.coSupervisorCount || 0) / (stats?.totalStudents || 1) * 100}%` }}
-                                                className="h-full bg-slate-700 relative group"
-                                            >
-                                                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNCIgaGVpZ2h0PSI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik00IDBMMCA0IiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9zdmc+')] opacity-50"></div>
-                                                <div className="absolute opacity-0 group-hover:opacity-100 bottom-full mb-2 left-1/2 -translate-x-1/2 bg-slate-800 text-[10px] text-gray-300 px-2 py-1 rounded border border-white/10 whitespace-nowrap pointer-events-none">
-                                                    Co-Sup: {stats.coSupervisorCount}
+                                                {/* Legend */}
+                                                <div className="flex justify-between text-xs text-gray-400">
+                                                    <div className="flex flex-col gap-1">
+                                                        <span className="text-cyan-400 font-medium">Main Supervisor</span>
+                                                        <span className="text-lg font-bold text-white">{stats.mainSupervisorCount}</span>
+                                                    </div>
+                                                    <div className="flex flex-col gap-1 text-right">
+                                                        <span className="text-slate-400 font-medium">Co-Supervisor</span>
+                                                        <span className="text-lg font-bold text-white">{stats.coSupervisorCount}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-
-                                        {/* Legend */}
-                                        <div className="flex justify-between text-xs text-gray-400">
-                                            <div className="flex flex-col gap-1">
-                                                <span className="text-cyan-400 font-medium">Main Supervisor</span>
-                                                <span className="text-lg font-bold text-white">{stats.mainSupervisorCount}</span>
-                                            </div>
-                                            <div className="flex flex-col gap-1 text-right">
-                                                <span className="text-slate-400 font-medium">Co-Supervisor</span>
-                                                <span className="text-lg font-bold text-white">{stats.coSupervisorCount}</span>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        {/* Student List Table */}
-                        <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-lg">
-                            <h3 className="text-sm font-semibold text-white mb-4">Supervision Details</h3>
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-sm text-left text-gray-400">
-                                    <thead className="text-xs text-gray-200 uppercase bg-white/5">
-                                        <tr>
-                                            <th className="px-4 py-3 rounded-tl-lg">Student Name</th>
-                                            <th className="px-4 py-3">Level</th>
-                                            <th className="px-4 py-3">Status</th>
-                                            <th className="px-4 py-3">Role</th>
-                                            <th className="px-4 py-3 rounded-tr-lg">Start Year</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {supervisions.map((student) => (
-                                            <tr key={student.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                                                <td className="px-4 py-3 font-medium text-white">{student.studentName}</td>
-                                                <td className="px-4 py-3">
-                                                    <span className={`px-2 py-1 rounded text-[10px] border ${student.level === 'PHD' ? 'bg-purple-500/10 border-purple-500/20 text-purple-300' : 'bg-indigo-500/10 border-indigo-500/20 text-indigo-300'}`}>
-                                                        {student.level}
-                                                    </span>
-                                                </td>
-                                                <td className="px-4 py-3">
-                                                    <span className={`px-2 py-1 rounded-full text-[10px] font-medium ${student.status === 'COMPLETED'
-                                                        ? 'bg-emerald-500/10 text-emerald-400'
-                                                        : 'bg-sky-500/10 text-sky-400'
-                                                        }`}>
-                                                        {student.status === 'COMPLETED' ? 'Graduated' : 'In Progress'}
-                                                    </span>
-                                                </td>
-                                                <td className="px-4 py-3 text-xs">{student.role}</td>
-                                                <td className="px-4 py-3">{student.startYear || '-'}</td>
-                                            </tr>
-                                        ))}
-                                        {supervisions.length === 0 && (
-                                            <tr>
-                                                <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
-                                                    No records found for selected criteria
-                                                </td>
-                                            </tr>
-                                        )}
-                                    </tbody>
-                                </table>
+                                {/* Student List Table */}
+                                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-lg">
+                                    <h3 className="text-sm font-semibold text-white mb-4">Supervision Details</h3>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-sm text-left text-gray-400">
+                                            <thead className="text-xs text-gray-200 uppercase bg-white/5">
+                                                <tr>
+                                                    <th className="px-4 py-3 rounded-tl-lg">Student Name</th>
+                                                    <th className="px-4 py-3">Level</th>
+                                                    <th className="px-4 py-3">Status</th>
+                                                    <th className="px-4 py-3">Role</th>
+                                                    <th className="px-4 py-3 rounded-tr-lg">Start Year</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {supervisions.map((student) => (
+                                                    <tr key={student.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                                        <td className="px-4 py-3 font-medium text-white">{student.studentName}</td>
+                                                        <td className="px-4 py-3">
+                                                            <span className={`px-2 py-1 rounded text-[10px] border ${student.level === 'PHD' ? 'bg-purple-500/10 border-purple-500/20 text-purple-300' : 'bg-indigo-500/10 border-indigo-500/20 text-indigo-300'}`}>
+                                                                {student.level}
+                                                            </span>
+                                                        </td>
+                                                        <td className="px-4 py-3">
+                                                            <span className={`px-2 py-1 rounded-full text-[10px] font-medium ${student.status === 'COMPLETED'
+                                                                ? 'bg-emerald-500/10 text-emerald-400'
+                                                                : 'bg-sky-500/10 text-sky-400'
+                                                                }`}>
+                                                                {student.status === 'COMPLETED' ? 'Graduated' : 'In Progress'}
+                                                            </span>
+                                                        </td>
+                                                        <td className="px-4 py-3 text-xs">{student.role}</td>
+                                                        <td className="px-4 py-3">{student.startYear || '-'}</td>
+                                                    </tr>
+                                                ))}
+                                                {supervisions.length === 0 && (
+                                                    <tr>
+                                                        <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
+                                                            No records found for selected criteria
+                                                        </td>
+                                                    </tr>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                            <div className="h-full flex items-center justify-center text-gray-500 border border-dashed border-gray-700 rounded-lg bg-slate-900/30">
+                                <div className="text-center">
+                                    <UserCheck className="mx-auto h-12 w-12 text-gray-600 mb-3" />
+                                    <h3 className="text-lg font-medium text-gray-400">Select a supervisor</h3>
+                                    <p className="text-sm text-gray-500">Select a member from the list to view stats</p>
+                                </div>
                             </div>
-                        </div>
-                    </>
-                    ) : (
-                    <div className="h-full flex items-center justify-center text-gray-500 border border-dashed border-gray-700 rounded-lg bg-slate-900/30">
-                        <div className="text-center">
-                            <UserCheck className="mx-auto h-12 w-12 text-gray-600 mb-3" />
-                            <h3 className="text-lg font-medium text-gray-400">Select a supervisor</h3>
-                            <p className="text-sm text-gray-500">Select a member from the list to view stats</p>
-                        </div>
-                    </div>
                         )}
+                    </div>
                 </div>
             </div>
-        </div>
         </div >
     );
 }
