@@ -414,10 +414,10 @@ export default function RCPostgraduatePage() {
                                                 <GripVertical size={14} />
                                             </div>
 
-                                            <div className="flex-1 flex flex-col items-start gap-1">
+                                            <div className="flex-1 flex items-center gap-2">
                                                 <div className="font-medium text-sm text-white truncate">{member.name}</div>
                                                 {member.staffId && (
-                                                    <div className="px-1.5 py-0.5 rounded bg-slate-700/50 text-[9px] font-medium text-slate-300 border border-slate-600/30">
+                                                    <div className="px-1.5 py-0.5 rounded bg-slate-700/50 text-[9px] font-medium text-slate-400 border border-slate-600/30">
                                                         {member.staffId.replace(/^\?\s*/, '')}
                                                     </div>
                                                 )}
