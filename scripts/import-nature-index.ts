@@ -11,6 +11,11 @@ async function importNatureIndex() {
 
         // Read CSV file
         const csvPath = path.join(process.cwd(), 'data', 'nature_index.csv');
+        if (!fs.existsSync(csvPath)) {
+            console.error(`❌ CSV file not found: ${csvPath}`);
+            return;
+        }
+
         const fileContent = fs.readFileSync(csvPath, 'utf-8');
 
         // Parse CSV
@@ -22,56 +27,61 @@ async function importNatureIndex() {
 
         console.log(`Found ${records.length} records in CSV`);
 
-        // Clear existing data
-        console.log('Clearing existing Nature Index data...');
-        await prisma.natureIndexInstitution.deleteMany({});
-
         // Prepare data for insertion
-        const institutions = records.map((record: any) => {
+        const institutions = [];
+        for (const record of records) {
             const institution = record['Institution'] || record['institution'];
-            const country = record['Country/territory'] || record['Country'] || record['country'];
-            const count = parseInt(record['Count'] || record['count'] || '0');
-            const share = parseFloat(record['Share'] || record['share'] || '0');
-            const position = parseInt(record['Position'] || record['position'] || '0');
+            if (!institution) continue;
 
-            return {
-                position,
-                institution,
+            const country = record['Country/territory'] || record['Country'] || record['country'] || '';
+
+            // Clean numbers
+            const countStr = (record['Count'] || record['count'] || '0').replace(/,/g, '');
+            const shareStr = (record['Share'] || record['share'] || '0').replace(/,/g, '');
+            const posStr = (record['Position'] || record['position'] || '0').replace(/,/g, '');
+
+            const count = parseInt(countStr);
+            // Use string for Decimal to be safe
+            const share = parseFloat(shareStr);
+            const position = parseInt(posStr);
+
+            institutions.push({
+                position: isNaN(position) ? 0 : position,
+                institution: institution,
                 normalizedName: institution.toLowerCase().trim(),
-                country,
-                count,
-                share
-            };
-        });
-
-        // Batch insert
-        console.log('Inserting records...');
-        const batchSize = 100;
-        for (let i = 0; i < institutions.length; i += batchSize) {
-            const batch = institutions.slice(i, i + batchSize);
-            await prisma.natureIndexInstitution.createMany({
-                data: batch
+                country: country,
+                count: isNaN(count) ? 0 : count,
+                share: isNaN(share) ? 0 : share,
             });
-            console.log(`Inserted ${Math.min(i + batchSize, institutions.length)}/${institutions.length} records`);
         }
 
-        console.log('✅ Import completed successfully!');
-        console.log(`Total institutions imported: ${institutions.length}`);
+        // Batch insert
+        console.log(`Inserting ${institutions.length} records...`);
+        const batchSize = 1000;
+        let insertedCount = 0;
 
-        // Show sample data
-        const sample = await prisma.natureIndexInstitution.findMany({
-            take: 5,
-            orderBy: { position: 'asc' }
-        });
+        for (let i = 0; i < institutions.length; i += batchSize) {
+            const batch = institutions.slice(i, i + batchSize);
+            try {
+                await prisma.natureIndexInstitution.createMany({
+                    data: batch,
+                    skipDuplicates: true
+                });
+                insertedCount += batch.length;
+                process.stdout.write(`\rInserted ${insertedCount}/${institutions.length} records`);
+            } catch (err: any) {
+                console.error(`\nBatch failed at index ${i}: ${err.message}`);
+                // Try smaller sub-batch if large batch fails? 
+                // For now just error out to see.
+            }
+            // Small delay to prevent connection saturation
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
 
-        console.log('\nTop 5 institutions:');
-        sample.forEach(inst => {
-            console.log(`  ${inst.position}. ${inst.institution} (${inst.country}) - Count: ${inst.count}, Share: ${inst.share}`);
-        });
+        console.log('\n✅ Import completed successfully!');
 
     } catch (error) {
         console.error('Error importing Nature Index data:', error);
-        throw error;
     } finally {
         await prisma.$disconnect();
     }

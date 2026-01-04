@@ -1,8 +1,3 @@
-
-
-// This is your Prisma schema file
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,126 +8,89 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-// User roles enum
-enum UserRole {
-  student
-  member
-  chairperson
-  public
-}
-
-// Document access level enum
-enum AccessLevel {
-  public
-  student
-  member
-  chairperson
-}
-
-// User model
 model User {
-  id            String        @id @default(uuid())
-  email         String        @unique
-  passwordHash  String
-  name          String
-  role          UserRole
-  isApproved    Boolean       @default(false) // For public users awaiting approval
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  resetToken       String?  @unique // For password reset
-  resetTokenExpiry DateTime? // Expiration time for reset token
-  recoveryEmail    String?    // Personal email for password recovery (for UTAR users)
-  invitationCodeId String?    // Invitation code used during signup
-  verificationToken String?   @unique // Token for email verification
-  verificationTokenExpiry DateTime? // Expiration time for verification token
-  isVerified       Boolean    @default(false) // Email verification status
-  lastLogin        DateTime?  // Last login timestamp
-  
-  // Relations
-  chatSessions    ChatSession[]
-  messages        Message[]
-  documents       Document[]
-  knowledgeNotes  KnowledgeNote[]
-  feedback        Feedback[]
-  invitationCode  InvitationCode? @relation(fields: [invitationCodeId], references: [id])
-  
+  id                      String          @id @default(uuid())
+  email                   String          @unique
+  passwordHash            String
+  name                    String
+  role                    UserRole
+  isApproved              Boolean         @default(false)
+  createdAt               DateTime        @default(now())
+  updatedAt               DateTime        @updatedAt
+  resetToken              String?         @unique
+  resetTokenExpiry        DateTime?
+  recoveryEmail           String?
+  invitationCodeId        String?
+  verificationToken       String?         @unique
+  verificationTokenExpiry DateTime?
+  isVerified              Boolean         @default(false)
+  lastLogin               DateTime?
+  chatSessions            ChatSession[]
+  documents               Document[]
+  feedback                Feedback[]
+  knowledgeNotes          KnowledgeNote[]
+  messages                Message[]
+  invitationCode          InvitationCode? @relation(fields: [invitationCodeId], references: [id])
+
   @@index([email])
   @@index([role])
   @@map("users")
 }
 
-// Department model (for organizing knowledge notes)
 model Department {
-  id              String   @id @default(uuid())
-  name            String   @unique
-  abbreviation    String?
-  color           String?  // Hex color for UI badges
-  icon            String?  // Emoji or icon name (legacy)
-  iconUrl         String?  // Supabase storage URL for uploaded icon
-  imageUrl        String?  // Supabase storage URL for uploaded image
-  isActive        Boolean  @default(true)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  
-  // Relations
-  knowledgeNotes  KnowledgeNote[]
-  
+  id             String          @id @default(uuid())
+  name           String          @unique
+  abbreviation   String?
+  color          String?
+  icon           String?
+  isActive       Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  iconUrl        String?
+  imageUrl       String?
+  knowledgeNotes KnowledgeNote[]
+
   @@index([isActive])
   @@map("departments")
 }
 
-// Document Type model (Policy, Form, Procedure, etc.)
 model DocumentType {
-  id              String   @id @default(uuid())
-  name            String   @unique
-  icon            String?  // Emoji or icon name (legacy)
-  iconUrl         String?  // Supabase storage URL for uploaded icon
-  imageUrl        String?  // Supabase storage URL for uploaded image
-  color           String?  // Hex color for UI styling
-  isActive        Boolean  @default(true)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  
-  // Relations
-  knowledgeNotes  KnowledgeNote[]
-  
+  id             String          @id @default(uuid())
+  name           String          @unique
+  icon           String?
+  color          String?
+  isActive       Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  iconUrl        String?
+  imageUrl       String?
+  knowledgeNotes KnowledgeNote[]
+
   @@index([isActive])
   @@map("document_types")
 }
 
-// Knowledge Note model (Priority notes for RAG)
 model KnowledgeNote {
-  id              String   @id @default(uuid())
+  id              String        @id @default(uuid())
   title           String
-  content         String   @db.Text
-  
-  // Organization (OPTIONAL - won't break existing notes)
+  content         String
   departmentId    String?
-  department      Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
-  
   documentTypeId  String?
-  documentType    DocumentType? @relation(fields: [documentTypeId], references: [id], onDelete: SetNull)
-  
-  // Legacy/existing fields
   category        String?
-  priority        String   @default("standard")
-  formatType      String   @default("auto")
-  accessLevel     String[] @default(["public", "student", "member", "chairperson"])
-  status          String   @default("active")
-  isActive        Boolean  @default(true)
-  
-  // Metadata
-  tags            String[] @default([])
-  
-  // Timestamps
+  priority        String        @default("standard")
+  formatType      String        @default("auto")
+  accessLevel     String[]      @default(["public", "student", "member", "chairperson"])
+  status          String        @default("active")
+  isActive        Boolean       @default(true)
+  tags            String[]      @default([])
   createdBy       String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  
-  // Relations
-  creator         User     @relation(fields: [createdBy], references: [id], onDelete: Cascade)
-  linkedDocuments Document[] @relation("KnowledgeNoteDocuments")
-  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  creator         User          @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  department      Department?   @relation(fields: [departmentId], references: [id])
+  documentType    DocumentType? @relation(fields: [documentTypeId], references: [id])
+  linkedDocuments Document[]    @relation("KnowledgeNoteDocuments")
+
   @@index([isActive])
   @@index([createdBy])
   @@index([priority])
@@ -141,69 +99,58 @@ model KnowledgeNote {
   @@map("knowledge_notes")
 }
 
-// Chat session model
 model ChatSession {
   id        String    @id @default(uuid())
   userId    String
-  title     String?   // First question or custom title
+  title     String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  deletedAt DateTime? // Soft delete timestamp
-  deletedBy String?   // User ID who deleted this session
-  
-  // Relations
+  deletedAt DateTime?
+  deletedBy String?
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   messages  Message[]
-  
+
   @@index([userId])
   @@index([createdAt])
   @@index([deletedAt])
   @@map("chat_sessions")
 }
 
-// Message model
 model Message {
-  id          String      @id @default(uuid())
-  sessionId   String
-  userId      String
-  role        String      // 'user' or 'assistant'
-  content     String      @db.Text
-  sources     Json?       // Array of document sources used for RAG
-  createdAt   DateTime    @default(now())
-  
-  // Relations
-  session     ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+  id        String      @id @default(uuid())
+  sessionId String
+  userId    String
+  role      String
+  content   String
+  sources   Json?
+  createdAt DateTime    @default(now())
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([sessionId])
   @@index([userId])
   @@index([createdAt])
   @@map("messages")
 }
 
-// Document model
 model Document {
-  id            String      @id @default(uuid())
-  filename      String
-  originalName  String
-  accessLevel   AccessLevel @default(student)
-  category      String      @default("policy") // policy, form
-  department    String      @default("General") // DHR, IPSR, etc.
-  filePath      String
-  fileSize      Int
-  status        String      @default("processing") // 'processing', 'processed', 'failed'
-  uploadedById  String
-  uploadedAt    DateTime    @default(now())
-  processedAt   DateTime?
-  
-  // Vector DB metadata
-  vectorIds     Json?       // Array of vector IDs in Pinecone
-  chunkCount    Int?        // Number of chunks created
-  
-  // Relations
-  uploadedBy    User        @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+  id                   String          @id @default(uuid())
+  filename             String
+  originalName         String
+  accessLevel          AccessLevel     @default(student)
+  category             String          @default("policy")
+  department           String          @default("General")
+  filePath             String
+  fileSize             Int
+  status               String          @default("processing")
+  uploadedById         String
+  uploadedAt           DateTime        @default(now())
+  processedAt          DateTime?
+  vectorIds            Json?
+  chunkCount           Int?
+  uploadedBy           User            @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
   linkedKnowledgeNotes KnowledgeNote[] @relation("KnowledgeNoteDocuments")
-  
+
   @@index([accessLevel])
   @@index([status])
   @@index([uploadedById])
@@ -211,73 +158,67 @@ model Document {
 }
 
 model SystemPrompt {
-  id          String   @id @default(uuid())
-  name        String   @unique // e.g., "default_rag"
-  content     String   @db.Text
-  isActive    Boolean  @default(true)
-  updatedBy   String?  // User ID of the editor
-  updatedAt   DateTime @updatedAt
-  createdAt   DateTime @default(now())
+  id        String   @id @default(uuid())
+  name      String   @unique
+  content   String
+  isActive  Boolean  @default(true)
+  updatedBy String?
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
 
   @@map("system_prompts")
 }
 
-// Chairperson signup code model
 model SignupCode {
-  id          String    @id @default(uuid())
-  code        String    @unique
-  isUsed      Boolean   @default(false)
-  usedBy      String?   // Email of user who used it
-  createdAt   DateTime  @default(now())
-  usedAt      DateTime?
-  expiresAt   DateTime? // Optional expiration
-  
+  id        String    @id @default(uuid())
+  code      String    @unique
+  isUsed    Boolean   @default(false)
+  usedBy    String?
+  createdAt DateTime  @default(now())
+  usedAt    DateTime?
+  expiresAt DateTime?
+
   @@index([code])
   @@index([isUsed])
   @@map("signup_codes")
 }
 
-// Invitation code model (reusable codes for UTAR signups)
 model InvitationCode {
   id         String    @id @default(uuid())
   code       String    @unique
   isActive   Boolean   @default(true)
-  createdBy  String    // Chairperson who created it
+  createdBy  String
   createdAt  DateTime  @default(now())
-  expiresAt  DateTime? // Optional expiration
+  expiresAt  DateTime?
   usageCount Int       @default(0)
-  remark     String?   // Optional note/description (e.g., cohort, group)
-  
-  // Relations
+  remark     String?
   users      User[]
-  
+
   @@index([code])
   @@index([isActive])
   @@map("invitation_codes")
 }
 
-// Quick Access Link model (Custom links in sidebar)
 model QuickAccessLink {
-  id          String   @id @default(uuid())
-  name        String   // Display name of the link
-  url         String   // URL to navigate to
-  section     String   @default("others") // "chst" or "others"
-  icon        String?  // Optional icon name from lucide-react
-  roles       String[] @default(["public", "student", "member", "chairperson"]) // Roles that can see this link
-  order       Int      @default(0) // Display order
-  isActive    Boolean  @default(true)
-  isSystem    Boolean  @default(false) // True for admin-forced links, False for personal links
-  createdBy   String   // User ID who created it
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+  id        String   @id @default(uuid())
+  name      String
+  url       String
+  section   String   @default("others")
+  icon      String?
+  roles     String[] @default(["public", "student", "member", "chairperson"])
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  isSystem  Boolean  @default(false)
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([section])
   @@index([isActive])
   @@index([order])
   @@map("quick_access_links")
 }
 
-// Popular Question model
 model PopularQuestion {
   id        String   @id @default(uuid())
   question  String
@@ -287,30 +228,27 @@ model PopularQuestion {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-
   @@map("popular_questions")
 }
 
-// User Feedback model
 model Feedback {
   id        String   @id @default(uuid())
   content   String
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("feedback")
 }
 
-// Version model (for version control management)
 model Version {
   id            String   @id @default(uuid())
-  versionNumber String   // e.g., "v1.5", "v2.0"
-  commitHash    String   // Git commit hash
-  description   String   @db.Text // What's new in this version
-  isCurrent     Boolean  @default(false) // Only one should be true
-  createdBy     String   // Chairperson who created it
+  versionNumber String
+  commitHash    String
+  description   String
+  isCurrent     Boolean  @default(false)
+  createdBy     String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -319,12 +257,11 @@ model Version {
   @@map("versions")
 }
 
-// Tool Permissions model
 model ToolPermission {
   id           String   @id @default(uuid())
-  toolName     String   @unique // e.g., "jcr_journal_metric"
+  toolName     String   @unique
   description  String?
-  allowedRoles String[] @default(["chairperson"]) // Array of strings: "student", "member", "chairperson", "public"
+  allowedRoles String[] @default(["chairperson"])
   updatedBy    String?
   updatedAt    DateTime @updatedAt
   createdAt    DateTime @default(now())
@@ -332,36 +269,34 @@ model ToolPermission {
   @@map("tool_permissions")
 }
 
-// Model Configuration (for AI model selection)
 model ModelConfig {
   id          String   @id @default(uuid())
-  modelName   String   @unique // e.g., "gpt-4o", "gpt-4o-mini", "gpt-3.5-turbo"
-  displayName String   // e.g., "GPT-4O", "GPT-4O Mini"
-  description String   @db.Text // Model capabilities and use cases
-  isActive    Boolean  @default(false) // Only one should be true
-  updatedBy   String?  // User ID of the editor
+  modelName   String   @unique
+  displayName String
+  description String
+  isActive    Boolean  @default(false)
+  updatedBy   String?
   updatedAt   DateTime @updatedAt
   createdAt   DateTime @default(now())
 
   @@map("model_configs")
 }
 
-// JCR Journal Metric model
 model JcrJournalMetric {
-  id              Int      @id @default(autoincrement())
-  fullTitle       String   @map("full_title")
-  normalizedTitle String   @map("normalized_title")
-  issnPrint       String?  @map("issn_print")
-  issnElectronic  String?  @map("issn_electronic")
-  category        String
-  edition         String?
-  jifYear         Int      @map("jif_year")
-  jifValue        Decimal? @map("jif_value") @db.Decimal(10, 3) 
-  jifQuartile     String   @map("jif_quartile")
-  jciValue        Decimal? @map("jci_value") @db.Decimal(10, 3)
+  id               Int      @id @default(autoincrement())
+  fullTitle        String   @map("full_title")
+  normalizedTitle  String   @map("normalized_title")
+  issnPrint        String?  @map("issn_print")
+  issnElectronic   String?  @map("issn_electronic")
+  category         String
+  edition          String?
+  jifYear          Int      @map("jif_year")
+  jifValue         Decimal? @map("jif_value") @db.Decimal(10, 3)
+  jifQuartile      String   @map("jif_quartile")
+  jciValue         Decimal? @map("jci_value") @db.Decimal(10, 3)
   percentCitableOa Decimal? @map("percent_citable_oa") @db.Decimal(10, 2)
-  source          String?  @default("JCR")
-  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at")
+  source           String?  @default("JCR")
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@index([issnPrint, jifYear])
   @@index([issnElectronic, jifYear])
@@ -370,17 +305,16 @@ model JcrJournalMetric {
   @@map("jcr_journal_metrics")
 }
 
-// Nature Index Institution model
 model NatureIndexInstitution {
-  id              String   @id @default(uuid())
-  position        Int
-  institution     String
-  normalizedName  String   @map("normalized_name") // Lowercase for fuzzy search
-  country         String
-  count           Int
-  share           Decimal  @db.Decimal(10, 2)
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  id             String   @id @default(uuid())
+  position       Int
+  institution    String
+  normalizedName String   @map("normalized_name")
+  country        String
+  count          Int
+  share          Decimal  @db.Decimal(10, 2)
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
 
   @@index([normalizedName])
   @@index([country])
@@ -388,48 +322,54 @@ model NatureIndexInstitution {
   @@map("nature_index_institutions")
 }
 
-// RC Member model (for publication analysis)
+model NatureIndexJournal {
+  id             String   @id @default(uuid())
+  journalName    String   @unique
+  isNatureIndex  Boolean  @default(true)
+  normalizedName String   @map("normalized_name")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@index([normalizedName])
+  @@map("nature_index_journals")
+}
+
 model RCMember {
-  id                  String              @id @default(uuid())
-  name                String
-  staffId             String?
-  totalPublications   Int                 @default(0)
-  journalArticles     Int                 @default(0)
-  conferencePapers    Int                 @default(0)
-  q1Publications      Int                 @default(0)
-  q2Publications      Int                 @default(0)
-  q3Publications      Int                 @default(0)
-  q4Publications      Int                 @default(0)
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @updatedAt
-  
-  // Relations
-  publications        Publication[]
-  groupMemberships    WorkingGroupMember[]
-  
+  id                String               @id @default(uuid())
+  name              String
+  staffId           String?
+  totalPublications Int                  @default(0)
+  journalArticles   Int                  @default(0)
+  conferencePapers  Int                  @default(0)
+  q1Publications    Int                  @default(0)
+  q2Publications    Int                  @default(0)
+  q3Publications    Int                  @default(0)
+  q4Publications    Int                  @default(0)
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  publications      Publication[]
+  groupMemberships  WorkingGroupMember[]
+
   @@index([name])
   @@map("rc_members")
 }
 
-// Publication model
 model Publication {
-  id              String    @id @default(uuid())
+  id              String   @id @default(uuid())
   memberId        String
-  title           String    @db.Text
+  title           String
   journalName     String?
-  publicationType String?   // JOURNAL ARTICLE, CONFERENCE, etc.
-  wosQuartile     String?   // Q1, Q2, Q3, Q4
-  authorshipRole  String?   // 1st Author, Corresponding Author, Co-author
-  publicationYear Int?      // Extracted from Publication Date
-  publicationDate String?   // Original: Jul-17, Dec-17, etc.
-  role            String?   // Original Role column value
+  publicationType String?
+  wosQuartile     String?
+  authorshipRole  String?
+  publicationYear Int?
+  publicationDate String?
+  role            String?
   issn            String?
   doi             String?
-  createdAt       DateTime  @default(now())
-  
-  // Relations
-  member          RCMember  @relation(fields: [memberId], references: [id], onDelete: Cascade)
-  
+  createdAt       DateTime @default(now())
+  member          RCMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
   @@index([memberId])
   @@index([wosQuartile])
   @@index([publicationYear])
@@ -437,54 +377,48 @@ model Publication {
   @@map("publications")
 }
 
-// RC Postgraduate Member model
 model RCPostgraduateMember {
-  id                    String                    @id @default(uuid())
-  name                  String
-  staffId               String?
-  faculty               String?
-  totalStudents         Int                       @default(0)
-  inProgressCount       Int                       @default(0)
-  completedCount        Int                       @default(0)
-  phdCount              Int                       @default(0)
-  masterCount           Int                       @default(0)
-  mainSupervisorCount   Int                       @default(0)
-  coSupervisorCount     Int                       @default(0)
-  createdAt             DateTime                  @default(now())
-  updatedAt             DateTime                  @updatedAt
-  
-  // Relations
-  supervisions          PostgraduateSupervision[]
-  
+  id                  String                    @id @default(uuid())
+  name                String
+  staffId             String?
+  faculty             String?
+  totalStudents       Int                       @default(0)
+  inProgressCount     Int                       @default(0)
+  completedCount      Int                       @default(0)
+  phdCount            Int                       @default(0)
+  masterCount         Int                       @default(0)
+  mainSupervisorCount Int                       @default(0)
+  coSupervisorCount   Int                       @default(0)
+  createdAt           DateTime                  @default(now())
+  updatedAt           DateTime                  @updatedAt
+  supervisions        PostgraduateSupervision[]
+
   @@index([name])
   @@map("rc_postgraduate_members")
 }
 
-// Postgraduate Supervision model
 model PostgraduateSupervision {
-  id              String                 @id @default(uuid())
-  memberId        String
-  staffId         String?
-  staffName       String
-  faculty         String?
-  staffCategory   String?                // Academic, etc.
-  status          String                 // IN PROGRESS, COMPLETED
-  areaOfStudy     String?
-  researchCentre  String?
-  studentName     String
-  level           String                 // PHD, MASTER
-  institution     String?
-  programTitle    String?                @db.Text
-  startDate       String?                // Jul-17, Oct-18, etc.
-  completedDate   String?                // Jul-20, Jan-23, etc.
-  startYear       Int?                   // Extracted from startDate
-  completedYear   Int?                   // Extracted from completedDate
-  role            String                 // MAIN SUPERVISOR, CO-SUPERVISOR
-  createdAt       DateTime               @default(now())
-  
-  // Relations
-  member          RCPostgraduateMember   @relation(fields: [memberId], references: [id], onDelete: Cascade)
-  
+  id             String               @id @default(uuid())
+  memberId       String
+  staffId        String?
+  staffName      String
+  faculty        String?
+  staffCategory  String?
+  status         String
+  areaOfStudy    String?
+  researchCentre String?
+  studentName    String
+  level          String
+  institution    String?
+  programTitle   String?
+  startDate      String?
+  completedDate  String?
+  startYear      Int?
+  completedYear  Int?
+  role           String
+  createdAt      DateTime             @default(now())
+  member         RCPostgraduateMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
   @@index([memberId])
   @@index([status])
   @@index([level])
@@ -493,34 +427,42 @@ model PostgraduateSupervision {
   @@map("postgraduate_supervisions")
 }
 
-// Working Group model
 model WorkingGroup {
-  id          String              @id @default(uuid())
+  id          String               @id @default(uuid())
   name        String
-  description String?             @db.Text
-  createdBy   String              // User ID of chairperson
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
-  
-  // Relations
+  description String?
+  createdBy   String
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
   members     WorkingGroupMember[]
-  
+
   @@index([createdBy])
   @@map("working_groups")
 }
 
-// Working Group Member (junction table)
 model WorkingGroupMember {
-  groupId   String
-  memberId  String
-  addedAt   DateTime     @default(now())
-  
-  // Relations
-  group     WorkingGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  member    RCMember     @relation(fields: [memberId], references: [id], onDelete: Cascade)
-  
+  groupId  String
+  memberId String
+  addedAt  DateTime     @default(now())
+  group    WorkingGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  member   RCMember     @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
   @@id([groupId, memberId])
   @@index([groupId])
   @@index([memberId])
   @@map("working_group_members")
+}
+
+enum UserRole {
+  student
+  member
+  chairperson
+  public
+}
+
+enum AccessLevel {
+  student
+  member
+  chairperson
+  public
 }

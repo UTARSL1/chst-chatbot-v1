@@ -1,4 +1,3 @@
-
 import fs from 'fs';
 import path from 'path';
 import { parse } from 'csv-parse/sync';
@@ -6,35 +5,19 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-async function main() {
-    const args = process.argv.slice(2);
-    const jifYearArg = args[0];
-
-    if (!jifYearArg) {
-        console.error('Please provide a JIF year (e.g., 2024)');
-        process.exit(1);
-    }
-
-    const jifYear = parseInt(jifYearArg, 10);
-    if (isNaN(jifYear)) {
-        console.error(`Invalid year provided: ${jifYearArg}`);
-        process.exit(1);
-    }
-
-    const csvPath = path.join(process.cwd(), 'data', 'jcr', jifYearArg, `JCR_${jifYearArg}.csv`);
+async function importJCR(year: number) {
+    const csvPath = path.join(process.cwd(), 'data', 'jcr', year.toString(), `JCR_${year}.csv`);
 
     if (!fs.existsSync(csvPath)) {
-        console.error(`CSV file not found at: ${csvPath}`);
+        console.error(`❌ CSV file not found: ${csvPath}`);
         process.exit(1);
     }
 
-    console.log(`Reading CSV from ${csvPath}...`);
-
+    console.log(`📂 Reading ${csvPath}...`);
     const fileContent = fs.readFileSync(csvPath, 'utf-8');
-
     const lines = fileContent.split(/\r?\n/);
-    let headerIndex = -1;
 
+    let headerIndex = -1;
     for (let i = 0; i < lines.length; i++) {
         if (lines[i].includes('Journal name') && (lines[i].includes('ISSN') || lines[i].includes('Total Citations'))) {
             headerIndex = i;
@@ -43,23 +26,18 @@ async function main() {
     }
 
     if (headerIndex === -1) {
-        console.error('Could not find header row containing "Journal name"');
+        console.error('❌ Could not find header row');
         process.exit(1);
     }
 
-    console.log(`Found header at line ${headerIndex + 1}`);
-
+    console.log(`✅ Found header at line ${headerIndex + 1}`);
     let csvData = lines.slice(headerIndex).join('\n');
 
-    // Sanitize: JCR CSVs often have trailing '%' signs after quotes, e.g., "100"%,
-    // 1. Remove trailing comma produced by the "%, at EOL"
-    csvData = csvData.replace(/"%,$/gm, '"'); // Quote + Percent + Comma at End of Line -> Quote
-    // 2. Remove % after quote in middle of line
+    // Sanitize CSV
+    csvData = csvData.replace(/"%,$/gm, '"');
     csvData = csvData.replace(/"%,/g, '",');
-    // 3. Handle end of line % without comma
     csvData = csvData.replace(/"%[\r\n]/g, '"\n');
 
-    // Cast to specific type to avoid unknown errors
     const records = parse(csvData, {
         columns: true,
         skip_empty_lines: true,
@@ -68,28 +46,29 @@ async function main() {
         relax_column_count: true
     }) as Record<string, string>[];
 
-    console.log(`Parsed ${records.length} rows. Starting upsert...`);
+    console.log(`📊 Parsed ${records.length} rows`);
+    console.log(`🔄 Starting import for year ${year}...\n`);
 
-    let count = 0;
+    // 1. Delete existing records for this year
+    console.log(`🗑️  Deleting existing records for year ${year}...`);
+    await prisma.jcrJournalMetric.deleteMany({
+        where: { jifYear: year }
+    });
+    console.log(`✅ Cleared existing ${year} data`);
 
+    // 2. Prepare all data objects
+    const dataToInsert = [];
+    let errorCount = 0; // Initialize errorCount for potential future use or if parsing fails
     for (const row of records) {
         const keys = Object.keys(row);
         const jifColName = keys.find(k => k.includes('JIF') && !k.includes('Quartile') && !k.includes('Percentile'));
         const jciColName = keys.find(k => k.includes('JCI') && !k.includes('Percentile'));
 
-        // Try various common column names
         const journalName = row['Journal name'] || row['Full Journal Title'];
-
-        if (!journalName) continue;
-
-        const issn = row['ISSN'];
-        const eIssn = row['eISSN'];
-        const category = row['Category'];
-        const edition = row['Edition'];
-        const jifStr = jifColName ? row[jifColName] : null;
-        const quartile = row['JIF Quartile'];
-        const jciStr = jciColName ? row[jciColName] : null;
-        const oaStr = row['% of Citable OA'];
+        if (!journalName) {
+            errorCount++;
+            continue; // Skip rows without a journal name
+        }
 
         const normalizedTitle = journalName.toLowerCase().trim().replace(/\s+/g, ' ');
 
@@ -100,66 +79,55 @@ async function main() {
             return isNaN(val) ? null : val;
         };
 
-        const jifValue = parseNum(jifStr);
-        const jciValue = parseNum(jciStr);
-        const oaValue = parseNum(oaStr);
-
-        try {
-            const whereClause: any = {
-                normalizedTitle,
-                category: category || 'Unknown',
-                jifYear
-            };
-            // Only add edition to query if it's present to avoid mis-matching, 
-            // but if DB has it, we must match it. 
-            // FindFirst is safest.
-            if (edition) whereClause.edition = edition;
-
-            const existing = await prisma.jcrJournalMetric.findFirst({
-                where: whereClause
-            });
-
-            const data = {
-                fullTitle: journalName,
-                normalizedTitle,
-                issnPrint: (issn && issn !== 'N/A') ? issn : null,
-                issnElectronic: (eIssn && eIssn !== 'N/A') ? eIssn : null,
-                category: category || 'Unknown',
-                edition: edition || null,
-                jifYear,
-                jifValue,
-                jifQuartile: quartile || 'N/A',
-                jciValue,
-                percentCitableOa: oaValue,
-                source: 'JCR'
-            };
-
-            if (existing) {
-                await prisma.jcrJournalMetric.update({
-                    where: { id: existing.id },
-                    data
-                });
-            } else {
-                await prisma.jcrJournalMetric.create({
-                    data
-                });
-            }
-
-            count++;
-            if (count % 100 === 0) process.stdout.write('.');
-        } catch (e) {
-            console.error(`\nError processing ${journalName}:`, e);
-        }
+        dataToInsert.push({
+            fullTitle: journalName,
+            normalizedTitle,
+            issnPrint: (row['ISSN'] && row['ISSN'] !== 'N/A') ? row['ISSN'] : null,
+            issnElectronic: (row['eISSN'] && row['eISSN'] !== 'N/A') ? row['eISSN'] : null,
+            category: row['Category'] || 'Unknown',
+            edition: row['Edition'] || null,
+            jifYear: year,
+            jifValue: parseNum(jifColName ? row[jifColName] : null),
+            jifQuartile: row['JIF Quartile'] || 'N/A',
+            jciValue: parseNum(jciColName ? row[jciColName] : null),
+            percentCitableOa: parseNum(row['% of Citable OA']),
+            source: 'JCR'
+        });
     }
 
-    console.log(`\nImported ${count} records for year ${jifYear}.`);
+    // 3. Batch Insert
+    console.log(`🚀 Bulk inserting ${dataToInsert.length} records...`);
+    const INSERT_BATCH_SIZE = 200; // Reduced from 1000
+    let successCount = 0;
+
+    for (let i = 0; i < dataToInsert.length; i += INSERT_BATCH_SIZE) {
+        const batch = dataToInsert.slice(i, i + INSERT_BATCH_SIZE);
+        await prisma.jcrJournalMetric.createMany({
+            data: batch
+        });
+        successCount += batch.length;
+        process.stdout.write(`\r✅ Inserted ${successCount}/${dataToInsert.length} records`);
+        // Add small delay to let connection pool breathe
+        await new Promise(resolve => setTimeout(resolve, 50));
+    }
+
+    console.log(`\n\n✅ Import complete for JCR ${year}!`);
+    console.log(`   Success: ${successCount} records`);
+    console.log(`   Errors: ${errorCount} records`);
+}
+
+async function main() {
+    const year = parseInt(process.argv[2] || '2022');
+    console.log(`\n🚀 Starting JCR ${year} import...\n`);
+
+    try {
+        await importJCR(year);
+    } catch (error) {
+        console.error('\n❌ Fatal error:', error);
+        process.exit(1);
+    }
 }
 
 main()
-    .catch(e => {
-        console.error(e);
-        process.exit(1);
-    })
-    .finally(async () => {
-        await prisma.$disconnect();
-    });
+    .catch(console.error)
+    .finally(() => prisma.$disconnect());
