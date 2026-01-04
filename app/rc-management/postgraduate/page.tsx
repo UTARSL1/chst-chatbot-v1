@@ -11,6 +11,7 @@ import { Upload, Users, Filter, SortAsc, SortDesc, X, Search, GraduationCap, Boo
 interface PostgradMember {
     id: string;
     name: string;
+    staffId?: string;
     totalStudents: number;
     inProgressCount: number;
     completedCount: number;
@@ -413,7 +414,14 @@ export default function RCPostgraduatePage() {
                                                 <GripVertical size={14} />
                                             </div>
 
-                                            <div className="flex-1 font-medium text-sm text-white truncate text-left">{member.name}</div>
+                                            <div className="flex-1 flex flex-col items-start gap-1">
+                                                <div className="font-medium text-sm text-white truncate">{member.name}</div>
+                                                {member.staffId && (
+                                                    <div className="px-1.5 py-0.5 rounded bg-slate-700/50 text-[9px] font-medium text-slate-300 border border-slate-600/30">
+                                                        {member.staffId}
+                                                    </div>
+                                                )}
+                                            </div>
 
                                             <div className="px-2 py-0.5 rounded-full bg-blue-950/50 text-[10px] font-medium text-blue-300 border border-blue-500/20 whitespace-nowrap">
                                                 {member.totalStudents} students
@@ -438,6 +446,18 @@ export default function RCPostgraduatePage() {
                                                     </div>
                                                 </div>
                                             </div>
+                                        </button>
+
+                                        {/* Delete Button */}
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDeleteMember(member.id, member.name);
+                                            }}
+                                            className="absolute top-2 right-2 p-1 rounded bg-red-900/80 hover:bg-red-900 text-red-100 opacity-0 group-hover:opacity-100 transition-all z-20"
+                                            title="Delete member"
+                                        >
+                                            <Trash2 className="w-3 h-3" />
                                         </button>
                                     </div>
                                 ))}

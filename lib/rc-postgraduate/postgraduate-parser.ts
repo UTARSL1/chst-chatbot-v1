@@ -171,7 +171,7 @@ export async function parsePostgraduateCSV(csvContent: string): Promise<ParsedPo
     }
 
     if (membersMap.size === 0) {
-        throw new Error('No valid supervision records found in CSV');
+        throw new Error('No valid staff members found in CSV. Please ensure Staff ID and Staff Name columns are present.');
     }
 
     // Process each member to calculate stats
