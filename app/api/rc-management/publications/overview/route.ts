@@ -14,8 +14,15 @@ export async function GET(request: NextRequest) {
             );
         }
 
-        // Get all publications with member info
+        // Get all publications with member info (Journal Only)
+        // User requested to include ONLY journal papers
         const publications = await prisma.publication.findMany({
+            where: {
+                OR: [
+                    { publicationType: { contains: 'Journal' } },
+                    { publicationType: { contains: 'journal' } }
+                ]
+            },
             include: {
                 member: {
                     select: {
@@ -41,7 +48,8 @@ export async function GET(request: NextRequest) {
         for (const pub of publications) {
             // Only count if member is 1st Author or Corresponding Author
             const role = pub.authorshipRole?.toUpperCase() || '';
-            if (role !== '1ST AUTHOR' && role !== 'CORRESPONDING AUTHOR') {
+            if (!role.includes('1ST AUTHOR') && !role.includes('FIRST AUTHOR') && !role.includes('CORRESPONDING')) {
+                // Relaxed check to match memberYearlyStats logic
                 continue;
             }
 
@@ -94,14 +102,10 @@ export async function GET(request: NextRequest) {
             }
         }
 
-        // Get active members count (members with at least 1 publication)
-        const activeMembers = await prisma.rCMember.count({
-            where: {
-                totalPublications: {
-                    gt: 0
-                }
-            }
-        });
+        // Calculate active members from the filtered publications
+        // This ensures we only count members who have contributed to JOURNAL publications
+        const activeMemberIds = new Set(publications.map(p => p.memberId));
+        const activeMembers = activeMemberIds.size;
 
         // Calculate Top Contributors by Year
         const memberYearlyStats = new Map<string, Map<string, {

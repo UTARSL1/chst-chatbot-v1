@@ -73,7 +73,7 @@ export default function RCOverview() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-lg">
                     <div className="flex items-center justify-between mb-2">
-                        <div className="text-sm text-gray-400">Total Publications</div>
+                        <div className="text-sm text-gray-400">Total Journal Publications</div>
                         <FileText className="w-5 h-5 text-blue-400" />
                     </div>
                     <div className="text-3xl font-bold text-white">{stats.totalPublications}</div>
@@ -82,7 +82,7 @@ export default function RCOverview() {
 
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-lg">
                     <div className="flex items-center justify-between mb-2">
-                        <div className="text-sm text-gray-400">Unique Papers</div>
+                        <div className="text-sm text-gray-400">Unique Journal Papers</div>
                         <TrendingUp className="w-5 h-5 text-emerald-400" />
                     </div>
                     <div className="text-3xl font-bold text-white">{stats.uniquePapers}</div>
@@ -155,11 +155,11 @@ export default function RCOverview() {
                 </div>
 
                 {/* Quartile Distribution (Donut Chart) */}
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-lg flex flex-col">
-                    <h3 className="text-lg font-semibold text-white mb-6">Quartile Distribution</h3>
-                    <div className="flex items-center justify-center gap-8 h-full min-h-[250px]">
-                        {/* Donut Chart */}
-                        <div className="relative w-56 h-56 shrink-0">
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-lg flex flex-col relative overflow-hidden">
+                    <h3 className="text-lg font-semibold text-white mb-6 relative z-10">Quartile Distribution</h3>
+                    <div className="flex-1 flex items-center justify-center relative z-10">
+                        <div className="relative w-64 h-64">
+                            {/* Donut Segments */}
                             <div
                                 className="w-full h-full rounded-full shadow-2xl"
                                 style={{
@@ -171,34 +171,48 @@ export default function RCOverview() {
                                     )`
                                 }}
                             ></div>
-                            {/* Inner Circle (Hole) - made thicker by increasing inset from 4 to 12 */}
-                            <div className="absolute inset-12 rounded-full bg-[#0f172a] flex items-center justify-center border border-white/5 shadow-inner">
+
+                            {/* Inner Circle (Hole) */}
+                            <div className="absolute inset-16 rounded-full bg-[#0f172a] flex items-center justify-center border border-white/5 shadow-inner">
                                 <div className="text-center">
                                     <div className="text-4xl font-bold text-white drop-shadow-md">{totalQuartile}</div>
                                     <div className="text-sm text-gray-400 uppercase tracking-widest font-semibold mt-1">Total</div>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* Legend */}
-                        <div className="flex flex-col gap-4">
+                            {/* Labels overlaid on chart */}
                             {[
-                                { label: 'Q1', count: stats.quartileCounts.q1, color: 'bg-emerald-500', text: 'text-emerald-400' },
-                                { label: 'Q2', count: stats.quartileCounts.q2, color: 'bg-blue-500', text: 'text-blue-400' },
-                                { label: 'Q3', count: stats.quartileCounts.q3, color: 'bg-amber-500', text: 'text-amber-400' },
-                                { label: 'Q4', count: stats.quartileCounts.q4, color: 'bg-rose-500', text: 'text-rose-400' }
-                            ].map(({ label, count, color, text }) => {
-                                const percentage = totalQuartile > 0 ? Math.round((count / totalQuartile) * 100) : 0;
+                                { label: 'Q1', count: stats.quartileCounts.q1, color: 'text-emerald-100' },
+                                { label: 'Q2', count: stats.quartileCounts.q2, color: 'text-blue-100' },
+                                { label: 'Q3', count: stats.quartileCounts.q3, color: 'text-amber-100' },
+                                { label: 'Q4', count: stats.quartileCounts.q4, color: 'text-rose-100' }
+                            ].reduce((acc, curr, idx) => {
+                                const percentage = totalQuartile > 0 ? (curr.count / totalQuartile) : 0;
+                                const prevEnd = idx === 0 ? 0 : acc[idx - 1].end;
+                                acc.push({ ...curr, start: prevEnd, end: prevEnd + percentage, percentage });
+                                return acc;
+                            }, [] as any[]).map((segment: any) => {
+                                if (segment.percentage < 0.03) return null; // Hide if tiny (<3%)
+
+                                const midPercent = (segment.start + segment.end) / 2;
+                                const angleInRad = (midPercent * 360 - 90) * (Math.PI / 180);
+                                const r = 88; // Place label in middle of ring
+
+                                const x = 50 + (r / 128) * 50 * Math.cos(angleInRad);
+                                const y = 50 + (r / 128) * 50 * Math.sin(angleInRad);
+
                                 return (
-                                    <div key={label} className="flex items-center gap-3">
-                                        <div className={`w-4 h-4 rounded-md shadow-lg shadow-black/50 ${color}`}></div>
-                                        <div className="flex flex-col">
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-sm font-bold text-gray-200">{label}</span>
-                                                <span className={`text-xs font-mono font-medium ${text} bg-white/5 px-1.5 rounded`}>{percentage}%</span>
-                                            </div>
-                                            <span className="text-xs text-gray-500 font-medium">{count} papers</span>
-                                        </div>
+                                    <div
+                                        key={segment.label}
+                                        className="absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center pointer-events-none drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]"
+                                        style={{ left: `${x}%`, top: `${y}%` }}
+                                    >
+                                        <span className={`text-base font-bold ${segment.color} leading-none mb-0.5`}>
+                                            {segment.label}
+                                        </span>
+                                        <span className="text-xs font-bold text-white bg-slate-900/40 px-1 rounded backdrop-blur-sm">
+                                            {Math.round(segment.percentage * 100)}%
+                                        </span>
                                     </div>
                                 );
                             })}
