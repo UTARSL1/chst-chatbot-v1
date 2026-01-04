@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import RCPostgraduateOverview from '@/components/rc/RCPostgraduateOverview';
 import { useState, useEffect, useMemo } from 'react';
 import { Upload, Users, Filter, SortAsc, SortDesc, X, Search, GraduationCap, BookOpen, UserCheck, Calendar, ArrowLeft, GripVertical, Trash2, ChevronDown } from 'lucide-react';
 
@@ -72,6 +73,7 @@ interface FilterState {
 }
 
 export default function RCPostgraduatePage() {
+    const [activeTab, setActiveTab] = useState<'members' | 'overview'>('members');
     const [members, setMembers] = useState<PostgradMember[]>([]);
     const [selectedMember, setSelectedMember] = useState<PostgradMember | null>(null);
     const [stats, setStats] = useState<PostgradStats | null>(null);
@@ -309,7 +311,33 @@ export default function RCPostgraduatePage() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Tab Navigation */}
+                <div className="flex items-center gap-6 border-b border-white/10 mb-6">
+                    <button
+                        onClick={() => setActiveTab('members')}
+                        className={`pb-3 text-sm font-medium transition-colors relative ${activeTab === 'members' ? 'text-purple-400' : 'text-gray-400 hover:text-white'}`}
+                    >
+                        Members
+                        {activeTab === 'members' && (
+                            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-400 rounded-t-full" />
+                        )}
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('overview')}
+                        className={`pb-3 text-sm font-medium transition-colors relative ${activeTab === 'overview' ? 'text-purple-400' : 'text-gray-400 hover:text-white'}`}
+                    >
+                        RC Overview
+                        {activeTab === 'overview' && (
+                            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-400 rounded-t-full" />
+                        )}
+                    </button>
+                </div>
+
+                {/* Overview Dashboard */}
+                {activeTab === 'overview' && <RCPostgraduateOverview />}
+
+                {/* Members Grid Structure - Hidden when not active */}
+                <div className={`grid grid-cols-1 lg:grid-cols-3 gap-6 ${activeTab !== 'members' ? 'hidden' : ''}`}>
                     {/* Left Panel - Members List */}
                     <div className="lg:col-span-1 space-y-4">
                         <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-4 shadow-[0_0_15px_rgba(255,255,255,0.07)]">
