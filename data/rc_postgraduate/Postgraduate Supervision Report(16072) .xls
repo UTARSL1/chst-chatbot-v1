@@ -1,0 +1,473 @@
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+      
+  
+
+
+
+
+                            
+<TABLE border="1">
+  <TR>
+		<TD class="text" bgcolor="#FFCCFF"><strong>No.</strong></TD>
+		<TD class="text" bgcolor="#99CC99"><strong>Staff ID</strong></TD>
+		<TD class="text" bgcolor="#99CC99"><strong>Staff Name</strong></TD>
+		<TD class="text" bgcolor="#99CC99"><strong>Faculty</strong></TD>
+		<TD class="text" bgcolor="#99CC99"><strong>Staff Category</strong></TD>
+		<TD class="text" bgcolor="#FFCC99"><strong>Supervision Status</strong></TD>
+		<TD class="text" bgcolor="#FFCC99"><strong>Area of Study</strong></TD>
+        <TD class="text" bgcolor="#FFCC99"><strong>Research Centre</strong></TD>
+        <TD class="text" bgcolor="#FFCC99"><strong>Name of Student</strong></TD>
+        <TD class="text" bgcolor="#FFCC99"><strong>Level</strong></TD>
+        <TD class="text" bgcolor="#FFCC99"><strong>Institution</strong></TD>
+		<TD class="text" bgcolor="#FFCC99"><strong>Program Title</strong></TD>
+		<TD class="text" bgcolor="#FFCC99"><strong>Start Date</strong></TD>
+		<TD class="text" bgcolor="#FFCC99"><strong>Completed Date</strong></TD>
+		<TD class="text" bgcolor="#FFCC99"><strong>Role</strong></TD>
+	</TR>
+   		 
+    		<tr> 
+            	<td align="center" valign="top">1</td>
+        		<td align="left" valign="top"> &#8203; 16072</td>
+        		<td align="left" valign="top">
+                    <div align="left">
+                        Hum Yan Chai
+                    </div>
+                </td>
+                <td align="left" valign="top">LKC FES</td>
+        		<td align="left" valign="top">Academic</td>
+                <td align="left" valign="top">COMPLETED</td>
+                <td align="left" valign="top">MEDICAL AND HEALTH SCIENCES</td>
+                <td align="left" valign="top">CHST</td>
+                <td align="left" valign="top">Nyee Wen Jet</td>
+
+                <td align="left" valign="top">MASTER</td>
+                <td align="left" valign="top">University Tunku Abdul Rahman</td>
+        		<td align="left" valign="top"></td>
+        		<td align="left" valign="top">7/2017</td>
+       			<td align="left" valign="top">7/2020</td>
+                <td align="left" valign="top">MAIN SUPERVISOR</td>
+             </tr>
+            
+    		<tr> 
+            	<td align="center" valign="top">2</td>
+        		<td align="left" valign="top"> &#8203; 16072</td>
+        		<td align="left" valign="top">
+                    <div align="left">
+                        Hum Yan Chai
+                    </div>
+                </td>
+                <td align="left" valign="top">LKC FES</td>
+        		<td align="left" valign="top">Academic</td>
+                <td align="left" valign="top">IN PROGRESS</td>
+                <td align="left" valign="top">ENGINEERING, GREEN TECHNOLOGY</td>
+                <td align="left" valign="top">CHST</td>
+                <td align="left" valign="top">Kelvin Ling Chia Hiik</td>
+
+                <td align="left" valign="top">PHD</td>
+                <td align="left" valign="top">Universiti Teknologi Malaysia</td>
+        		<td align="left" valign="top">PhD in Biomedical Engineering</td>
+        		<td align="left" valign="top">10/2018</td>
+       			<td align="left" valign="top">10/2021</td>
+                <td align="left" valign="top">CO-SUPERVISOR</td>
+             </tr>
+            
+    		<tr> 
+            	<td align="center" valign="top">3</td>
+        		<td align="left" valign="top"> &#8203; 16072</td>
+        		<td align="left" valign="top">
+                    <div align="left">
+                        Hum Yan Chai
+                    </div>
+                </td>
+                <td align="left" valign="top">LKC FES</td>
+        		<td align="left" valign="top">Academic</td>
+                <td align="left" valign="top">COMPLETED</td>
+                <td align="left" valign="top">ENGINEERING, GREEN TECHNOLOGY</td>
+                <td align="left" valign="top">CHST</td>
+                <td align="left" valign="top">Joyce Sia Sin Yin</td>
+
+                <td align="left" valign="top">PHD</td>
+                <td align="left" valign="top">Universiti Teknologi Malaysia</td>
+        		<td align="left" valign="top">PhD in Biomedical Engineering</td>
+        		<td align="left" valign="top">10/2018</td>
+       			<td align="left" valign="top">1/2023</td>
+                <td align="left" valign="top">CO-SUPERVISOR</td>
+             </tr>
+            
+    		<tr> 
+            	<td align="center" valign="top">4</td>
+        		<td align="left" valign="top"> &#8203; 16072</td>
+        		<td align="left" valign="top">
+                    <div align="left">
+                        Hum Yan Chai
+                    </div>
+                </td>
+                <td align="left" valign="top">LKC FES</td>
+        		<td align="left" valign="top">Academic</td>
+                <td align="left" valign="top">COMPLETED</td>
+                <td align="left" valign="top">INFORMATION AND COMMUNICATION TECHNOLOGY</td>
+                <td align="left" valign="top">CHST</td>
+                <td align="left" valign="top">ABDULRAHMAN HUSSEIN ABDULLAH AL-HAMED</td>
+
+                <td align="left" valign="top">MASTER</td>
+                <td align="left" valign="top">University Tunku Abdul Rahman</td>
+        		<td align="left" valign="top"></td>
+        		<td align="left" valign="top">6/2020</td>
+       			<td align="left" valign="top">2/2024</td>
+                <td align="left" valign="top">CO-SUPERVISOR</td>
+             </tr>
+            
+    		<tr> 
+            	<td align="center" valign="top">5</td>
+        		<td align="left" valign="top"> &#8203; 16072</td>
+        		<td align="left" valign="top">
+                    <div align="left">
+                        Hum Yan Chai
+                    </div>
+                </td>
+                <td align="left" valign="top">LKC FES</td>
+        		<td align="left" valign="top">Academic</td>
+                <td align="left" valign="top">IN PROGRESS</td>
+                <td align="left" valign="top">ENGINEERING, GREEN TECHNOLOGY</td>
+                <td align="left" valign="top">CHST</td>
+                <td align="left" valign="top">Sami Abdulmuneem Ahmed Al-Sharabi</td>
+
+                <td align="left" valign="top">MASTER</td>
+                <td align="left" valign="top">Universiti Tunku Abdul Rahman</td>
+        		<td align="left" valign="top"></td>
+        		<td align="left" valign="top">2/2021</td>
+       			<td align="left" valign="top">3/2022</td>
+                <td align="left" valign="top">MAIN SUPERVISOR</td>
+             </tr>
+            
+    		<tr> 
+            	<td align="center" valign="top">6</td>
+        		<td align="left" valign="top"> &#8203; 16072</td>
+        		<td align="left" valign="top">
+                    <div align="left">
+                        Hum Yan Chai
+                    </div>
+                </td>
+                <td align="left" valign="top">LKC FES</td>
+        		<td align="left" valign="top">Academic</td>
+                <td align="left" valign="top">COMPLETED</td>
+                <td align="left" valign="top">ENGINEERING, GREEN TECHNOLOGY</td>
+                <td align="left" valign="top">CHST</td>
+                <td align="left" valign="top">Haw Yu Hong</td>
+
+                <td align="left" valign="top">MASTER</td>
+                <td align="left" valign="top">Universiti Malaya</td>
+        		<td align="left" valign="top">MASTER BY RESEARCH (ENGINEERING AND ENGINEERING TRADES)</td>
+        		<td align="left" valign="top">1/2022</td>
+       			<td align="left" valign="top">1/2025</td>
+                <td align="left" valign="top">CO-SUPERVISOR</td>
+             </tr>
+            
+    		<tr> 
+            	<td align="center" valign="top">7</td>
+        		<td align="left" valign="top"> &#8203; 16072</td>
+        		<td align="left" valign="top">
+                    <div align="left">
+                        Hum Yan Chai
+                    </div>
+                </td>
+                <td align="left" valign="top">LKC FES</td>
+        		<td align="left" valign="top">Academic</td>
+                <td align="left" valign="top">IN PROGRESS</td>
+                <td align="left" valign="top">ENGINEERING, GREEN TECHNOLOGY</td>
+                <td align="left" valign="top">CHST</td>
+                <td align="left" valign="top">Ke Qi</td>
+
+                <td align="left" valign="top">PHD</td>
+                <td align="left" valign="top">University Tunku Abdul Rahman</td>
+        		<td align="left" valign="top"></td>
+        		<td align="left" valign="top">5/2022</td>
+       			<td align="left" valign="top">5/2025</td>
+                <td align="left" valign="top">CO-SUPERVISOR</td>
+             </tr>
+            
+    		<tr> 
+            	<td align="center" valign="top">8</td>
+        		<td align="left" valign="top"> &#8203; 16072</td>
+        		<td align="left" valign="top">
+                    <div align="left">
+                        Hum Yan Chai
+                    </div>
+                </td>
+                <td align="left" valign="top">LKC FES</td>
+        		<td align="left" valign="top">Academic</td>
+                <td align="left" valign="top">IN PROGRESS</td>
+                <td align="left" valign="top">ENGINEERING, GREEN TECHNOLOGY</td>
+                <td align="left" valign="top">CHST</td>
+                <td align="left" valign="top">Choong Ren Jun</td>
+
+                <td align="left" valign="top">PHD</td>
+                <td align="left" valign="top">University Tunku Abdul Rahman</td>
+        		<td align="left" valign="top"></td>
+        		<td align="left" valign="top">5/2022</td>
+       			<td align="left" valign="top">5/2025</td>
+                <td align="left" valign="top">CO-SUPERVISOR</td>
+             </tr>
+            
+    		<tr> 
+            	<td align="center" valign="top">9</td>
+        		<td align="left" valign="top"> &#8203; 16072</td>
+        		<td align="left" valign="top">
+                    <div align="left">
+                        Hum Yan Chai
+                    </div>
+                </td>
+                <td align="left" valign="top">LKC FES</td>
+        		<td align="left" valign="top">Academic</td>
+                <td align="left" valign="top">IN PROGRESS</td>
+                <td align="left" valign="top">ENGINEERING, GREEN TECHNOLOGY</td>
+                <td align="left" valign="top">CHST</td>
+                <td align="left" valign="top">ALHAYEK RAMI</td>
+
+                <td align="left" valign="top">PHD</td>
+                <td align="left" valign="top">University Tunku Abdul Rahman</td>
+        		<td align="left" valign="top"></td>
+        		<td align="left" valign="top">5/2022</td>
+       			<td align="left" valign="top">5/2025</td>
+                <td align="left" valign="top">CO-SUPERVISOR</td>
+             </tr>
+            
+    		<tr> 
+            	<td align="center" valign="top">10</td>
+        		<td align="left" valign="top"> &#8203; 16072</td>
+        		<td align="left" valign="top">
+                    <div align="left">
+                        Hum Yan Chai
+                    </div>
+                </td>
+                <td align="left" valign="top">LKC FES</td>
+        		<td align="left" valign="top">Academic</td>
+                <td align="left" valign="top">COMPLETED</td>
+                <td align="left" valign="top">ENGINEERING, GREEN TECHNOLOGY</td>
+                <td align="left" valign="top">CHST</td>
+                <td align="left" valign="top">Wingates Voon</td>
+
+                <td align="left" valign="top">PHD</td>
+                <td align="left" valign="top">University Tunku Abdul Rahman</td>
+        		<td align="left" valign="top"></td>
+        		<td align="left" valign="top">9/2022</td>
+       			<td align="left" valign="top">9/2025</td>
+                <td align="left" valign="top">MAIN SUPERVISOR</td>
+             </tr>
+            
+    		<tr> 
+            	<td align="center" valign="top">11</td>
+        		<td align="left" valign="top"> &#8203; 16072</td>
+        		<td align="left" valign="top">
+                    <div align="left">
+                        Hum Yan Chai
+                    </div>
+                </td>
+                <td align="left" valign="top">LKC FES</td>
+        		<td align="left" valign="top">Academic</td>
+                <td align="left" valign="top">IN PROGRESS</td>
+                <td align="left" valign="top">INFORMATION AND COMMUNICATION TECHNOLOGY</td>
+                <td align="left" valign="top">CHST</td>
+                <td align="left" valign="top">Kwong Jun Kit</td>
+
+                <td align="left" valign="top">MASTER</td>
+                <td align="left" valign="top">University Tunku Abdul Rahman</td>
+        		<td align="left" valign="top"></td>
+        		<td align="left" valign="top">9/2022</td>
+       			<td align="left" valign="top">9/2026</td>
+                <td align="left" valign="top">MAIN SUPERVISOR</td>
+             </tr>
+            
+    		<tr> 
+            	<td align="center" valign="top">12</td>
+        		<td align="left" valign="top"> &#8203; 16072</td>
+        		<td align="left" valign="top">
+                    <div align="left">
+                        Hum Yan Chai
+                    </div>
+                </td>
+                <td align="left" valign="top">LKC FES</td>
+        		<td align="left" valign="top">Academic</td>
+                <td align="left" valign="top">IN PROGRESS</td>
+                <td align="left" valign="top">ENGINEERING, GREEN TECHNOLOGY</td>
+                <td align="left" valign="top">CHST</td>
+                <td align="left" valign="top">Tan Jing Jie</td>
+
+                <td align="left" valign="top">PHD</td>
+                <td align="left" valign="top">University Tunku Abdul Rahman</td>
+        		<td align="left" valign="top"></td>
+        		<td align="left" valign="top">10/2022</td>
+       			<td align="left" valign="top">10/2025</td>
+                <td align="left" valign="top">CO-SUPERVISOR</td>
+             </tr>
+            
+    		<tr> 
+            	<td align="center" valign="top">13</td>
+        		<td align="left" valign="top"> &#8203; 16072</td>
+        		<td align="left" valign="top">
+                    <div align="left">
+                        Hum Yan Chai
+                    </div>
+                </td>
+                <td align="left" valign="top">LKC FES</td>
+        		<td align="left" valign="top">Academic</td>
+                <td align="left" valign="top">IN PROGRESS</td>
+                <td align="left" valign="top">ENGINEERING, GREEN TECHNOLOGY</td>
+                <td align="left" valign="top">CHST</td>
+                <td align="left" valign="top">Ke, Qi</td>
+
+                <td align="left" valign="top">PHD</td>
+                <td align="left" valign="top">Universiti Tunku Abdul Rahman</td>
+        		<td align="left" valign="top"></td>
+        		<td align="left" valign="top">10/2022</td>
+       			<td align="left" valign="top">10/2025</td>
+                <td align="left" valign="top">CO-SUPERVISOR</td>
+             </tr>
+            
+    		<tr> 
+            	<td align="center" valign="top">14</td>
+        		<td align="left" valign="top"> &#8203; 16072</td>
+        		<td align="left" valign="top">
+                    <div align="left">
+                        Hum Yan Chai
+                    </div>
+                </td>
+                <td align="left" valign="top">LKC FES</td>
+        		<td align="left" valign="top">Academic</td>
+                <td align="left" valign="top">COMPLETED</td>
+                <td align="left" valign="top">ENGINEERING, GREEN TECHNOLOGY</td>
+                <td align="left" valign="top">CHST</td>
+                <td align="left" valign="top">Ma Kun</td>
+
+                <td align="left" valign="top">PHD</td>
+                <td align="left" valign="top">Universiti Teknologi Malaysia</td>
+        		<td align="left" valign="top">Doctor of Philosophy (UTM)</td>
+        		<td align="left" valign="top">11/2022</td>
+       			<td align="left" valign="top">11/2025</td>
+                <td align="left" valign="top">CO-SUPERVISOR</td>
+             </tr>
+            
+    		<tr> 
+            	<td align="center" valign="top">15</td>
+        		<td align="left" valign="top"> &#8203; 16072</td>
+        		<td align="left" valign="top">
+                    <div align="left">
+                        Hum Yan Chai
+                    </div>
+                </td>
+                <td align="left" valign="top">LKC FES</td>
+        		<td align="left" valign="top">Academic</td>
+                <td align="left" valign="top">IN PROGRESS</td>
+                <td align="left" valign="top">ENGINEERING, GREEN TECHNOLOGY</td>
+                <td align="left" valign="top">CHST</td>
+                <td align="left" valign="top">He Jie</td>
+
+                <td align="left" valign="top">PHD</td>
+                <td align="left" valign="top">University Tunku Abdul Rahman</td>
+        		<td align="left" valign="top"></td>
+        		<td align="left" valign="top">5/2023</td>
+       			<td align="left" valign="top">5/2026</td>
+                <td align="left" valign="top">MAIN SUPERVISOR</td>
+             </tr>
+            
+    		<tr> 
+            	<td align="center" valign="top">16</td>
+        		<td align="left" valign="top"> &#8203; 16072</td>
+        		<td align="left" valign="top">
+                    <div align="left">
+                        Hum Yan Chai
+                    </div>
+                </td>
+                <td align="left" valign="top">LKC FES</td>
+        		<td align="left" valign="top">Academic</td>
+                <td align="left" valign="top">IN PROGRESS</td>
+                <td align="left" valign="top">ENGINEERING, GREEN TECHNOLOGY</td>
+                <td align="left" valign="top">CHST</td>
+                <td align="left" valign="top">Sadeem Nabeel Saleem Kbah</td>
+
+                <td align="left" valign="top">PHD</td>
+                <td align="left" valign="top">Universiti Teknologi Malaysia</td>
+        		<td align="left" valign="top"></td>
+        		<td align="left" valign="top">5/2024</td>
+       			<td align="left" valign="top">5/2028</td>
+                <td align="left" valign="top">CO-SUPERVISOR</td>
+             </tr>
+            
+    		<tr> 
+            	<td align="center" valign="top">17</td>
+        		<td align="left" valign="top"> &#8203; 16072</td>
+        		<td align="left" valign="top">
+                    <div align="left">
+                        Hum Yan Chai
+                    </div>
+                </td>
+                <td align="left" valign="top">LKC FES</td>
+        		<td align="left" valign="top">Academic</td>
+                <td align="left" valign="top">IN PROGRESS</td>
+                <td align="left" valign="top">ENGINEERING, GREEN TECHNOLOGY</td>
+                <td align="left" valign="top">CHST</td>
+                <td align="left" valign="top">Fan WenFrng</td>
+
+                <td align="left" valign="top">PHD</td>
+                <td align="left" valign="top">University Tunku Abdul Rahman</td>
+        		<td align="left" valign="top"></td>
+        		<td align="left" valign="top">7/2025</td>
+       			<td align="left" valign="top">7/2028</td>
+                <td align="left" valign="top">MAIN SUPERVISOR</td>
+             </tr>
+                
+        </table>
+
+<!-- End Content -->								
+

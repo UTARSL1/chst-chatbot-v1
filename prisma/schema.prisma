@@ -437,6 +437,62 @@ model Publication {
   @@map("publications")
 }
 
+// RC Postgraduate Member model
+model RCPostgraduateMember {
+  id                    String                    @id @default(uuid())
+  name                  String
+  staffId               String?
+  faculty               String?
+  totalStudents         Int                       @default(0)
+  inProgressCount       Int                       @default(0)
+  completedCount        Int                       @default(0)
+  phdCount              Int                       @default(0)
+  masterCount           Int                       @default(0)
+  mainSupervisorCount   Int                       @default(0)
+  coSupervisorCount     Int                       @default(0)
+  createdAt             DateTime                  @default(now())
+  updatedAt             DateTime                  @updatedAt
+  
+  // Relations
+  supervisions          PostgraduateSupervision[]
+  
+  @@index([name])
+  @@map("rc_postgraduate_members")
+}
+
+// Postgraduate Supervision model
+model PostgraduateSupervision {
+  id              String                 @id @default(uuid())
+  memberId        String
+  staffId         String?
+  staffName       String
+  faculty         String?
+  staffCategory   String?                // Academic, etc.
+  status          String                 // IN PROGRESS, COMPLETED
+  areaOfStudy     String?
+  researchCentre  String?
+  studentName     String
+  level           String                 // PHD, MASTER
+  institution     String?
+  programTitle    String?                @db.Text
+  startDate       String?                // Jul-17, Oct-18, etc.
+  completedDate   String?                // Jul-20, Jan-23, etc.
+  startYear       Int?                   // Extracted from startDate
+  completedYear   Int?                   // Extracted from completedDate
+  role            String                 // MAIN SUPERVISOR, CO-SUPERVISOR
+  createdAt       DateTime               @default(now())
+  
+  // Relations
+  member          RCPostgraduateMember   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  
+  @@index([memberId])
+  @@index([status])
+  @@index([level])
+  @@index([role])
+  @@index([startYear])
+  @@map("postgraduate_supervisions")
+}
+
 // Working Group model
 model WorkingGroup {
   id          String              @id @default(uuid())
