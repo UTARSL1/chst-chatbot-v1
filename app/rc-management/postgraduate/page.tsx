@@ -430,11 +430,11 @@ export default function RCPostgraduatePage() {
                                             {/* Mini Stacked Bar */}
                                             <div className="flex flex-col gap-1 w-24 opacity-90">
                                                 <div className="h-3.5 w-full bg-slate-800 rounded-full overflow-hidden flex text-[9px] font-bold leading-none text-white/90 shadow-sm">
-                                                    <div style={{ width: member.totalStudents > 0 ? `${(member.phdCount / member.totalStudents) * 100}%` : '50%' }} className="bg-purple-600 h-full flex items-center justify-center">
-                                                        {member.phdCount}
-                                                    </div>
                                                     <div style={{ width: member.totalStudents > 0 ? `${(member.masterCount / member.totalStudents) * 100}%` : '50%' }} className="bg-orange-500 h-full flex items-center justify-center">
                                                         {member.masterCount}
+                                                    </div>
+                                                    <div style={{ width: member.totalStudents > 0 ? `${(member.phdCount / member.totalStudents) * 100}%` : '50%' }} className="bg-purple-600 h-full flex items-center justify-center">
+                                                        {member.phdCount}
                                                     </div>
                                                 </div>
                                                 <div className="h-3.5 w-full bg-slate-800 rounded-full overflow-hidden flex text-[9px] font-bold leading-none text-white/90 shadow-sm">
