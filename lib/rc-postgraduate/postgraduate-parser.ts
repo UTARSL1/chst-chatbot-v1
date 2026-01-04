@@ -105,6 +105,17 @@ export async function parsePostgraduateCSV(csvContent: string): Promise<ParsedPo
         return -1;
     };
 
+    // Check if this looks like a Publication file instead of Supervision file
+    const isPublicationFile = header.some(h =>
+        h.toLowerCase().includes('title of publication') ||
+        h.toLowerCase().includes('wos') ||
+        h.toLowerCase().includes('scopus')
+    );
+
+    if (isPublicationFile) {
+        throw new Error('This appears to be a Publication file. Please upload a Postgraduate Supervision CSV file containing "Name of Student", "Level", and "Supervision Status".');
+    }
+
     // Check required columns exist
     const requiredColumns = [
         'Staff ID', 'Staff Name', 'Supervision Status',

@@ -97,17 +97,19 @@ export async function GET(request: NextRequest) {
             count: number;
         }>>();
 
-        // Chart Data (Students by Year)
-        const chartDataMap = new Map<string, number>();
+        // Chart Data (Students by Year with Level breakdown)
+        const chartDataMap = new Map<string, { phd: number; master: number; count: number }>();
         const yearsOrder = [
-            anchorYear.toString(),
-            (anchorYear - 1).toString(),
-            (anchorYear - 2).toString(),
-            (anchorYear - 3).toString(),
-            (anchorYear - 4).toString(),
-            accumulatedLabel
+            accumulatedLabel,
+            startYear.toString(),
+            (startYear + 1).toString(),
+            (startYear + 2).toString(),
+            (startYear + 3).toString(),
+            (startYear + 4).toString()
         ];
-        yearsOrder.forEach(y => chartDataMap.set(y, 0));
+
+        // Initialize map
+        yearsOrder.forEach(y => chartDataMap.set(y, { phd: 0, master: 0, count: 0 }));
 
         // Process Unique Students for Year Stats
         for (const stud of uniqueStudents) {
@@ -122,7 +124,19 @@ export async function GET(request: NextRequest) {
             }
 
             // Chart Data
-            chartDataMap.set(yearKey, (chartDataMap.get(yearKey) || 0) + 1);
+            if (!chartDataMap.has(yearKey)) {
+                // Should be initialized, but safety check
+                chartDataMap.set(yearKey, { phd: 0, master: 0, count: 0 });
+            }
+            const data = chartDataMap.get(yearKey)!;
+            data.count++;
+
+            const lvl = stud.level.toLowerCase();
+            if (lvl.includes('phd') || lvl.includes('doctor')) {
+                data.phd++;
+            } else if (lvl.includes('master')) {
+                data.master++;
+            }
 
             // Member Leaderboard
             if (!memberYearlyStats.has(yearKey)) {
@@ -141,7 +155,13 @@ export async function GET(request: NextRequest) {
         }
 
         // Format Top Members Response
-        const topMembersByYear = yearsOrder.map(yearKey => {
+        const topMembersByYear = yearsOrder.slice().reverse().map(yearKey => { // Display reverse for logic order? No, user wants chronological maybe? Publications showed recent first?
+            // Wait, previous logic was: accumulated, 2021, 2022, 2023, 2024, 2025.
+            // Leaderboard usually shows recent first? Or same order.
+            // Let's stick to the yearsOrder for consistency in variable names, but the UI might map it.
+            // Previous code used 'yearsOrder' for chart data map init, but mapped manually for response.
+            // Let's use yearsOrder for both.
+
             const yearStats = memberYearlyStats.get(yearKey);
             if (!yearStats) return { year: yearKey, members: [] };
 
@@ -156,14 +176,11 @@ export async function GET(request: NextRequest) {
         });
 
         // Format Chart Response
-        const studentsByYear = [
-            { year: accumulatedLabel, count: chartDataMap.get(accumulatedLabel) || 0, isAccumulated: true },
-            { year: startYear, count: chartDataMap.get(startYear.toString()) || 0, isAccumulated: false },
-            { year: startYear + 1, count: chartDataMap.get((startYear + 1).toString()) || 0, isAccumulated: false },
-            { year: startYear + 2, count: chartDataMap.get((startYear + 2).toString()) || 0, isAccumulated: false },
-            { year: startYear + 3, count: chartDataMap.get((startYear + 3).toString()) || 0, isAccumulated: false },
-            { year: startYear + 4, count: chartDataMap.get((startYear + 4).toString()) || 0, isAccumulated: false },
-        ];
+        const studentsByYear = yearsOrder.map(yearKey => ({
+            year: yearKey,
+            ...chartDataMap.get(yearKey)!,
+            isAccumulated: yearKey === accumulatedLabel
+        }));
 
         return NextResponse.json({
             success: true,

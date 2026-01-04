@@ -12,7 +12,13 @@ interface PGOverviewStats {
         master: number;
         other: number;
     };
-    studentsByYear: Array<{ year: string | number; count: number; isAccumulated?: boolean }>;
+    studentsByYear: Array<{
+        year: string | number;
+        count: number;
+        phd: number;
+        master: number;
+        isAccumulated?: boolean
+    }>;
     topMembersByYear: Array<{
         year: string | number;
         members: Array<{
@@ -108,10 +114,23 @@ export default function RCPostgraduateOverview() {
 
             {/* Charts Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Students by Year (Vertical Bars) */}
+                {/* Students by Year (Vertical Stacked Bars) */}
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-lg flex flex-col">
                     <h3 className="text-lg font-semibold text-white mb-6">Students by Intake Year</h3>
-                    <div className="flex-1 flex items-end justify-between gap-4 h-64 border-b border-white/10 pb-2 relative mt-4">
+
+                    {/* Legend */}
+                    <div className="flex items-center justify-end gap-4 mb-2 text-xs">
+                        <div className="flex items-center gap-1.5">
+                            <div className="w-3 h-3 rounded bg-purple-500"></div>
+                            <span className="text-gray-300">PhD</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                            <div className="w-3 h-3 rounded bg-orange-500"></div>
+                            <span className="text-gray-300">Master</span>
+                        </div>
+                    </div>
+
+                    <div className="flex-1 flex items-end justify-between gap-4 h-64 border-b border-white/10 pb-2 relative mt-2">
                         {/* Grid lines */}
                         <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
                             {[0, 0.25, 0.5, 0.75, 1].map((tick) => (
@@ -119,27 +138,46 @@ export default function RCPostgraduateOverview() {
                             ))}
                         </div>
 
-                        {stats.studentsByYear.map(({ year, count, isAccumulated }) => {
+                        {stats.studentsByYear.map(({ year, count, phd, master, isAccumulated }) => {
                             const maxCount = Math.max(...stats.studentsByYear.map(y => y.count), 1) * 1.15;
                             const percentage = Math.max((count / maxCount) * 100, 2);
+                            const phdPercent = count > 0 ? (phd / count) * 100 : 0;
+                            const masterPercent = count > 0 ? (master / count) * 100 : 0;
 
                             return (
                                 <div key={year} className="flex-1 flex flex-col items-center group relative z-10 h-full justify-end">
-                                    <div className="mb-2 text-sm font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 px-2 py-0.5 rounded border border-white/10 absolute" style={{ bottom: `${percentage}%` }}>
-                                        {count}
+                                    {/* Tooltip */}
+                                    <div className="mb-2 text-sm font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 px-2 py-0.5 rounded border border-white/10 absolute z-20 whitespace-nowrap" style={{ bottom: `${percentage}%` }}>
+                                        Draft: {count} (PhD: {phd}, Master: {master})
                                     </div>
+
+                                    {/* Stacked Bar Container */}
                                     <div
-                                        className={`w-full max-w-[40px] rounded-t-sm relative transition-all duration-500
-                                            ${isAccumulated
-                                                ? 'bg-gradient-to-t from-gray-600 to-gray-400 hover:from-gray-500 hover:to-gray-300 shadow-[0_0_15px_rgba(156,163,175,0.3)]'
-                                                : 'bg-gradient-to-t from-purple-600 to-fuchsia-400 hover:from-purple-500 hover:to-fuchsia-300 shadow-[0_0_15px_rgba(192,132,252,0.3)]'
-                                            }
+                                        className={`w-full max-w-[40px] rounded-t-sm relative transition-all duration-500 flex flex-col justify-end overflow-hidden
+                                            ${percentage === 2 ? 'bg-white/5' : ''}
                                         `}
                                         style={{ height: `${percentage}%` }}
                                     >
-                                        <div className={`absolute -top-6 left-1/2 -translate-x-1/2 text-sm font-bold ${isAccumulated ? 'text-gray-300' : 'text-purple-200'}`}>
+                                        {/* Total Label Top */}
+                                        <div className={`absolute -top-6 left-1/2 -translate-x-1/2 text-sm font-bold ${isAccumulated ? 'text-gray-300' : 'text-blue-200'}`}>
                                             {count}
                                         </div>
+
+                                        {/* PhD Segment (Top) */}
+                                        {phd > 0 && (
+                                            <div
+                                                style={{ height: `${phdPercent}%` }}
+                                                className={`w-full bg-purple-600 hover:bg-purple-500 transition-colors relative group/segment`}
+                                            ></div>
+                                        )}
+
+                                        {/* Master Segment (Bottom) */}
+                                        {master > 0 && (
+                                            <div
+                                                style={{ height: `${masterPercent}%` }}
+                                                className={`w-full bg-orange-500 hover:bg-orange-400 transition-colors relative group/segment`}
+                                            ></div>
+                                        )}
                                     </div>
                                     <div className="mt-3 text-xs md:text-sm text-gray-400 font-medium text-center h-8 flex items-start justify-center">
                                         {year}
