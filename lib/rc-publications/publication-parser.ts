@@ -104,7 +104,15 @@ export async function parsePublicationCSV(fileContent: string): Promise<ParsedCS
 
         // Extract staff name and ID from first row
         const staffName = typedRecords[0]['Staff Name'] || 'Unknown';
-        const staffId = typedRecords[0]['Staff ID'] || typedRecords[0]['Staff Id'] || undefined;
+        // Try multiple possible column names for Staff ID
+        const staffId = typedRecords[0]['Staff ID']
+            || typedRecords[0]['Staff Id']
+            || typedRecords[0]['Staff No']
+            || typedRecords[0]['Staff No.']
+            || typedRecords[0]['ID']
+            || typedRecords[0]['No']
+            || typedRecords[0]['No.']
+            || undefined;
 
         // Parse publications
         const publications: ParsedPublication[] = [];
