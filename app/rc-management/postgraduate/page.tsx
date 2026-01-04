@@ -430,19 +430,19 @@ export default function RCPostgraduatePage() {
                                             {/* Mini Stacked Bar */}
                                             <div className="flex flex-col gap-1 w-24 opacity-90">
                                                 <div className="h-3.5 w-full bg-slate-800 rounded-full overflow-hidden flex text-[9px] font-bold leading-none text-white/90 shadow-sm">
-                                                    <div style={{ width: `${(member.phdCount / member.totalStudents) * 100}%` }} className="bg-purple-600 h-full flex items-center justify-center">
-                                                        {member.phdCount > 0 && member.phdCount}
+                                                    <div style={{ width: member.totalStudents > 0 ? `${(member.phdCount / member.totalStudents) * 100}%` : '50%' }} className="bg-purple-600 h-full flex items-center justify-center">
+                                                        {member.phdCount}
                                                     </div>
-                                                    <div style={{ width: `${(member.masterCount / member.totalStudents) * 100}%` }} className="bg-orange-500 h-full flex items-center justify-center">
-                                                        {member.masterCount > 0 && member.masterCount}
+                                                    <div style={{ width: member.totalStudents > 0 ? `${(member.masterCount / member.totalStudents) * 100}%` : '50%' }} className="bg-orange-500 h-full flex items-center justify-center">
+                                                        {member.masterCount}
                                                     </div>
                                                 </div>
                                                 <div className="h-3.5 w-full bg-slate-800 rounded-full overflow-hidden flex text-[9px] font-bold leading-none text-white/90 shadow-sm">
-                                                    <div style={{ width: `${(member.inProgressCount / member.totalStudents) * 100}%` }} className="bg-sky-600 h-full flex items-center justify-center">
-                                                        {member.inProgressCount > 0 && member.inProgressCount}
+                                                    <div style={{ width: member.totalStudents > 0 ? `${(member.inProgressCount / member.totalStudents) * 100}%` : '50%' }} className="bg-sky-600 h-full flex items-center justify-center">
+                                                        {member.inProgressCount}
                                                     </div>
-                                                    <div style={{ width: `${(member.completedCount / member.totalStudents) * 100}%` }} className="bg-emerald-600 h-full flex items-center justify-center">
-                                                        {member.completedCount > 0 && member.completedCount}
+                                                    <div style={{ width: member.totalStudents > 0 ? `${(member.completedCount / member.totalStudents) * 100}%` : '50%' }} className="bg-emerald-600 h-full flex items-center justify-center">
+                                                        {member.completedCount}
                                                     </div>
                                                 </div>
                                             </div>
