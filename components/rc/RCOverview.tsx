@@ -13,7 +13,7 @@ interface OverviewStats {
         q3: number;
         q4: number;
     };
-    publicationsByYear: Array<{ year: number; count: number }>;
+    publicationsByYear: Array<{ year: string | number; count: number; isAccumulated?: boolean }>;
     topMembersByYear: Array<{
         year: number;
         members: Array<{
@@ -113,7 +113,8 @@ export default function RCOverview() {
                 {/* Publications by Year (Vertical Bars) */}
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-lg flex flex-col">
                     <h3 className="text-lg font-semibold text-white mb-6">Publications by Year</h3>
-                    <div className="flex-1 flex items-end justify-between gap-4 min-h-[200px] border-b border-white/10 pb-2 relative">
+                    {/* Added fixed height h-64 to container to ensure percentage heights work */}
+                    <div className="flex-1 flex items-end justify-between gap-4 h-64 border-b border-white/10 pb-2 relative mt-4">
                         {/* Grid lines */}
                         <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
                             {[0, 0.25, 0.5, 0.75, 1].map((tick) => (
@@ -121,24 +122,32 @@ export default function RCOverview() {
                             ))}
                         </div>
 
-                        {stats.publicationsByYear.slice(-5).map(({ year, count }) => {
-                            const maxCount = Math.max(...stats.publicationsByYear.map(y => y.count)) * 1.1; // Add 10% buffering
-                            const percentage = (count / maxCount) * 100;
+                        {stats.publicationsByYear.map(({ year, count, isAccumulated }) => {
+                            // Find max count for scaling (ensure we have at least 1 to avoid /0)
+                            const maxCount = Math.max(...stats.publicationsByYear.map(y => y.count), 1) * 1.15;
+                            const percentage = Math.max((count / maxCount) * 100, 2); // Ensure at least 2% height so bar is visible
 
                             return (
-                                <div key={year} className="flex-1 flex flex-col items-center group relative z-10">
-                                    <div className="mb-2 text-sm font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 px-2 py-0.5 rounded border border-white/10 absolute -top-8">
+                                <div key={year} className="flex-1 flex flex-col items-center group relative z-10 h-full justify-end">
+                                    <div className="mb-2 text-sm font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 px-2 py-0.5 rounded border border-white/10 absolute" style={{ bottom: `${percentage}%` }}>
                                         {count}
                                     </div>
                                     <div
-                                        className="w-full max-w-[40px] rounded-t-sm bg-gradient-to-t from-blue-600 to-cyan-400 relative hover:from-blue-500 hover:to-cyan-300 transition-all duration-300 shadow-[0_0_15px_rgba(56,189,248,0.3)]"
+                                        className={`w-full max-w-[40px] rounded-t-sm relative transition-all duration-500
+                                            ${isAccumulated
+                                                ? 'bg-gradient-to-t from-amber-600 to-orange-400 hover:from-amber-500 hover:to-orange-300 shadow-[0_0_15px_rgba(251,146,60,0.3)]'
+                                                : 'bg-gradient-to-t from-blue-600 to-cyan-400 hover:from-blue-500 hover:to-cyan-300 shadow-[0_0_15px_rgba(56,189,248,0.3)]'
+                                            }
+                                        `}
                                         style={{ height: `${percentage}%` }}
                                     >
-                                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-sm font-bold text-cyan-100">
+                                        <div className={`absolute -top-6 left-1/2 -translate-x-1/2 text-sm font-bold ${isAccumulated ? 'text-orange-200' : 'text-cyan-100'}`}>
                                             {count}
                                         </div>
                                     </div>
-                                    <div className="mt-3 text-sm text-gray-400 font-medium">{year}</div>
+                                    <div className="mt-3 text-xs md:text-sm text-gray-400 font-medium text-center h-8 flex items-start justify-center">
+                                        {year}
+                                    </div>
                                 </div>
                             );
                         })}
@@ -148,11 +157,11 @@ export default function RCOverview() {
                 {/* Quartile Distribution (Donut Chart) */}
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-lg flex flex-col">
                     <h3 className="text-lg font-semibold text-white mb-6">Quartile Distribution</h3>
-                    <div className="flex items-center justify-center gap-8 h-full">
+                    <div className="flex items-center justify-center gap-8 h-full min-h-[250px]">
                         {/* Donut Chart */}
-                        <div className="relative w-48 h-48">
+                        <div className="relative w-56 h-56 shrink-0">
                             <div
-                                className="w-full h-full rounded-full"
+                                className="w-full h-full rounded-full shadow-2xl"
                                 style={{
                                     background: `conic-gradient(
                                         #10b981 0% ${(stats.quartileCounts.q1 / totalQuartile) * 100}%,
@@ -162,17 +171,17 @@ export default function RCOverview() {
                                     )`
                                 }}
                             ></div>
-                            {/* Inner Circle (Hole) */}
-                            <div className="absolute inset-4 rounded-full bg-[#0f172a] flex items-center justify-center border border-white/5">
+                            {/* Inner Circle (Hole) - made thicker by increasing inset from 4 to 12 */}
+                            <div className="absolute inset-12 rounded-full bg-[#0f172a] flex items-center justify-center border border-white/5 shadow-inner">
                                 <div className="text-center">
-                                    <div className="text-3xl font-bold text-white">{totalQuartile}</div>
-                                    <div className="text-xs text-gray-400">Total</div>
+                                    <div className="text-4xl font-bold text-white drop-shadow-md">{totalQuartile}</div>
+                                    <div className="text-sm text-gray-400 uppercase tracking-widest font-semibold mt-1">Total</div>
                                 </div>
                             </div>
                         </div>
 
                         {/* Legend */}
-                        <div className="space-y-3">
+                        <div className="flex flex-col gap-4">
                             {[
                                 { label: 'Q1', count: stats.quartileCounts.q1, color: 'bg-emerald-500', text: 'text-emerald-400' },
                                 { label: 'Q2', count: stats.quartileCounts.q2, color: 'bg-blue-500', text: 'text-blue-400' },
@@ -182,13 +191,13 @@ export default function RCOverview() {
                                 const percentage = totalQuartile > 0 ? Math.round((count / totalQuartile) * 100) : 0;
                                 return (
                                     <div key={label} className="flex items-center gap-3">
-                                        <div className={`w-3 h-3 rounded-full ${color}`}></div>
+                                        <div className={`w-4 h-4 rounded-md shadow-lg shadow-black/50 ${color}`}></div>
                                         <div className="flex flex-col">
                                             <div className="flex items-center gap-2">
-                                                <span className="text-sm font-medium text-gray-300">{label}</span>
-                                                <span className="text-xs text-gray-500">({percentage}%)</span>
+                                                <span className="text-sm font-bold text-gray-200">{label}</span>
+                                                <span className={`text-xs font-mono font-medium ${text} bg-white/5 px-1.5 rounded`}>{percentage}%</span>
                                             </div>
-                                            <span className={`text-lg font-bold ${text}`}>{count}</span>
+                                            <span className="text-xs text-gray-500 font-medium">{count} papers</span>
                                         </div>
                                     </div>
                                 );

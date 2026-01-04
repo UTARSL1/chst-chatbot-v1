@@ -179,10 +179,47 @@ export async function GET(request: NextRequest) {
             };
         });
 
-        // Convert yearCounts to array and sort
-        const publicationsByYear = Object.entries(yearCounts)
-            .map(([year, count]) => ({ year: parseInt(year), count }))
-            .sort((a, b) => a.year - b.year);
+        // Convert yearCounts to chart data
+        // Logic: 5 bars total.
+        // Bar 1: Up to 2021 (Total accumulated)
+        // Bar 2: 2022
+        // Bar 3: 2023
+        // Bar 4: 2024
+        // Bar 5: 2025
+
+        const anchorYear = 2025;
+        const cutoffYear = anchorYear - 3; // 2022
+
+        const chartDataMap = new Map<string, number>();
+        chartDataMap.set(`Up to ${cutoffYear - 1}`, 0);
+        chartDataMap.set((cutoffYear).toString(), 0);
+        chartDataMap.set((cutoffYear + 1).toString(), 0);
+        chartDataMap.set((cutoffYear + 2).toString(), 0);
+        chartDataMap.set((cutoffYear + 3).toString(), 0);
+
+        for (const paper of uniquePapers) {
+            if (!paper.year) continue;
+
+            if (paper.year < cutoffYear) {
+                const key = `Up to ${cutoffYear - 1}`;
+                chartDataMap.set(key, (chartDataMap.get(key) || 0) + 1);
+            } else {
+                const key = paper.year.toString();
+                // Only track up to the anchor year, ignore future if any
+                if (parseInt(key) <= anchorYear) {
+                    chartDataMap.set(key, (chartDataMap.get(key) || 0) + 1);
+                }
+            }
+        }
+
+        // Convert key-value map to array structure for frontend
+        const publicationsByYear = [
+            { year: `Up to ${cutoffYear - 1}`, count: chartDataMap.get(`Up to ${cutoffYear - 1}`) || 0, isAccumulated: true },
+            { year: cutoffYear, count: chartDataMap.get(cutoffYear.toString()) || 0, isAccumulated: false },
+            { year: cutoffYear + 1, count: chartDataMap.get((cutoffYear + 1).toString()) || 0, isAccumulated: false },
+            { year: cutoffYear + 2, count: chartDataMap.get((cutoffYear + 2).toString()) || 0, isAccumulated: false },
+            { year: cutoffYear + 3, count: chartDataMap.get((cutoffYear + 3).toString()) || 0, isAccumulated: false },
+        ];
 
         return NextResponse.json({
             success: true,
