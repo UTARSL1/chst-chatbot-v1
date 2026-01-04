@@ -320,12 +320,12 @@ export default function RCPostgraduatePage() {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     {/* Sort Field */}
-                                    <div className="relative group z-20">
+                                    <div className="relative group z-50">
                                         <button className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-md text-xs text-gray-300 hover:bg-white/10">
                                             <span>{sortOptions[sortField]}</span>
                                             <ChevronDown size={12} />
                                         </button>
-                                        <div className="absolute right-0 top-full mt-1 w-40 bg-slate-800 border border-white/10 rounded-lg shadow-xl py-1 hidden group-hover:block">
+                                        <div className="absolute right-0 top-full mt-1 w-40 bg-slate-800 border border-white/10 rounded-lg shadow-xl py-1 hidden group-hover:block z-50">
                                             {Object.entries(sortOptions).map(([key, label]) => (
                                                 <button
                                                     key={key}
