@@ -72,16 +72,46 @@ export async function parsePostgraduateCSV(csvContent: string): Promise<ParsedPo
     // Parse header
     const header = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
 
-    // Expected columns
+    // Column aliases for flexible matching
+    const columnAliases: Record<string, string[]> = {
+        'Staff ID': ['Staff ID', 'Staff No', 'ID'],
+        'Staff Name': ['Staff Name', 'Name of Staff', 'Supervisor Name', 'Name'],
+        'Faculty': ['Faculty', 'Centre', 'School'],
+        'Supervision Status': ['Supervision Status', 'Status', 'Current Status'],
+        'Name of Student': ['Name of Student', 'Student Name', 'Student', 'Candidate Name'],
+        'Level': ['Level', 'Degree', 'Program Level'],
+        'Role': ['Role', 'Supervision Role', 'Type'],
+        'Start Date': ['Start Date', 'Commencement Date', 'Date Start'],
+        'Completed Date': ['Completed Date', 'Completion Date', 'Date Completed', 'End Date'],
+        'Area of Study': ['Area of Study', 'Research Area', 'Field'],
+        'Research Centre': ['Research Centre', 'RC'],
+        'Staff Category': ['Staff Category', 'Category'],
+        'Institution': ['Institution', 'University'],
+        'Program Title': ['Program Title', 'Program']
+    };
+
+    // Helper to find column index by name or alias
+    const getColumnIndex = (colName: string): number => {
+        // Direct match or partial match with canonical name
+        let index = header.findIndex(h => h.toLowerCase().includes(colName.toLowerCase()));
+        if (index >= 0) return index;
+
+        // Check aliases
+        const aliases = columnAliases[colName] || [];
+        for (const alias of aliases) {
+            index = header.findIndex(h => h.toLowerCase().includes(alias.toLowerCase()) || alias.toLowerCase().includes(h.toLowerCase()));
+            if (index >= 0) return index;
+        }
+        return -1;
+    };
+
+    // Check required columns exist
     const requiredColumns = [
-        'Staff ID', 'Staff Name', 'Faculty', 'Supervision Status',
+        'Staff ID', 'Staff Name', 'Supervision Status',
         'Name of Student', 'Level', 'Role'
     ];
 
-    // Check required columns exist
-    const missingColumns = requiredColumns.filter(col =>
-        !header.some(h => h.toLowerCase().includes(col.toLowerCase()))
-    );
+    const missingColumns = requiredColumns.filter(col => getColumnIndex(col) === -1);
 
     if (missingColumns.length > 0) {
         throw new Error(`Missing required columns: ${missingColumns.join(', ')}`);
@@ -116,11 +146,9 @@ export async function parsePostgraduateCSV(csvContent: string): Promise<ParsedPo
         }
         values.push(current.trim().replace(/^"|"$/g, ''));
 
-        // Extract values by column name
+        // Extract values by column name using helper
         const getValueByColumn = (columnName: string): string => {
-            const index = header.findIndex(h =>
-                h.toLowerCase().includes(columnName.toLowerCase())
-            );
+            const index = getColumnIndex(columnName);
             return index >= 0 ? (values[index] || '').trim() : '';
         };
 

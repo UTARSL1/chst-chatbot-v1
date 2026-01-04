@@ -177,7 +177,7 @@ export default function RCPostgraduatePage() {
                     fetchMemberStats(selectedMember.id, selectedYears.length > 0 ? selectedYears.join(',') : 'all');
                 }
             } else {
-                alert(`Error: ${data.error}`);
+                alert(`Error: ${data.error}\n\nDetails: ${data.details || ''}`);
             }
         } catch (error) {
             console.error('Error uploading:', error);
