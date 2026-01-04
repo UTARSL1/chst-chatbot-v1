@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect, useMemo } from 'react';
-import { Upload, Users, Filter, SortAsc, SortDesc, X, Search, GraduationCap, BookOpen, UserCheck, Calendar, ArrowLeft } from 'lucide-react';
+import { Upload, Users, Filter, SortAsc, SortDesc, X, Search, GraduationCap, BookOpen, UserCheck, Calendar, ArrowLeft, GripVertical } from 'lucide-react';
 
 
 // Check if recharts is installed, otherwise fallback to simple visuals
@@ -364,49 +364,69 @@ export default function RCPostgraduatePage() {
                             )}
 
                             {/* List */}
-                            <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1 custom-scrollbar">
+                            <div className="space-y-2 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
                                 {filteredAndSortedMembers.map(member => (
-                                    <button
+                                    <div
                                         key={member.id}
-                                        onClick={() => setSelectedMember(member)}
-                                        className={`w-full text-left p-3 rounded-md border transition-all ${selectedMember?.id === member.id
+                                        className={`relative group rounded-md transition-all duration-300 border ${selectedMember?.id === member.id
                                             ? 'bg-blue-900/40 border-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.5)]'
-                                            : 'bg-white/5 border-transparent hover:border-blue-400/30 hover:bg-slate-800/60'
+                                            : 'bg-white/5 border-transparent hover:border-blue-400/30 hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:bg-slate-800/60'
                                             }`}
                                     >
-                                        <div className="flex justify-between items-start mb-1">
-                                            <span className="font-medium text-sm text-white truncate w-32">{member.name}</span>
-                                            <span className="text-xs font-bold text-blue-300 bg-blue-950/50 px-2 py-0.5 rounded-full border border-blue-500/20">
-                                                {member.totalStudents}
-                                            </span>
-                                        </div>
-                                        <div className="flex gap-2 text-[10px] text-gray-400">
-                                            <span className="flex items-center gap-1"><GraduationCap size={10} /> {member.phdCount} PhD</span>
-                                            <span className="flex items-center gap-1"><BookOpen size={10} /> {member.masterCount} Master</span>
-                                        </div>
-                                        <div className="mt-1 w-full bg-slate-800 h-1 rounded-full overflow-hidden flex">
-                                            <div style={{ width: `${(member.inProgressCount / member.totalStudents) * 100}%` }} className="bg-sky-500 h-full" />
-                                            <div style={{ width: `${(member.completedCount / member.totalStudents) * 100}%` }} className="bg-emerald-500 h-full" />
-                                        </div>
-                                    </button>
+                                        <button
+                                            onClick={() => setSelectedMember(member)}
+                                            className="w-full flex items-center gap-3 p-2.5"
+                                        >
+                                            <div className="text-gray-600 group-hover:text-gray-400 transition-colors">
+                                                <GripVertical size={14} />
+                                            </div>
+
+                                            <div className="flex-1 font-medium text-sm text-white truncate text-left">{member.name}</div>
+
+                                            <div className="px-2 py-0.5 rounded-full bg-blue-950/50 text-[10px] font-medium text-blue-300 border border-blue-500/20 whitespace-nowrap">
+                                                {member.totalStudents} students
+                                            </div>
+
+                                            {/* Mini Stacked Bar */}
+                                            <div className="flex flex-col gap-[2px] w-12 opacity-80">
+                                                <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden flex">
+                                                    <div style={{ width: `${(member.phdCount / member.totalStudents) * 100}%` }} className="bg-purple-500 h-full" />
+                                                    <div style={{ width: `${(member.masterCount / member.totalStudents) * 100}%` }} className="bg-indigo-500 h-full" />
+                                                </div>
+                                                <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden flex">
+                                                    <div style={{ width: `${(member.inProgressCount / member.totalStudents) * 100}%` }} className="bg-sky-500 h-full" />
+                                                    <div style={{ width: `${(member.completedCount / member.totalStudents) * 100}%` }} className="bg-emerald-500 h-full" />
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </div>
                                 ))}
                             </div>
                         </div>
 
                         {/* Upload */}
-                        <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-4 shadow-lg">
-                            <label className="flex items-center justify-between cursor-pointer group">
+                        <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-5 shadow-lg">
+                            <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-blue-500/20 rounded-lg group-hover:bg-blue-500/30 transition-colors">
-                                        <Upload className="w-5 h-5 text-blue-400" />
-                                    </div>
+                                    <Upload className="w-5 h-5 text-blue-400" />
                                     <div>
                                         <h2 className="text-sm font-semibold text-white">Upload Statistics</h2>
-                                        <p className="text-xs text-gray-400">{uploading ? 'Uploading...' : 'Click to select .csv file'}</p>
+                                        <p className="text-xs text-gray-400">Upload CSV file containing supervision data</p>
                                     </div>
                                 </div>
-                                <input type="file" accept=".csv" onChange={handleFileUpload} disabled={uploading} className="hidden" />
-                            </label>
+                                <label className="cursor-pointer">
+                                    <input
+                                        type="file"
+                                        accept=".csv"
+                                        onChange={handleFileUpload}
+                                        className="hidden"
+                                        disabled={uploading}
+                                    />
+                                    <div className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition font-medium text-sm shadow-lg">
+                                        {uploading ? 'Uploading...' : 'Upload'}
+                                    </div>
+                                </label>
+                            </div>
                         </div>
                     </div>
 

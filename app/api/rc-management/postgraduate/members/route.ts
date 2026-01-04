@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
             }
         });
 
-        return NextResponse.json({ members });
+        return NextResponse.json({ success: true, members });
     } catch (error) {
         console.error('[RC Postgraduate Members] Error:', error);
         return NextResponse.json(

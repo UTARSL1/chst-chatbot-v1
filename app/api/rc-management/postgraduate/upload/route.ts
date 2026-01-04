@@ -37,111 +37,119 @@ export async function POST(request: NextRequest) {
         // Read file content
         const fileContent = await file.text();
 
-        // Parse CSV
-        const parsedData = await parsePostgraduateCSV(fileContent);
+        // Parse CSV - returns array of members
+        const membersData = await parsePostgraduateCSV(fileContent);
 
-        // Check if member already exists
-        const existingMember = await prisma.rCPostgraduateMember.findFirst({
-            where: { name: parsedData.staffName }
+        let updatedMembers = 0;
+        let createdMembers = 0;
+        let totalSupervisions = 0;
+
+        for (const data of membersData) {
+            totalSupervisions += data.totalStudents;
+
+            // Try to find existing member by ID first, then Name
+            let existingMember = null;
+
+            if (data.staffId) {
+                existingMember = await prisma.rCPostgraduateMember.findFirst({
+                    where: { staffId: data.staffId }
+                });
+            }
+
+            if (!existingMember && data.staffName) {
+                existingMember = await prisma.rCPostgraduateMember.findFirst({
+                    where: { name: data.staffName }
+                });
+            }
+
+            if (existingMember) {
+                // Update existing member
+                // First delete old supervisions to replace with new data (full sync for this member)
+                await prisma.postgraduateSupervision.deleteMany({
+                    where: { memberId: existingMember.id }
+                });
+
+                await prisma.rCPostgraduateMember.update({
+                    where: { id: existingMember.id },
+                    data: {
+                        staffId: data.staffId || existingMember.staffId,
+                        faculty: data.faculty || existingMember.faculty,
+                        totalStudents: data.totalStudents,
+                        inProgressCount: data.inProgressCount,
+                        completedCount: data.completedCount,
+                        phdCount: data.phdCount,
+                        masterCount: data.masterCount,
+                        mainSupervisorCount: data.mainSupervisorCount,
+                        coSupervisorCount: data.coSupervisorCount,
+                        supervisions: {
+                            create: data.supervisions.map(sup => ({
+                                staffId: sup.staffId,
+                                staffName: sup.staffName,
+                                faculty: sup.faculty,
+                                staffCategory: sup.staffCategory,
+                                status: sup.status,
+                                areaOfStudy: sup.areaOfStudy,
+                                researchCentre: sup.researchCentre,
+                                studentName: sup.studentName,
+                                level: sup.level,
+                                institution: sup.institution,
+                                programTitle: sup.programTitle,
+                                startDate: sup.startDate,
+                                completedDate: sup.completedDate,
+                                startYear: sup.startYear,
+                                completedYear: sup.completedYear,
+                                role: sup.role,
+                            }))
+                        }
+                    }
+                });
+                updatedMembers++;
+            } else {
+                // Create new member
+                await prisma.rCPostgraduateMember.create({
+                    data: {
+                        name: data.staffName,
+                        staffId: data.staffId,
+                        faculty: data.faculty,
+                        totalStudents: data.totalStudents,
+                        inProgressCount: data.inProgressCount,
+                        completedCount: data.completedCount,
+                        phdCount: data.phdCount,
+                        masterCount: data.masterCount,
+                        mainSupervisorCount: data.mainSupervisorCount,
+                        coSupervisorCount: data.coSupervisorCount,
+                        supervisions: {
+                            create: data.supervisions.map(sup => ({
+                                staffId: sup.staffId,
+                                staffName: sup.staffName,
+                                faculty: sup.faculty,
+                                staffCategory: sup.staffCategory,
+                                status: sup.status,
+                                areaOfStudy: sup.areaOfStudy,
+                                researchCentre: sup.researchCentre,
+                                studentName: sup.studentName,
+                                level: sup.level,
+                                institution: sup.institution,
+                                programTitle: sup.programTitle,
+                                startDate: sup.startDate,
+                                completedDate: sup.completedDate,
+                                startYear: sup.startYear,
+                                completedYear: sup.completedYear,
+                                role: sup.role,
+                            }))
+                        }
+                    }
+                });
+                createdMembers++;
+            }
+        }
+
+        return NextResponse.json({
+            success: true,
+            message: `Successfully processed ${membersData.length} supervisors. Created: ${createdMembers}, Updated: ${updatedMembers}. Total Records: ${totalSupervisions}`,
+            member: membersData.length === 1 ? { name: membersData[0].staffName, id: 'multi' } : { name: 'Multiple Members', id: 'multi' } // Legacy support for frontend
         });
 
-        if (existingMember) {
-            // Update existing member
-            await prisma.postgraduateSupervision.deleteMany({
-                where: { memberId: existingMember.id }
-            });
-
-            await prisma.rCPostgraduateMember.update({
-                where: { id: existingMember.id },
-                data: {
-                    staffId: parsedData.staffId,
-                    faculty: parsedData.faculty,
-                    totalStudents: parsedData.totalStudents,
-                    inProgressCount: parsedData.inProgressCount,
-                    completedCount: parsedData.completedCount,
-                    phdCount: parsedData.phdCount,
-                    masterCount: parsedData.masterCount,
-                    mainSupervisorCount: parsedData.mainSupervisorCount,
-                    coSupervisorCount: parsedData.coSupervisorCount,
-                    supervisions: {
-                        create: parsedData.supervisions.map(sup => ({
-                            staffId: sup.staffId,
-                            staffName: sup.staffName,
-                            faculty: sup.faculty,
-                            staffCategory: sup.staffCategory,
-                            status: sup.status,
-                            areaOfStudy: sup.areaOfStudy,
-                            researchCentre: sup.researchCentre,
-                            studentName: sup.studentName,
-                            level: sup.level,
-                            institution: sup.institution,
-                            programTitle: sup.programTitle,
-                            startDate: sup.startDate,
-                            completedDate: sup.completedDate,
-                            startYear: sup.startYear,
-                            completedYear: sup.completedYear,
-                            role: sup.role,
-                        }))
-                    }
-                }
-            });
-
-            return NextResponse.json({
-                success: true,
-                message: `Updated supervision records for ${parsedData.staffName}`,
-                member: {
-                    id: existingMember.id,
-                    name: parsedData.staffName,
-                    totalStudents: parsedData.totalStudents
-                }
-            });
-        } else {
-            // Create new member
-            const newMember = await prisma.rCPostgraduateMember.create({
-                data: {
-                    name: parsedData.staffName,
-                    staffId: parsedData.staffId,
-                    faculty: parsedData.faculty,
-                    totalStudents: parsedData.totalStudents,
-                    inProgressCount: parsedData.inProgressCount,
-                    completedCount: parsedData.completedCount,
-                    phdCount: parsedData.phdCount,
-                    masterCount: parsedData.masterCount,
-                    mainSupervisorCount: parsedData.mainSupervisorCount,
-                    coSupervisorCount: parsedData.coSupervisorCount,
-                    supervisions: {
-                        create: parsedData.supervisions.map(sup => ({
-                            staffId: sup.staffId,
-                            staffName: sup.staffName,
-                            faculty: sup.faculty,
-                            staffCategory: sup.staffCategory,
-                            status: sup.status,
-                            areaOfStudy: sup.areaOfStudy,
-                            researchCentre: sup.researchCentre,
-                            studentName: sup.studentName,
-                            level: sup.level,
-                            institution: sup.institution,
-                            programTitle: sup.programTitle,
-                            startDate: sup.startDate,
-                            completedDate: sup.completedDate,
-                            startYear: sup.startYear,
-                            completedYear: sup.completedYear,
-                            role: sup.role,
-                        }))
-                    }
-                }
-            });
-
-            return NextResponse.json({
-                success: true,
-                message: `Successfully uploaded ${parsedData.totalStudents} supervisions for ${parsedData.staffName}`,
-                member: {
-                    id: newMember.id,
-                    name: parsedData.staffName,
-                    totalStudents: parsedData.totalStudents
-                }
-            });
-        }
     } catch (error) {
         console.error('[RC Postgraduate Upload] Error:', error);
         return NextResponse.json(

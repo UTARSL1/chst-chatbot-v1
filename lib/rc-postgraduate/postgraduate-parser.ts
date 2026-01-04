@@ -58,7 +58,11 @@ function extractYear(dateStr: string | null | undefined): number | null {
 /**
  * Parse CSV content for postgraduate supervision data
  */
-export async function parsePostgraduateCSV(csvContent: string): Promise<ParsedPostgraduateData> {
+/**
+ * Parse CSV content for postgraduate supervision data
+ * Supports multiple members in a single CSV file
+ */
+export async function parsePostgraduateCSV(csvContent: string): Promise<ParsedPostgraduateData[]> {
     const lines = csvContent.split('\n').filter(line => line.trim());
 
     if (lines.length < 2) {
@@ -83,11 +87,12 @@ export async function parsePostgraduateCSV(csvContent: string): Promise<ParsedPo
         throw new Error(`Missing required columns: ${missingColumns.join(', ')}`);
     }
 
-    // Parse data rows
-    const supervisions: PostgraduateSupervision[] = [];
-    let staffName = '';
-    let staffId = '';
-    let faculty = '';
+    const membersMap = new Map<string, {
+        staffName: string;
+        staffId: string;
+        faculty: string;
+        supervisions: PostgraduateSupervision[];
+    }>();
 
     for (let i = 1; i < lines.length; i++) {
         const line = lines[i];
@@ -119,32 +124,36 @@ export async function parsePostgraduateCSV(csvContent: string): Promise<ParsedPo
             return index >= 0 ? (values[index] || '').trim() : '';
         };
 
-        const currentStaffName = getValueByColumn('Staff Name');
-        const currentStaffId = getValueByColumn('Staff ID');
-        const currentFaculty = getValueByColumn('Faculty');
+        const staffName = getValueByColumn('Staff Name');
+        const staffId = getValueByColumn('Staff ID');
+        const faculty = getValueByColumn('Faculty');
 
-        // Set staff info from first row
-        if (i === 1) {
-            staffName = currentStaffName;
-            staffId = currentStaffId;
-            faculty = currentFaculty;
+        if (!staffId && !staffName) continue;
+
+        // Use Staff ID as key, fallback to Name
+        const key = staffId || staffName;
+
+        if (!membersMap.has(key)) {
+            membersMap.set(key, {
+                staffName,
+                staffId,
+                faculty,
+                supervisions: []
+            });
         }
 
-        // Verify all rows have the same staff member
-        if (currentStaffName !== staffName) {
-            throw new Error(
-                `CSV contains multiple staff members. Expected "${staffName}" but found "${currentStaffName}" on line ${i + 1}. ` +
-                `Each CSV file should contain data for ONE member only.`
-            );
-        }
+        const memberData = membersMap.get(key)!;
+
+        // Update faculty if missing in previous row (take last non-empty)
+        if (!memberData.faculty && faculty) memberData.faculty = faculty;
 
         const startDateStr = getValueByColumn('Start Date');
         const completedDateStr = getValueByColumn('Completed Date');
 
-        supervisions.push({
-            staffId: currentStaffId,
-            staffName: currentStaffName,
-            faculty: currentFaculty,
+        memberData.supervisions.push({
+            staffId: staffId,
+            staffName: staffName,
+            faculty: faculty,
             staffCategory: getValueByColumn('Staff Category'),
             status: getValueByColumn('Supervision Status').toUpperCase(),
             areaOfStudy: getValueByColumn('Area of Study'),
@@ -161,30 +170,30 @@ export async function parsePostgraduateCSV(csvContent: string): Promise<ParsedPo
         });
     }
 
-    if (supervisions.length === 0) {
+    if (membersMap.size === 0) {
         throw new Error('No valid supervision records found in CSV');
     }
 
-    // Calculate aggregates
-    const totalStudents = supervisions.length;
-    const inProgressCount = supervisions.filter(s => s.status === 'IN PROGRESS').length;
-    const completedCount = supervisions.filter(s => s.status === 'COMPLETED').length;
-    const phdCount = supervisions.filter(s => s.level === 'PHD').length;
-    const masterCount = supervisions.filter(s => s.level === 'MASTER').length;
-    const mainSupervisorCount = supervisions.filter(s => s.role.includes('MAIN')).length;
-    const coSupervisorCount = supervisions.filter(s => s.role.includes('CO')).length;
+    // Process each member to calculate stats
+    const results: ParsedPostgraduateData[] = [];
 
-    return {
-        staffName,
-        staffId,
-        faculty,
-        totalStudents,
-        inProgressCount,
-        completedCount,
-        phdCount,
-        masterCount,
-        mainSupervisorCount,
-        coSupervisorCount,
-        supervisions,
-    };
+    for (const data of membersMap.values()) {
+        const supervisions = data.supervisions;
+
+        results.push({
+            staffName: data.staffName,
+            staffId: data.staffId,
+            faculty: data.faculty,
+            totalStudents: supervisions.length,
+            inProgressCount: supervisions.filter(s => s.status === 'IN PROGRESS').length,
+            completedCount: supervisions.filter(s => s.status === 'COMPLETED').length,
+            phdCount: supervisions.filter(s => s.level === 'PHD').length,
+            masterCount: supervisions.filter(s => s.level === 'MASTER').length,
+            mainSupervisorCount: supervisions.filter(s => s.role.includes('MAIN')).length,
+            coSupervisorCount: supervisions.filter(s => s.role.includes('CO')).length,
+            supervisions: supervisions,
+        });
+    }
+
+    return results;
 }
