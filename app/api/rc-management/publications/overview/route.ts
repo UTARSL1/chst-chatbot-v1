@@ -103,18 +103,81 @@ export async function GET(request: NextRequest) {
             }
         });
 
-        // Sort papers by year (most recent first) and get top 20
-        const topPapers = uniquePapers
-            .sort((a, b) => (b.year || 0) - (a.year || 0))
-            .slice(0, 20)
-            .map(paper => ({
-                title: paper.title,
-                year: paper.year,
-                quartile: paper.quartile,
-                contributingMembersCount: paper.contributingMembers.length,
-                contributingMembers: paper.contributingMembers,
-                roles: Array.from(paper.roles)
-            }));
+        // Calculate Top Contributors by Year
+        const memberYearlyStats = new Map<string, Map<string, {
+            name: string;
+            staffId: string | null;
+            count: number;
+            q1Count: number;
+            paperIds: Set<string>;
+        }>>();
+
+        for (const pub of publications) {
+            const year = pub.publicationYear || 0;
+            if (year === 0) continue;
+
+            const role = pub.authorshipRole?.toUpperCase() || '';
+            // Allow strict checks or combined checks if data format changes (e.g. "1st Author & Corresponding")
+            const isFirst = role.includes('1ST AUTHOR') || role === 'FIRST AUTHOR';
+            const isCorr = role.includes('CORRESPONDING') || role === 'CORRESPONDING AUTHOR';
+
+            if (!isFirst && !isCorr) continue;
+
+            const yearKey = year.toString();
+            if (!memberYearlyStats.has(yearKey)) {
+                memberYearlyStats.set(yearKey, new Map());
+            }
+
+            const yearStats = memberYearlyStats.get(yearKey)!;
+            const memberId = pub.member.id;
+
+            // Unique key for paper to prevent double counting if multiple records/roles exist for same paper+member
+            const paperUniqueKey = pub.doi || pub.title;
+
+            if (!yearStats.has(memberId)) {
+                yearStats.set(memberId, {
+                    name: pub.member.name,
+                    staffId: pub.member.staffId,
+                    count: 0,
+                    q1Count: 0,
+                    paperIds: new Set()
+                });
+            }
+
+            const memberStats = yearStats.get(memberId)!;
+
+            // Only count if this specific paper hasn't been counted for this member yet
+            if (!memberStats.paperIds.has(paperUniqueKey)) {
+                memberStats.count++;
+                if (pub.wosQuartile === 'Q1') {
+                    memberStats.q1Count++;
+                }
+                memberStats.paperIds.add(paperUniqueKey);
+            }
+        }
+
+        // Convert to sorted array for the response
+        // Get top 5 years
+        const years = Array.from(memberYearlyStats.keys())
+            .map(Number)
+            .sort((a, b) => b - a)
+            .slice(0, 5); // Last 5 years
+
+        const topMembersByYear = years.map(year => {
+            const yearStats = memberYearlyStats.get(year.toString())!;
+            const members = Array.from(yearStats.values())
+                .map(({ name, staffId, count, q1Count }) => ({ name, staffId, count, q1Count }))
+                .sort((a, b) => {
+                    if (b.count !== a.count) return b.count - a.count; // Sort by count desc
+                    return b.q1Count - a.q1Count; // Tie-breaker: Q1 count
+                })
+                .slice(0, 5); // Top 5 members per year
+
+            return {
+                year,
+                members
+            };
+        });
 
         // Convert yearCounts to array and sort
         const publicationsByYear = Object.entries(yearCounts)
@@ -129,7 +192,7 @@ export async function GET(request: NextRequest) {
                 activeMembers,
                 quartileCounts,
                 publicationsByYear,
-                topPapers
+                topMembersByYear
             }
         });
     } catch (error) {
