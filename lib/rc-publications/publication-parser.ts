@@ -15,6 +15,7 @@ export interface ParsedPublication {
 
 export interface ParsedCSVData {
     staffName: string;
+    staffId?: string;
     publications: ParsedPublication[];
     totalPublications: number;
     journalArticles: number;
@@ -101,8 +102,9 @@ export async function parsePublicationCSV(fileContent: string): Promise<ParsedCS
         type CSVRecord = Record<string, string>;
         const typedRecords = records as CSVRecord[];
 
-        // Extract staff name from first row
+        // Extract staff name and ID from first row
         const staffName = typedRecords[0]['Staff Name'] || 'Unknown';
+        const staffId = typedRecords[0]['Staff ID'] || typedRecords[0]['Staff Id'] || undefined;
 
         // Parse publications
         const publications: ParsedPublication[] = [];
@@ -153,6 +155,7 @@ export async function parsePublicationCSV(fileContent: string): Promise<ParsedCS
 
         return {
             staffName,
+            staffId,
             publications,
             totalPublications: publications.length,
             journalArticles: journalCount,

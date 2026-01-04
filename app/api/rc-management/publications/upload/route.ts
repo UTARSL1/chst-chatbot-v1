@@ -54,6 +54,7 @@ export async function POST(request: NextRequest) {
             await prisma.rCMember.update({
                 where: { id: existingMember.id },
                 data: {
+                    staffId: parsedData.staffId,
                     totalPublications: parsedData.totalPublications,
                     journalArticles: parsedData.journalArticles,
                     conferencePapers: parsedData.conferencePapers,
@@ -92,6 +93,7 @@ export async function POST(request: NextRequest) {
             const newMember = await prisma.rCMember.create({
                 data: {
                     name: parsedData.staffName,
+                    staffId: parsedData.staffId,
                     totalPublications: parsedData.totalPublications,
                     journalArticles: parsedData.journalArticles,
                     conferencePapers: parsedData.conferencePapers,
