@@ -74,20 +74,20 @@ export async function parsePostgraduateCSV(csvContent: string): Promise<ParsedPo
 
     // Column aliases for flexible matching
     const columnAliases: Record<string, string[]> = {
-        'Staff ID': ['Staff ID', 'Staff No', 'ID'],
-        'Staff Name': ['Staff Name', 'Name of Staff', 'Supervisor Name', 'Name'],
-        'Faculty': ['Faculty', 'Centre', 'School'],
-        'Supervision Status': ['Supervision Status', 'Status', 'Current Status'],
-        'Name of Student': ['Name of Student', 'Student Name', 'Student', 'Candidate Name'],
-        'Level': ['Level', 'Degree', 'Program Level'],
-        'Role': ['Role', 'Supervision Role', 'Type'],
-        'Start Date': ['Start Date', 'Commencement Date', 'Date Start'],
-        'Completed Date': ['Completed Date', 'Completion Date', 'Date Completed', 'End Date'],
-        'Area of Study': ['Area of Study', 'Research Area', 'Field'],
+        'Staff ID': ['Staff ID', 'Staff No', 'ID', 'Staff Number'],
+        'Staff Name': ['Staff Name', 'Name of Staff', 'Supervisor Name', 'Supervisor', 'Main Supervisor'],
+        'Faculty': ['Faculty', 'Centre', 'School', 'Fac'],
+        'Supervision Status': ['Supervision Status', 'Status', 'Current Status', 'Active Status'],
+        'Name of Student': ['Name of Student', 'Student Name', 'Student', 'Candidate Name', 'Candidate', 'Name'], // 'Name' is fallback
+        'Level': ['Level', 'Degree', 'Program Level', 'Study Level', 'Lvl', 'Academic Level'],
+        'Role': ['Role', 'Supervision Role', 'Type', 'Role of Supervisor'],
+        'Start Date': ['Start Date', 'Commencement Date', 'Date Start', 'Start'],
+        'Completed Date': ['Completed Date', 'Completion Date', 'Date Completed', 'End Date', 'End'],
+        'Area of Study': ['Area of Study', 'Research Area', 'Field', 'Topic'],
         'Research Centre': ['Research Centre', 'RC'],
         'Staff Category': ['Staff Category', 'Category'],
         'Institution': ['Institution', 'University'],
-        'Program Title': ['Program Title', 'Program']
+        'Program Title': ['Program Title', 'Program', 'Programme']
     };
 
     // Helper to find column index by name or alias
@@ -114,7 +114,7 @@ export async function parsePostgraduateCSV(csvContent: string): Promise<ParsedPo
     const missingColumns = requiredColumns.filter(col => getColumnIndex(col) === -1);
 
     if (missingColumns.length > 0) {
-        throw new Error(`Missing required columns: ${missingColumns.join(', ')}`);
+        throw new Error(`Missing required columns: ${missingColumns.join(', ')}. Found headers: ${header.join(', ')}`);
     }
 
     const membersMap = new Map<string, {
