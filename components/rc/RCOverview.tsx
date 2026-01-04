@@ -122,28 +122,9 @@ export default function RCOverview() {
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-lg flex flex-col">
                     <h3 className="text-lg font-semibold text-white mb-6">Publications by Year</h3>
 
-                    {/* Legend */}
-                    <div className="flex items-center justify-end gap-3 mb-2 text-xs">
-                        <div className="flex items-center gap-1">
-                            <div className="w-2.5 h-2.5 rounded bg-emerald-500"></div>
-                            <span className="text-gray-300">Q1</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                            <div className="w-2.5 h-2.5 rounded bg-blue-500"></div>
-                            <span className="text-gray-300">Q2</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                            <div className="w-2.5 h-2.5 rounded bg-amber-500"></div>
-                            <span className="text-gray-300">Q3</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                            <div className="w-2.5 h-2.5 rounded bg-rose-500"></div>
-                            <span className="text-gray-300">Q4</span>
-                        </div>
-                    </div>
 
                     {/* Added fixed height h-64 to container to ensure percentage heights work */}
-                    <div className="flex-1 flex items-end justify-between gap-4 h-64 border-b border-white/10 pb-2 relative mt-2">
+                    <div className="flex-1 flex items-end justify-between gap-4 h-64 border-b border-white/10 pb-2 relative mt-4">
                         {/* Grid lines */}
                         <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
                             {[0, 0.25, 0.5, 0.75, 1].map((tick) => (
