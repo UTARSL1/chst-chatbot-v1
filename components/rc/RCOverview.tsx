@@ -15,7 +15,7 @@ interface OverviewStats {
     };
     publicationsByYear: Array<{ year: string | number; count: number; isAccumulated?: boolean }>;
     topMembersByYear: Array<{
-        year: number;
+        year: string | number;
         members: Array<{
             name: string;
             staffId: string | null;
