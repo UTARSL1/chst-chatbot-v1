@@ -9,6 +9,7 @@ const nextConfig = {
     webpack: (config, { isServer }) => {
         config.resolve.alias.canvas = false;
         config.resolve.alias.encoding = false;
+        config.resolve.alias['webworker-threads'] = false;
 
         // Externalize PDF parsing packages for server-side
         if (isServer) {

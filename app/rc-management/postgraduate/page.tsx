@@ -1,7 +1,8 @@
 'use client';
 
+import Link from 'next/link';
 import { useState, useEffect, useMemo } from 'react';
-import { Upload, Users, Filter, SortAsc, SortDesc, X, Search, GraduationCap, BookOpen, UserCheck, Calendar } from 'lucide-react';
+import { Upload, Users, Filter, SortAsc, SortDesc, X, Search, GraduationCap, BookOpen, UserCheck, Calendar, ArrowLeft } from 'lucide-react';
 
 
 // Check if recharts is installed, otherwise fallback to simple visuals
@@ -276,6 +277,14 @@ export default function RCPostgraduatePage() {
     return (
         <div className="min-h-screen bg-slate-950 p-6">
             <div className="max-w-7xl mx-auto">
+                {/* Back Link */}
+                <div className="mb-6">
+                    <Link href="/chat" className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
+                        <ArrowLeft size={20} />
+                        <span>Back to Chat</span>
+                    </Link>
+                </div>
+
                 {/* Header */}
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-[#818cf8] mb-2">

@@ -29,7 +29,7 @@ async function importNatureIndex() {
 
         // Prepare data for insertion
         const institutions = [];
-        for (const record of records) {
+        for (const record of (records as any[])) {
             const institution = record['Institution'] || record['institution'];
             if (!institution) continue;
 
