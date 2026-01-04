@@ -149,6 +149,12 @@ export async function parsePostgraduateCSV(csvContent: string): Promise<ParsedPo
 
         const startDateStr = getValueByColumn('Start Date');
         const completedDateStr = getValueByColumn('Completed Date');
+        const studentName = getValueByColumn('Name of Student');
+
+        // Skip rows with no student name (these are just staff info rows)
+        if (!studentName || studentName.trim() === '') {
+            continue;
+        }
 
         memberData.supervisions.push({
             staffId: staffId,
@@ -158,7 +164,7 @@ export async function parsePostgraduateCSV(csvContent: string): Promise<ParsedPo
             status: getValueByColumn('Supervision Status').toUpperCase(),
             areaOfStudy: getValueByColumn('Area of Study'),
             researchCentre: getValueByColumn('Research Centre'),
-            studentName: getValueByColumn('Name of Student'),
+            studentName: studentName,
             level: getValueByColumn('Level').toUpperCase(),
             institution: getValueByColumn('Institution'),
             programTitle: getValueByColumn('Program Title'),

@@ -19,6 +19,7 @@ export async function GET(request: NextRequest) {
             select: {
                 id: true,
                 name: true,
+                staffId: true,
                 totalPublications: true,
                 journalArticles: true,
                 conferencePapers: true,

@@ -7,6 +7,7 @@ import { Upload, Users, BarChart3, Download, Trash2, GripVertical, Filter, SortA
 interface Member {
     id: string;
     name: string;
+    staffId?: string;
     totalPublications: number;
     journalArticles: number;
     conferencePapers: number;
@@ -588,7 +589,14 @@ export default function RCPublicationsPage() {
                                                     <GripVertical size={14} />
                                                 </div>
 
-                                                <div className="flex-1 font-medium text-sm text-white truncate text-left">{member.name}</div>
+                                                <div className="flex-1 flex flex-col items-start gap-1">
+                                                    <div className="font-medium text-sm text-white truncate">{member.name}</div>
+                                                    {member.staffId && (
+                                                        <div className="px-1.5 py-0.5 rounded bg-slate-700/50 text-[9px] font-medium text-slate-300 border border-slate-600/30">
+                                                            {member.staffId.replace(/^\?\s*/, '')}
+                                                        </div>
+                                                    )}
+                                                </div>
 
                                                 <div className="px-2 py-0.5 rounded-full bg-blue-950/50 text-[10px] font-medium text-blue-300 border border-blue-500/20 whitespace-nowrap">
                                                     {member.totalPublications} pubs
