@@ -153,7 +153,7 @@ export default function RCPostgraduateOverview() {
 
                                     {/* Stacked Bar Container */}
                                     <div
-                                        className={`w-full max-w-[40px] rounded-t-sm relative transition-all duration-500 flex flex-col justify-end overflow-hidden
+                                        className={`w-full max-w-[40px] rounded-t-sm relative transition-all duration-500 flex flex-col justify-end
                                             ${percentage === 2 ? 'bg-white/5' : ''}
                                         `}
                                         style={{ height: `${percentage}%` }}

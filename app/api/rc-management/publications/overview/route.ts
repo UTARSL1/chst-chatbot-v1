@@ -204,32 +204,47 @@ export async function GET(request: NextRequest) {
 
         // Convert yearCounts to chart data
         // Logic: 6 bars
-        const chartDataMap = new Map<string, number>();
-        yearsOrder.forEach(y => chartDataMap.set(y, 0)); // Initialize
+        // Convert yearCounts to chart data
+        // Logic: 6 bars
+        const chartDataMap = new Map<string, { q1: number, q2: number, q3: number, q4: number, count: number }>();
+        yearsOrder.forEach(y => chartDataMap.set(y, { q1: 0, q2: 0, q3: 0, q4: 0, count: 0 })); // Initialize
 
         for (const paper of uniquePapers) {
             if (!paper.year) continue;
 
+            let key = '';
             if (paper.year < startYear) {
-                const key = accumulatedLabel;
-                chartDataMap.set(key, (chartDataMap.get(key) || 0) + 1);
+                key = accumulatedLabel;
             } else {
-                const key = paper.year.toString();
-                if (parseInt(key) <= anchorYear) {
-                    chartDataMap.set(key, (chartDataMap.get(key) || 0) + 1);
+                const yearStr = paper.year.toString();
+                if (parseInt(yearStr) <= anchorYear) {
+                    key = yearStr;
                 }
+            }
+
+            if (key && chartDataMap.has(key)) {
+                const data = chartDataMap.get(key)!;
+                data.count++;
+                if (paper.quartile === 'Q1') data.q1++;
+                else if (paper.quartile === 'Q2') data.q2++;
+                else if (paper.quartile === 'Q3') data.q3++;
+                else if (paper.quartile === 'Q4') data.q4++;
             }
         }
 
         // Convert to array structure for frontend (Ordered chronologically for Bar Chart: Up to 2020 -> 2025)
         const publicationsByYear = [
-            { year: accumulatedLabel, count: chartDataMap.get(accumulatedLabel) || 0, isAccumulated: true },
-            { year: startYear, count: chartDataMap.get(startYear.toString()) || 0, isAccumulated: false },
-            { year: startYear + 1, count: chartDataMap.get((startYear + 1).toString()) || 0, isAccumulated: false },
-            { year: startYear + 2, count: chartDataMap.get((startYear + 2).toString()) || 0, isAccumulated: false },
-            { year: startYear + 3, count: chartDataMap.get((startYear + 3).toString()) || 0, isAccumulated: false },
-            { year: startYear + 4, count: chartDataMap.get((startYear + 4).toString()) || 0, isAccumulated: false },
-        ];
+            accumulatedLabel,
+            startYear.toString(),
+            (startYear + 1).toString(),
+            (startYear + 2).toString(),
+            (startYear + 3).toString(),
+            (startYear + 4).toString()
+        ].map(yearKey => ({
+            year: yearKey,
+            ...chartDataMap.get(yearKey)!,
+            isAccumulated: yearKey === accumulatedLabel
+        }));
 
         return NextResponse.json({
             success: true,
