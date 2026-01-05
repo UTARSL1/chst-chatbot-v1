@@ -54,6 +54,7 @@ export default function ChatPage() {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [termsModalOpen, setTermsModalOpen] = useState(false);
     const [othersOpen, setOthersOpen] = useState(false);
+    const [rcQuickAccessOpen, setRcQuickAccessOpen] = useState(false);
     const [rcManagementOpen, setRcManagementOpen] = useState(false);
     const [customLinks, setCustomLinks] = useState<QuickAccessLink[]>([]);
     const [showAddLinkModal, setShowAddLinkModal] = useState(false);
@@ -777,14 +778,14 @@ export default function ChatPage() {
                         {/* RC Quick Access - Collapsible */}
                         <div className="space-y-2">
                             <button
-                                onClick={() => setRcManagementOpen(!rcManagementOpen)}
+                                onClick={() => setRcQuickAccessOpen(!rcQuickAccessOpen)}
                                 className="w-full flex items-center justify-between text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
                             >
                                 <span>Quick Access (RC)</span>
-                                <ChevronDown className={`w-4 h-4 transition-transform ${rcManagementOpen ? 'rotate-180' : ''}`} />
+                                <ChevronDown className={`w-4 h-4 transition-transform ${rcQuickAccessOpen ? 'rotate-180' : ''}`} />
                             </button>
 
-                            {rcManagementOpen && (
+                            {rcQuickAccessOpen && (
                                 <div className="space-y-2 mt-2">
                                     {/* Display RC links with role-based filtering */}
                                     {customLinks
@@ -802,10 +803,10 @@ export default function ChatPage() {
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isTeams ? 'bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20' :
-                                                            isLinkedIn ? 'bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20' :
-                                                                isWebsite ? 'bg-teal-600/10 hover:bg-teal-600/20 border border-teal-600/20' :
-                                                                    isResourceHub ? 'bg-purple-600/10 hover:bg-purple-600/20 border border-purple-600/20' :
-                                                                        'bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20'
+                                                        isLinkedIn ? 'bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20' :
+                                                            isWebsite ? 'bg-teal-600/10 hover:bg-teal-600/20 border border-teal-600/20' :
+                                                                isResourceHub ? 'bg-purple-600/10 hover:bg-purple-600/20 border border-purple-600/20' :
+                                                                    'bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20'
                                                         }`}
                                                 >
                                                     {isTeams && <Users className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />}
@@ -814,10 +815,10 @@ export default function ChatPage() {
                                                     {isResourceHub && <FolderOpen className="w-4 h-4 text-purple-400 group-hover:text-purple-300" />}
                                                     {!isTeams && !isLinkedIn && !isWebsite && !isResourceHub && <ExternalLink className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />}
                                                     <span className={`text-sm ${isTeams ? 'text-indigo-400 group-hover:text-indigo-300' :
-                                                            isLinkedIn ? 'text-blue-400 group-hover:text-blue-300' :
-                                                                isWebsite ? 'text-teal-400 group-hover:text-teal-300' :
-                                                                    isResourceHub ? 'text-purple-400 group-hover:text-purple-300' :
-                                                                        'text-indigo-400 group-hover:text-indigo-300'
+                                                        isLinkedIn ? 'text-blue-400 group-hover:text-blue-300' :
+                                                            isWebsite ? 'text-teal-400 group-hover:text-teal-300' :
+                                                                isResourceHub ? 'text-purple-400 group-hover:text-purple-300' :
+                                                                    'text-indigo-400 group-hover:text-indigo-300'
                                                         }`}>{link.name}</span>
                                                 </a>
                                             );
