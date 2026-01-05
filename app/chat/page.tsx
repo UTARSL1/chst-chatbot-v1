@@ -59,7 +59,7 @@ export default function ChatPage() {
     const [customLinks, setCustomLinks] = useState<QuickAccessLink[]>([]);
     const [showAddLinkModal, setShowAddLinkModal] = useState(false);
     const [editingLink, setEditingLink] = useState<QuickAccessLink | null>(null);
-    const [newLink, setNewLink] = useState({ name: '', url: '', section: 'others', roles: ['public', 'student', 'member', 'chairperson'] });
+    const [newLink, setNewLink] = useState({ name: '', url: '', section: 'others', roles: [] });
 
     // Session Management State
     const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
@@ -201,12 +201,18 @@ export default function ChatPage() {
             const response = await fetch('/api/quick-access', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newLink)
+                body: JSON.stringify({
+                    name: newLink.name,
+                    url: newLink.url,
+                    section: 'others',
+                    roles: [],
+                    isSystem: false
+                })
             });
 
             if (response.ok) {
                 setShowAddLinkModal(false);
-                setNewLink({ name: '', url: '', section: 'others', roles: ['public', 'student', 'member', 'chairperson'] });
+                setNewLink({ name: '', url: '', section: 'others', roles: [] });
                 loadCustomLinks(); // Reload links
             } else {
                 alert('Failed to add link');
@@ -1516,7 +1522,7 @@ export default function ChatPage() {
                                     <Button
                                         onClick={() => {
                                             setShowAddLinkModal(false);
-                                            setNewLink({ name: '', url: '', section: 'others', roles: ['public', 'student', 'member', 'chairperson'] });
+                                            setNewLink({ name: '', url: '', section: 'others', roles: [] });
                                         }}
                                         variant="outline"
                                         className="flex-1"
