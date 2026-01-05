@@ -1,20 +1,100 @@
 ﻿{
-    "members":  [
-                    "chansc@utar.edu.my",
-                    "cheeps@utar.edu.my",
-                    "chongyz@utar.edu.my",
-                    "gohch@utar.edu.my",
-                    "humyc@utar.edu.my",
-                    "humaira@utar.edu.my",
-                    "kamalak@utar.edu.my",
-                    "kongsg@utar.edu.my",
-                    "kwanbh@utar.edu.my",
-                    "loojl@utar.edu.my",
-                    "moksy@utar.edu.my",
-                    "tchui@utar.edu.my",
-                    "tanlf@utar.edu.my",
-                    "tanyq@utar.edu.my",
-                    "tangpy@utar.edu.my",
-                    "teesf@utar.edu.my"
-                ]
+    "members": [
+        {
+            "email": "chansc@utar.edu.my",
+            "staffId": "7129",
+            "name": "Chan Siow Cheng",
+            "faculty": "LKC FES"
+        },
+        {
+            "email": "cheeps@utar.edu.my",
+            "staffId": "15106",
+            "name": "Chee Pei Song",
+            "faculty": "LKC FES"
+        },
+        {
+            "email": "chongyz@utar.edu.my",
+            "staffId": "07139",
+            "name": "Chong Yu Zheng",
+            "faculty": "LKC FES"
+        },
+        {
+            "email": "gohch@utar.edu.my",
+            "staffId": "20003",
+            "name": "Goh Choon Hian",
+            "faculty": "LKC FES"
+        },
+        {
+            "email": "humyc@utar.edu.my",
+            "staffId": "16072",
+            "name": "Hum Yan Chai",
+            "faculty": "LKC FES"
+        },
+        {
+            "email": "humaira@utar.edu.my",
+            "staffId": "E10011",
+            "name": "Humaira Nisar",
+            "faculty": "FEGT"
+        },
+        {
+            "email": "kamalak@utar.edu.my",
+            "staffId": "20025",
+            "name": "Kamala A/P Krishnan",
+            "faculty": "MK FMHS"
+        },
+        {
+            "email": "kongsg@utar.edu.my",
+            "staffId": "14048",
+            "name": "Kong Sin Guan",
+            "faculty": "LKC FES"
+        },
+        {
+            "email": "kwanbh@utar.edu.my",
+            "staffId": "14156",
+            "name": "Kwan Ban Hoe",
+            "faculty": "LKC FES"
+        },
+        {
+            "email": "loojl@utar.edu.my",
+            "staffId": "07005",
+            "name": "Loo Joo Ling",
+            "faculty": "LKC FES"
+        },
+        {
+            "email": "moksy@utar.edu.my",
+            "staffId": "06224",
+            "name": "Mok Siew Ying",
+            "faculty": "LKC FES"
+        },
+        {
+            "email": "tchui@utar.edu.my",
+            "staffId": "19054",
+            "name": "Tan Chun Hui",
+            "faculty": "LKC FES"
+        },
+        {
+            "email": "tanlf@utar.edu.my",
+            "staffId": "05251",
+            "name": "Tan Lee Fan",
+            "faculty": "LKC FES"
+        },
+        {
+            "email": "tanyq@utar.edu.my",
+            "staffId": "09066",
+            "name": "Tan Yin Qing",
+            "faculty": "LKC FES"
+        },
+        {
+            "email": "tangpy@utar.edu.my",
+            "staffId": "05218",
+            "name": "Tang Pek Yee",
+            "faculty": "LKC FES"
+        },
+        {
+            "email": "teesf@utar.edu.my",
+            "staffId": "08090",
+            "name": "Tee Shiau Foon",
+            "faculty": "LKC FES"
+        }
+    ]
 }
