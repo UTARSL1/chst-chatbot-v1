@@ -12,7 +12,7 @@ import rehypeRaw from 'rehype-raw';
 import { TermsOfUseModal } from '@/components/TermsOfUseModal';
 import { CopyButton } from '@/components/CopyButton';
 import UserManualButton from '@/components/UserManualButton';
-import { Linkedin, Globe, FolderOpen, Users, ChevronDown, BookOpen, GraduationCap, Briefcase, FileText, DollarSign, TrendingUp, UserPlus, Plus, ExternalLink, Pencil, Trash2, MessageSquare, MoreVertical, Check, X } from 'lucide-react';
+import { Linkedin, Globe, FolderOpen, Users, ChevronDown, BookOpen, GraduationCap, Briefcase, FileText, DollarSign, TrendingUp, UserPlus, Plus, ExternalLink, Pencil, Trash2, MessageSquare, MoreVertical, MoreHorizontal, Check, X } from 'lucide-react';
 import { useCurrentVersion } from '@/hooks/useCurrentVersion';
 
 interface QuickAccessLink {
@@ -60,6 +60,7 @@ export default function ChatPage() {
     const [showAddLinkModal, setShowAddLinkModal] = useState(false);
     const [editingLink, setEditingLink] = useState<QuickAccessLink | null>(null);
     const [newLink, setNewLink] = useState({ name: '', url: '', section: 'others', roles: [] });
+    const [linkMenuOpenId, setLinkMenuOpenId] = useState<string | null>(null);
 
     // Session Management State
     const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
@@ -849,33 +850,63 @@ export default function ChatPage() {
                                     {customLinks
                                         .filter((link) => link.section === 'others' && (!link.isSystem || link.roles.includes(session.user.role)))
                                         .map((link) => (
-                                            <div key={link.id} className="flex items-center gap-2">
+                                            <div key={link.id} className="relative group">
                                                 <a
                                                     href={link.url}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="flex-1 flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20 transition-all duration-200 group"
+                                                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20 transition-all duration-200 group w-full pr-10"
                                                 >
                                                     <ExternalLink className="w-4 h-4 text-blue-400 group-hover:text-blue-300" />
-                                                    <span className="text-sm text-blue-400 group-hover:text-blue-300">{link.name}</span>
+                                                    <span className="text-sm text-blue-400 group-hover:text-blue-300 truncate">{link.name}</span>
                                                 </a>
+
                                                 {!link.isSystem && (
-                                                    <>
+                                                    <div className="absolute right-2 top-1/2 -translate-y-1/2">
                                                         <button
-                                                            onClick={() => setEditingLink(link)}
-                                                            className="p-2 rounded-lg bg-amber-600/10 hover:bg-amber-600/20 border border-amber-600/20 transition-all"
-                                                            title="Edit link"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                e.stopPropagation();
+                                                                setLinkMenuOpenId(linkMenuOpenId === link.id ? null : link.id);
+                                                            }}
+                                                            className="p-1.5 rounded-md text-blue-400/70 hover:text-blue-300 hover:bg-blue-600/20 transition-colors"
                                                         >
-                                                            <Pencil className="w-3 h-3 text-amber-400" />
+                                                            <MoreHorizontal className="w-4 h-4" />
                                                         </button>
-                                                        <button
-                                                            onClick={() => handleDeleteLink(link.id)}
-                                                            className="p-2 rounded-lg bg-red-600/10 hover:bg-red-600/20 border border-red-600/20 transition-all"
-                                                            title="Delete link"
-                                                        >
-                                                            <Trash2 className="w-3 h-3 text-red-400" />
-                                                        </button>
-                                                    </>
+
+                                                        {linkMenuOpenId === link.id && (
+                                                            <>
+                                                                <div
+                                                                    className="fixed inset-0 z-40"
+                                                                    onClick={() => setLinkMenuOpenId(null)}
+                                                                />
+                                                                <div className="absolute right-0 top-full mt-1 w-32 bg-slate-900 border border-slate-700 rounded-lg shadow-xl z-50 py-1 overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+                                                                    <button
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            setEditingLink(link);
+                                                                            setLinkMenuOpenId(null);
+                                                                        }}
+                                                                        className="flex items-center gap-2 w-full px-3 py-2 text-xs text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
+                                                                    >
+                                                                        <Pencil className="w-3.5 h-3.5" />
+                                                                        Edit
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            handleDeleteLink(link.id);
+                                                                            setLinkMenuOpenId(null);
+                                                                        }}
+                                                                        className="flex items-center gap-2 w-full px-3 py-2 text-xs text-red-400 hover:bg-slate-800 hover:text-red-300 transition-colors"
+                                                                    >
+                                                                        <Trash2 className="w-3.5 h-3.5" />
+                                                                        Delete
+                                                                    </button>
+                                                                </div>
+                                                            </>
+                                                        )}
+                                                    </div>
                                                 )}
                                             </div>
                                         ))}
