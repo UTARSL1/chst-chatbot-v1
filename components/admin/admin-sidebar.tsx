@@ -3,15 +3,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useCurrentVersion } from '@/hooks/useCurrentVersion';
-import { useState } from 'react';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+
 
 export function AdminSidebar() {
     const pathname = usePathname();
     const currentVersion = useCurrentVersion();
-    const [isRCManagementOpen, setIsRCManagementOpen] = useState(
-        pathname.startsWith('/rc-management')
-    );
+
 
     const links = [
         {
@@ -125,37 +122,7 @@ export function AdminSidebar() {
         },
     ];
 
-    const rcManagementLinks = [
-        {
-            name: 'RC Publications',
-            href: '/rc-management/publications',
-            icon: (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-            ),
-        },
-        {
-            name: 'RC Postgraduate',
-            href: '/rc-management/postgraduate',
-            icon: (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
-                </svg>
-            ),
-        },
-        {
-            name: 'RC Grants',
-            href: '/rc-management/grants',
-            icon: (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            ),
-        },
-    ];
+
 
     return (
         <div className="w-64 bg-gray-950 border-r border-gray-800 flex flex-col h-full">
@@ -185,54 +152,7 @@ export function AdminSidebar() {
                     );
                 })}
 
-                {/* RC Management Collapsible Section */}
-                <div className="pt-2">
-                    <button
-                        onClick={() => setIsRCManagementOpen(!isRCManagementOpen)}
-                        className={cn(
-                            'w-full flex items-center justify-between gap-3 px-4 py-3 rounded-lg transition-colors',
-                            pathname.startsWith('/rc-management')
-                                ? 'bg-violet-600/10 text-violet-400 border border-violet-600/20'
-                                : 'text-gray-400 hover:bg-gray-900 hover:text-gray-200'
-                        )}
-                    >
-                        <div className="flex items-center gap-3">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                            </svg>
-                            <span className="font-medium">RC Management</span>
-                        </div>
-                        {isRCManagementOpen ? (
-                            <ChevronDown className="w-4 h-4" />
-                        ) : (
-                            <ChevronRight className="w-4 h-4" />
-                        )}
-                    </button>
 
-                    {/* RC Management Sub-items */}
-                    {isRCManagementOpen && (
-                        <div className="ml-4 mt-1 space-y-1 border-l border-gray-800 pl-4">
-                            {rcManagementLinks.map((link) => {
-                                const isActive = pathname === link.href;
-                                return (
-                                    <Link
-                                        key={link.href}
-                                        href={link.href}
-                                        className={cn(
-                                            'flex items-center gap-2 px-3 py-2 rounded-lg transition-colors text-sm',
-                                            isActive
-                                                ? 'bg-violet-600/10 text-violet-400'
-                                                : 'text-gray-500 hover:bg-gray-900 hover:text-gray-300'
-                                        )}
-                                    >
-                                        {link.icon}
-                                        <span>{link.name}</span>
-                                    </Link>
-                                );
-                            })}
-                        </div>
-                    )}
-                </div>
             </nav>
 
             <div className="p-4 border-t border-gray-800">
