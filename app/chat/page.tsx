@@ -847,7 +847,7 @@ export default function ChatPage() {
                                 <div className="space-y-2 mt-2">
                                     {/* Display custom links with edit/delete buttons */}
                                     {customLinks
-                                        .filter((link) => link.section === 'others' && link.roles.includes(session.user.role))
+                                        .filter((link) => link.section === 'others' && (!link.isSystem || link.roles.includes(session.user.role)))
                                         .map((link) => (
                                             <div key={link.id} className="flex items-center gap-2">
                                                 <a
