@@ -138,9 +138,6 @@ export default function RCPostgraduatePage() {
             const data = await res.json();
             if (data.success) {
                 setMembers(data.members);
-                if (data.members.length > 0 && !selectedMember) {
-                    setSelectedMember(data.members[0]);
-                }
             }
         } catch (error) {
             console.error('Error fetching members:', error);
@@ -240,10 +237,9 @@ export default function RCPostgraduatePage() {
         // Filter for RC Members (non-chairperson)
         if (!isChairperson && userStaffId && status === 'authenticated') {
             result = result.filter(m => {
-                // Normalize IDs for comparison (remove ? and leading zeros and spaces)
-                // Use a simpler approach: strip everything except alphanumeric chars
-                const mId = m.staffId?.replace(/[^a-zA-Z0-9]/g, '') || '';
-                const uId = userStaffId.replace(/[^a-zA-Z0-9]/g, '') || '';
+                // Exact match comparison as per user request
+                const mId = m.staffId?.trim() || '';
+                const uId = userStaffId.trim();
                 return mId === uId;
             });
         }
@@ -272,6 +268,19 @@ export default function RCPostgraduatePage() {
 
         return result;
     }, [members, filters, sortField, sortDirection]);
+
+    // UX: Robust Auto-select logic
+    useEffect(() => {
+        if (filteredAndSortedMembers.length > 0) {
+            const isSelectedInList = selectedMember && filteredAndSortedMembers.some(m => m.id === selectedMember.id);
+
+            if (!isSelectedInList) {
+                setSelectedMember(filteredAndSortedMembers[0]);
+            }
+        } else if (filteredAndSortedMembers.length === 0 && selectedMember) {
+            setSelectedMember(null);
+        }
+    }, [filteredAndSortedMembers, selectedMember]);
 
     const activeFilterCount = useMemo(() => {
         let count = 0;
