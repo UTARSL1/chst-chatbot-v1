@@ -33,7 +33,11 @@ interface OverviewStats {
     }>;
 }
 
-export default function RCOverview() {
+interface RCOverviewProps {
+    showNames?: boolean;
+}
+
+export default function RCOverview({ showNames = false }: RCOverviewProps) {
     const [stats, setStats] = useState<OverviewStats | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -249,58 +253,62 @@ export default function RCOverview() {
                 </div>
             </div>
 
-            {/* Top Contributing Members by Year */}
-            <h3 className="text-xl font-bold text-white mt-8 mb-4">Top RC Contributors (1st/Corresponding Author Only)</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {stats.topMembersByYear.map((yearStat) => (
-                    <div key={yearStat.year} className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-5 shadow-lg flex flex-col">
-                        <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
-                            <h4 className="text-lg font-bold text-blue-400">{yearStat.year}</h4>
-                            <span className="text-xs text-slate-500 uppercase tracking-wider">Leaderboard</span>
-                        </div>
+            {/* Top Contributing Members by Year - Only for Chairperson */}
+            {showNames && (
+                <>
+                    <h3 className="text-xl font-bold text-white mt-8 mb-4">Top RC Contributors (1st/Corresponding Author Only)</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {stats.topMembersByYear.map((yearStat) => (
+                            <div key={yearStat.year} className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-5 shadow-lg flex flex-col">
+                                <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
+                                    <h4 className="text-lg font-bold text-blue-400">{yearStat.year}</h4>
+                                    <span className="text-xs text-slate-500 uppercase tracking-wider">Leaderboard</span>
+                                </div>
 
-                        <div className="space-y-3 flex-1">
-                            {yearStat.members.length > 0 ? (
-                                yearStat.members.map((member, idx) => (
-                                    <div key={idx} className="flex items-center justify-between group">
-                                        <div className="flex items-center gap-3 min-w-0">
-                                            <div className={`
-                                                w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold
-                                                ${idx === 0 ? 'bg-amber-500/20 text-amber-500 border border-amber-500/30' :
-                                                    idx === 1 ? 'bg-slate-400/20 text-slate-300 border border-slate-400/30' :
-                                                        idx === 2 ? 'bg-amber-700/20 text-amber-700 border border-amber-700/30' :
-                                                            'bg-slate-800 text-slate-500'}
-                                            `}>
-                                                {idx + 1}
-                                            </div>
-                                            <div className="truncate">
-                                                <div className="text-sm text-white truncate font-medium group-hover:text-blue-300 transition-colors">
-                                                    {member.name}
-                                                </div>
-                                                {member.staffId && (
-                                                    <div className="text-[10px] text-slate-500">
-                                                        {member.staffId.replace(/^\?\s*/, '')}
+                                <div className="space-y-3 flex-1">
+                                    {yearStat.members.length > 0 ? (
+                                        yearStat.members.map((member, idx) => (
+                                            <div key={idx} className="flex items-center justify-between group">
+                                                <div className="flex items-center gap-3 min-w-0">
+                                                    <div className={`
+                                                        w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold
+                                                        ${idx === 0 ? 'bg-amber-500/20 text-amber-500 border border-amber-500/30' :
+                                                            idx === 1 ? 'bg-slate-400/20 text-slate-300 border border-slate-400/30' :
+                                                                idx === 2 ? 'bg-amber-700/20 text-amber-700 border border-amber-700/30' :
+                                                                    'bg-slate-800 text-slate-500'}
+                                                    `}>
+                                                        {idx + 1}
                                                     </div>
-                                                )}
+                                                    <div className="truncate">
+                                                        <div className="text-sm text-white truncate font-medium group-hover:text-blue-300 transition-colors">
+                                                            {member.name}
+                                                        </div>
+                                                        {member.staffId && (
+                                                            <div className="text-[10px] text-slate-500">
+                                                                {member.staffId.replace(/^\?\s*/, '')}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="flex flex-col items-end shrink-0">
+                                                    <span className="text-sm font-bold text-white">{member.count}</span>
+                                                    {member.q1Count > 0 && (
+                                                        <span className="text-[10px] text-emerald-400 font-medium">
+                                                            {member.q1Count} Q1
+                                                        </span>
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="flex flex-col items-end shrink-0">
-                                            <span className="text-sm font-bold text-white">{member.count}</span>
-                                            {member.q1Count > 0 && (
-                                                <span className="text-[10px] text-emerald-400 font-medium">
-                                                    {member.q1Count} Q1
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <div className="text-sm text-gray-500 italic py-4 text-center">No data for this year</div>
-                            )}
-                        </div>
+                                        ))
+                                    ) : (
+                                        <div className="text-sm text-gray-500 italic py-4 text-center">No data for this year</div>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
+                </>
+            )}
         </div>
     );
 }

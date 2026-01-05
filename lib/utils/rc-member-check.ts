@@ -23,7 +23,7 @@ const rcMembers: RCMember[] = rcMembersData.members as RCMember[];
 export function normalizeStaffId(staffId: string): string {
     if (!staffId) return '';
 
-    // Remove any existing "?" prefix
+    // Remove any existing "?" prefix and spaces
     let normalized = staffId.replace(/^\?/, '').trim();
 
     // If it's a 4-digit number, pad with leading zero
@@ -31,8 +31,8 @@ export function normalizeStaffId(staffId: string): string {
         normalized = '0' + normalized;
     }
 
-    // Add "?" prefix to match uploaded data format
-    return '?' + normalized;
+    // Add "? " prefix to match uploaded data format (standardized: "? <staffId>")
+    return '? ' + normalized;
 }
 
 /**

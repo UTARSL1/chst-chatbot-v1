@@ -4,6 +4,9 @@ import Link from 'next/link';
 import RCPostgraduateOverview from '@/components/rc/RCPostgraduateOverview';
 import { useState, useEffect, useMemo } from 'react';
 import { Upload, Users, Filter, SortAsc, SortDesc, X, Search, GraduationCap, BookOpen, UserCheck, Calendar, ArrowLeft, GripVertical, Trash2, ChevronDown } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { hasRCAccess, getStaffIdByEmail } from '@/lib/utils/rc-member-check';
 
 
 // Check if recharts is installed, otherwise fallback to simple visuals
@@ -99,6 +102,21 @@ export default function RCPostgraduatePage() {
         totalStudentsMin: 0,
         totalStudentsMax: 1000,
     });
+
+    // Session and access control
+    const router = useRouter();
+    const { data: session, status } = useSession();
+    const userStaffId = session?.user?.email ? getStaffIdByEmail(session.user.email) : null;
+    const isChairperson = session?.user?.role === 'chairperson';
+
+    // Access control - redirect if not RC member
+    useEffect(() => {
+        if (status === 'loading') return;
+
+        if (!session || !hasRCAccess(session.user.email, session.user.role)) {
+            router.push('/chat');
+        }
+    }, [session, status, router]);
 
     // Fetch members on mount
     useEffect(() => {
@@ -219,6 +237,17 @@ export default function RCPostgraduatePage() {
     const filteredAndSortedMembers = useMemo(() => {
         let result = [...members];
 
+        // Filter for RC Members (non-chairperson)
+        if (!isChairperson && userStaffId && status === 'authenticated') {
+            result = result.filter(m => {
+                // Normalize IDs for comparison (remove ? and leading zeros and spaces)
+                // Use a simpler approach: strip everything except alphanumeric chars
+                const mId = m.staffId?.replace(/[^a-zA-Z0-9]/g, '') || '';
+                const uId = userStaffId.replace(/[^a-zA-Z0-9]/g, '') || '';
+                return mId === uId;
+            });
+        }
+
         if (filters.searchQuery.trim()) {
             const query = filters.searchQuery.toLowerCase();
             result = result.filter(m => m.name.toLowerCase().includes(query));
@@ -334,7 +363,7 @@ export default function RCPostgraduatePage() {
                 </div>
 
                 {/* Overview Dashboard */}
-                {activeTab === 'overview' && <RCPostgraduateOverview />}
+                {activeTab === 'overview' && <RCPostgraduateOverview showNames={isChairperson} />}
 
                 {/* Members Grid Structure - Hidden when not active */}
                 <div className={`grid grid-cols-1 lg:grid-cols-3 gap-6 ${activeTab !== 'members' ? 'hidden' : ''}`}>

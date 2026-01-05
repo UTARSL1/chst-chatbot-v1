@@ -4,6 +4,9 @@ import Link from 'next/link';
 import { useState, useEffect, useMemo } from 'react';
 import { Upload, Users, BarChart3, Download, Trash2, GripVertical, Filter, SortAsc, SortDesc, X, ChevronDown, Search, ArrowLeft } from 'lucide-react';
 import RCOverview from '@/components/rc/RCOverview';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { hasRCAccess, getStaffIdByEmail } from '@/lib/utils/rc-member-check';
 
 interface Member {
     id: string;
@@ -95,6 +98,21 @@ export default function RCPublicationsPage() {
 
     // Tab state
     const [activeTab, setActiveTab] = useState<'members' | 'overview'>('members');
+
+    // Session and access control
+    const router = useRouter();
+    const { data: session, status } = useSession();
+    const userStaffId = session?.user?.email ? getStaffIdByEmail(session.user.email) : null;
+    const isChairperson = session?.user?.role === 'chairperson';
+
+    // Access control - redirect if not RC member
+    useEffect(() => {
+        if (status === 'loading') return;
+
+        if (!session || !hasRCAccess(session.user.email, session.user.role)) {
+            router.push('/chat');
+        }
+    }, [session, status, router]);
 
     // Fetch members on mount
     useEffect(() => {
@@ -227,6 +245,17 @@ export default function RCPublicationsPage() {
     // Filtered and sorted members
     const filteredAndSortedMembers = useMemo(() => {
         let result = [...members];
+
+        // Filter for RC Members (non-chairperson)
+        if (!isChairperson && userStaffId && status === 'authenticated') {
+            result = result.filter(m => {
+                // Normalize IDs for comparison (remove ? and leading zeros and spaces)
+                // Use a simpler approach: strip everything except alphanumeric chars
+                const mId = m.staffId?.replace(/[^a-zA-Z0-9]/g, '') || '';
+                const uId = userStaffId.replace(/[^a-zA-Z0-9]/g, '') || '';
+                return mId === uId;
+            });
+        }
 
         // Apply search filter
         if (filters.searchQuery.trim()) {
@@ -919,7 +948,7 @@ export default function RCPublicationsPage() {
                         </div>
                     </div>
                 ) : (
-                    <RCOverview />
+                    <RCOverview showNames={isChairperson} />
                 )}
             </div>
         </div>
