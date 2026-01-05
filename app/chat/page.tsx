@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -65,6 +65,43 @@ export default function ChatPage() {
     const [editTitle, setEditTitle] = useState('');
     const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
     const [chatHistoryMenuOpen, setChatHistoryMenuOpen] = useState(false);
+
+    // Streaming & UI Refs
+    const chatContainerRef = useRef<HTMLDivElement>(null);
+    const abortControllerRef = useRef<AbortController | null>(null);
+    const [isAutoScroll, setIsAutoScroll] = useState(true);
+
+    // Auto-scroll logic
+    useEffect(() => {
+        const container = chatContainerRef.current;
+        if (!container) return;
+
+        const handleScroll = () => {
+            const { scrollTop, scrollHeight, clientHeight } = container;
+            const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
+            setIsAutoScroll(isNearBottom);
+        };
+
+        container.addEventListener('scroll', handleScroll);
+        return () => container.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    useEffect(() => {
+        if (isAutoScroll && chatContainerRef.current) {
+            chatContainerRef.current.scrollTo({
+                top: chatContainerRef.current.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+    }, [messages, isAutoScroll]);
+
+    const handleStop = () => {
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+            abortControllerRef.current = null;
+            setLoading(false);
+        }
+    };
 
     // Admin notification state
     const [pendingUsersCount, setPendingUsersCount] = useState(0);
@@ -294,13 +331,30 @@ export default function ChatPage() {
         setInput('');
         setLoading(true);
 
+        // Create temporary IDs
+        const userMsgId = Date.now().toString();
+        const assistantMsgId = (Date.now() + 1).toString();
+
         const tempUserMessage: Message = {
-            id: Date.now().toString(),
+            id: userMsgId,
             role: 'user',
             content: userMessage,
             createdAt: new Date(),
         };
-        setMessages((prev) => [...prev, tempUserMessage]);
+
+        // Initialize empty assistant message
+        const tempAssistantMessage: Message = {
+            id: assistantMsgId,
+            role: 'assistant',
+            content: '', // Start empty
+            createdAt: new Date(),
+        };
+
+        setMessages((prev) => [...prev, tempUserMessage, tempAssistantMessage]);
+
+        // Setup AbortController
+        const abortController = new AbortController();
+        abortControllerRef.current = abortController;
 
         try {
             const response = await fetch('/api/chat', {
@@ -309,30 +363,107 @@ export default function ChatPage() {
                 body: JSON.stringify({
                     message: userMessage,
                     sessionId,
+                    stream: true, // Request streaming
                 }),
+                signal: abortController.signal,
             });
 
-            const data = await response.json();
-
-            if (data.success) {
-                const assistantMessage: Message = {
-                    id: (Date.now() + 1).toString(),
-                    role: 'assistant',
-                    content: data.answer,
-                    sources: data.sources,
-                    suggestions: data.suggestions,
-                    logs: data.logs,
-                    createdAt: new Date(),
-                };
-                setMessages((prev) => [...prev, assistantMessage]);
-                setSessionId(data.sessionId);
-                loadChatSessions();
-            } else {
-                alert('Error: ' + data.error);
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.error || 'Failed to send message');
             }
-        } catch (error) {
+
+            if (!response.body) {
+                throw new Error('No response body');
+            }
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let accumulatedContent = '';
+            let rawBuffer = '';
+
+            // Delimiter for metadata (must match backend)
+            const METADATA_DELIMITER = '___METADATA_JSON___';
+
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value, { stream: true });
+                rawBuffer += chunk;
+
+                // Check for metadata delimiter
+                if (rawBuffer.includes(METADATA_DELIMITER)) {
+                    const parts = rawBuffer.split(METADATA_DELIMITER);
+
+                    // The first part is the final chunk of text
+                    if (parts[0]) {
+                        accumulatedContent = parts[0]; // Note: rawBuffer split might be safer if we accumulate rawBuffer then split. 
+                        // Actually rawBuffer is the whole stream so far.
+                        // So parts[0] is the whole content.
+
+                        // Update message content immediately
+                        setMessages((prev) =>
+                            prev.map(m => m.id === assistantMsgId
+                                ? { ...m, content: parts[0] }
+                                : m
+                            )
+                        );
+                    }
+
+                    // The second part is the JSON metadata
+                    if (parts[1]) {
+                        try {
+                            const metadata = JSON.parse(parts[1]);
+                            // Update message with metadata
+                            setMessages((prev) =>
+                                prev.map(m => m.id === assistantMsgId
+                                    ? {
+                                        ...m,
+                                        content: parts[0], // Ensure content is synced
+                                        sources: metadata.sources,
+                                        suggestions: metadata.suggestions,
+                                        logs: metadata.logs
+                                    }
+                                    : m
+                                )
+                            );
+
+                            if (metadata.sessionId) {
+                                setSessionId(metadata.sessionId);
+                                // Refresh session list to show updated title/time
+                                loadChatSessions();
+                            }
+
+                            // Stop processing only if we successfully parsed the metadata
+                            break;
+                        } catch (e) {
+                            // JSON might be incomplete, wait for more chunks
+                            // console.log('Waiting for complete metadata...');
+                        }
+                    }
+                } else {
+                    // Normal text chunk (no delimiter yet)
+                    accumulatedContent = rawBuffer;
+
+                    setMessages((prev) =>
+                        prev.map(m => m.id === assistantMsgId
+                            ? { ...m, content: accumulatedContent }
+                            : m
+                        )
+                    );
+                }
+            }
+
+        } catch (error: any) {
             console.error('Error sending message:', error);
-            alert('Failed to send message');
+            // Update error state in UI
+            setMessages((prev) =>
+                prev.map(m => m.id === assistantMsgId
+                    ? { ...m, content: "Sorry, an error occurred while generating the response: " + error.message }
+                    : m
+                )
+            );
         } finally {
             setLoading(false);
         }
@@ -860,7 +991,10 @@ export default function ChatPage() {
                     </div>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                <div
+                    ref={chatContainerRef}
+                    className="flex-1 overflow-y-auto p-4 space-y-4 scroll-smooth"
+                >
                     {messages.length === 0 ? (
                         <div className="max-w-3xl mx-auto text-center space-y-6 mt-12">
                             <div className="w-24 h-24 mx-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center gap-1">
@@ -896,7 +1030,7 @@ export default function ChatPage() {
                             </div>
                         </div>
                     ) : (
-                        messages.map((message) => (
+                        messages.map((message, index) => (
                             <div
                                 key={message.id}
                                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
@@ -1128,6 +1262,9 @@ export default function ChatPage() {
                                             {/* Remove backticks around download links for backward compatibility */}
                                             {message.content.replace(/`(\[Download[^\]]+\]\(download:[^\)]+\))`/g, '$1')}
                                         </ReactMarkdown>
+                                        {loading && index === messages.length - 1 && (
+                                            <span className="inline-block w-2 h-4 ml-1 bg-violet-400 animate-pulse align-middle" />
+                                        )}
                                     </div>
                                     {message.sources && message.sources.length > 0 && (() => {
                                         // Get unique documents based on documentId
@@ -1273,14 +1410,19 @@ export default function ChatPage() {
                         ))
                     )}
                     {loading && (
-                        <div className="flex justify-start">
-                            <Card className="p-4 bg-card">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce" />
-                                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce delay-100" />
-                                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce delay-200" />
-                                </div>
-                            </Card>
+                        <div className="flex justify-center mt-4 mb-2">
+                            <Button
+                                onClick={handleStop}
+                                variant="outline"
+                                className="flex items-center gap-2 bg-background/80 backdrop-blur border-red-500/20 text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all shadow-sm"
+                            >
+                                <svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <span>Generating...</span>
+                                <span className="text-xs opacity-70 border-l border-red-500/30 pl-2 ml-1">Stop</span>
+                            </Button>
                         </div>
                     )}
                 </div>

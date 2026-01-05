@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json();
-        const { message, sessionId } = body;
+        const { message, sessionId, stream } = body;
 
         if (!message) {
             return NextResponse.json(
@@ -52,35 +52,96 @@ export async function POST(req: NextRequest) {
             },
         });
 
-        // Process RAG query
-        const ragResponse = await processRAGQuery({
-            query: message,
-            userRole: session.user.role as any,
-            sessionId: chatSession.id,
-        });
+        if (stream) {
+            const encoder = new TextEncoder();
 
-        // Save assistant message
-        await prisma.message.create({
-            data: {
-                sessionId: chatSession.id,
-                userId: session.user.id,
-                role: 'assistant',
-                content: ragResponse.answer,
-                sources: ragResponse.sources as any,
-            },
-        });
+            // Create a ReadableStream
+            const customStream = new ReadableStream({
+                async start(controller) {
+                    try {
+                        // Process RAG query with onChunk callback
+                        const ragResponse = await processRAGQuery({
+                            query: message,
+                            userRole: session.user.role as any,
+                            sessionId: chatSession.id,
+                        }, (chunk) => {
+                            // Enqueue chunks to client
+                            controller.enqueue(encoder.encode(chunk));
+                        });
 
-        return NextResponse.json(
-            {
-                success: true,
+                        // Save assistant message AFTER generation is complete
+                        await prisma.message.create({
+                            data: {
+                                sessionId: chatSession.id,
+                                userId: session.user.id,
+                                role: 'assistant',
+                                content: ragResponse.answer,
+                                sources: ragResponse.sources as any,
+                            },
+                        });
+
+                        // Append metadata delimiter and JSON
+                        const metadata = {
+                            sessionId: chatSession.id,
+                            sources: ragResponse.sources,
+                            suggestions: ragResponse.suggestions,
+                            logs: ragResponse.logs,
+                        };
+
+                        const METADATA_DELIMITER = '___METADATA_JSON___';
+                        controller.enqueue(encoder.encode(METADATA_DELIMITER + JSON.stringify(metadata)));
+
+                        controller.close();
+                    } catch (error: any) {
+                        console.error('Streaming error:', error);
+                        // Try to send error to client if stream is still open (might be mixed with content)
+                        // A clean way is just closing, client will see incomplete stream or parse error
+                        try {
+                            controller.error(error);
+                        } catch (e) { /* ignore */ }
+                    }
+                }
+            });
+
+            return new Response(customStream, {
+                headers: {
+                    'Content-Type': 'text/plain; charset=utf-8',
+                    'Transfer-Encoding': 'chunked',
+                    'Connection': 'keep-alive',
+                }
+            });
+
+        } else {
+            // Non-streaming fallback (Original logic)
+            const ragResponse = await processRAGQuery({
+                query: message,
+                userRole: session.user.role as any,
                 sessionId: chatSession.id,
-                answer: ragResponse.answer,
-                sources: ragResponse.sources,
-                suggestions: ragResponse.suggestions,
-                logs: ragResponse.logs,
-            },
-            { status: 200 }
-        );
+            });
+
+            // Save assistant message
+            await prisma.message.create({
+                data: {
+                    sessionId: chatSession.id,
+                    userId: session.user.id,
+                    role: 'assistant',
+                    content: ragResponse.answer,
+                    sources: ragResponse.sources as any,
+                },
+            });
+
+            return NextResponse.json(
+                {
+                    success: true,
+                    sessionId: chatSession.id,
+                    answer: ragResponse.answer,
+                    sources: ragResponse.sources,
+                    suggestions: ragResponse.suggestions,
+                    logs: ragResponse.logs,
+                },
+                { status: 200 }
+            );
+        }
     } catch (error) {
         console.error('Chat error:', error);
         return NextResponse.json(

@@ -1068,7 +1068,7 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
 /**
  * Process a RAG query and generate a response
  */
-export async function processRAGQuery(query: RAGQuery): Promise<RAGResponse> {
+export async function processRAGQuery(query: RAGQuery, onChunk?: (token: string) => void): Promise<RAGResponse> {
     const startTime = Date.now(); // Start timer
     const debugLogs: string[] = []; // Capture activity for debugging
     const log = (msg: string) => {
@@ -1644,19 +1644,76 @@ ${chatHistoryStr}
                 }
             }
 
-            const completion = await openai.chat.completions.create({
-                model: activeModel,
-                messages: messages,
-                tools: localTools.length > 0 ? localTools : undefined, // Only pass tools if any are allowed
-                tool_choice: localTools.length > 0 ? 'auto' : undefined,
+            let message;
 
-                temperature: 0.7,
-                max_tokens: 4000,
-            });
-            log(`⏱️ LLM call #${loopCount + 1}: ${((Date.now() - tLoop) / 1000).toFixed(2)}s`);
+            if (onChunk) {
+                // STREAMING MODE
+                const stream = await openai.chat.completions.create({
+                    model: activeModel,
+                    messages: messages,
+                    tools: localTools.length > 0 ? localTools : undefined,
+                    tool_choice: localTools.length > 0 ? 'auto' : undefined,
+                    temperature: 0.7,
+                    max_tokens: 4000,
+                    stream: true,
+                });
 
-            totalTokens += completion.usage?.total_tokens || 0;
-            const message = completion.choices[0].message;
+                let fullContent = '';
+                const toolCallsMap = new Map<number, any>();
+
+                for await (const chunk of stream) {
+                    const delta = chunk.choices[0]?.delta;
+                    if (!delta) continue;
+
+                    // Stream content if available
+                    if (delta.content) {
+                        fullContent += delta.content;
+                        onChunk(delta.content);
+                    }
+
+                    // Accumulate tool calls
+                    if (delta.tool_calls) {
+                        for (const tc of delta.tool_calls) {
+                            if (!toolCallsMap.has(tc.index)) {
+                                toolCallsMap.set(tc.index, {
+                                    id: tc.id,
+                                    type: tc.type,
+                                    function: { ...tc.function, arguments: '' }
+                                });
+                            }
+
+                            const existing = toolCallsMap.get(tc.index);
+                            if (tc.function?.name) existing.function.name = tc.function.name;
+                            if (tc.function?.arguments) existing.function.arguments += tc.function.arguments;
+                        }
+                    }
+                }
+
+                // Construct message object compatible with ChatCompletionMessage
+                message = {
+                    role: 'assistant',
+                    content: fullContent || null,
+                    tool_calls: toolCallsMap.size > 0 ? Array.from(toolCallsMap.values()) : undefined
+                };
+
+                log(`⏱️ LLM streaming finished (#${loopCount + 1}): ${((Date.now() - tLoop) / 1000).toFixed(2)}s`);
+
+            } else {
+                // NON-STREAMING MODE
+                const completion = await openai.chat.completions.create({
+                    model: activeModel,
+                    messages: messages,
+                    tools: localTools.length > 0 ? localTools : undefined,
+                    tool_choice: localTools.length > 0 ? 'auto' : undefined,
+
+                    temperature: 0.7,
+                    max_tokens: 4000,
+                });
+                log(`⏱️ LLM call #${loopCount + 1}: ${((Date.now() - tLoop) / 1000).toFixed(2)}s`);
+
+                totalTokens += completion.usage?.total_tokens || 0;
+                message = completion.choices[0].message;
+            }
 
             messages.push(message);
 
