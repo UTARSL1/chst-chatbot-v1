@@ -789,18 +789,39 @@ export default function ChatPage() {
                                     {/* Display RC links with role-based filtering */}
                                     {customLinks
                                         .filter((link) => link.section === 'rc' && link.roles.includes(session.user.role))
-                                        .map((link) => (
-                                            <a
-                                                key={link.id}
-                                                href={link.url}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20 transition-all duration-200 group"
-                                            >
-                                                <ExternalLink className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />
-                                                <span className="text-sm text-indigo-400 group-hover:text-indigo-300">{link.name}</span>
-                                            </a>
-                                        ))}
+                                        .map((link) => {
+                                            const isTeams = link.name.includes('Teams Portal');
+                                            const isLinkedIn = link.name.includes('LinkedIn');
+                                            const isWebsite = link.name.includes('Official Website');
+                                            const isResourceHub = link.name.includes('Resource Hub');
+
+                                            return (
+                                                <a
+                                                    key={link.id}
+                                                    href={link.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isTeams ? 'bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20' :
+                                                            isLinkedIn ? 'bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20' :
+                                                                isWebsite ? 'bg-teal-600/10 hover:bg-teal-600/20 border border-teal-600/20' :
+                                                                    isResourceHub ? 'bg-purple-600/10 hover:bg-purple-600/20 border border-purple-600/20' :
+                                                                        'bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20'
+                                                        }`}
+                                                >
+                                                    {isTeams && <Users className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />}
+                                                    {isLinkedIn && <Linkedin className="w-4 h-4 text-blue-400 group-hover:text-blue-300" />}
+                                                    {isWebsite && <Globe className="w-4 h-4 text-teal-400 group-hover:text-teal-300" />}
+                                                    {isResourceHub && <FolderOpen className="w-4 h-4 text-purple-400 group-hover:text-purple-300" />}
+                                                    {!isTeams && !isLinkedIn && !isWebsite && !isResourceHub && <ExternalLink className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />}
+                                                    <span className={`text-sm ${isTeams ? 'text-indigo-400 group-hover:text-indigo-300' :
+                                                            isLinkedIn ? 'text-blue-400 group-hover:text-blue-300' :
+                                                                isWebsite ? 'text-teal-400 group-hover:text-teal-300' :
+                                                                    isResourceHub ? 'text-purple-400 group-hover:text-purple-300' :
+                                                                        'text-indigo-400 group-hover:text-indigo-300'
+                                                        }`}>{link.name}</span>
+                                                </a>
+                                            );
+                                        })}
                                 </div>
                             )}
                         </div>
