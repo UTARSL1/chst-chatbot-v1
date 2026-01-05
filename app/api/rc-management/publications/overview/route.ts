@@ -3,11 +3,20 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 
+import { hasRCAccess } from '@/lib/utils/rc-member-check';
+
 export async function GET(request: NextRequest) {
     try {
         // Check authentication
         const session = await getServerSession(authOptions);
-        if (!session || session.user.role !== 'chairperson') {
+
+        // Allow if chairperson OR if verified RC member
+        const isAuthorized = session && (
+            session.user.role === 'chairperson' ||
+            hasRCAccess(session.user.email, session.user.role)
+        );
+
+        if (!isAuthorized) {
             return NextResponse.json(
                 { error: 'Unauthorized' },
                 { status: 403 }
