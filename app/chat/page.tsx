@@ -774,48 +774,34 @@ export default function ChatPage() {
 
                     {/* Quick Links - Fixed at bottom */}
                     <div className="mt-4 pt-4 border-t border-border space-y-4">
-                        {/* CHST Quick Access */}
+                        {/* RC Quick Access - Collapsible */}
                         <div className="space-y-2">
-                            <h3 className="text-xs font-semibold text-muted-foreground mb-2">Quick Access (CHST)</h3>
-                            {!['student', 'public'].includes(session.user.role) && (
-                                <a
-                                    href="https://teams.microsoft.com/l/team/19%3A50c3f438061846c2809c8318fcf1ac17%40thread.tacv2/conversations?groupId=9795c98d-9bc0-4453-8150-0b2495001652&tenantId=4edf9354-0b3b-429a-bb8f-f21f957f1d1c"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20 transition-all duration-200 group"
-                                >
-                                    <Users className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />
-                                    <span className="text-sm text-indigo-400 group-hover:text-indigo-300">CHST Teams Portal</span>
-                                </a>
-                            )}
-                            <a
-                                href="https://www.linkedin.com/company/hst-research-group/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20 transition-all duration-200 group"
+                            <button
+                                onClick={() => setRcManagementOpen(!rcManagementOpen)}
+                                className="w-full flex items-center justify-between text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
                             >
-                                <Linkedin className="w-4 h-4 text-blue-400 group-hover:text-blue-300" />
-                                <span className="text-sm text-blue-400 group-hover:text-blue-300">CHST LinkedIn Community</span>
-                            </a>
-                            <a
-                                href="http://chst.research.utar.edu.my/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-teal-600/10 hover:bg-teal-600/20 border border-teal-600/20 transition-all duration-200 group"
-                            >
-                                <Globe className="w-4 h-4 text-teal-400 group-hover:text-teal-300" />
-                                <span className="text-sm text-teal-400 group-hover:text-teal-300">CHST Official Website</span>
-                            </a>
-                            {!['student', 'public'].includes(session.user.role) && (
-                                <a
-                                    href="https://www.dropbox.com/scl/fo/1lgconbww9vjda2vgsgiz/ALgvtMRZGD2J9oZrFzK9Gns?rlkey=ce7gkp0455zu90q6jpf7879hw&dl=0"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-purple-600/10 hover:bg-purple-600/20 border border-purple-600/20 transition-all duration-200 group"
-                                >
-                                    <FolderOpen className="w-4 h-4 text-purple-400 group-hover:text-purple-300" />
-                                    <span className="text-sm text-purple-400 group-hover:text-purple-300">CHST Resource Hub</span>
-                                </a>
+                                <span>Quick Access (RC)</span>
+                                <ChevronDown className={`w-4 h-4 transition-transform ${rcManagementOpen ? 'rotate-180' : ''}`} />
+                            </button>
+
+                            {rcManagementOpen && (
+                                <div className="space-y-2 mt-2">
+                                    {/* Display RC links with role-based filtering */}
+                                    {customLinks
+                                        .filter((link) => link.section === 'rc' && link.roles.includes(session.user.role))
+                                        .map((link) => (
+                                            <a
+                                                key={link.id}
+                                                href={link.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20 transition-all duration-200 group"
+                                            >
+                                                <ExternalLink className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />
+                                                <span className="text-sm text-indigo-400 group-hover:text-indigo-300">{link.name}</span>
+                                            </a>
+                                        ))}
+                                </div>
                             )}
                         </div>
 
@@ -832,37 +818,39 @@ export default function ChatPage() {
                             {othersOpen && (
                                 <div className="space-y-2 mt-2">
                                     {/* Display custom links with edit/delete buttons */}
-                                    {customLinks.map((link) => (
-                                        <div key={link.id} className="flex items-center gap-2">
-                                            <a
-                                                href={link.url}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex-1 flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20 transition-all duration-200 group"
-                                            >
-                                                <ExternalLink className="w-4 h-4 text-blue-400 group-hover:text-blue-300" />
-                                                <span className="text-sm text-blue-400 group-hover:text-blue-300">{link.name}</span>
-                                            </a>
-                                            {!link.isSystem && (
-                                                <>
-                                                    <button
-                                                        onClick={() => setEditingLink(link)}
-                                                        className="p-2 rounded-lg bg-amber-600/10 hover:bg-amber-600/20 border border-amber-600/20 transition-all"
-                                                        title="Edit link"
-                                                    >
-                                                        <Pencil className="w-3 h-3 text-amber-400" />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleDeleteLink(link.id)}
-                                                        className="p-2 rounded-lg bg-red-600/10 hover:bg-red-600/20 border border-red-600/20 transition-all"
-                                                        title="Delete link"
-                                                    >
-                                                        <Trash2 className="w-3 h-3 text-red-400" />
-                                                    </button>
-                                                </>
-                                            )}
-                                        </div>
-                                    ))}
+                                    {customLinks
+                                        .filter((link) => link.section === 'others' && link.roles.includes(session.user.role))
+                                        .map((link) => (
+                                            <div key={link.id} className="flex items-center gap-2">
+                                                <a
+                                                    href={link.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex-1 flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20 transition-all duration-200 group"
+                                                >
+                                                    <ExternalLink className="w-4 h-4 text-blue-400 group-hover:text-blue-300" />
+                                                    <span className="text-sm text-blue-400 group-hover:text-blue-300">{link.name}</span>
+                                                </a>
+                                                {!link.isSystem && (
+                                                    <>
+                                                        <button
+                                                            onClick={() => setEditingLink(link)}
+                                                            className="p-2 rounded-lg bg-amber-600/10 hover:bg-amber-600/20 border border-amber-600/20 transition-all"
+                                                            title="Edit link"
+                                                        >
+                                                            <Pencil className="w-3 h-3 text-amber-400" />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDeleteLink(link.id)}
+                                                            className="p-2 rounded-lg bg-red-600/10 hover:bg-red-600/20 border border-red-600/20 transition-all"
+                                                            title="Delete link"
+                                                        >
+                                                            <Trash2 className="w-3 h-3 text-red-400" />
+                                                        </button>
+                                                    </>
+                                                )}
+                                            </div>
+                                        ))}
 
                                     {/* Add Quick Access button for all users */}
                                     <button

@@ -21,10 +21,11 @@ export default function AdminQuickAccessPage() {
     const [links, setLinks] = useState<QuickAccessLink[]>([]);
     const [showAddModal, setShowAddModal] = useState(false);
     const [editingLink, setEditingLink] = useState<QuickAccessLink | null>(null);
+    const [activeTab, setActiveTab] = useState<'others' | 'rc'>('others');
     const [newLink, setNewLink] = useState({
         name: '',
         url: '',
-        section: 'others',
+        section: 'others' as 'others' | 'rc',
         roles: ['public', 'student', 'member', 'chairperson'],
         isSystem: true
     });
@@ -56,7 +57,7 @@ export default function AdminQuickAccessPage() {
             const response = await fetch('/api/quick-access', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newLink)
+                body: JSON.stringify({ ...newLink, section: activeTab })
             });
 
             if (response.ok) {
@@ -64,7 +65,7 @@ export default function AdminQuickAccessPage() {
                 setNewLink({
                     name: '',
                     url: '',
-                    section: 'others',
+                    section: activeTab,
                     roles: ['public', 'student', 'member', 'chairperson'],
                     isSystem: true
                 });
@@ -136,25 +137,51 @@ export default function AdminQuickAccessPage() {
         }
     };
 
+    const filteredLinks = links.filter(link => link.section === activeTab);
+
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold text-white">Quick Access Management</h1>
                 <Button onClick={() => setShowAddModal(true)} variant="gradient">
-                    + Add System Link
+                    + Add Link
                 </Button>
+            </div>
+
+            {/* Tabs */}
+            <div className="flex gap-2 border-b border-white/10">
+                <button
+                    onClick={() => setActiveTab('others')}
+                    className={`px-4 py-2 text-sm font-medium transition-colors ${activeTab === 'others'
+                            ? 'text-violet-400 border-b-2 border-violet-400'
+                            : 'text-gray-400 hover:text-gray-300'
+                        }`}
+                >
+                    Quick Access (Others)
+                </button>
+                <button
+                    onClick={() => setActiveTab('rc')}
+                    className={`px-4 py-2 text-sm font-medium transition-colors ${activeTab === 'rc'
+                            ? 'text-violet-400 border-b-2 border-violet-400'
+                            : 'text-gray-400 hover:text-gray-300'
+                        }`}
+                >
+                    Quick Access (RC)
+                </button>
             </div>
 
             <Card className="bg-gray-900/50 border-white/10 backdrop-blur-xl">
                 <CardHeader>
-                    <CardTitle className="text-white">System Links</CardTitle>
+                    <CardTitle className="text-white">
+                        {activeTab === 'others' ? 'Other Links' : 'RC Links'}
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-4">
-                        {links.length === 0 ? (
-                            <p className="text-gray-400 text-center py-4">No system links found.</p>
+                        {filteredLinks.length === 0 ? (
+                            <p className="text-gray-400 text-center py-4">No links found.</p>
                         ) : (
-                            links.map((link) => (
+                            filteredLinks.map((link) => (
                                 <div key={link.id} className="flex items-center justify-between p-4 rounded-lg bg-white/5 border border-white/10">
                                     <div className="flex items-center gap-4">
                                         <div className="p-2 rounded-full bg-violet-500/20 text-violet-400">
@@ -193,7 +220,9 @@ export default function AdminQuickAccessPage() {
             {showAddModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                     <div className="bg-gray-900 border border-white/10 p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
-                        <h2 className="text-xl font-bold text-white mb-4">Add System Link</h2>
+                        <h2 className="text-xl font-bold text-white mb-4">
+                            Add Link to {activeTab === 'others' ? 'Others' : 'RC'}
+                        </h2>
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-300 mb-1">Link Name</label>
@@ -246,7 +275,7 @@ export default function AdminQuickAccessPage() {
             {editingLink && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                     <div className="bg-gray-900 border border-white/10 p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
-                        <h2 className="text-xl font-bold text-white mb-4">Edit System Link</h2>
+                        <h2 className="text-xl font-bold text-white mb-4">Edit Link</h2>
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-300 mb-1">Link Name</label>
