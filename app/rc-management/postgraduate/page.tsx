@@ -385,42 +385,44 @@ export default function RCPostgraduatePage() {
                                     <Users className="w-5 h-5 text-blue-300" />
                                     <h3 className="font-semibold text-blue-300">Supervisors ({filteredAndSortedMembers.length})</h3>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    {/* Sort Field */}
-                                    <div className="relative group z-50">
-                                        <button className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-md text-xs text-gray-300 hover:bg-white/10">
-                                            <span>{sortOptions[sortField]}</span>
-                                            <ChevronDown size={12} />
-                                        </button>
-                                        <div className="absolute right-0 top-full mt-1 w-40 bg-slate-800 border border-white/10 rounded-lg shadow-xl py-1 hidden group-hover:block z-50">
-                                            {Object.entries(sortOptions).map(([key, label]) => (
-                                                <button
-                                                    key={key}
-                                                    onClick={() => setSortField(key as SortField)}
-                                                    className={`w-full text-left px-4 py-2 text-xs hover:bg-white/5 ${sortField === key ? 'text-blue-400 font-medium' : 'text-gray-400'}`}
-                                                >
-                                                    {label}
-                                                </button>
-                                            ))}
+                                {isChairperson && (
+                                    <div className="flex items-center gap-2">
+                                        {/* Sort Field */}
+                                        <div className="relative group z-50">
+                                            <button className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-md text-xs text-gray-300 hover:bg-white/10">
+                                                <span>{sortOptions[sortField]}</span>
+                                                <ChevronDown size={12} />
+                                            </button>
+                                            <div className="absolute right-0 top-full mt-1 w-40 bg-slate-800 border border-white/10 rounded-lg shadow-xl py-1 hidden group-hover:block z-50">
+                                                {Object.entries(sortOptions).map(([key, label]) => (
+                                                    <button
+                                                        key={key}
+                                                        onClick={() => setSortField(key as SortField)}
+                                                        className={`w-full text-left px-4 py-2 text-xs hover:bg-white/5 ${sortField === key ? 'text-blue-400 font-medium' : 'text-gray-400'}`}
+                                                    >
+                                                        {label}
+                                                    </button>
+                                                ))}
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <button
-                                        onClick={() => setSortDirection(d => d === 'asc' ? 'desc' : 'asc')}
-                                        className="p-1.5 rounded-md bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300"
-                                    >
-                                        {sortDirection === 'asc' ? <SortAsc size={16} /> : <SortDesc size={16} />}
-                                    </button>
-                                    <button
-                                        onClick={() => setShowFilters(!showFilters)}
-                                        className={`p-1.5 rounded-md border transition-colors relative ${showFilters ? 'bg-blue-500/20 border-blue-400/50 text-blue-300' : 'bg-white/5 border-white/10 text-gray-300'}`}
-                                    >
-                                        <Filter size={16} />
-                                        {activeFilterCount > 0 && (
-                                            <span className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full" />
-                                        )}
-                                    </button>
-                                </div>
+                                        <button
+                                            onClick={() => setSortDirection(d => d === 'asc' ? 'desc' : 'asc')}
+                                            className="p-1.5 rounded-md bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300"
+                                        >
+                                            {sortDirection === 'asc' ? <SortAsc size={16} /> : <SortDesc size={16} />}
+                                        </button>
+                                        <button
+                                            onClick={() => setShowFilters(!showFilters)}
+                                            className={`p-1.5 rounded-md border transition-colors relative ${showFilters ? 'bg-blue-500/20 border-blue-400/50 text-blue-300' : 'bg-white/5 border-white/10 text-gray-300'}`}
+                                        >
+                                            <Filter size={16} />
+                                            {activeFilterCount > 0 && (
+                                                <span className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full" />
+                                            )}
+                                        </button>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Search */}
@@ -531,29 +533,31 @@ export default function RCPostgraduatePage() {
                         </div>
 
                         {/* Upload */}
-                        <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-5 shadow-lg">
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <Upload className="w-5 h-5 text-blue-400" />
-                                    <div>
-                                        <h2 className="text-sm font-semibold text-white">Upload Statistics</h2>
-                                        <p className="text-xs text-gray-400">Upload CSV file containing supervision data</p>
+                        {isChairperson && (
+                            <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-5 shadow-lg">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <Upload className="w-5 h-5 text-blue-400" />
+                                        <div>
+                                            <h2 className="text-sm font-semibold text-white">Upload Statistics</h2>
+                                            <p className="text-xs text-gray-400">Upload CSV file containing supervision data</p>
+                                        </div>
                                     </div>
+                                    <label className="cursor-pointer">
+                                        <input
+                                            type="file"
+                                            accept=".csv"
+                                            onChange={handleFileUpload}
+                                            className="hidden"
+                                            disabled={uploading}
+                                        />
+                                        <div className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition font-medium text-sm shadow-lg">
+                                            {uploading ? 'Uploading...' : 'Upload'}
+                                        </div>
+                                    </label>
                                 </div>
-                                <label className="cursor-pointer">
-                                    <input
-                                        type="file"
-                                        accept=".csv"
-                                        onChange={handleFileUpload}
-                                        className="hidden"
-                                        disabled={uploading}
-                                    />
-                                    <div className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition font-medium text-sm shadow-lg">
-                                        {uploading ? 'Uploading...' : 'Upload'}
-                                    </div>
-                                </label>
                             </div>
-                        </div>
+                        )}
                     </div>
 
                     {/* Right Panel - Dashboard */}
