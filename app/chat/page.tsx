@@ -14,6 +14,7 @@ import { CopyButton } from '@/components/CopyButton';
 import UserManualButton from '@/components/UserManualButton';
 import { Linkedin, Globe, FolderOpen, Users, ChevronDown, BookOpen, GraduationCap, Briefcase, FileText, DollarSign, TrendingUp, UserPlus, Plus, ExternalLink, Pencil, Trash2, MessageSquare, MoreVertical, MoreHorizontal, Check, X } from 'lucide-react';
 import { useCurrentVersion } from '@/hooks/useCurrentVersion';
+import { hasRCAccess } from '@/lib/utils/rc-member-check';
 
 interface QuickAccessLink {
     id: string;
@@ -782,57 +783,59 @@ export default function ChatPage() {
 
                     {/* Quick Links - Fixed at bottom */}
                     <div className="mt-4 pt-4 border-t border-border space-y-4">
-                        {/* RC Quick Access - Collapsible */}
-                        <div className="space-y-2">
-                            <button
-                                onClick={() => setRcQuickAccessOpen(!rcQuickAccessOpen)}
-                                className="w-full flex items-center justify-between text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
-                            >
-                                <span>Quick Access (RC)</span>
-                                <ChevronDown className={`w-4 h-4 transition-transform ${rcQuickAccessOpen ? 'rotate-180' : ''}`} />
-                            </button>
+                        {/* RC Quick Access - Collapsible (RC Members & Chairperson only) */}
+                        {hasRCAccess(session.user.email, session.user.role) && (
+                            <div className="space-y-2">
+                                <button
+                                    onClick={() => setRcQuickAccessOpen(!rcQuickAccessOpen)}
+                                    className="w-full flex items-center justify-between text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
+                                >
+                                    <span>Quick Access (RC)</span>
+                                    <ChevronDown className={`w-4 h-4 transition-transform ${rcQuickAccessOpen ? 'rotate-180' : ''}`} />
+                                </button>
 
-                            {rcQuickAccessOpen && (
-                                <div className="space-y-2 mt-2">
-                                    {/* Display RC links with role-based filtering */}
-                                    {customLinks
-                                        .filter((link) => link.section === 'rc' && link.roles.includes(session.user.role))
-                                        .map((link) => {
-                                            const isTeams = link.name.includes('Teams Portal');
-                                            const isLinkedIn = link.name.includes('LinkedIn');
-                                            const isWebsite = link.name.includes('Official Website');
-                                            const isResourceHub = link.name.includes('Resource Hub');
+                                {rcQuickAccessOpen && (
+                                    <div className="space-y-2 mt-2">
+                                        {/* Display RC links with role-based filtering */}
+                                        {customLinks
+                                            .filter((link) => link.section === 'rc' && link.roles.includes(session.user.role))
+                                            .map((link) => {
+                                                const isTeams = link.name.includes('Teams Portal');
+                                                const isLinkedIn = link.name.includes('LinkedIn');
+                                                const isWebsite = link.name.includes('Official Website');
+                                                const isResourceHub = link.name.includes('Resource Hub');
 
-                                            return (
-                                                <a
-                                                    key={link.id}
-                                                    href={link.url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isTeams ? 'bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20' :
-                                                        isLinkedIn ? 'bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20' :
-                                                            isWebsite ? 'bg-teal-600/10 hover:bg-teal-600/20 border border-teal-600/20' :
-                                                                isResourceHub ? 'bg-purple-600/10 hover:bg-purple-600/20 border border-purple-600/20' :
-                                                                    'bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20'
-                                                        }`}
-                                                >
-                                                    {isTeams && <Users className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />}
-                                                    {isLinkedIn && <Linkedin className="w-4 h-4 text-blue-400 group-hover:text-blue-300" />}
-                                                    {isWebsite && <Globe className="w-4 h-4 text-teal-400 group-hover:text-teal-300" />}
-                                                    {isResourceHub && <FolderOpen className="w-4 h-4 text-purple-400 group-hover:text-purple-300" />}
-                                                    {!isTeams && !isLinkedIn && !isWebsite && !isResourceHub && <ExternalLink className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />}
-                                                    <span className={`text-sm ${isTeams ? 'text-indigo-400 group-hover:text-indigo-300' :
-                                                        isLinkedIn ? 'text-blue-400 group-hover:text-blue-300' :
-                                                            isWebsite ? 'text-teal-400 group-hover:text-teal-300' :
-                                                                isResourceHub ? 'text-purple-400 group-hover:text-purple-300' :
-                                                                    'text-indigo-400 group-hover:text-indigo-300'
-                                                        }`}>{link.name}</span>
-                                                </a>
-                                            );
-                                        })}
-                                </div>
-                            )}
-                        </div>
+                                                return (
+                                                    <a
+                                                        key={link.id}
+                                                        href={link.url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isTeams ? 'bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20' :
+                                                            isLinkedIn ? 'bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20' :
+                                                                isWebsite ? 'bg-teal-600/10 hover:bg-teal-600/20 border border-teal-600/20' :
+                                                                    isResourceHub ? 'bg-purple-600/10 hover:bg-purple-600/20 border border-purple-600/20' :
+                                                                        'bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20'
+                                                            }`}
+                                                    >
+                                                        {isTeams && <Users className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />}
+                                                        {isLinkedIn && <Linkedin className="w-4 h-4 text-blue-400 group-hover:text-blue-300" />}
+                                                        {isWebsite && <Globe className="w-4 h-4 text-teal-400 group-hover:text-teal-300" />}
+                                                        {isResourceHub && <FolderOpen className="w-4 h-4 text-purple-400 group-hover:text-purple-300" />}
+                                                        {!isTeams && !isLinkedIn && !isWebsite && !isResourceHub && <ExternalLink className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />}
+                                                        <span className={`text-sm ${isTeams ? 'text-indigo-400 group-hover:text-indigo-300' :
+                                                            isLinkedIn ? 'text-blue-400 group-hover:text-blue-300' :
+                                                                isWebsite ? 'text-teal-400 group-hover:text-teal-300' :
+                                                                    isResourceHub ? 'text-purple-400 group-hover:text-purple-300' :
+                                                                        'text-indigo-400 group-hover:text-indigo-300'
+                                                            }`}>{link.name}</span>
+                                                    </a>
+                                                );
+                                            })}
+                                    </div>
+                                )}
+                            </div>
+                        )}
 
                         {/* IPSR Quick Access - Collapsible */}
                         <div className="space-y-2">
@@ -923,8 +926,8 @@ export default function ChatPage() {
                             )}
                         </div>
 
-                        {/* RC Management - Collapsible (Chairperson only) */}
-                        {session.user.role === 'chairperson' && (
+                        {/* RC Management - Collapsible (RC Members & Chairperson) */}
+                        {hasRCAccess(session.user.email, session.user.role) && (
                             <div className="space-y-2">
                                 <button
                                     onClick={() => setRcManagementOpen(!rcManagementOpen)}
