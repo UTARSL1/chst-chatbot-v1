@@ -175,7 +175,6 @@ const RCGrantDonutChart: React.FC<RCGrantDonutChartProps> = ({ grants, totalFund
                         </g>
                     )}
 
-                    {/* Labels on Slices */}
                     {/* External Label */}
                     {data.external.percentage > 0 && (
                         <text
@@ -183,10 +182,10 @@ const RCGrantDonutChart: React.FC<RCGrantDonutChartProps> = ({ grants, totalFund
                             y={extPos.y}
                             textAnchor="middle"
                             dominantBaseline="middle"
-                            className="fill-white text-[4.5px] font-bold pointer-events-none drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]"
+                            className="fill-white text-[5.5px] font-black pointer-events-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]"
                         >
-                            <tspan x={extPos.x} dy="-2">External</tspan>
-                            <tspan x={extPos.x} dy="5">{`PI ${data.external.piCount}/${data.external.count}`}</tspan>
+                            <tspan x={extPos.x} dy="-2.5">External</tspan>
+                            <tspan x={extPos.x} dy="6">{`PI ${data.external.piCount}/${data.external.count}`}</tspan>
                         </text>
                     )}
 
@@ -197,10 +196,10 @@ const RCGrantDonutChart: React.FC<RCGrantDonutChartProps> = ({ grants, totalFund
                             y={intPos.y}
                             textAnchor="middle"
                             dominantBaseline="middle"
-                            className="fill-white text-[4.5px] font-bold pointer-events-none drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]"
+                            className="fill-white text-[5.5px] font-black pointer-events-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]"
                         >
-                            <tspan x={intPos.x} dy="-2">Internal</tspan>
-                            <tspan x={intPos.x} dy="5">{`PI ${data.internal.piCount}/${data.internal.count}`}</tspan>
+                            <tspan x={intPos.x} dy="-2.5">Internal</tspan>
+                            <tspan x={intPos.x} dy="6">{`PI ${data.internal.piCount}/${data.internal.count}`}</tspan>
                         </text>
                     )}
 
