@@ -30,9 +30,16 @@ export async function POST(request: NextRequest) {
             grants: any[]
         }>();
 
+        // Determine which locations are being updated in this request
+        const locationsToUpdate: string[] = [];
+        if (inUtarFile) locationsToUpdate.push('IN_UTAR');
+        if (notInUtarFile) locationsToUpdate.push('NOT_IN_UTAR');
+
         const processRow = (row: any, fundingLocation: 'IN_UTAR' | 'NOT_IN_UTAR') => {
-            const staffId = row['Staff ID'];
-            if (!staffId) return;
+            // Sanitize Staff ID to prevent duplicates
+            const rawStaffId = row['Staff ID'];
+            if (!rawStaffId) return;
+            const staffId = String(rawStaffId).trim();
 
             if (!grantsByStaff.has(staffId)) {
                 grantsByStaff.set(staffId, {
@@ -166,10 +173,13 @@ export async function POST(request: NextRequest) {
                 });
             }
 
-            // Delete ALL existing grants for this member to avoid duplicates
-            // This assumes the upload contains the COMPLETE history for the member
+            // Scoped Deletion: Only delete grants for the locations we are updating
+            // This allows merging IN_UTAR and NOT_IN_UTAR data by uploading them sequentially
             await prisma.grant.deleteMany({
-                where: { memberId: member.id }
+                where: {
+                    memberId: member.id,
+                    fundingLocation: { in: locationsToUpdate }
+                }
             });
 
             // Insert new grants
@@ -182,17 +192,20 @@ export async function POST(request: NextRequest) {
                 });
             }
 
-            // Calculate and update stats
-            const grants = data.grants;
+            // Fetch ALL grants for this member to calculate correct totals (merging existing + new)
+            const allGrants = await prisma.grant.findMany({
+                where: { memberId: member.id }
+            });
+
             const stats = {
-                totalGrants: grants.length,
-                totalFunding: grants.reduce((sum, g) => sum + g.fundingAmount, 0),
-                inUtarGrants: grants.filter(g => g.fundingLocation === 'IN_UTAR').length,
-                notInUtarGrants: grants.filter(g => g.fundingLocation === 'NOT_IN_UTAR').length,
-                internalGrants: grants.filter(g => g.grantType === 'INTERNAL').length,
-                externalGrants: grants.filter(g => g.grantType === 'EXTERNAL').length,
-                piCount: grants.filter(g => g.role === 'PRINCIPAL INVESTIGATOR').length,
-                coResearcherCount: grants.filter(g => g.role === 'CO-RESEARCHER').length
+                totalGrants: allGrants.length,
+                totalFunding: allGrants.reduce((sum, g) => sum + g.fundingAmount, 0),
+                inUtarGrants: allGrants.filter(g => g.fundingLocation === 'IN_UTAR').length,
+                notInUtarGrants: allGrants.filter(g => g.fundingLocation === 'NOT_IN_UTAR').length,
+                internalGrants: allGrants.filter(g => g.grantType === 'INTERNAL').length,
+                externalGrants: allGrants.filter(g => g.grantType === 'EXTERNAL').length,
+                piCount: allGrants.filter(g => g.role === 'PRINCIPAL INVESTIGATOR').length,
+                coResearcherCount: allGrants.filter(g => g.role === 'CO-RESEARCHER').length
             };
 
             await prisma.rCGrantMember.update({
