@@ -115,7 +115,7 @@ const RCGrantYearlyBarChart: React.FC<RCGrantYearlyBarChartProps> = ({ grants })
                                     y={yPos}
                                     dy="3"
                                     textAnchor="end"
-                                    className="fill-gray-500 text-[10px]"
+                                    className="fill-white text-[12px] font-bold"
                                 >
                                     {formatCurrency(yVal)}
                                 </text>
@@ -154,7 +154,7 @@ const RCGrantYearlyBarChart: React.FC<RCGrantYearlyBarChartProps> = ({ grants })
                                     x={x + barWidth / 2}
                                     y={height - 20}
                                     textAnchor="middle"
-                                    className="fill-gray-400 text-[11px] font-medium"
+                                    className="fill-white text-[12px] font-bold"
                                 >
                                     {d.label}
                                 </text>
