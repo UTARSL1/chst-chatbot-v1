@@ -23,6 +23,7 @@ interface Member {
     externalGrants: number;
     piCount: number;
     coResearcherCount: number;
+    grants: Grant[];
 }
 
 interface Grant {
@@ -388,60 +389,81 @@ export default function RCGrantPage() {
                                             <p className="text-gray-400 text-sm">No members found</p>
                                         </div>
                                     ) : (
-                                        filteredAndSortedMembers.map((member) => (
-                                            <div
-                                                key={member.id}
-                                                className={`relative group rounded-md transition-all duration-300 border ${selectedMember?.id === member.id
-                                                    ? 'bg-blue-900/40 border-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.5)]'
-                                                    : 'bg-white/5 border-transparent hover:border-blue-400/30 hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:bg-slate-800/60'
-                                                    }`}
-                                            >
-                                                <button
-                                                    onClick={() => setSelectedMember(member)}
-                                                    className="w-full flex items-center gap-3 p-2.5 text-left"
-                                                >
-                                                    <div className="text-gray-600 group-hover:text-gray-400 transition-colors">
-                                                        <GripVertical size={14} />
-                                                    </div>
+                                        filteredAndSortedMembers.map((member) => {
+                                            // Calculate granular stats
+                                            const extGrants = member.grants?.filter(g => g.grantType !== 'INTERNAL') || [];
+                                            const intGrants = member.grants?.filter(g => g.grantType === 'INTERNAL') || [];
 
-                                                    <div className="flex-1 min-w-0">
-                                                        <div className="font-medium text-sm text-white truncate">{member.name}</div>
-                                                        {member.staffId && (
-                                                            <div className="text-[10px] text-gray-500 truncate mt-0.5">{member.staffId}</div>
-                                                        )}
-                                                        <div className="flex items-center gap-2 mt-1">
-                                                            <div className="text-xs text-gray-400">
-                                                                {member.totalGrants} grants • {formatCurrency(member.totalFunding)}
+                                            const extFunding = extGrants.reduce((sum, g) => sum + Number(g.fundingAmount), 0);
+                                            const intFunding = intGrants.reduce((sum, g) => sum + Number(g.fundingAmount), 0);
+
+                                            const extPi = extGrants.filter(g => g.role === 'PRINCIPAL INVESTIGATOR').length;
+                                            const intPi = intGrants.filter(g => g.role === 'PRINCIPAL INVESTIGATOR').length;
+
+                                            const totalFunding = Number(member.totalFunding) || 1;
+                                            const extPerc = (extFunding / totalFunding) * 100;
+                                            const intPerc = (intFunding / totalFunding) * 100;
+
+                                            return (
+                                                <div
+                                                    key={member.id}
+                                                    className={`relative group rounded-md transition-all duration-300 border ${selectedMember?.id === member.id
+                                                        ? 'bg-blue-900/40 border-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.5)]'
+                                                        : 'bg-white/5 border-transparent hover:border-blue-400/30 hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:bg-slate-800/60'
+                                                        }`}
+                                                >
+                                                    <button
+                                                        onClick={() => setSelectedMember(member)}
+                                                        className="w-full flex items-center gap-3 p-2.5 text-left"
+                                                    >
+                                                        <div className="text-gray-600 group-hover:text-gray-400 transition-colors">
+                                                            <GripVertical size={14} />
+                                                        </div>
+
+                                                        <div className="flex-1 min-w-0">
+                                                            <div className="font-medium text-sm text-white truncate">{member.name}</div>
+                                                            {member.staffId && (
+                                                                <div className="text-[10px] text-gray-500 truncate mt-0.5">{member.staffId}</div>
+                                                            )}
+                                                            <div className="flex items-center gap-2 mt-1">
+                                                                <div className="text-xs text-gray-400">
+                                                                    {member.totalGrants} grants • {formatCurrency(member.totalFunding)}
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
 
-                                                    {/* Mini Stats */}
-                                                    <div className="flex flex-col gap-1 text-[10px]">
-                                                        <div className="px-1.5 py-0.5 rounded bg-emerald-950/50 text-emerald-300 border border-emerald-500/20">
-                                                            PI: {member.piCount}
-                                                        </div>
-                                                        <div className="px-1.5 py-0.5 rounded bg-blue-950/50 text-blue-300 border border-blue-500/20">
-                                                            Ext: {member.externalGrants}
-                                                        </div>
-                                                    </div>
-                                                </button>
+                                                        {/* Granular Stats */}
+                                                        <div className="flex flex-col gap-1 text-[10px] items-end min-w-[130px]">
+                                                            {/* External Row */}
+                                                            <div className="flex items-center justify-between w-full px-1.5 py-0.5 rounded bg-blue-950/40 text-blue-300 border border-blue-500/10">
+                                                                <span className="font-bold text-blue-400 min-w-[24px]">{extPerc.toFixed(0)}%</span>
+                                                                <span className="ml-1">Ext: {extGrants.length}, PI: {extPi}</span>
+                                                            </div>
 
-                                                {/* Delete Button (Only for Chairperson) */}
-                                                {isChairperson && (
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleDeleteMember(member.staffId || '', member.name);
-                                                        }}
-                                                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all p-1.5 hover:bg-red-500/20 text-gray-400 hover:text-red-400 rounded-md"
-                                                        title="Delete Member"
-                                                    >
-                                                        <Trash2 size={16} />
+                                                            {/* Internal Row */}
+                                                            <div className="flex items-center justify-between w-full px-1.5 py-0.5 rounded bg-purple-950/40 text-purple-300 border border-purple-500/10">
+                                                                <span className="font-bold text-purple-400 min-w-[24px]">{intPerc.toFixed(0)}%</span>
+                                                                <span className="ml-1">Int: {intGrants.length}, PI: {intPi}</span>
+                                                            </div>
+                                                        </div>
                                                     </button>
-                                                )}
-                                            </div>
-                                        ))
+
+                                                    {/* Delete Button (Only for Chairperson) */}
+                                                    {isChairperson && (
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleDeleteMember(member.staffId || '', member.name);
+                                                            }}
+                                                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all p-1.5 hover:bg-red-500/20 text-gray-400 hover:text-red-400 rounded-md"
+                                                            title="Delete Member"
+                                                        >
+                                                            <Trash2 size={16} />
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            );
+                                        })
                                     )}
                                 </div>
                             </div>
