@@ -120,8 +120,28 @@ export default function RCGrantPage() {
         try {
             const res = await fetch(`/api/rc-grant/${staffId}`);
             const data = await res.json();
-            if (data.member) {
-                setGrants(data.member.grants);
+            if (data.member && data.member.grants) {
+                // Sort grants by latest start date first
+                const sortedGrants = [...data.member.grants].sort((a: any, b: any) => {
+                    const parseDate = (dateStr?: string) => {
+                        if (!dateStr) return 0;
+                        const cleanStr = dateStr.trim();
+                        // Handle DD/MM/YYYY
+                        if (cleanStr.includes('/')) {
+                            const parts = cleanStr.split('/');
+                            if (parts.length === 3) {
+                                // new Date(year, monthIndex, day)
+                                return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0])).getTime();
+                            }
+                        }
+                        // Try standard parsing
+                        const timestamp = new Date(cleanStr).getTime();
+                        return isNaN(timestamp) ? 0 : timestamp;
+                    };
+
+                    return parseDate(b.commencementDate) - parseDate(a.commencementDate);
+                });
+                setGrants(sortedGrants);
             }
         } catch (error) {
             console.error('Error fetching grants:', error);
