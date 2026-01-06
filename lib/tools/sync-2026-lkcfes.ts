@@ -39,9 +39,9 @@ async function sync2026LKCFESData() {
         console.log(`⏱️  Duration: ${duration}s`);
         console.log(`📊 Status: ${result.status}`);
         console.log(`👥 Total Staff: ${result.totalStaff}`);
-        console.log(`➕ Added: ${result.added}`);
-        console.log(`🔄 Updated: ${result.updated}`);
-        console.log(`➖ Removed: ${result.removed}`);
+        console.log(`➕ Added: ${result.changes.added}`);
+        console.log(`🔄 Updated: ${result.changes.updated}`);
+        console.log(`➖ Removed: ${result.changes.deleted}`);
         console.log('');
         console.log('📁 Files updated:');
         console.log('   ✓ lib/tools/staff_directory.json (2026 data)');

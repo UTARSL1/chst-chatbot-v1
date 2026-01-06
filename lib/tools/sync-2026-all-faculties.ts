@@ -77,9 +77,9 @@ async function sync2026AllFaculties() {
         console.log(`⏱️  Duration: ${minutes}m ${seconds}s`);
         console.log(`📊 Status: ${result.status}`);
         console.log(`👥 Total Staff: ${result.totalStaff}`);
-        console.log(`➕ Added: ${result.added}`);
-        console.log(`🔄 Updated: ${result.updated}`);
-        console.log(`➖ Removed: ${result.removed}`);
+        console.log(`➕ Added: ${result.changes.added}`);
+        console.log(`🔄 Updated: ${result.changes.updated}`);
+        console.log(`➖ Removed: ${result.changes.deleted}`);
         console.log('');
         console.log('📁 Files updated:');
         console.log('   ✓ lib/tools/staff_directory.json (Complete 2026 data)');

@@ -255,7 +255,7 @@ async function scrapeStaffDetail(
 }
 
 // Scrape all staff from a unit (faculty/department/research centre)
-async function scrapeUnitStaff(
+export async function scrapeUnitStaff(
     unitAcronym: string,
     departmentId: string = 'All',
     logger?: (msg: string) => void
