@@ -199,13 +199,13 @@ export async function POST(request: NextRequest) {
 
             const stats = {
                 totalGrants: allGrants.length,
-                totalFunding: allGrants.reduce((sum, g) => sum + g.fundingAmount, 0),
-                inUtarGrants: allGrants.filter(g => g.fundingLocation === 'IN_UTAR').length,
-                notInUtarGrants: allGrants.filter(g => g.fundingLocation === 'NOT_IN_UTAR').length,
-                internalGrants: allGrants.filter(g => g.grantType === 'INTERNAL').length,
-                externalGrants: allGrants.filter(g => g.grantType === 'EXTERNAL').length,
-                piCount: allGrants.filter(g => g.role === 'PRINCIPAL INVESTIGATOR').length,
-                coResearcherCount: allGrants.filter(g => g.role === 'CO-RESEARCHER').length
+                totalFunding: allGrants.reduce((sum: number, g: any) => sum + Number(g.fundingAmount), 0),
+                inUtarGrants: allGrants.filter((g: any) => g.fundingLocation === 'IN_UTAR').length,
+                notInUtarGrants: allGrants.filter((g: any) => g.fundingLocation === 'NOT_IN_UTAR').length,
+                internalGrants: allGrants.filter((g: any) => g.grantType === 'INTERNAL').length,
+                externalGrants: allGrants.filter((g: any) => g.grantType === 'EXTERNAL').length,
+                piCount: allGrants.filter((g: any) => g.role === 'PRINCIPAL INVESTIGATOR').length,
+                coResearcherCount: allGrants.filter((g: any) => g.role === 'CO-RESEARCHER').length
             };
 
             await prisma.rCGrantMember.update({
