@@ -13,6 +13,7 @@ interface RCGrantDonutChartProps {
 }
 
 const RCGrantDonutChart: React.FC<RCGrantDonutChartProps> = ({ grants, totalFunding }) => {
+    console.log('RCGrantDonutChart rendering with:', { grantsCount: grants?.length, totalFunding });
 
     // Process data for the chart
     const data = useMemo(() => {
@@ -120,6 +121,15 @@ const RCGrantDonutChart: React.FC<RCGrantDonutChartProps> = ({ grants, totalFund
 
     const isExternalSmall = data.external.percentage < 15;
     const isInternalSmall = data.internal.percentage < 15;
+
+    // Defensive check - if no grants or zero funding, show a message
+    if (!grants || grants.length === 0 || totalFunding === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center p-8">
+                <div className="text-gray-400 text-sm">No grant data available</div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col items-center justify-center p-4">
