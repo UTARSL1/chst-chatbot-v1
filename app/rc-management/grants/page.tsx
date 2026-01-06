@@ -87,6 +87,17 @@ export default function RCGrantPage() {
         }
     }, [selectedMember]);
 
+    // Sync selectedMember with members list updates to reflect new stats immediately
+    useEffect(() => {
+        if (selectedMember) {
+            const updatedMember = members.find(m => m.id === selectedMember.id);
+            // Only update if the object reference has changed (implies data update from fetchMembers)
+            if (updatedMember && updatedMember !== selectedMember) {
+                setSelectedMember(updatedMember);
+            }
+        }
+    }, [members]);
+
     const fetchMembers = async () => {
         try {
             const res = await fetch('/api/rc-grant/overview');
