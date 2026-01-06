@@ -126,6 +126,56 @@
     ]
   },
   {
+    "acronym": "DCS-KPR",
+    "canonical": "Department of Chinese Studies (Kampar Campus)",
+    "departmentId": "7389",
+    "parent": "FCS",
+    "type": "Academic Department",
+    "aliases": [
+      "Department of Chinese Studies (Kampar Campus)",
+      "Chinese Studies Department Kampar",
+      "DCS-KPR",
+      "DCS Kampar"
+    ]
+  },
+  {
+    "acronym": "DCS-SL",
+    "canonical": "Department of Chinese Studies (Sungai Long Campus)",
+    "departmentId": "7390",
+    "parent": "FCS",
+    "type": "Academic Department",
+    "aliases": [
+      "Department of Chinese Studies (Sungai Long Campus)",
+      "Chinese Studies Department Sungai Long",
+      "DCS-SL",
+      "DCS Sungai Long"
+    ]
+  },
+  {
+    "acronym": "FGO-KPR-FCS",
+    "canonical": "Faculty General Office (Kampar Campus)",
+    "departmentId": "7391",
+    "parent": "FCS",
+    "type": "Administrative Department",
+    "aliases": [
+      "Faculty General Office (Kampar Campus)",
+      "FCS FGO Kampar",
+      "FGO-KPR-FCS"
+    ]
+  },
+  {
+    "acronym": "FGO-SL-FCS",
+    "canonical": "Faculty General Office (Sungai Long Campus)",
+    "departmentId": "7392",
+    "parent": "FCS",
+    "type": "Administrative Department",
+    "aliases": [
+      "Faculty General Office (Sungai Long Campus)",
+      "FCS FGO Sungai Long",
+      "FGO-SL-FCS"
+    ]
+  },
+  {
     "acronym": "FCI",
     "canonical": "Faculty of Creative Industries",
     "type": "Faculty",

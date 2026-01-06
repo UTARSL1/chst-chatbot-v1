@@ -1,0 +1,58 @@
+﻿================================================================================
+≡ƒôè STAFF DIRECTORY SYNC STATUS
+================================================================================
+
+≡ƒôà 2026 DATA (Current)
+--------------------------------------------------------------------------------
+Last Updated: 2026-01-06T12:14:17.199Z
+Sync Duration: 757.60s
+Total Staff: 1384
+Unique Staff: 1285
+Faculties: 11
+
+Staff by Faculty (2026):
+  LKC FES    :  279 staff
+  FAM        :   82 staff
+  FAS        :  191 staff
+  FCS        :    3 staff
+  FCI        :  113 staff
+  FEd        :   28 staff
+  FEGT       :   96 staff
+  FICT       :  122 staff
+  FSc        :  134 staff
+  MK FMHS    :  182 staff
+  THP FBF    :  154 staff
+
+≡ƒôà 2025 DATA (Legacy)
+--------------------------------------------------------------------------------
+Last Updated: 2025-12-30T17:55:53.514Z
+Total Staff: 1383
+Unique Staff: 1284
+Faculties: 11
+
+Staff by Faculty (2025):
+  LKC FES    :  278 staff
+  FAM        :   81 staff
+  FAS        :  191 staff
+  FCS        :    3 staff
+  FCI        :  113 staff
+  FEd        :   28 staff
+  FEGT       :   96 staff
+  FICT       :  123 staff
+  FSc        :  134 staff
+  MK FMHS    :  180 staff
+  THP FBF    :  156 staff
+
+≡ƒôê COMPARISON
+--------------------------------------------------------------------------------
+Total Staff Change: 1 (1383 ΓåÆ 1384)
+Unique Staff Change: 1 (1284 ΓåÆ 1285)
+
+Changes by Faculty:
+  LKC FES    : +1 (278 ΓåÆ 279)
+  FAM        : +1 (81 ΓåÆ 82)
+  FICT       : -1 (123 ΓåÆ 122)
+  MK FMHS    : +2 (180 ΓåÆ 182)
+  THP FBF    : -2 (156 ΓåÆ 154)
+
+================================================================================

@@ -1,0 +1,224 @@
+[
+    {
+        "deptId": "7389",
+        "deptName": "Department of Chinese Studies (Kampar Campus)",
+        "staff": [
+            {
+                "name": "Dr Ling Liong Ngo",
+                "position": "Deputy Dean (Student Development and Industrial Training) Associate Professor",
+                "email": "lingln@utar.edu.my",
+                "searchId": "06104"
+            },
+            {
+                "name": "Dr Wong Wun Bin",
+                "position": "Deputy Dean (Academic Development and Undergraduate Programmes) Head (Humanistic Buddhism Studies Unit) Associate Professor",
+                "email": "wongwb@utar.edu.my",
+                "searchId": "04151"
+            },
+            {
+                "name": "Dr Toh Teong Chuan",
+                "position": "Head of Department (Department of Chinese Studies (Kampar Campus)) Associate Professor",
+                "email": "tctoh@utar.edu.my",
+                "searchId": "13010"
+            },
+            {
+                "name": "Dr Tan Ai Boay",
+                "position": "Head of Programme (PhD (Chinese Studies)) Head (Malaysian Chinese and Cultural Studies Unit) Associate Professor",
+                "email": "tanab@utar.edu.my",
+                "searchId": "14027"
+            },
+            {
+                "name": "Dr Bin Mei Fern",
+                "position": "Assistant Professor",
+                "email": "binmf@utar.edu.my",
+                "searchId": "25028"
+            },
+            {
+                "name": "Dr Chou Wen Loong",
+                "position": "Assistant Professor",
+                "email": "chouwl@utar.edu.my",
+                "searchId": "09204"
+            },
+            {
+                "name": "Dr Er Lee Siong",
+                "position": "Assistant Professor",
+                "email": "erls@utar.edu.my",
+                "searchId": "04337"
+            },
+            {
+                "name": "Dr Lee Soo Chee",
+                "position": "Assistant Professor",
+                "email": "lschee@utar.edu.my",
+                "searchId": "09168"
+            },
+            {
+                "name": "Dr Lim Chee Men",
+                "position": "Assistant Professor",
+                "email": "limcm@utar.edu.my",
+                "searchId": "03075"
+            },
+            {
+                "name": "Prof. Dr Lo Yuet Keung",
+                "position": "Adjunct Professor",
+                "email": "yklo@utar.edu.my",
+                "searchId": "AP24008"
+            },
+            {
+                "name": "Dr Tan Beng Piou",
+                "position": "Assistant Professor",
+                "email": "tanbp@utar.edu.my",
+                "searchId": "12029"
+            },
+            {
+                "name": "Dr Th'ng Bee Fu",
+                "position": "Assistant Professor",
+                "email": "thngbf@utar.edu.my",
+                "searchId": "07207"
+            },
+            {
+                "name": "Dr Yap Siew Chin",
+                "position": "Assistant Professor",
+                "email": "yapsc@utar.edu.my",
+                "searchId": "04002"
+            }
+        ]
+    },
+    {
+        "deptId": "7390",
+        "deptName": "Department of Chinese Studies (Sungai Long Campus)",
+        "staff": [
+            {
+                "name": "Dr Chong Siou Wei",
+                "position": "Dean Director (Mencius Institute (拉曼大學孟子學院)) Director (Confucius Institute (拉曼大學孔子學院)) Head (Min-nan Cultural Studies Unit) Associate Professor",
+                "email": "chongsw@utar.edu.my",
+                "searchId": "05340"
+            },
+            {
+                "name": "Dr Chin Chong Foh",
+                "position": "Deputy Dean (R&D and Postgraduate Programmes) Head (Contemporary China Studies Unit) Chairperson (Yu Cai Foundation Centre for Chinese Studies) Associate Professor",
+                "email": "chincf@utar.edu.my",
+                "searchId": "12187"
+            },
+            {
+                "name": "Dr Liau Ping Leng",
+                "position": "Head of Department (Department of Chinese Studies (Sg Long Campus)) Associate Professor",
+                "email": "liaupl@utar.edu.my",
+                "searchId": "07369"
+            },
+            {
+                "name": "Dr Ng Bung Chen",
+                "position": "Head of Programme (Master of Arts (Chinese Studies) & Master of Chinese Studies) Acting Head of Programme (PhD (Chinese Studies)) Head (Sinology Unit) Assistant Professor",
+                "email": "ngbc@utar.edu.my",
+                "searchId": "14036"
+            },
+            {
+                "name": "Dr Kwan Kai Hong",
+                "position": "Assistant Professor",
+                "email": "kwankh@utar.edu.my",
+                "searchId": "23017"
+            },
+            {
+                "name": "Dr Lew Hoi Len",
+                "position": "Head (Chinese Arts Research Unit) Assistant Professor",
+                "email": "lewhl@utar.edu.my",
+                "searchId": "18150"
+            },
+            {
+                "name": "Dr Li Rui",
+                "position": "Assistant Professor",
+                "email": "lirui@utar.edu.my",
+                "searchId": "E25003"
+            },
+            {
+                "name": "Prof. Datuk Dr Lim Chooi Kwa",
+                "position": "Adjunct Professor",
+                "email": "limck@utar.edu.my",
+                "searchId": "AP13001"
+            },
+            {
+                "name": "Dr Loh Say Chung",
+                "position": "Assistant Professor",
+                "email": "lohsc@utar.edu.my",
+                "searchId": "23057"
+            },
+            {
+                "name": "Prof. Dr Lu Dan",
+                "position": "Adjunct Professor",
+                "email": "",
+                "searchId": "AP23005"
+            },
+            {
+                "name": "Dr Sim Sin Chie",
+                "position": "Assistant Professor",
+                "email": "simsc@utar.edu.my",
+                "searchId": "25038"
+            },
+            {
+                "name": "Dr Tee Boon Chuan @ Zheng Zhiyi",
+                "position": "Associate Professor",
+                "email": "teebc@utar.edu.my",
+                "searchId": "09165"
+            },
+            {
+                "name": "Dr Wong Lih Lih",
+                "position": "Head (Modern Chinese Literature Studies Unit) Assistant Professor",
+                "email": "wongll@utar.edu.my",
+                "searchId": "09039"
+            },
+            {
+                "name": "Dr Yap Pei Sze",
+                "position": "Assistant Professor",
+                "email": "yapps@utar.edu.my",
+                "searchId": "20087"
+            }
+        ]
+    },
+    {
+        "deptId": "7391",
+        "deptName": "Faculty General Office (Kampar Campus)",
+        "staff": [
+            {
+                "name": "Ms Lai Kuen Yee",
+                "position": "Administrative Assistant III",
+                "email": "kylai@utar.edu.my",
+                "searchId": "17110"
+            },
+            {
+                "name": "Ms Woo Jen Lin",
+                "position": "Manager",
+                "email": "woojl@utar.edu.my",
+                "searchId": "11173"
+            },
+            {
+                "name": "Ms Yeoh Shi Qian",
+                "position": "Assistant Manager",
+                "email": "yeohsq@utar.edu.my",
+                "searchId": "15069"
+            }
+        ]
+    },
+    {
+        "deptId": "7392",
+        "deptName": "Faculty General Office (Sungai Long Campus)",
+        "staff": [
+            {
+                "name": "Ms Ang Shiao Ling",
+                "position": "Senior Assistant Manager",
+                "email": "angsl@utar.edu.my",
+                "searchId": "13121"
+            },
+            {
+                "name": "Ms Chan Yoke Chang",
+                "position": "Assistant Manager",
+                "email": "chanyc@utar.edu.my",
+                "searchId": "03020"
+            },
+            {
+                "name": "Mr Ng Chi Jian",
+                "position": "Assistant Manager",
+                "email": "ngcj@utar.edu.my",
+                "searchId": "25101"
+            }
+        ]
+    }
+]

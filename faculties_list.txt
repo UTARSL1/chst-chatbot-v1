@@ -1,0 +1,36 @@
+﻿Faculties in staff_directory.json:
+
+1. LKC FES - Lee Kong Chian Faculty of Engineering and Science
+   Staff: 279
+
+2. FAM - Faculty of Accountancy and Management
+   Staff: 82
+
+3. FAS - Faculty of Arts and Social Science
+   Staff: 191
+
+4. FCS - Faculty of Chinese Studies
+   Staff: 3
+
+5. FCI - Faculty of Creative Industries
+   Staff: 113
+
+6. FEd - Faculty of Education
+   Staff: 28
+
+7. FEGT - Faculty of Engineering and Green Technology
+   Staff: 96
+
+8. FICT - Faculty of Information and Communication Technology
+   Staff: 122
+
+9. FSc - Faculty of Science
+   Staff: 134
+
+10. MK FMHS - M. Kandiah Faculty of Medicine and Health Sciences
+   Staff: 182
+
+11. THP FBF - Teh Hong Piow Faculty of Business and Finance
+   Staff: 154
+
+Total faculties: 11

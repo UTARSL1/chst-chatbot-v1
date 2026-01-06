@@ -453,6 +453,62 @@ model WorkingGroupMember {
   @@map("working_group_members")
 }
 
+model RCGrantMember {
+  id                  String    @id @default(uuid())
+  name                String
+  staffId             String?
+  faculty             String?
+  totalGrants         Int       @default(0)
+  totalFunding        Decimal   @default(0) @db.Decimal(15, 2)
+  inUtarGrants        Int       @default(0)
+  notInUtarGrants     Int       @default(0)
+  internalGrants      Int       @default(0)
+  externalGrants      Int       @default(0)
+  piCount             Int       @default(0)
+  coResearcherCount   Int       @default(0)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  grants              Grant[]
+
+  @@index([name])
+  @@map("rc_grant_members")
+}
+
+model Grant {
+  id                String        @id @default(uuid())
+  memberId          String
+  staffId           String?
+  staffName         String
+  faculty           String?
+  fundingLocation   String        // 'IN_UTAR' or 'NOT_IN_UTAR'
+  fundingBody       String
+  projectStatus     String
+  role              String        // 'PRINCIPAL INVESTIGATOR' or 'CO-RESEARCHER'
+  title             String
+  objective         String?
+  projectDuration   String?
+  commencementDate  String?
+  endDate           String?
+  fundingAmount     Decimal       @db.Decimal(15, 2)
+  grantType         String        // 'INTERNAL' or 'EXTERNAL'
+  grantCategory     String?       // 'INTERNATIONAL' or 'NATIONAL' (for external grants)
+  projectNumber     String?
+  researchArea      String?
+  researchCentre    String?
+  keywords          String?       // JSON array
+  collaborators     String?       // JSON array
+  institutionParked String?       // For NOT_IN_UTAR grants
+  createdAt         DateTime      @default(now())
+  member            RCGrantMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([memberId])
+  @@index([fundingLocation])
+  @@index([grantType])
+  @@index([role])
+  @@index([commencementDate])
+  @@map("grants")
+}
+
 enum UserRole {
   student
   member

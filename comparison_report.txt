@@ -1,0 +1,473 @@
+﻿Loading staff directories...
+Γ£ô Loaded 2025 data
+Γ£ô Loaded 2026 data
+
+Comparing directories...
+
+================================================================================
+≡ƒôè STAFF DIRECTORY COMPARISON: 2025 vs 2026
+================================================================================
+
+≡ƒôê SUMMARY
+--------------------------------------------------------------------------------
+Total Staff (2025): 1284
+Total Staff (2026): 1284
+Net Change: 0
+
+Promotions: 9
+Demotions: 0
+Lateral Moves: 0
+Admin Post Changes: 25
+New Hires: 0
+Departures: 0
+
+≡ƒÅ¢∩╕Å  ADMINISTRATIVE POSITION CHANGES
+--------------------------------------------------------------------------------
+
+1. Ir. Prof. Dr.┬áChee Pei Song
+   Faculty: LKC FES
+   Department: DMBE
+   Γ₧ò Added Posts:
+      ΓÇó Deputy Dean (R&D and Postgraduate Programmes)
+   Γ₧û Removed Posts:
+      ΓÇó Chairperson (Centre for Healthcare Science and Technology)
+
+2. Ir Ts Dr┬áHau Lee Cheun
+   Faculty: LKC FES
+   Department: DMBE
+   Γ₧ò Added Posts:
+      ΓÇó Head of Programme (PhD (Eng))
+   Γ₧û Removed Posts:
+      ΓÇó Acting Head of Programme (PhD (Eng))
+
+3. Ir. Prof. Dr.┬áGoi Bok Min
+   Faculty: LKC FES
+   Department: DMBE
+   Γ₧ò Added Posts:
+      ΓÇó Sungai Long Campus Administration Director
+
+4. Ir Ts Dr┬áHum Yan Chai
+   Faculty: LKC FES
+   Department: DMBE
+   Γ₧ò Added Posts:
+      ΓÇó Chairperson (Centre for Healthcare Science and Technology)
+
+5. Dr┬áKwan Ban Hoe
+   Faculty: LKC FES
+   Department: DMBE
+   Γ₧ò Added Posts:
+      ΓÇó Head (Innovation and Commercialisation Unit)
+   Γ₧û Removed Posts:
+      ΓÇó Deputy Head (Consultancy and Commercialisation)
+
+6. Ir Ts Dr┬áLeong Kah Hon
+   Faculty: LKC FES
+   Department: DCI
+   Γ₧ò Added Posts:
+      ΓÇó Deputy Director (Division of Sustainability and Strategic Management)
+
+7. Ir Dr┬áLing Lloyd
+   Faculty: LKC FES
+   Department: DCI
+   Γ₧û Removed Posts:
+      ΓÇó Deputy Dean (R&D and Postgraduate Programmes)
+
+8. Ts Dr┬áChin Ren Jie
+   Faculty: LKC FES
+   Department: DCI
+   Γ₧ò Added Posts:
+      ΓÇó Head of Department (Department of Civil Engineering)
+
+9. Ir Ts Dr┬áYip Chun Chieh
+   Faculty: LKC FES
+   Department: DCI
+   Γ₧û Removed Posts:
+      ΓÇó Head of Department (Department of Civil Engineering)
+
+10. Ir Ts Dr┬áKwong Kok Zee
+   Faculty: LKC FES
+   Department: DCI
+   Γ₧û Removed Posts:
+      ΓÇó Head of Programme (MEng (Civil))
+
+11. Ir Dr┬áLim Siong Kang
+   Faculty: LKC FES
+   Department: DCI
+   Γ₧ò Added Posts:
+      ΓÇó Head of Programme (MEng (Civil))
+
+12. Ir Dr┬áLim Jee Hock
+   Faculty: LKC FES
+   Department: DCI
+   Γ₧ò Added Posts:
+      ΓÇó Dean (Institute of International Education)
+   Γ₧û Removed Posts:
+      ΓÇó Director (Centre for Extension Education)
+
+13. Prof Ts Dr┬áYap Wun She
+   Faculty: LKC FES
+   Department: D3E
+   Γ₧ò Added Posts:
+      ΓÇó Chairperson (Centre for Artificial Intelligence and Computing Applications)
+   Γ₧û Removed Posts:
+      ΓÇó Dean
+      ΓÇó Director (Xinwei Institute)
+
+14. Ir. Prof. Dr.┬áChang Yoong Choon
+   Faculty: LKC FES
+   Department: D3E
+   Γ₧ò Added Posts:
+      ΓÇó Dean
+      ΓÇó Director (Xinwei Institute)
+   Γ₧û Removed Posts:
+      ΓÇó Head of Department (Department of Electrical and Electronic Engineering)
+
+15. Ir Ts Dr┬áLee Ying Loong
+   Faculty: LKC FES
+   Department: D3E
+   Γ₧ò Added Posts:
+      ΓÇó Head of Department (Department of Electrical and Electronic Engineering)
+
+16. Dr┬áFelicia Yong Yan Yan
+   Faculty: LKC FES
+   Department: DS
+   Γ₧û Removed Posts:
+      ΓÇó Head of Department (Department of Surveying)
+
+17. Sr┬áIbtisam Azwani Binti Mat Ya'acob
+   Faculty: LKC FES
+   Department: DS
+   Γ₧ò Added Posts:
+      ΓÇó Head of Department (Department of Surveying)
+
+18. Sr Dr┬áWong Phui Fung
+   Faculty: LKC FES
+   Department: DS
+   Γ₧ò Added Posts:
+      ΓÇó Head of Programme (Master of Project Management)
+
+19. Sr┬áZamharira Binti Sulaiman
+   Faculty: LKC FES
+   Department: DS
+   Γ₧û Removed Posts:
+      ΓÇó Head of Programme (Master of Project Management)
+
+20. Ir Ts Dr┬áJeffrey Yap Boon Hui
+   Faculty: LKC FES
+   Department: DS
+   Γ₧ò Added Posts:
+      ΓÇó Chairperson (Centre for Sustainable Design and Built Environment)
+
+21. Dr┬áNur Aqlima Binti Ramli
+   Faculty: LKC FES
+   Department: DS
+   Γ₧û Removed Posts:
+      ΓÇó Chairperson (Centre for Sustainable Design and Built Environment)
+
+22. Dr┬áToo Chian Wen
+   Faculty: LKC FES
+   Department: DC
+   Γ₧û Removed Posts:
+      ΓÇó Head of Programme (Master of Information Systems)
+
+23. Ts Dr┬áWong Whee Yen
+   Faculty: LKC FES
+   Department: DC
+   Γ₧ò Added Posts:
+      ΓÇó Head (Entrepreneurship and Business Development Unit)
+   Γ₧û Removed Posts:
+      ΓÇó Acting Head (Unovate Centre)
+
+24. Prof Ts Dr┬áYau Kok Lim
+   Faculty: LKC FES
+   Department: DC
+   Γ₧û Removed Posts:
+      ΓÇó Chairperson (Centre for Artificial Intelligence and Computing Applications)
+
+25. Ir. Prof. Ts. Dr┬áBernard Saw Lip Huat
+   Faculty: LKC FES
+   Department: DMME
+   Γ₧ò Added Posts:
+      ΓÇó Acting Director (Division of Sustainability and Strategic Management)
+      ΓÇó Director (Institute of Postgraduate Studies and Research)
+   Γ₧û Removed Posts:
+      ΓÇó Director (Division of Sustainability and Strategic Management)
+
+≡ƒôè DESIGNATION CHANGES
+--------------------------------------------------------------------------------
+
+Γ¼å∩╕Å  PROMOTIONS:
+1. Ts Dr┬áShuit Siew Hoong
+   Assistant Professor ΓåÆ Associate Professor
+   Faculty: LKC FES, Department: DCL
+
+2. Ir Dr┬áSim Lan Ching
+   Assistant Professor ΓåÆ Associate Professor
+   Faculty: LKC FES, Department: DCL
+
+3. Dr┬áThiam Hui San
+   Assistant Professor ΓåÆ Associate Professor
+   Faculty: LKC FES, Department: DCL
+
+4. Ts Dr┬áChin Ren Jie
+   Assistant Professor ΓåÆ Associate Professor
+   Faculty: LKC FES, Department: DCI
+
+5. Dr┬áTan Chun Hui
+   Assistant Professor ΓåÆ Associate Professor
+   Faculty: LKC FES, Department: D3E
+
+6. Ir Dr┬áChua Kein Huat
+   Associate Professor ΓåÆ Professor
+   Faculty: LKC FES, Department: D3E
+
+7. Ir Dr┬áLim Boon Han
+   Associate Professor ΓåÆ Professor
+   Faculty: LKC FES, Department: D3E
+
+8. Ir Ts Dr┬áJeffrey Yap Boon Hui
+   Associate Professor ΓåÆ Professor
+   Faculty: LKC FES, Department: DS
+
+9. Ts Dr┬áLee Chen Kang
+   Assistant Professor ΓåÆ Associate Professor
+   Faculty: LKC FES, Department: DC
+
+================================================================================
+
+
+
+
+================================================================================
+≡ƒôè STAFF DIRECTORY COMPARISON: 2025 vs 2026
+================================================================================
+
+≡ƒÄ» Filtered by Faculty: LKC FES
+
+≡ƒôê SUMMARY
+--------------------------------------------------------------------------------
+Total Staff (2025): 1284
+Total Staff (2026): 1284
+Net Change: 0
+
+Promotions: 9
+Demotions: 0
+Lateral Moves: 0
+Admin Post Changes: 25
+New Hires: 0
+Departures: 0
+
+≡ƒÅ¢∩╕Å  ADMINISTRATIVE POSITION CHANGES
+--------------------------------------------------------------------------------
+
+1. Ir. Prof. Dr.┬áChee Pei Song
+   Faculty: LKC FES
+   Department: DMBE
+   Γ₧ò Added Posts:
+      ΓÇó Deputy Dean (R&D and Postgraduate Programmes)
+   Γ₧û Removed Posts:
+      ΓÇó Chairperson (Centre for Healthcare Science and Technology)
+
+2. Ir Ts Dr┬áHau Lee Cheun
+   Faculty: LKC FES
+   Department: DMBE
+   Γ₧ò Added Posts:
+      ΓÇó Head of Programme (PhD (Eng))
+   Γ₧û Removed Posts:
+      ΓÇó Acting Head of Programme (PhD (Eng))
+
+3. Ir. Prof. Dr.┬áGoi Bok Min
+   Faculty: LKC FES
+   Department: DMBE
+   Γ₧ò Added Posts:
+      ΓÇó Sungai Long Campus Administration Director
+
+4. Ir Ts Dr┬áHum Yan Chai
+   Faculty: LKC FES
+   Department: DMBE
+   Γ₧ò Added Posts:
+      ΓÇó Chairperson (Centre for Healthcare Science and Technology)
+
+5. Dr┬áKwan Ban Hoe
+   Faculty: LKC FES
+   Department: DMBE
+   Γ₧ò Added Posts:
+      ΓÇó Head (Innovation and Commercialisation Unit)
+   Γ₧û Removed Posts:
+      ΓÇó Deputy Head (Consultancy and Commercialisation)
+
+6. Ir Ts Dr┬áLeong Kah Hon
+   Faculty: LKC FES
+   Department: DCI
+   Γ₧ò Added Posts:
+      ΓÇó Deputy Director (Division of Sustainability and Strategic Management)
+
+7. Ir Dr┬áLing Lloyd
+   Faculty: LKC FES
+   Department: DCI
+   Γ₧û Removed Posts:
+      ΓÇó Deputy Dean (R&D and Postgraduate Programmes)
+
+8. Ts Dr┬áChin Ren Jie
+   Faculty: LKC FES
+   Department: DCI
+   Γ₧ò Added Posts:
+      ΓÇó Head of Department (Department of Civil Engineering)
+
+9. Ir Ts Dr┬áYip Chun Chieh
+   Faculty: LKC FES
+   Department: DCI
+   Γ₧û Removed Posts:
+      ΓÇó Head of Department (Department of Civil Engineering)
+
+10. Ir Ts Dr┬áKwong Kok Zee
+   Faculty: LKC FES
+   Department: DCI
+   Γ₧û Removed Posts:
+      ΓÇó Head of Programme (MEng (Civil))
+
+11. Ir Dr┬áLim Siong Kang
+   Faculty: LKC FES
+   Department: DCI
+   Γ₧ò Added Posts:
+      ΓÇó Head of Programme (MEng (Civil))
+
+12. Ir Dr┬áLim Jee Hock
+   Faculty: LKC FES
+   Department: DCI
+   Γ₧ò Added Posts:
+      ΓÇó Dean (Institute of International Education)
+   Γ₧û Removed Posts:
+      ΓÇó Director (Centre for Extension Education)
+
+13. Prof Ts Dr┬áYap Wun She
+   Faculty: LKC FES
+   Department: D3E
+   Γ₧ò Added Posts:
+      ΓÇó Chairperson (Centre for Artificial Intelligence and Computing Applications)
+   Γ₧û Removed Posts:
+      ΓÇó Dean
+      ΓÇó Director (Xinwei Institute)
+
+14. Ir. Prof. Dr.┬áChang Yoong Choon
+   Faculty: LKC FES
+   Department: D3E
+   Γ₧ò Added Posts:
+      ΓÇó Dean
+      ΓÇó Director (Xinwei Institute)
+   Γ₧û Removed Posts:
+      ΓÇó Head of Department (Department of Electrical and Electronic Engineering)
+
+15. Ir Ts Dr┬áLee Ying Loong
+   Faculty: LKC FES
+   Department: D3E
+   Γ₧ò Added Posts:
+      ΓÇó Head of Department (Department of Electrical and Electronic Engineering)
+
+16. Dr┬áFelicia Yong Yan Yan
+   Faculty: LKC FES
+   Department: DS
+   Γ₧û Removed Posts:
+      ΓÇó Head of Department (Department of Surveying)
+
+17. Sr┬áIbtisam Azwani Binti Mat Ya'acob
+   Faculty: LKC FES
+   Department: DS
+   Γ₧ò Added Posts:
+      ΓÇó Head of Department (Department of Surveying)
+
+18. Sr Dr┬áWong Phui Fung
+   Faculty: LKC FES
+   Department: DS
+   Γ₧ò Added Posts:
+      ΓÇó Head of Programme (Master of Project Management)
+
+19. Sr┬áZamharira Binti Sulaiman
+   Faculty: LKC FES
+   Department: DS
+   Γ₧û Removed Posts:
+      ΓÇó Head of Programme (Master of Project Management)
+
+20. Ir Ts Dr┬áJeffrey Yap Boon Hui
+   Faculty: LKC FES
+   Department: DS
+   Γ₧ò Added Posts:
+      ΓÇó Chairperson (Centre for Sustainable Design and Built Environment)
+
+21. Dr┬áNur Aqlima Binti Ramli
+   Faculty: LKC FES
+   Department: DS
+   Γ₧û Removed Posts:
+      ΓÇó Chairperson (Centre for Sustainable Design and Built Environment)
+
+22. Dr┬áToo Chian Wen
+   Faculty: LKC FES
+   Department: DC
+   Γ₧û Removed Posts:
+      ΓÇó Head of Programme (Master of Information Systems)
+
+23. Ts Dr┬áWong Whee Yen
+   Faculty: LKC FES
+   Department: DC
+   Γ₧ò Added Posts:
+      ΓÇó Head (Entrepreneurship and Business Development Unit)
+   Γ₧û Removed Posts:
+      ΓÇó Acting Head (Unovate Centre)
+
+24. Prof Ts Dr┬áYau Kok Lim
+   Faculty: LKC FES
+   Department: DC
+   Γ₧û Removed Posts:
+      ΓÇó Chairperson (Centre for Artificial Intelligence and Computing Applications)
+
+25. Ir. Prof. Ts. Dr┬áBernard Saw Lip Huat
+   Faculty: LKC FES
+   Department: DMME
+   Γ₧ò Added Posts:
+      ΓÇó Acting Director (Division of Sustainability and Strategic Management)
+      ΓÇó Director (Institute of Postgraduate Studies and Research)
+   Γ₧û Removed Posts:
+      ΓÇó Director (Division of Sustainability and Strategic Management)
+
+≡ƒôè DESIGNATION CHANGES
+--------------------------------------------------------------------------------
+
+Γ¼å∩╕Å  PROMOTIONS:
+1. Ts Dr┬áShuit Siew Hoong
+   Assistant Professor ΓåÆ Associate Professor
+   Faculty: LKC FES, Department: DCL
+
+2. Ir Dr┬áSim Lan Ching
+   Assistant Professor ΓåÆ Associate Professor
+   Faculty: LKC FES, Department: DCL
+
+3. Dr┬áThiam Hui San
+   Assistant Professor ΓåÆ Associate Professor
+   Faculty: LKC FES, Department: DCL
+
+4. Ts Dr┬áChin Ren Jie
+   Assistant Professor ΓåÆ Associate Professor
+   Faculty: LKC FES, Department: DCI
+
+5. Dr┬áTan Chun Hui
+   Assistant Professor ΓåÆ Associate Professor
+   Faculty: LKC FES, Department: D3E
+
+6. Ir Dr┬áChua Kein Huat
+   Associate Professor ΓåÆ Professor
+   Faculty: LKC FES, Department: D3E
+
+7. Ir Dr┬áLim Boon Han
+   Associate Professor ΓåÆ Professor
+   Faculty: LKC FES, Department: D3E
+
+8. Ir Ts Dr┬áJeffrey Yap Boon Hui
+   Associate Professor ΓåÆ Professor
+   Faculty: LKC FES, Department: DS
+
+9. Ts Dr┬áLee Chen Kang
+   Assistant Professor ΓåÆ Associate Professor
+   Faculty: LKC FES, Department: DC
+
+================================================================================
+
