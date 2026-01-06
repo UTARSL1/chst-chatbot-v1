@@ -13,9 +13,11 @@ interface RCGrantYearlyBarChartProps {
 const RCGrantYearlyBarChart: React.FC<RCGrantYearlyBarChartProps> = ({ grants }) => {
 
     const chartData = useMemo(() => {
-        // Defined buckets as per request
+        // Defined buckets as per request 
+        // 6 bars: <= 2020, 2021, 2022, 2023, 2024, 2025
         const buckets: Record<string, number> = {
-            'Up to 2021': 0,
+            '≤ 2020': 0,
+            '2021': 0,
             '2022': 0,
             '2023': 0,
             '2024': 0,
@@ -27,17 +29,16 @@ const RCGrantYearlyBarChart: React.FC<RCGrantYearlyBarChartProps> = ({ grants })
         grants.forEach(grant => {
             if (!grant.commencementDate) return;
 
-            // Extract year
             const yearMatch = grant.commencementDate.toString().match(/\b(19|20)\d{2}\b/);
 
             if (yearMatch) {
                 const year = parseInt(yearMatch[0], 10);
                 const amount = Number(grant.fundingAmount);
 
-                if (year <= 2021) {
-                    buckets['Up to 2021'] += amount;
+                if (year <= 2020) {
+                    buckets['≤ 2020'] += amount;
                     hasData = true;
-                } else if (year >= 2022 && year <= 2025) {
+                } else if (year >= 2021 && year <= 2025) {
                     buckets[year.toString()] += amount;
                     hasData = true;
                 }
@@ -46,9 +47,12 @@ const RCGrantYearlyBarChart: React.FC<RCGrantYearlyBarChartProps> = ({ grants })
 
         if (!hasData) return [];
 
-        return Object.entries(buckets).map(([label, amount]) => ({
+        // Explicit order required to prevent automatic sorting of integer-like keys
+        const order = ['≤ 2020', '2021', '2022', '2023', '2024', '2025'];
+
+        return order.map(label => ({
             label,
-            amount
+            amount: buckets[label]
         }));
     }, [grants]);
 
@@ -68,8 +72,9 @@ const RCGrantYearlyBarChart: React.FC<RCGrantYearlyBarChartProps> = ({ grants })
     }
 
     // Chart dimensions
-    const height = 220; // Increased height slightly
-    const width = 320;
+    // Increased size to match Donut chart (approx 320px height)
+    const height = 320;
+    const width = 450;
     const padding = { top: 30, right: 20, bottom: 40, left: 50 };
     const chartWidth = width - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
@@ -80,12 +85,13 @@ const RCGrantYearlyBarChart: React.FC<RCGrantYearlyBarChartProps> = ({ grants })
     const yMax = maxAmount > 0 ? maxAmount * 1.15 : 1000;
 
     // Bar properties
-    const barWidth = 40; // Fixed width for cleaner look since we have fixed 5 buckets
+    // 6 bars
+    const barWidth = 40;
     const gap = (chartWidth - (barWidth * chartData.length)) / (chartData.length + 1);
 
     return (
         <div className="flex flex-col items-center w-full">
-            <h3 className="text-gray-400 text-xs mb-2 uppercase tracking-wider font-semibold">Funding Distribution</h3>
+            <h3 className="text-gray-400 text-xs mb-4 uppercase tracking-wider font-semibold">Funding Distribution</h3>
             <div className="relative">
                 <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
                     {/* Y Axis Grid Lines */}
@@ -109,7 +115,7 @@ const RCGrantYearlyBarChart: React.FC<RCGrantYearlyBarChartProps> = ({ grants })
                                     y={yPos}
                                     dy="3"
                                     textAnchor="end"
-                                    className="fill-gray-500 text-[9px]"
+                                    className="fill-gray-500 text-[10px]"
                                 >
                                     {formatCurrency(yVal)}
                                 </text>
@@ -131,32 +137,26 @@ const RCGrantYearlyBarChart: React.FC<RCGrantYearlyBarChartProps> = ({ grants })
                                     width={barWidth}
                                     height={barHeight}
                                     className="fill-blue-500/80 hover:fill-blue-400 transition-all duration-300"
-                                    rx="3" // Rounded corners
+                                    rx="3"
                                 />
-                                {/* Tooltip Trigger */}
                                 <title>{`${d.label}\nAmount: RM ${d.amount.toLocaleString()}`}</title>
 
-                                {/* value Label on top of bar */}
-                                {d.amount > 0 && (
-                                    <text
-                                        x={x + barWidth / 2}
-                                        y={y - 6}
-                                        textAnchor="middle"
-                                        className="fill-blue-300 text-[9px] font-medium opacity-0 group-hover:opacity-100 transition-opacity"
-                                    >
-                                        {formatCurrency(d.amount)}
-                                    </text>
-                                )}
+                                <text
+                                    x={x + barWidth / 2}
+                                    y={y - 6}
+                                    textAnchor="middle"
+                                    className="fill-blue-300 text-[10px] font-medium opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                    {formatCurrency(d.amount)}
+                                </text>
 
-                                {/* X Axis Label */}
                                 <text
                                     x={x + barWidth / 2}
                                     y={height - 20}
                                     textAnchor="middle"
-                                    className="fill-gray-400 text-[10px] font-medium"
+                                    className="fill-gray-400 text-[11px] font-medium"
                                 >
-                                    {/* Simple mapping for labels to be concise */}
-                                    {d.label === 'Up to 2021' ? '≤ 2021' : d.label}
+                                    {d.label}
                                 </text>
                             </g>
                         );
