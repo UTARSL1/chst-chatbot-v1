@@ -5,6 +5,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Upload, Users, DollarSign, ArrowLeft, Trash2, GripVertical, Filter, SortAsc, SortDesc, X, Search, RefreshCw } from 'lucide-react';
 import RCGrantOverview from '@/components/rc/RCGrantOverview';
 import RCGrantDonutChart from '@/components/rc/RCGrantDonutChart';
+import RCGrantYearlyBarChart from '@/components/rc/RCGrantYearlyBarChart';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { hasRCAccess, getStaffIdByEmail } from '@/lib/utils/rc-member-check';
@@ -546,12 +547,20 @@ export default function RCGrantPage() {
                                             </div>
                                         </div>
 
-                                        {/* Donut Chart Visualization */}
-                                        <div className="flex justify-center py-4 border-t border-white/5">
-                                            <RCGrantDonutChart
-                                                grants={grants}
-                                                totalFunding={Number(selectedMember.totalFunding)}
-                                            />
+                                        {/* Charts: Yearly Bar (Left) + Donut (Right) */}
+                                        <div className="flex flex-col md:flex-row border-t border-white/5">
+                                            {/* Left: Yearly Funding Bar Chart */}
+                                            <div className="flex-1 py-4 border-b md:border-b-0 md:border-r border-white/5 flex justify-center items-center">
+                                                <RCGrantYearlyBarChart grants={grants} />
+                                            </div>
+
+                                            {/* Right: Funding Distribution Donut */}
+                                            <div className="flex-1 py-4 flex justify-center items-center">
+                                                <RCGrantDonutChart
+                                                    grants={grants}
+                                                    totalFunding={Number(selectedMember.totalFunding)}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
 
