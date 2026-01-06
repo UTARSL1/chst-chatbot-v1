@@ -47,7 +47,7 @@ export default function RCGrantPage() {
     const [selectedMember, setSelectedMember] = useState<Member | null>(null);
     const [grants, setGrants] = useState<Grant[]>([]);
     const [loading, setLoading] = useState(true);
-    const [uploading, setUploading] = useState(false);
+    const [uploadingStates, setUploadingStates] = useState({ inUtar: false, notInUtar: false });
     const [loadingGrants, setLoadingGrants] = useState(false);
 
     // Sorting state
@@ -120,10 +120,7 @@ export default function RCGrantPage() {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const staffId = prompt('Enter Staff ID for this upload:');
-        if (!staffId) return;
-
-        setUploading(true);
+        setUploadingStates(prev => ({ ...prev, [fileType]: true }));
         const formData = new FormData();
 
         if (fileType === 'inUtar') {
@@ -131,7 +128,6 @@ export default function RCGrantPage() {
         } else {
             formData.append('notInUtarFile', file);
         }
-        formData.append('staffId', staffId);
 
         try {
             const res = await fetch('/api/rc-grant/upload', {
@@ -141,7 +137,7 @@ export default function RCGrantPage() {
 
             const data = await res.json();
             if (data.success) {
-                alert(`Successfully uploaded grants for ${data.member.name}`);
+                alert(`Successfully processed ${data.membersProcessed} members with ${data.totalGrantsFound} grants.`);
                 fetchMembers();
             } else {
                 alert(`Error: ${data.error}`);
@@ -150,8 +146,33 @@ export default function RCGrantPage() {
             console.error('Error uploading:', error);
             alert('Failed to upload file');
         } finally {
-            setUploading(false);
+            setUploadingStates(prev => ({ ...prev, [fileType]: false }));
             e.target.value = '';
+        }
+    };
+
+    const handleDeleteMember = async (staffId: string, memberName: string) => {
+        if (!confirm(`Are you sure you want to delete ${memberName} and all their grants? This action cannot be undone.`)) {
+            return;
+        }
+
+        try {
+            const res = await fetch(`/api/rc-grant/${staffId}`, {
+                method: 'DELETE'
+            });
+
+            if (res.ok) {
+                setMembers(prev => prev.filter(m => m.staffId !== staffId));
+                if (selectedMember?.staffId === staffId) {
+                    setSelectedMember(null);
+                }
+            } else {
+                const data = await res.json();
+                alert(`Error: ${data.error}`);
+            }
+        } catch (error) {
+            console.error('Error deleting member:', error);
+            alert('Failed to delete member');
         }
     };
 
@@ -354,14 +375,17 @@ export default function RCGrantPage() {
                                             >
                                                 <button
                                                     onClick={() => setSelectedMember(member)}
-                                                    className="w-full flex items-center gap-3 p-2.5"
+                                                    className="w-full flex items-center gap-3 p-2.5 text-left"
                                                 >
                                                     <div className="text-gray-600 group-hover:text-gray-400 transition-colors">
                                                         <GripVertical size={14} />
                                                     </div>
 
-                                                    <div className="flex-1">
+                                                    <div className="flex-1 min-w-0">
                                                         <div className="font-medium text-sm text-white truncate">{member.name}</div>
+                                                        {member.staffId && (
+                                                            <div className="text-[10px] text-gray-500 truncate mt-0.5">{member.staffId}</div>
+                                                        )}
                                                         <div className="flex items-center gap-2 mt-1">
                                                             <div className="text-xs text-gray-400">
                                                                 {member.totalGrants} grants • {formatCurrency(member.totalFunding)}
@@ -379,6 +403,28 @@ export default function RCGrantPage() {
                                                         </div>
                                                     </div>
                                                 </button>
+
+                                                {/* Delete Menu (Only for Chairperson) */}
+                                                {isChairperson && (
+                                                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <div className="relative group/menu">
+                                                            <button className="p-1 hover:bg-white/10 rounded-full text-gray-400 hover:text-white transition-colors">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" /></svg>
+                                                            </button>
+                                                            <div className="absolute right-0 top-full mt-1 w-32 bg-slate-900 border border-white/10 rounded-md shadow-xl overflow-hidden invisible group-hover/menu:visible z-20">
+                                                                <button
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        handleDeleteMember(member.staffId || '', member.name);
+                                                                    }}
+                                                                    className="w-full text-left px-3 py-2 text-xs text-red-400 hover:bg-red-900/20 flex items-center gap-2"
+                                                                >
+                                                                    <Trash2 size={12} /> Confirm Delete
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
                                             </div>
                                         ))
                                     )}
@@ -396,32 +442,38 @@ export default function RCGrantPage() {
                                         </div>
                                     </div>
 
-                                    <div className="space-y-2">
+                                    <div className="flex flex-row gap-2">
                                         {/* IN UTAR Upload */}
-                                        <label className="cursor-pointer block">
+                                        <label className="cursor-pointer flex-1">
                                             <input
                                                 type="file"
                                                 accept=".csv"
                                                 onChange={(e) => handleFileUpload(e, 'inUtar')}
                                                 className="hidden"
-                                                disabled={uploading}
+                                                disabled={uploadingStates.inUtar || uploadingStates.notInUtar}
                                             />
-                                            <div className="px-4 py-2 bg-emerald-600/80 text-white rounded-lg hover:bg-emerald-700 transition font-medium text-sm text-center">
-                                                {uploading ? 'Uploading...' : 'Upload IN UTAR Grants'}
+                                            <div className={`px-4 py-2 rounded-lg transition font-medium text-sm text-center ${uploadingStates.inUtar
+                                                ? 'bg-emerald-800/50 text-emerald-300 cursor-wait'
+                                                : 'bg-emerald-600/80 text-white hover:bg-emerald-700'
+                                                }`}>
+                                                {uploadingStates.inUtar ? 'Processing...' : 'Upload IN UTAR Grants'}
                                             </div>
                                         </label>
 
                                         {/* NOT IN UTAR Upload */}
-                                        <label className="cursor-pointer block">
+                                        <label className="cursor-pointer flex-1">
                                             <input
                                                 type="file"
                                                 accept=".csv"
                                                 onChange={(e) => handleFileUpload(e, 'notInUtar')}
                                                 className="hidden"
-                                                disabled={uploading}
+                                                disabled={uploadingStates.inUtar || uploadingStates.notInUtar}
                                             />
-                                            <div className="px-4 py-2 bg-amber-600/80 text-white rounded-lg hover:bg-amber-700 transition font-medium text-sm text-center">
-                                                {uploading ? 'Uploading...' : 'Upload NOT IN UTAR Grants'}
+                                            <div className={`px-4 py-2 rounded-lg transition font-medium text-sm text-center ${uploadingStates.notInUtar
+                                                ? 'bg-amber-800/50 text-amber-300 cursor-wait'
+                                                : 'bg-amber-600/80 text-white hover:bg-amber-700'
+                                                }`}>
+                                                {uploadingStates.notInUtar ? 'Processing...' : 'Upload NOT IN UTAR Grants'}
                                             </div>
                                         </label>
                                     </div>
@@ -475,22 +527,32 @@ export default function RCGrantPage() {
                                             {grants.map((grant) => (
                                                 <div key={grant.id} className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-blue-400/30 transition-colors">
                                                     <div className="flex items-start justify-between mb-2">
-                                                        <h4 className="font-medium text-white text-sm flex-1">{grant.title}</h4>
-                                                        <div className="flex gap-2 ml-4">
-                                                            <span className={`px-2 py-1 rounded text-xs font-medium ${grant.role === 'PRINCIPAL INVESTIGATOR'
-                                                                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                                                                : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
-                                                                }`}>
-                                                                {grant.role === 'PRINCIPAL INVESTIGATOR' ? 'PI' : 'Co-R'}
-                                                            </span>
-                                                            <span className={`px-2 py-1 rounded text-xs font-medium ${grant.grantType === 'INTERNAL'
-                                                                ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-                                                                : grant.grantCategory === 'INTERNATIONAL'
+                                                        <h4 className="font-medium text-white text-sm flex-1 mr-4">{grant.title}</h4>
+                                                        <div className="flex flex-col gap-1 items-end">
+                                                            <div className="flex gap-1">
+                                                                <span className={`px-2 py-1 rounded text-xs font-medium ${grant.role === 'PRINCIPAL INVESTIGATOR'
+                                                                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                                                                    : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                                                                    }`}>
+                                                                    {grant.role === 'PRINCIPAL INVESTIGATOR' ? 'PI' : 'Co-R'}
+                                                                </span>
+                                                                {/* Grant Type Badge (Internal/External) */}
+                                                                <span className={`px-2 py-1 rounded text-xs font-medium ${grant.grantType === 'INTERNAL'
+                                                                    ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                                                                    : 'bg-blue-600/20 text-blue-300 border border-blue-500/30'
+                                                                    }`}>
+                                                                    {grant.grantType === 'INTERNAL' ? 'Internal' : 'External'}
+                                                                </span>
+                                                            </div>
+                                                            {/* External Category Sub-badge (National/International) */}
+                                                            {grant.grantType !== 'INTERNAL' && (
+                                                                <span className={`px-2 py-0.5 rounded text-[10px] font-medium self-end ${grant.grantCategory === 'INTERNATIONAL'
                                                                     ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
                                                                     : 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
-                                                                }`}>
-                                                                {grant.grantType === 'INTERNAL' ? 'Internal' : grant.grantCategory || 'External'}
-                                                            </span>
+                                                                    }`}>
+                                                                    {grant.grantCategory || 'National'}
+                                                                </span>
+                                                            )}
                                                         </div>
                                                     </div>
 

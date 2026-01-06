@@ -19,227 +19,189 @@ export async function POST(request: NextRequest) {
         const formData = await request.formData();
         const inUtarFile = formData.get('inUtarFile') as File | null;
         const notInUtarFile = formData.get('notInUtarFile') as File | null;
-        const staffId = formData.get('staffId') as string;
-
-        if (!staffId) {
-            return NextResponse.json({ error: 'Staff ID is required' }, { status: 400 });
-        }
 
         if (!inUtarFile && !notInUtarFile) {
             return NextResponse.json({ error: 'At least one file is required' }, { status: 400 });
         }
 
-        const grants: any[] = [];
-        let staffName = '';
-        let faculty = '';
+        // Group grants by Staff ID
+        const grantsByStaff = new Map<string, {
+            info: { name: string, faculty: string },
+            grants: any[]
+        }>();
+
+        const processRow = (row: any, fundingLocation: 'IN_UTAR' | 'NOT_IN_UTAR') => {
+            const staffId = row['Staff ID'];
+            if (!staffId) return;
+
+            if (!grantsByStaff.has(staffId)) {
+                grantsByStaff.set(staffId, {
+                    info: {
+                        name: row['Staff Name'] || '',
+                        faculty: row['Faculty'] || ''
+                    },
+                    grants: []
+                });
+            }
+
+            const StaffData = grantsByStaff.get(staffId)!;
+
+            // Update info if missing
+            if (!StaffData.info.name && row['Staff Name']) StaffData.info.name = row['Staff Name'];
+            if (!StaffData.info.faculty && row['Faculty']) StaffData.info.faculty = row['Faculty'];
+
+            const fundingBody = row['Funding Body'] || '';
+            const typeOfFunding = row['Type of Funding'] || ''; // For Not In UTAR
+
+            // Determine grant type and category
+            // Logic: UTARRF is Internal. Everything else is External.
+            const grantType = fundingBody.toUpperCase().includes('UTARRF') ? 'INTERNAL' : 'EXTERNAL';
+
+            let grantCategory = null;
+            if (grantType === 'EXTERNAL') {
+                // Check keywords for International
+                const isInternational =
+                    fundingBody.toUpperCase().includes('INTERNATIONAL') ||
+                    typeOfFunding.toUpperCase().includes('INTERNATIONAL');
+
+                grantCategory = isInternational ? 'INTERNATIONAL' : 'NATIONAL';
+            }
+
+            // Parse keywords
+            const keywords = [
+                row['Keywords 1'],
+                row['Keywords 2'],
+                row['Keywords 3'],
+                row['Keywords 4'],
+                row['Keywords 5']
+            ].filter(k => k && k.trim());
+
+            // Parse collaborators
+            const collaborators = [];
+            for (let i = 1; i <= 5; i++) {
+                const collabName = row[`Collaborators ${i}`];
+                const collabInst = row[`Institution ${i}`];
+                const collabRole = row[`Role ${i}`];
+
+                if (collabName && collabName.trim()) {
+                    collaborators.push({
+                        name: collabName,
+                        institution: collabInst || '',
+                        role: collabRole || ''
+                    });
+                }
+            }
+
+            StaffData.grants.push({
+                staffId,
+                staffName: StaffData.info.name,
+                faculty: StaffData.info.faculty,
+                fundingLocation,
+                fundingBody,
+                projectStatus: row['Project Status'] || '',
+                role: row['Role'] || '',
+                title: row['Title of Research'] || '',
+                objective: row['Objective'] || '',
+                projectDuration: row['Project Duration'] || '',
+                commencementDate: row['Commencement Date'] || '',
+                endDate: row['End Date'] || '',
+                fundingAmount: parseFloat(row['Funding Amount (RM)']?.replace(/,/g, '') || '0'),
+                grantType,
+                grantCategory,
+                projectNumber: row['Project Number'] || '',
+                researchArea: row['Research Area'] || '',
+                researchCentre: row['Research Centre'] || '',
+                keywords: JSON.stringify(keywords),
+                collaborators: JSON.stringify(collaborators),
+                institutionParked: row['Institution Where The Funding is Parked'] || null
+            });
+        };
 
         // Process IN_UTAR file
         if (inUtarFile) {
-            const inUtarText = await inUtarFile.text();
-            const inUtarData = Papa.parse(inUtarText, { header: true });
-
-            for (const row of inUtarData.data as any[]) {
-                if (!row['Staff ID']) continue;
-
-                staffName = row['Staff Name'] || staffName;
-                faculty = row['Faculty'] || faculty;
-
-                const fundingBody = row['Funding Body'] || '';
-                const grantType = fundingBody.toUpperCase().includes('UTARRF') ? 'INTERNAL' : 'EXTERNAL';
-
-                // Determine grant category for external grants
-                let grantCategory = null;
-                if (grantType === 'EXTERNAL') {
-                    if (fundingBody.toLowerCase().includes('international')) {
-                        grantCategory = 'INTERNATIONAL';
-                    } else {
-                        grantCategory = 'NATIONAL';
-                    }
-                }
-
-                // Parse keywords
-                const keywords = [
-                    row['Keywords 1'],
-                    row['Keywords 2'],
-                    row['Keywords 3'],
-                    row['Keywords 4'],
-                    row['Keywords 5']
-                ].filter(k => k && k.trim());
-
-                // Parse collaborators
-                const collaborators = [];
-                for (let i = 1; i <= 5; i++) {
-                    const collabName = row[`Collaborators ${i}`];
-                    const collabInst = row[`Institution ${i}`];
-                    const collabRole = row[`Role ${i}`];
-
-                    if (collabName && collabName.trim()) {
-                        collaborators.push({
-                            name: collabName,
-                            institution: collabInst || '',
-                            role: collabRole || ''
-                        });
-                    }
-                }
-
-                grants.push({
-                    staffId: row['Staff ID'],
-                    staffName: row['Staff Name'],
-                    faculty: row['Faculty'],
-                    fundingLocation: 'IN_UTAR',
-                    fundingBody,
-                    projectStatus: row['Project Status'] || '',
-                    role: row['Role'] || '',
-                    title: row['Title of Research'] || '',
-                    objective: row['Objective'] || '',
-                    projectDuration: row['Project Duration'] || '',
-                    commencementDate: row['Commencement Date'] || '',
-                    endDate: row['End Date'] || '',
-                    fundingAmount: parseFloat(row['Funding Amount (RM)']?.replace(/,/g, '') || '0'),
-                    grantType,
-                    grantCategory,
-                    projectNumber: row['Project Number'] || '',
-                    researchArea: row['Research Area'] || '',
-                    researchCentre: row['Research Centre'] || '',
-                    keywords: JSON.stringify(keywords),
-                    collaborators: JSON.stringify(collaborators),
-                    institutionParked: null
-                });
-            }
+            const text = await inUtarFile.text();
+            const data = Papa.parse(text, { header: true });
+            (data.data as any[]).forEach(row => processRow(row, 'IN_UTAR'));
         }
 
         // Process NOT_IN_UTAR file
         if (notInUtarFile) {
-            const notInUtarText = await notInUtarFile.text();
-            const notInUtarData = Papa.parse(notInUtarText, { header: true });
+            const text = await notInUtarFile.text();
+            const data = Papa.parse(text, { header: true });
+            (data.data as any[]).forEach(row => processRow(row, 'NOT_IN_UTAR'));
+        }
 
-            for (const row of notInUtarData.data as any[]) {
-                if (!row['Staff ID']) continue;
+        if (grantsByStaff.size === 0) {
+            return NextResponse.json({ error: 'No valid grant data found' }, { status: 400 });
+        }
 
-                staffName = row['Staff Name'] || staffName;
-                faculty = row['Faculty'] || faculty;
+        // Process each staff member
+        let processedCount = 0;
 
-                const fundingBody = row['Funding Body'] || '';
-                const typeOfFunding = row['Type of Funding'] || '';
+        for (const [staffId, data] of grantsByStaff) {
+            // Find or create member
+            let member = await prisma.rCGrantMember.findFirst({ where: { staffId } });
 
-                // Determine grant type and category
-                const grantType = fundingBody.toUpperCase().includes('UTARRF') ? 'INTERNAL' : 'EXTERNAL';
-                let grantCategory = null;
-                if (grantType === 'EXTERNAL') {
-                    if (typeOfFunding.toUpperCase().includes('INTERNATIONAL')) {
-                        grantCategory = 'INTERNATIONAL';
-                    } else {
-                        grantCategory = 'NATIONAL';
+            if (!member) {
+                member = await prisma.rCGrantMember.create({
+                    data: {
+                        name: data.info.name || 'Unknown',
+                        staffId,
+                        faculty: data.info.faculty || ''
                     }
-                }
-
-                // Parse keywords
-                const keywords = [
-                    row['Keywords 1'],
-                    row['Keywords 2'],
-                    row['Keywords 3'],
-                    row['Keywords 4'],
-                    row['Keywords 5']
-                ].filter(k => k && k.trim());
-
-                // Parse collaborators
-                const collaborators = [];
-                for (let i = 1; i <= 5; i++) {
-                    const collabName = row[`Collaborators ${i}`];
-                    const collabInst = row[`Institution ${i}`];
-                    const collabRole = row[`Role ${i}`];
-
-                    if (collabName && collabName.trim()) {
-                        collaborators.push({
-                            name: collabName,
-                            institution: collabInst || '',
-                            role: collabRole || ''
-                        });
+                });
+            } else {
+                // Update name/faculty if they were missing or changed
+                await prisma.rCGrantMember.update({
+                    where: { id: member.id },
+                    data: {
+                        name: data.info.name || member.name,
+                        faculty: data.info.faculty || member.faculty
                     }
-                }
-
-                grants.push({
-                    staffId: row['Staff ID'],
-                    staffName: row['Staff Name'],
-                    faculty: row['Faculty'],
-                    fundingLocation: 'NOT_IN_UTAR',
-                    fundingBody,
-                    projectStatus: row['Project Status'] || '',
-                    role: row['Role'] || '',
-                    title: row['Title of Research'] || '',
-                    objective: row['Objective'] || '',
-                    projectDuration: row['Project Duration'] || '',
-                    commencementDate: row['Commencement Date'] || '',
-                    endDate: row['End Date'] || '',
-                    fundingAmount: parseFloat(row['Funding Amount (RM)']?.replace(/,/g, '') || '0'),
-                    grantType,
-                    grantCategory,
-                    projectNumber: row['Project Number'] || '',
-                    researchArea: row['Research Area'] || '',
-                    researchCentre: row['Research Centre'] || '',
-                    keywords: JSON.stringify(keywords),
-                    collaborators: JSON.stringify(collaborators),
-                    institutionParked: row['Institution Where The Funding is Parked'] || null
                 });
             }
-        }
 
-        if (grants.length === 0) {
-            return NextResponse.json({ error: 'No valid grant data found in files' }, { status: 400 });
-        }
-
-        // Find or create member
-        let member = await prisma.rCGrantMember.findFirst({
-            where: { staffId }
-        });
-
-        if (!member) {
-            member = await prisma.rCGrantMember.create({
-                data: {
-                    name: staffName,
-                    staffId,
-                    faculty
-                }
+            // Delete ALL existing grants for this member to avoid duplicates
+            // This assumes the upload contains the COMPLETE history for the member
+            await prisma.grant.deleteMany({
+                where: { memberId: member.id }
             });
+
+            // Insert new grants
+            if (data.grants.length > 0) {
+                await prisma.grant.createMany({
+                    data: data.grants.map(g => ({
+                        ...g,
+                        memberId: member!.id
+                    }))
+                });
+            }
+
+            // Calculate and update stats
+            const grants = data.grants;
+            const stats = {
+                totalGrants: grants.length,
+                totalFunding: grants.reduce((sum, g) => sum + g.fundingAmount, 0),
+                inUtarGrants: grants.filter(g => g.fundingLocation === 'IN_UTAR').length,
+                notInUtarGrants: grants.filter(g => g.fundingLocation === 'NOT_IN_UTAR').length,
+                internalGrants: grants.filter(g => g.grantType === 'INTERNAL').length,
+                externalGrants: grants.filter(g => g.grantType === 'EXTERNAL').length,
+                piCount: grants.filter(g => g.role === 'PRINCIPAL INVESTIGATOR').length,
+                coResearcherCount: grants.filter(g => g.role === 'CO-RESEARCHER').length
+            };
+
+            await prisma.rCGrantMember.update({
+                where: { id: member.id },
+                data: stats
+            });
+
+            processedCount++;
         }
-
-        // Delete existing grants for this member
-        await prisma.grant.deleteMany({
-            where: { memberId: member.id }
-        });
-
-        // Insert new grants
-        await prisma.grant.createMany({
-            data: grants.map(g => ({
-                ...g,
-                memberId: member!.id
-            }))
-        });
-
-        // Update member statistics
-        const stats = {
-            totalGrants: grants.length,
-            totalFunding: grants.reduce((sum, g) => sum + g.fundingAmount, 0),
-            inUtarGrants: grants.filter(g => g.fundingLocation === 'IN_UTAR').length,
-            notInUtarGrants: grants.filter(g => g.fundingLocation === 'NOT_IN_UTAR').length,
-            internalGrants: grants.filter(g => g.grantType === 'INTERNAL').length,
-            externalGrants: grants.filter(g => g.grantType === 'EXTERNAL').length,
-            piCount: grants.filter(g => g.role === 'PRINCIPAL INVESTIGATOR').length,
-            coResearcherCount: grants.filter(g => g.role === 'CO-RESEARCHER').length
-        };
-
-        await prisma.rCGrantMember.update({
-            where: { id: member.id },
-            data: stats
-        });
 
         return NextResponse.json({
             success: true,
-            member: {
-                ...member,
-                ...stats
-            },
-            grantsProcessed: grants.length
+            membersProcessed: processedCount,
+            totalGrantsFound: Array.from(grantsByStaff.values()).reduce((sum, d) => sum + d.grants.length, 0)
         });
 
     } catch (error) {

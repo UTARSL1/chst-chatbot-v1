@@ -60,3 +60,53 @@ export async function GET(
         );
     }
 }
+
+/**
+ * Delete RC Grant member and all their grants
+ * DELETE /api/rc-grant/[staffId]
+ */
+export async function DELETE(
+    request: NextRequest,
+    context: { params: Promise<{ staffId: string }> }
+) {
+    try {
+        const params = await context.params;
+        const session = await getServerSession(authOptions);
+
+        if (!session?.user || session.user.role !== 'chairperson') {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const { staffId } = params;
+
+        // Find member first to get ID
+        const member = await prisma.rCGrantMember.findFirst({
+            where: { staffId }
+        });
+
+        if (!member) {
+            return NextResponse.json({ error: 'Member not found' }, { status: 404 });
+        }
+
+        // Delete member (cascading delete should handle grants if configured, but let's be safe)
+        // Check schema: if we don't have Cascade delete, we need to delete grants first
+        // But in Prisma, if we defined relation correctly it might work.
+        // Let's delete manually to be safe.
+        await prisma.grant.deleteMany({
+            where: { memberId: member.id }
+        });
+
+        await prisma.rCGrantMember.delete({
+            where: { id: member.id }
+        });
+
+        return NextResponse.json({ success: true });
+
+    } catch (error) {
+        console.error('Error deleting RC grant member:', error);
+        return NextResponse.json(
+            { error: 'Failed to delete member' },
+            { status: 500 }
+        );
+    }
+}
