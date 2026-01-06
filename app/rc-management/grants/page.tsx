@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect, useMemo } from 'react';
-import { Upload, Users, DollarSign, ArrowLeft, Trash2, GripVertical, Filter, SortAsc, SortDesc, X, Search } from 'lucide-react';
+import { Upload, Users, DollarSign, ArrowLeft, Trash2, GripVertical, Filter, SortAsc, SortDesc, X, Search, RefreshCw } from 'lucide-react';
 import RCGrantOverview from '@/components/rc/RCGrantOverview';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -149,7 +149,17 @@ export default function RCGrantPage() {
             const data = await res.json();
             if (data.success) {
                 alert(`Successfully processed ${data.membersProcessed} members with ${data.totalGrantsFound} grants.`);
-                fetchMembers();
+                await fetchMembers();
+                // If a member is currently selected, refresh their grants too (auto-refresh logic)
+                // Note: fetchMembers usage of useEffect might trigger this already via selectedMember update,
+                // but calling it explicitly ensures the latest list is fetched if the selectedMember object identity doesn't change enough to trigger useEffect
+                if (data.member && data.member.staffId) {
+                    // If the response returns a specific member context
+                    await fetchMemberGrants(data.member.staffId);
+                } else if (selectedMember && selectedMember.staffId) {
+                    // Fallback to refreshing currently selected member
+                    await fetchMemberGrants(selectedMember.staffId);
+                }
             } else {
                 alert(`Error: ${data.error}`);
             }
@@ -498,8 +508,22 @@ export default function RCGrantPage() {
                                 <div className="space-y-6">
                                     {/* Member Header */}
                                     <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)]">
-                                        <h2 className="text-2xl font-bold text-white mb-2">{selectedMember.name}</h2>
-                                        <p className="text-gray-400 mb-4">Grant Portfolio Analysis</p>
+                                        <div className="flex justify-between items-start mb-4">
+                                            <div>
+                                                <h2 className="text-2xl font-bold text-white mb-1">{selectedMember.name}</h2>
+                                                <p className="text-gray-400">Grant Portfolio Analysis</p>
+                                            </div>
+                                            <button
+                                                onClick={() => {
+                                                    fetchMembers();
+                                                    if (selectedMember?.staffId) fetchMemberGrants(selectedMember.staffId);
+                                                }}
+                                                className="p-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                                                title="Refresh Data"
+                                            >
+                                                <RefreshCw size={18} />
+                                            </button>
+                                        </div>
 
                                         {/* Key Metrics */}
                                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -527,75 +551,89 @@ export default function RCGrantPage() {
                                         <h3 className="text-lg font-semibold text-white mb-4">Grants ({grants.length})</h3>
 
                                         <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
-                                            {grants.map((grant) => (
-                                                <div key={grant.id} className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-blue-400/30 transition-colors">
-                                                    <div className="flex items-start justify-between mb-2">
-                                                        <h4 className="font-medium text-white text-sm flex-1 mr-4">{grant.title}</h4>
-                                                        <div className="flex flex-col gap-1 items-end">
-                                                            <div className="flex gap-1">
-                                                                <span className={`px-2 py-1 rounded text-xs font-medium ${grant.role === 'PRINCIPAL INVESTIGATOR'
+                                            <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
+                                                {grants.map((grant) => (
+                                                    <div
+                                                        key={grant.id}
+                                                        className={`bg-white/5 rounded-lg p-4 border transition-colors ${grant.fundingLocation === 'IN_UTAR'
+                                                            ? 'border-emerald-500/20 hover:border-emerald-500/40' // Green for IN_UTAR
+                                                            : grant.fundingLocation === 'NOT_IN_UTAR'
+                                                                ? 'border-amber-500/20 hover:border-amber-500/40' // Orange/Amber for NOT_IN_UTAR
+                                                                : 'border-white/10 hover:border-blue-400/30'
+                                                            }`}
+                                                    >
+                                                        <div className="flex items-start justify-between mb-2">
+                                                            <h4 className="font-medium text-white text-sm flex-1 mr-4">{grant.title}</h4>
+                                                            <div className="flex flex-col gap-1 items-end shrink-0">
+                                                                {/* Row 1: Role */}
+                                                                <span className={`px-2 py-0.5 rounded text-[10px] font-medium tracking-wide ${grant.role === 'PRINCIPAL INVESTIGATOR'
                                                                     ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
                                                                     : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
                                                                     }`}>
                                                                     {grant.role === 'PRINCIPAL INVESTIGATOR' ? 'PI' : 'Co-R'}
                                                                 </span>
-                                                                {/* Grant Type Badge (Internal/External) */}
-                                                                <span className={`px-2 py-1 rounded text-xs font-medium ${grant.grantType === 'INTERNAL'
-                                                                    ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-                                                                    : 'bg-blue-600/20 text-blue-300 border border-blue-500/30'
-                                                                    }`}>
-                                                                    {grant.grantType === 'INTERNAL' ? 'Internal' : 'External'}
-                                                                </span>
-                                                            </div>
-                                                            {/* External Category Sub-badge (National/International) */}
-                                                            {grant.grantType !== 'INTERNAL' && (
-                                                                <span className={`px-2 py-0.5 rounded text-[10px] font-medium self-end ${grant.grantCategory === 'INTERNATIONAL'
-                                                                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                                                                    : 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
-                                                                    }`}>
-                                                                    {grant.grantCategory || 'National'}
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                    </div>
 
-                                                    <div className="grid grid-cols-2 gap-3 text-xs text-gray-400 mb-2">
-                                                        <div>
-                                                            <span className="font-medium text-gray-300">Funding Body:</span> {grant.fundingBody}
+                                                                {/* Row 2: Type & Category */}
+                                                                <div className="flex gap-1 items-center">
+                                                                    <span className={`px-2 py-0.5 rounded text-[10px] font-medium tracking-wide ${grant.grantType === 'INTERNAL'
+                                                                        ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                                                                        : 'bg-blue-600/20 text-blue-300 border border-blue-500/30'
+                                                                        }`}>
+                                                                        {grant.grantType === 'INTERNAL' ? 'Internal' : 'External'}
+                                                                    </span>
+
+                                                                    {/* Category Label (e.g. NATIONAL) for External Grants */}
+                                                                    {grant.grantType !== 'INTERNAL' && (
+                                                                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-medium uppercase tracking-wider ${grant.grantCategory === 'INTERNATIONAL'
+                                                                            ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                                                                            : 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
+                                                                            }`}>
+                                                                            {grant.grantCategory || 'NATIONAL'}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div>
-                                                            <span className="font-medium text-gray-300">Amount:</span> {formatCurrency(grant.fundingAmount)}
-                                                        </div>
-                                                        {grant.commencementDate && (
+
+                                                        <div className="grid grid-cols-2 gap-3 text-xs text-gray-400 mb-2">
                                                             <div>
-                                                                <span className="font-medium text-gray-300">Period:</span> {grant.commencementDate} - {grant.endDate}
+                                                                <span className="font-medium text-gray-300">Funding Body:</span> {grant.fundingBody}
+                                                            </div>
+                                                            <div>
+                                                                <span className="font-medium text-gray-300">Amount:</span> {formatCurrency(grant.fundingAmount)}
+                                                            </div>
+                                                            {grant.commencementDate && (
+                                                                <div>
+                                                                    <span className="font-medium text-gray-300">Period:</span> {grant.commencementDate} - {grant.endDate}
+                                                                </div>
+                                                            )}
+                                                            <div>
+                                                                <span className="font-medium text-gray-300">Status:</span> {grant.projectStatus}
+                                                            </div>
+                                                        </div>
+
+                                                        {grant.keywords && grant.keywords.length > 0 && (
+                                                            <div className="flex flex-wrap gap-1 mt-2">
+                                                                {grant.keywords.slice(0, 5).map((keyword, idx) => (
+                                                                    <span key={idx} className="px-2 py-0.5 bg-slate-700/50 text-slate-300 rounded text-[10px]">
+                                                                        {keyword}
+                                                                    </span>
+                                                                ))}
                                                             </div>
                                                         )}
-                                                        <div>
-                                                            <span className="font-medium text-gray-300">Status:</span> {grant.projectStatus}
-                                                        </div>
                                                     </div>
-
-                                                    {grant.keywords.length > 0 && (
-                                                        <div className="flex flex-wrap gap-1 mt-2">
-                                                            {grant.keywords.slice(0, 5).map((keyword, idx) => (
-                                                                <span key={idx} className="px-2 py-0.5 bg-slate-700/50 text-slate-300 rounded text-[10px]">
-                                                                    {keyword}
-                                                                </span>
-                                                            ))}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            ))}
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                             )}
-                        </div>
+
+                                    {activeTab === 'overview' && (
+                                        <RCGrantOverview showNames={isChairperson} />
+                                    )}
+                                </div>
                     </div>
-                ) : (
-                    <RCGrantOverview showNames={isChairperson} />
-                )}
+                    </div>
             </div>
         </div>
     );
