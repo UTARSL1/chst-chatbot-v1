@@ -133,7 +133,7 @@ const RCGrantDonutChart: React.FC<RCGrantDonutChartProps> = ({ grants, totalFund
 
     return (
         <div className="flex flex-col items-center justify-center p-4">
-            <div className="relative w-64 h-64">
+            <div className="relative w-80 h-80">
                 <svg viewBox="0 0 100 100" className="w-full h-full transform">
                     {/* Background Circle (for empty state or border) */}
                     <circle
@@ -159,11 +159,7 @@ const RCGrantDonutChart: React.FC<RCGrantDonutChartProps> = ({ grants, totalFund
                         </g>
                     )}
 
-                    {/* Internal Slice (Purple/Emerald -> Request said Internal slice, let's use Purple to match badges or Orange for 'Not In UTAR' concept? 
-                        Wait, previous prompt said "Slice A: External, Slice B: Internal".
-                        Badge colors: Internal is Purple. External is Blue/Sky. 
-                        Let's use Purple for Internal.
-                    */}
+                    {/* Internal Slice (Purple) */}
                     {data.internal.percentage > 0 && (
                         <g className="group">
                             <circle
@@ -187,10 +183,10 @@ const RCGrantDonutChart: React.FC<RCGrantDonutChartProps> = ({ grants, totalFund
                             y={extPos.y}
                             textAnchor="middle"
                             dominantBaseline="middle"
-                            className="fill-white text-[3px] font-bold pointer-events-none drop-shadow-md"
+                            className="fill-white text-[4.5px] font-bold pointer-events-none drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]"
                         >
-                            <tspan x={extPos.x} dy="-1.5">External</tspan>
-                            <tspan x={extPos.x} dy="3.5">{`PI ${data.external.piCount}/${data.external.count}`}</tspan>
+                            <tspan x={extPos.x} dy="-2">External</tspan>
+                            <tspan x={extPos.x} dy="5">{`PI ${data.external.piCount}/${data.external.count}`}</tspan>
                         </text>
                     )}
 
@@ -201,10 +197,10 @@ const RCGrantDonutChart: React.FC<RCGrantDonutChartProps> = ({ grants, totalFund
                             y={intPos.y}
                             textAnchor="middle"
                             dominantBaseline="middle"
-                            className="fill-white text-[3px] font-bold pointer-events-none drop-shadow-md"
+                            className="fill-white text-[4.5px] font-bold pointer-events-none drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]"
                         >
-                            <tspan x={intPos.x} dy="-1.5">Internal</tspan>
-                            <tspan x={intPos.x} dy="3.5">{`PI ${data.internal.piCount}/${data.internal.count}`}</tspan>
+                            <tspan x={intPos.x} dy="-2">Internal</tspan>
+                            <tspan x={intPos.x} dy="5">{`PI ${data.internal.piCount}/${data.internal.count}`}</tspan>
                         </text>
                     )}
 
@@ -212,15 +208,15 @@ const RCGrantDonutChart: React.FC<RCGrantDonutChartProps> = ({ grants, totalFund
 
                 {/* Center Label */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <div className="text-xl font-bold text-white tracking-tight">
+                    <div className="text-2xl font-bold text-white tracking-tight">
                         {formatCurrency(totalFunding)}
                     </div>
-                    <div className="text-xs text-gray-400 font-medium mt-0.5">
+                    <div className="text-sm text-gray-400 font-medium mt-1">
                         Total Funding
                     </div>
-                    <div className="text-[10px] text-gray-500 mt-1 flex gap-2">
-                        <span className="text-blue-400">Ext {data.external.percentage.toFixed(0)}%</span>
-                        <span className="text-purple-400">Int {data.internal.percentage.toFixed(0)}%</span>
+                    <div className="text-xs text-gray-500 mt-2 flex gap-3">
+                        <span className="text-blue-400 font-semibold">Ext {data.external.percentage.toFixed(0)}%</span>
+                        <span className="text-purple-400 font-semibold">Int {data.internal.percentage.toFixed(0)}%</span>
                     </div>
                 </div>
             </div>

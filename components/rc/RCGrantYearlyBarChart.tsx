@@ -13,35 +13,43 @@ interface RCGrantYearlyBarChartProps {
 const RCGrantYearlyBarChart: React.FC<RCGrantYearlyBarChartProps> = ({ grants }) => {
 
     const chartData = useMemo(() => {
-        // 1. Aggregate funding by year
-        const yearlyData: Record<number, number> = {};
+        // Defined buckets as per request
+        const buckets: Record<string, number> = {
+            'Up to 2021': 0,
+            '2022': 0,
+            '2023': 0,
+            '2024': 0,
+            '2025': 0
+        };
+
+        let hasData = false;
 
         grants.forEach(grant => {
             if (!grant.commencementDate) return;
 
-            // Extract the first 4-digit year found in the string
-            // This handles "2021-2024" -> 2021, "15/05/2022" -> 2022
+            // Extract year
             const yearMatch = grant.commencementDate.toString().match(/\b(19|20)\d{2}\b/);
 
             if (yearMatch) {
                 const year = parseInt(yearMatch[0], 10);
-                yearlyData[year] = (yearlyData[year] || 0) + Number(grant.fundingAmount);
+                const amount = Number(grant.fundingAmount);
+
+                if (year <= 2021) {
+                    buckets['Up to 2021'] += amount;
+                    hasData = true;
+                } else if (year >= 2022 && year <= 2025) {
+                    buckets[year.toString()] += amount;
+                    hasData = true;
+                }
             }
         });
 
-        // 2. Convert to array and sort by year
-        const years = Object.keys(yearlyData).map(Number).sort((a, b) => a - b);
+        if (!hasData) return [];
 
-        if (years.length === 0) return [];
-
-        // Fill in gaps if cleaner chart needed? For now, just show active years.
-
-        const data = years.map(year => ({
-            year,
-            amount: yearlyData[year]
+        return Object.entries(buckets).map(([label, amount]) => ({
+            label,
+            amount
         }));
-
-        return data;
     }, [grants]);
 
     // Format currency for tooltip/axis
@@ -54,32 +62,32 @@ const RCGrantYearlyBarChart: React.FC<RCGrantYearlyBarChartProps> = ({ grants })
     if (chartData.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center p-8 h-full w-full">
-                <div className="text-gray-500 text-xs">No yearly data available</div>
+                <div className="text-gray-500 text-xs text-center">No grant data in range (≤2025)</div>
             </div>
         );
     }
 
     // Chart dimensions
-    const height = 200;
-    const width = 300;
-    const padding = { top: 20, right: 20, bottom: 30, left: 50 };
+    const height = 220; // Increased height slightly
+    const width = 320;
+    const padding = { top: 30, right: 20, bottom: 40, left: 50 };
     const chartWidth = width - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
 
     // Scales
     const maxAmount = Math.max(...chartData.map(d => d.amount));
-    // Add 10% headroom
-    const yMax = maxAmount * 1.1;
+    // Add 15% headroom
+    const yMax = maxAmount > 0 ? maxAmount * 1.15 : 1000;
 
     // Bar properties
-    const barWidth = Math.min(40, chartWidth / chartData.length * 0.6);
+    const barWidth = 40; // Fixed width for cleaner look since we have fixed 5 buckets
     const gap = (chartWidth - (barWidth * chartData.length)) / (chartData.length + 1);
 
     return (
         <div className="flex flex-col items-center w-full">
-            <h3 className="text-gray-400 text-xs mb-2 uppercase tracking-wider font-semibold">Funding by Year</h3>
+            <h3 className="text-gray-400 text-xs mb-2 uppercase tracking-wider font-semibold">Funding Distribution</h3>
             <div className="relative">
-                <svg width="100%" height="200" viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
+                <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
                     {/* Y Axis Grid Lines */}
                     {[0, 0.25, 0.5, 0.75, 1].map((tick, i) => {
                         const yVal = yMax * tick;
@@ -116,38 +124,39 @@ const RCGrantYearlyBarChart: React.FC<RCGrantYearlyBarChartProps> = ({ grants })
                         const y = padding.top + chartHeight - barHeight;
 
                         return (
-                            <g key={d.year} className="group cursor-pointer">
+                            <g key={d.label} className="group cursor-pointer">
                                 <rect
                                     x={x}
                                     y={y}
                                     width={barWidth}
                                     height={barHeight}
                                     className="fill-blue-500/80 hover:fill-blue-400 transition-all duration-300"
-                                    rx="2"
+                                    rx="3" // Rounded corners
                                 />
                                 {/* Tooltip Trigger */}
-                                <title>{`Year: ${d.year}\nAmount: RM ${d.amount.toLocaleString()}`}</title>
+                                <title>{`${d.label}\nAmount: RM ${d.amount.toLocaleString()}`}</title>
 
-                                {/* Label on top of bar if space permits */}
-                                {barHeight > 20 && (
+                                {/* value Label on top of bar */}
+                                {d.amount > 0 && (
                                     <text
                                         x={x + barWidth / 2}
-                                        y={y - 5}
+                                        y={y - 6}
                                         textAnchor="middle"
-                                        className="fill-white text-[9px] opacity-0 group-hover:opacity-100 transition-opacity"
+                                        className="fill-blue-300 text-[9px] font-medium opacity-0 group-hover:opacity-100 transition-opacity"
                                     >
                                         {formatCurrency(d.amount)}
                                     </text>
                                 )}
 
-                                {/* X Axis Label (Year) */}
+                                {/* X Axis Label */}
                                 <text
                                     x={x + barWidth / 2}
-                                    y={height - 10}
+                                    y={height - 20}
                                     textAnchor="middle"
                                     className="fill-gray-400 text-[10px] font-medium"
                                 >
-                                    {d.year}
+                                    {/* Simple mapping for labels to be concise */}
+                                    {d.label === 'Up to 2021' ? '≤ 2021' : d.label}
                                 </text>
                             </g>
                         );

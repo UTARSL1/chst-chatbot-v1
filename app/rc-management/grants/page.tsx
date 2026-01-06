@@ -335,6 +335,18 @@ export default function RCGrantPage() {
                                     </div>
                                     {isChairperson && (
                                         <div className="flex items-center gap-2">
+                                            {/* Filter Toggle */}
+                                            <button
+                                                onClick={() => setShowFilters(!showFilters)}
+                                                className={`p-1.5 rounded-md border transition-colors ${showFilters
+                                                    ? 'bg-blue-500/20 border-blue-500/30 text-blue-300'
+                                                    : 'bg-white/5 border-white/10 hover:bg-white/10 text-gray-300'
+                                                    }`}
+                                                title="Filter Members"
+                                            >
+                                                <Filter className="w-4 h-4" />
+                                            </button>
+
                                             {/* Sort Dropdown */}
                                             <div className="relative group">
                                                 <button className="p-1.5 rounded-md bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
