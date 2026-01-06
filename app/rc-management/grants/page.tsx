@@ -615,15 +615,16 @@ export default function RCGrantPage() {
                                             </div>
                                         </div>
                                     </div>
+                                </div>
                             )}
 
-                                    {activeTab === 'overview' && (
-                                        <RCGrantOverview showNames={isChairperson} />
-                                    )}
-                                </div>
+                            {activeTab === 'overview' && (
+                                <RCGrantOverview showNames={isChairperson} />
+                            )}
+                        </div>
                     </div>
-                    </div>
-            </div>
+                </div>
         </div>
+        </div >
     );
 }
