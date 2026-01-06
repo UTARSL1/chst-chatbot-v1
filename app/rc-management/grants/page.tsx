@@ -526,8 +526,28 @@ export default function RCGrantPage() {
                                             </button>
                                         </div>
 
-                                        {/* Key Metrics - Replaced with Donut Chart */}
-                                        <div className="flex justify-center py-4">
+                                        {/* Key Metrics (Scoreboard) */}
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                                            <div className="bg-white/5 rounded-lg p-3 border border-white/10">
+                                                <div className="text-2xl font-bold text-blue-400">{selectedMember.totalGrants}</div>
+                                                <div className="text-xs text-gray-400">Total Grants</div>
+                                            </div>
+                                            <div className="bg-white/5 rounded-lg p-3 border border-white/10">
+                                                <div className="text-2xl font-bold text-emerald-400">{formatCurrency(selectedMember.totalFunding)}</div>
+                                                <div className="text-xs text-gray-400">Total Funding</div>
+                                            </div>
+                                            <div className="bg-white/5 rounded-lg p-3 border border-white/10">
+                                                <div className="text-2xl font-bold text-purple-400">{selectedMember.piCount}</div>
+                                                <div className="text-xs text-gray-400">As PI</div>
+                                            </div>
+                                            <div className="bg-white/5 rounded-lg p-3 border border-white/10">
+                                                <div className="text-2xl font-bold text-amber-400">{selectedMember.externalGrants}</div>
+                                                <div className="text-xs text-gray-400">External</div>
+                                            </div>
+                                        </div>
+
+                                        {/* Donut Chart Visualization */}
+                                        <div className="flex justify-center py-4 border-t border-white/5">
                                             <RCGrantDonutChart
                                                 grants={grants}
                                                 totalFunding={Number(selectedMember.totalFunding)}
