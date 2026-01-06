@@ -54,15 +54,20 @@ export async function POST(request: NextRequest) {
             const typeOfFunding = row['Type of Funding'] || ''; // For Not In UTAR
 
             // Determine grant type and category
+            const fundingBodyUpper = fundingBody.toUpperCase();
+            const typeOfFundingUpper = typeOfFunding.toUpperCase();
+
             // Logic: UTARRF is Internal. Everything else is External.
-            const grantType = fundingBody.toUpperCase().includes('UTARRF') ? 'INTERNAL' : 'EXTERNAL';
+            const grantType = fundingBodyUpper.includes('UTARRF') ? 'INTERNAL' : 'EXTERNAL';
 
             let grantCategory = null;
             if (grantType === 'EXTERNAL') {
-                // Check keywords for International
+                // Check keywords for International. 'OTHERS' also implies International per user request.
                 const isInternational =
-                    fundingBody.toUpperCase().includes('INTERNATIONAL') ||
-                    typeOfFunding.toUpperCase().includes('INTERNATIONAL');
+                    fundingBodyUpper.includes('INTERNATIONAL') ||
+                    fundingBodyUpper.includes('OTHERS') ||
+                    typeOfFundingUpper.includes('INTERNATIONAL') ||
+                    typeOfFundingUpper.includes('OTHERS');
 
                 grantCategory = isInternational ? 'INTERNATIONAL' : 'NATIONAL';
             }

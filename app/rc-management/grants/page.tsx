@@ -404,26 +404,18 @@ export default function RCGrantPage() {
                                                     </div>
                                                 </button>
 
-                                                {/* Delete Menu (Only for Chairperson) */}
+                                                {/* Delete Button (Only for Chairperson) */}
                                                 {isChairperson && (
-                                                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                        <div className="relative group/menu">
-                                                            <button className="p-1 hover:bg-white/10 rounded-full text-gray-400 hover:text-white transition-colors">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" /></svg>
-                                                            </button>
-                                                            <div className="absolute right-0 top-full mt-1 w-32 bg-slate-900 border border-white/10 rounded-md shadow-xl overflow-hidden invisible group-hover/menu:visible z-20">
-                                                                <button
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        handleDeleteMember(member.staffId || '', member.name);
-                                                                    }}
-                                                                    className="w-full text-left px-3 py-2 text-xs text-red-400 hover:bg-red-900/20 flex items-center gap-2"
-                                                                >
-                                                                    <Trash2 size={12} /> Confirm Delete
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleDeleteMember(member.staffId || '', member.name);
+                                                        }}
+                                                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all p-1.5 hover:bg-red-500/20 text-gray-400 hover:text-red-400 rounded-md"
+                                                        title="Delete Member"
+                                                    >
+                                                        <Trash2 size={16} />
+                                                    </button>
                                                 )}
                                             </div>
                                         ))

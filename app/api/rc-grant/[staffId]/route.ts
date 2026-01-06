@@ -70,14 +70,31 @@ export async function DELETE(
     context: { params: Promise<{ staffId: string }> }
 ) {
     try {
-        const params = await context.params;
         const session = await getServerSession(authOptions);
 
         if (!session?.user || session.user.role !== 'chairperson') {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { staffId } = params;
+        // Try to get staffId from context params first
+        let staffId: string | undefined;
+        try {
+            const params = await context.params;
+            staffId = params.staffId;
+        } catch (e) {
+            console.warn('Could not await context.params', e);
+        }
+
+        // Fallback: try parsing from URL if context param failed (though context should work in Next 15)
+        if (!staffId) {
+            const url = new URL(request.url);
+            const pathSegments = url.pathname.split('/');
+            staffId = pathSegments[pathSegments.length - 1];
+        }
+
+        if (!staffId) {
+            return NextResponse.json({ error: 'Staff ID is required' }, { status: 400 });
+        }
 
         // Find member first to get ID
         const member = await prisma.rCGrantMember.findFirst({
@@ -88,10 +105,7 @@ export async function DELETE(
             return NextResponse.json({ error: 'Member not found' }, { status: 404 });
         }
 
-        // Delete member (cascading delete should handle grants if configured, but let's be safe)
-        // Check schema: if we don't have Cascade delete, we need to delete grants first
-        // But in Prisma, if we defined relation correctly it might work.
-        // Let's delete manually to be safe.
+        // Delete member (and their grants first)
         await prisma.grant.deleteMany({
             where: { memberId: member.id }
         });
@@ -105,7 +119,7 @@ export async function DELETE(
     } catch (error) {
         console.error('Error deleting RC grant member:', error);
         return NextResponse.json(
-            { error: 'Failed to delete member' },
+            { error: error instanceof Error ? error.message : 'Failed to delete member' },
             { status: 500 }
         );
     }
