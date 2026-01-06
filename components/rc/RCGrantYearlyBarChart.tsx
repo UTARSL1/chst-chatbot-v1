@@ -136,7 +136,7 @@ const RCGrantYearlyBarChart: React.FC<RCGrantYearlyBarChartProps> = ({ grants })
                                     y={y}
                                     width={barWidth}
                                     height={barHeight}
-                                    className="fill-blue-500/80 hover:fill-blue-400 transition-all duration-300"
+                                    className="fill-cyan-500/80 hover:fill-cyan-400 transition-all duration-300"
                                     rx="3"
                                 />
                                 <title>{`${d.label}\nAmount: RM ${d.amount.toLocaleString()}`}</title>
@@ -145,7 +145,7 @@ const RCGrantYearlyBarChart: React.FC<RCGrantYearlyBarChartProps> = ({ grants })
                                     x={x + barWidth / 2}
                                     y={y - 6}
                                     textAnchor="middle"
-                                    className="fill-blue-300 text-[10px] font-medium opacity-0 group-hover:opacity-100 transition-opacity"
+                                    className="fill-cyan-300 text-[10px] font-medium opacity-0 group-hover:opacity-100 transition-opacity"
                                 >
                                     {formatCurrency(d.amount)}
                                 </text>
