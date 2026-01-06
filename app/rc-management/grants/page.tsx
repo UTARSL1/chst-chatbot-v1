@@ -626,11 +626,11 @@ export default function RCGrantPage() {
                                             {grants.map((grant) => (
                                                 <div
                                                     key={grant.id}
-                                                    className={`bg-white/5 rounded-lg p-4 border transition-colors ${grant.fundingLocation === 'IN_UTAR'
-                                                        ? 'border-emerald-500/20 hover:border-emerald-500/40' // Green for IN_UTAR
+                                                    className={`bg-white/5 rounded-lg p-4 border transition-colors border-l-4 ${grant.fundingLocation === 'IN_UTAR'
+                                                        ? 'border-l-emerald-500 border-y-emerald-500/30 border-r-emerald-500/30 hover:border-emerald-500/50'
                                                         : grant.fundingLocation === 'NOT_IN_UTAR'
-                                                            ? 'border-amber-500/20 hover:border-amber-500/40' // Orange/Amber for NOT_IN_UTAR
-                                                            : 'border-white/10 hover:border-blue-400/30'
+                                                            ? 'border-l-amber-500 border-y-amber-500/30 border-r-amber-500/30 hover:border-amber-500/50'
+                                                            : 'border-l-slate-500 border-white/10 hover:border-white/30'
                                                         }`}
                                                 >
                                                     <div className="flex items-start justify-between mb-2">
