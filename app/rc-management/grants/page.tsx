@@ -320,7 +320,7 @@ export default function RCGrantPage() {
                 </div>
 
                 {/* Main Content */}
-                {activeTab === 'members' ? (
+                {activeTab === 'members' && (
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         {/* Left Panel - Members List */}
                         <div className="lg:col-span-1">
@@ -540,91 +540,89 @@ export default function RCGrantPage() {
                                         <h3 className="text-lg font-semibold text-white mb-4">Grants ({grants.length})</h3>
 
                                         <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
-                                            <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
-                                                {grants.map((grant) => (
-                                                    <div
-                                                        key={grant.id}
-                                                        className={`bg-white/5 rounded-lg p-4 border transition-colors ${grant.fundingLocation === 'IN_UTAR'
-                                                            ? 'border-emerald-500/20 hover:border-emerald-500/40' // Green for IN_UTAR
-                                                            : grant.fundingLocation === 'NOT_IN_UTAR'
-                                                                ? 'border-amber-500/20 hover:border-amber-500/40' // Orange/Amber for NOT_IN_UTAR
-                                                                : 'border-white/10 hover:border-blue-400/30'
-                                                            }`}
-                                                    >
-                                                        <div className="flex items-start justify-between mb-2">
-                                                            <h4 className="font-medium text-white text-sm flex-1 mr-4">{grant.title}</h4>
-                                                            <div className="flex flex-col gap-1 items-end shrink-0">
-                                                                {/* Row 1: Role */}
-                                                                <span className={`px-2 py-0.5 rounded text-[10px] font-medium tracking-wide ${grant.role === 'PRINCIPAL INVESTIGATOR'
-                                                                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                                                                    : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                                            {grants.map((grant) => (
+                                                <div
+                                                    key={grant.id}
+                                                    className={`bg-white/5 rounded-lg p-4 border transition-colors ${grant.fundingLocation === 'IN_UTAR'
+                                                        ? 'border-emerald-500/20 hover:border-emerald-500/40' // Green for IN_UTAR
+                                                        : grant.fundingLocation === 'NOT_IN_UTAR'
+                                                            ? 'border-amber-500/20 hover:border-amber-500/40' // Orange/Amber for NOT_IN_UTAR
+                                                            : 'border-white/10 hover:border-blue-400/30'
+                                                        }`}
+                                                >
+                                                    <div className="flex items-start justify-between mb-2">
+                                                        <h4 className="font-medium text-white text-sm flex-1 mr-4">{grant.title}</h4>
+                                                        <div className="flex flex-col gap-1 items-end shrink-0">
+                                                            {/* Row 1: Role */}
+                                                            <span className={`px-2 py-0.5 rounded text-[10px] font-medium tracking-wide ${grant.role === 'PRINCIPAL INVESTIGATOR'
+                                                                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                                                                : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                                                                }`}>
+                                                                {grant.role === 'PRINCIPAL INVESTIGATOR' ? 'PI' : 'Co-R'}
+                                                            </span>
+
+                                                            {/* Row 2: Type & Category */}
+                                                            <div className="flex gap-1 items-center">
+                                                                <span className={`px-2 py-0.5 rounded text-[10px] font-medium tracking-wide ${grant.grantType === 'INTERNAL'
+                                                                    ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                                                                    : 'bg-blue-600/20 text-blue-300 border border-blue-500/30'
                                                                     }`}>
-                                                                    {grant.role === 'PRINCIPAL INVESTIGATOR' ? 'PI' : 'Co-R'}
+                                                                    {grant.grantType === 'INTERNAL' ? 'Internal' : 'External'}
                                                                 </span>
 
-                                                                {/* Row 2: Type & Category */}
-                                                                <div className="flex gap-1 items-center">
-                                                                    <span className={`px-2 py-0.5 rounded text-[10px] font-medium tracking-wide ${grant.grantType === 'INTERNAL'
-                                                                        ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-                                                                        : 'bg-blue-600/20 text-blue-300 border border-blue-500/30'
+                                                                {/* Category Label (e.g. NATIONAL) for External Grants */}
+                                                                {grant.grantType !== 'INTERNAL' && (
+                                                                    <span className={`px-1.5 py-0.5 rounded text-[9px] font-medium uppercase tracking-wider ${grant.grantCategory === 'INTERNATIONAL'
+                                                                        ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                                                                        : 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
                                                                         }`}>
-                                                                        {grant.grantType === 'INTERNAL' ? 'Internal' : 'External'}
+                                                                        {grant.grantCategory || 'NATIONAL'}
                                                                     </span>
-
-                                                                    {/* Category Label (e.g. NATIONAL) for External Grants */}
-                                                                    {grant.grantType !== 'INTERNAL' && (
-                                                                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-medium uppercase tracking-wider ${grant.grantCategory === 'INTERNATIONAL'
-                                                                            ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                                                                            : 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
-                                                                            }`}>
-                                                                            {grant.grantCategory || 'NATIONAL'}
-                                                                        </span>
-                                                                    )}
-                                                                </div>
+                                                                )}
                                                             </div>
                                                         </div>
+                                                    </div>
 
-                                                        <div className="grid grid-cols-2 gap-3 text-xs text-gray-400 mb-2">
-                                                            <div>
-                                                                <span className="font-medium text-gray-300">Funding Body:</span> {grant.fundingBody}
-                                                            </div>
-                                                            <div>
-                                                                <span className="font-medium text-gray-300">Amount:</span> {formatCurrency(grant.fundingAmount)}
-                                                            </div>
-                                                            {grant.commencementDate && (
-                                                                <div>
-                                                                    <span className="font-medium text-gray-300">Period:</span> {grant.commencementDate} - {grant.endDate}
-                                                                </div>
-                                                            )}
-                                                            <div>
-                                                                <span className="font-medium text-gray-300">Status:</span> {grant.projectStatus}
-                                                            </div>
+                                                    <div className="grid grid-cols-2 gap-3 text-xs text-gray-400 mb-2">
+                                                        <div>
+                                                            <span className="font-medium text-gray-300">Funding Body:</span> {grant.fundingBody}
                                                         </div>
-
-                                                        {grant.keywords && grant.keywords.length > 0 && (
-                                                            <div className="flex flex-wrap gap-1 mt-2">
-                                                                {grant.keywords.slice(0, 5).map((keyword, idx) => (
-                                                                    <span key={idx} className="px-2 py-0.5 bg-slate-700/50 text-slate-300 rounded text-[10px]">
-                                                                        {keyword}
-                                                                    </span>
-                                                                ))}
+                                                        <div>
+                                                            <span className="font-medium text-gray-300">Amount:</span> {formatCurrency(grant.fundingAmount)}
+                                                        </div>
+                                                        {grant.commencementDate && (
+                                                            <div>
+                                                                <span className="font-medium text-gray-300">Period:</span> {grant.commencementDate} - {grant.endDate}
                                                             </div>
                                                         )}
+                                                        <div>
+                                                            <span className="font-medium text-gray-300">Status:</span> {grant.projectStatus}
+                                                        </div>
                                                     </div>
-                                                ))}
-                                            </div>
+
+                                                    {grant.keywords && grant.keywords.length > 0 && (
+                                                        <div className="flex flex-wrap gap-1 mt-2">
+                                                            {grant.keywords.slice(0, 5).map((keyword, idx) => (
+                                                                <span key={idx} className="px-2 py-0.5 bg-slate-700/50 text-slate-300 rounded text-[10px]">
+                                                                    {keyword}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
                                 </div>
                             )}
-
-                            {activeTab === 'overview' && (
-                                <RCGrantOverview showNames={isChairperson} />
-                            )}
                         </div>
                     </div>
-                </div>
+                )}
+
+                {activeTab === 'overview' && (
+                    <RCGrantOverview showNames={isChairperson} />
+                )}
+            </div>
         </div>
-        </div >
     );
 }
