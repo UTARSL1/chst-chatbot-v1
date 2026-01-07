@@ -275,7 +275,7 @@ export function ChatSidebar({
                                         <ChevronRight className="w-3.5 h-3.5" />
                                     </div>
                                     <span className="flex items-center gap-2">
-                                        <Rocket className="w-3.5 h-3.5" /> RC Management
+                                        <Rocket className="w-3.5 h-3.5" /> RC Dashboards
                                     </span>
                                 </button>
 
