@@ -110,28 +110,38 @@ export function ChatSidebar({
                     <Plus className="w-4 h-4 mr-2" /> New Chat
                 </Button>
 
-                <div className="grid grid-cols-2 p-1 bg-muted/30 rounded-lg border border-border/50">
+                <div className="relative grid grid-cols-2 p-1 bg-black/20 rounded-xl border border-white/5 backdrop-blur-sm">
+                    {/* Sliding Background */}
+                    <div
+                        className={cn(
+                            "absolute inset-y-1 rounded-lg bg-card/50 shadow-sm transition-all duration-300 ease-out border border-white/10",
+                            activeTab === 'chats' ? "left-1 right-[50%]" : "left-[50%] right-1"
+                        )}
+                    />
+
                     <button
                         onClick={() => setActiveTab('chats')}
                         className={cn(
-                            "flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all duration-200",
+                            "relative z-10 flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200",
                             activeTab === 'chats'
-                                ? "bg-background text-foreground shadow-sm ring-1 ring-border/50"
-                                : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                                ? "text-white"
+                                : "text-muted-foreground hover:text-white/80"
                         )}
                     >
-                        <MessageCircle className="w-4 h-4" /> Chats
+                        <MessageCircle className={cn("w-4 h-4 transition-transform duration-300", activeTab === 'chats' ? "scale-110" : "scale-100")} />
+                        Chats
                     </button>
                     <button
                         onClick={() => setActiveTab('tools')}
                         className={cn(
-                            "flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all duration-200",
+                            "relative z-10 flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200",
                             activeTab === 'tools'
-                                ? "bg-background text-foreground shadow-sm ring-1 ring-border/50"
-                                : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                                ? "text-white"
+                                : "text-muted-foreground hover:text-white/80"
                         )}
                     >
-                        <LayoutGrid className="w-4 h-4" /> Tools
+                        <LayoutGrid className={cn("w-4 h-4 transition-transform duration-300", activeTab === 'tools' ? "scale-110" : "scale-100")} />
+                        Tools
                     </button>
                 </div>
             </div>
@@ -142,7 +152,7 @@ export function ChatSidebar({
                     /* --- CHATS TAB --- */
                     <div className="p-3 space-y-2">
                         <div className="flex items-center justify-between px-2 py-1">
-                            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Recent Access</h3>
+                            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Chat History</h3>
                             <div className="relative">
                                 <button
                                     onClick={() => setChatHistoryMenuOpen(!chatHistoryMenuOpen)}
