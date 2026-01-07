@@ -110,11 +110,11 @@ export function ChatSidebar({
                     <Plus className="w-4 h-4 mr-2" /> New Chat
                 </Button>
 
-                <div className="relative grid grid-cols-2 p-1 bg-black/20 rounded-xl border border-white/5 backdrop-blur-sm">
+                <div className="relative grid grid-cols-2 p-1 bg-muted/50 rounded-xl border border-border/50">
                     {/* Sliding Background */}
                     <div
                         className={cn(
-                            "absolute inset-y-1 rounded-lg bg-card/50 shadow-sm transition-all duration-300 ease-out border border-white/10",
+                            "absolute inset-y-1 rounded-lg bg-background shadow-md shadow-black/10 ring-1 ring-white/10 transition-all duration-300 ease-out",
                             activeTab === 'chats' ? "left-1 right-[50%]" : "left-[50%] right-1"
                         )}
                     />
@@ -124,11 +124,11 @@ export function ChatSidebar({
                         className={cn(
                             "relative z-10 flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200",
                             activeTab === 'chats'
-                                ? "text-white"
-                                : "text-muted-foreground hover:text-white/80"
+                                ? "text-foreground font-semibold"
+                                : "text-muted-foreground hover:text-foreground/80"
                         )}
                     >
-                        <MessageCircle className={cn("w-4 h-4 transition-transform duration-300", activeTab === 'chats' ? "scale-110" : "scale-100")} />
+                        <MessageCircle className={cn("w-4 h-4 transition-transform duration-300", activeTab === 'chats' ? "text-violet-400 scale-110" : "scale-100")} />
                         Chats
                     </button>
                     <button
@@ -136,11 +136,11 @@ export function ChatSidebar({
                         className={cn(
                             "relative z-10 flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200",
                             activeTab === 'tools'
-                                ? "text-white"
-                                : "text-muted-foreground hover:text-white/80"
+                                ? "text-foreground font-semibold"
+                                : "text-muted-foreground hover:text-foreground/80"
                         )}
                     >
-                        <LayoutGrid className={cn("w-4 h-4 transition-transform duration-300", activeTab === 'tools' ? "scale-110" : "scale-100")} />
+                        <LayoutGrid className={cn("w-4 h-4 transition-transform duration-300", activeTab === 'tools' ? "text-violet-400 scale-110" : "scale-100")} />
                         Tools
                     </button>
                 </div>
