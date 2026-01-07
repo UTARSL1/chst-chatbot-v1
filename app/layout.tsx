@@ -12,12 +12,12 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: {
-        default: "CHST Chatbot - UTAR Centre for Healthcare Science and Technology",
-        template: "%s | CHST Chatbot"
+        default: "CHST AI Assistant - UTAR Centre for Healthcare Science and Technology",
+        template: "%s | CHST AI Assistant"
     },
-    description: "Centre for Healthcare Science and Technology AI chatbot assistant. Get instant answers about courses, research, healthcare science programs, and academic policies at Universiti Tunku Abdul Rahman.",
+    description: "Centre for Healthcare Science and Technology AI assistant. Get instant answers about courses, research, healthcare science programs, and academic policies at Universiti Tunku Abdul Rahman.",
     keywords: [
-        "CHST chatbot",
+        "CHST AI assistant",
         "UTAR chatbot",
         "Universiti Tunku Abdul Rahman",
         "Centre for Healthcare Science and Technology",

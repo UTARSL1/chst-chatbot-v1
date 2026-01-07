@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>CHST AI Agent - ${requestedRole.charAt(0).toUpperCase() + requestedRole.slice(1)} User Manual</title>
+  <title>CHST AI Assistant - ${requestedRole.charAt(0).toUpperCase() + requestedRole.slice(1)} User Manual</title>
   <style>
     @page {
       size: A4;
@@ -198,7 +198,7 @@ export async function GET(request: NextRequest) {
     // Return HTML with appropriate headers for download
     const headers = new Headers();
     headers.set('Content-Type', 'text/html; charset=utf-8');
-    headers.set('Content-Disposition', `attachment; filename="CHST-AI-Agent-${requestedRole}-Manual.html"`);
+    headers.set('Content-Disposition', `attachment; filename="CHST-AI-Assistant-${requestedRole}-Manual.html"`);
 
     return new NextResponse(fullHtml, {
       status: 200,

@@ -18,7 +18,7 @@ export function TermsOfUseModal({ open, onOpenChange }: TermsOfUseModalProps) {
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">Terms of Use for CHST AI Agent</DialogTitle>
+                    <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">Terms of Use for CHST AI Assistant</DialogTitle>
                     <DialogDescription>
                         Universiti Tunku Abdul Rahman – Centre for Healthcare Sciences and Technology (CHST)
                     </DialogDescription>
@@ -36,7 +36,7 @@ export function TermsOfUseModal({ open, onOpenChange }: TermsOfUseModalProps) {
                     </section>
 
                     <section>
-                        <h3 className="font-bold text-lg mb-2 text-purple-300">DISCLAIMER</h3>
+                        <h2 className="text-2xl font-bold mb-4">Terms of Use for CHST AI Assistant</h2>
                         <p className="text-muted-foreground leading-relaxed">
                             This AI Agent is provided on an "as is" and "as available" basis. Universiti Tunku Abdul Rahman (UTAR) and the Centre for Healthcare Sciences and Technology (CHST) make no representation or warranty, whether express or implied, regarding:
                         </p>

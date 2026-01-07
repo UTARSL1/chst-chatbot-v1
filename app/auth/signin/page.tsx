@@ -75,7 +75,7 @@ function SignInContent() {
                     </svg>
                 </div>
                 <CardTitle className="text-2xl font-bold text-white">
-                    Welcome to CHST AI Agent{' '}
+                    Welcome to CHST AI Assistant{' '}
                     <span className="inline-block ml-2 px-2 py-0.5 text-xs bg-blue-500/20 border border-blue-500/50 rounded text-blue-300">
                         {currentVersion}
                     </span>
