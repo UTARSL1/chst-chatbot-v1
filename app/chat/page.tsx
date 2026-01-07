@@ -12,9 +12,10 @@ import rehypeRaw from 'rehype-raw';
 import { TermsOfUseModal } from '@/components/TermsOfUseModal';
 import { CopyButton } from '@/components/CopyButton';
 import UserManualButton from '@/components/UserManualButton';
-import { Linkedin, Globe, FolderOpen, Users, ChevronDown, BookOpen, GraduationCap, Briefcase, FileText, DollarSign, TrendingUp, UserPlus, Plus, ExternalLink, Pencil, Trash2, MessageSquare, MoreVertical, MoreHorizontal, Check, X } from 'lucide-react';
+import { FileText, MessageSquare } from 'lucide-react';
 import { useCurrentVersion } from '@/hooks/useCurrentVersion';
 import { hasRCAccess } from '@/lib/utils/rc-member-check';
+import { ChatSidebar } from '@/components/chat/ChatSidebar';
 
 interface QuickAccessLink {
     id: string;
@@ -54,20 +55,10 @@ export default function ChatPage() {
     const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [termsModalOpen, setTermsModalOpen] = useState(false);
-    const [othersOpen, setOthersOpen] = useState(false);
-    const [rcQuickAccessOpen, setRcQuickAccessOpen] = useState(false);
-    const [rcManagementOpen, setRcManagementOpen] = useState(false);
     const [customLinks, setCustomLinks] = useState<QuickAccessLink[]>([]);
     const [showAddLinkModal, setShowAddLinkModal] = useState(false);
     const [editingLink, setEditingLink] = useState<QuickAccessLink | null>(null);
     const [newLink, setNewLink] = useState({ name: '', url: '', section: 'others', roles: [] });
-    const [linkMenuOpenId, setLinkMenuOpenId] = useState<string | null>(null);
-
-    // Session Management State
-    const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
-    const [editTitle, setEditTitle] = useState('');
-    const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
-    const [chatHistoryMenuOpen, setChatHistoryMenuOpen] = useState(false);
 
     // Streaming & UI Refs
     const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -478,19 +469,18 @@ export default function ChatPage() {
         }
     };
 
-    const handleRenameSession = async (sid: string) => {
-        if (!editTitle.trim()) return;
+    const handleRenameSession = async (sid: string, newTitle: string) => {
+        if (!newTitle.trim()) return;
 
         try {
             const res = await fetch(`/api/chat-sessions/${sid}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title: editTitle.trim() })
+                body: JSON.stringify({ title: newTitle.trim() })
             });
 
             if (res.ok) {
-                setChatSessions((prev) => prev.map((s) => s.id === sid ? { ...s, title: editTitle.trim() } : s));
-                setEditingSessionId(null);
+                setChatSessions((prev) => prev.map((s) => s.id === sid ? { ...s, title: newTitle.trim() } : s));
             } else {
                 alert('Failed to rename session');
             }
@@ -543,7 +533,6 @@ export default function ChatPage() {
                 setChatSessions([]);
                 setMessages([]);
                 setSessionId(null);
-                setChatHistoryMenuOpen(false);
             } else {
                 alert('Failed to clear chat history');
             }
@@ -623,362 +612,20 @@ export default function ChatPage() {
     return (
         <div className="flex h-screen bg-background">
             {sidebarOpen && (
-                <div className="w-72 border-r border-border bg-card p-4 flex flex-col">
-                    <Button
-                        onClick={handleNewChat}
-                        variant="gradient"
-                        className="mb-4"
-                    >
-                        + New Chat
-                    </Button>
-
-                    <div className="flex-1 overflow-y-auto space-y-2">
-                        {/* Chat History Header with 3-dot Menu */}
-                        <div className="group relative flex items-center justify-between mb-2">
-                            <h3 className="text-sm font-semibold text-muted-foreground">Chat History</h3>
-
-                            {/* Three-dot Menu Button - Visible on Hover */}
-                            <div className="relative">
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setChatHistoryMenuOpen(!chatHistoryMenuOpen);
-                                    }}
-                                    className={`p-1.5 rounded-md hover:bg-background transition-opacity ${chatHistoryMenuOpen ? 'opacity-100 bg-background' : 'opacity-0 group-hover:opacity-100'}`}
-                                    title="Chat History Options"
-                                >
-                                    <MoreVertical className="w-4 h-4 text-muted-foreground" />
-                                </button>
-
-                                {/* Dropdown Menu */}
-                                {chatHistoryMenuOpen && (
-                                    <>
-                                        <div
-                                            className="fixed inset-0 z-40"
-                                            onClick={(e) => { e.stopPropagation(); setChatHistoryMenuOpen(false); }}
-                                        />
-                                        <div className="absolute right-0 top-8 w-48 bg-popover border border-border rounded-md shadow-md z-50 py-1 bg-card">
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setChatHistoryMenuOpen(false);
-                                                    handleClearAllChatHistory();
-                                                }}
-                                                className="w-full text-left px-3 py-2 text-xs hover:bg-red-500/10 text-red-500 flex items-center gap-2"
-                                            >
-                                                <Trash2 className="w-3 h-3" />
-                                                Clear all Chat History
-                                            </button>
-                                        </div>
-                                    </>
-                                )}
-                            </div>
-                        </div>
-
-                        {chatSessions.map((s) => (
-                            <div key={s.id} className={`group relative flex items-center gap-2 px-3 py-2 rounded-md text-sm hover:bg-accent transition-colors ${sessionId === s.id ? 'bg-accent' : ''}`}>
-                                {editingSessionId === s.id ? (
-                                    <div className="flex items-center w-full gap-1">
-                                        <input
-                                            value={editTitle}
-                                            onChange={(e) => setEditTitle(e.target.value)}
-                                            className="flex-1 bg-background border border-input rounded px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-                                            autoFocus
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter') handleRenameSession(s.id);
-                                                if (e.key === 'Escape') setEditingSessionId(null);
-                                            }}
-                                            onClick={(e) => e.stopPropagation()}
-                                        />
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); handleRenameSession(s.id); }}
-                                            className="p-1 hover:bg-green-500/10 text-green-500 rounded transition-colors"
-                                            title="Save"
-                                        >
-                                            <Check className="w-3 h-3" />
-                                        </button>
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); setEditingSessionId(null); }}
-                                            className="p-1 hover:bg-red-500/10 text-red-500 rounded transition-colors"
-                                            title="Cancel"
-                                        >
-                                            <X className="w-3 h-3" />
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <>
-                                        <button
-                                            onClick={() => loadMessages(s.id)}
-                                            className="flex-1 text-left min-w-0 pointer-events-auto"
-                                        >
-                                            <p className="truncate">{s.title}</p>
-                                            <p className="text-xs text-muted-foreground">
-                                                {new Date(s.updatedAt).toLocaleDateString()}
-                                            </p>
-                                        </button>
-
-                                        {/* Menu Button - Visible on Hover or when Menu Open */}
-                                        <div className="relative">
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setMenuOpenId(menuOpenId === s.id ? null : s.id);
-                                                }}
-                                                className={`p-1.5 rounded-md hover:bg-background transition-opacity ${menuOpenId === s.id ? 'opacity-100 bg-background' : 'opacity-0 group-hover:opacity-100'}`}
-                                            >
-                                                <MoreVertical className="w-4 h-4 text-muted-foreground" />
-                                            </button>
-
-                                            {/* Dropdown Menu */}
-                                            {menuOpenId === s.id && (
-                                                <>
-                                                    <div
-                                                        className="fixed inset-0 z-40"
-                                                        onClick={(e) => { e.stopPropagation(); setMenuOpenId(null); }}
-                                                    />
-                                                    <div className="absolute right-0 top-8 w-32 bg-popover border border-border rounded-md shadow-md z-50 py-1 bg-card">
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                setEditingSessionId(s.id);
-                                                                setEditTitle(s.title);
-                                                                setMenuOpenId(null);
-                                                            }}
-                                                            className="w-full text-left px-3 py-2 text-xs hover:bg-accent flex items-center gap-2"
-                                                        >
-                                                            <Pencil className="w-3 h-3" />
-                                                            Rename
-                                                        </button>
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                setMenuOpenId(null);
-                                                                handleDeleteSession(s.id);
-                                                            }}
-                                                            className="w-full text-left px-3 py-2 text-xs hover:bg-red-500/10 text-red-500 flex items-center gap-2"
-                                                        >
-                                                            <Trash2 className="w-3 h-3" />
-                                                            Delete
-                                                        </button>
-                                                    </div>
-                                                </>
-                                            )}
-                                        </div>
-                                    </>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Feedback to Admin - Fixed at bottom */}
-                    <div className="mt-4 pt-4 border-t border-border">
-                        <button
-                            onClick={() => setFeedbackModalOpen(true)}
-                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg bg-violet-600/10 hover:bg-violet-600/20 border border-violet-600/20 transition-all duration-200 group"
-                        >
-                            <MessageSquare className="w-4 h-4 text-violet-400 group-hover:text-violet-300" />
-                            <span className="text-sm text-violet-400 group-hover:text-violet-300">Message to Admin</span>
-                        </button>
-                    </div>
-
-                    {/* Quick Links - Fixed at bottom */}
-                    <div className="mt-4 pt-4 border-t border-border space-y-4">
-                        {/* RC Quick Access - Collapsible (RC Members & Chairperson only) */}
-                        {hasRCAccess(session.user.email, session.user.role) && (
-                            <div className="space-y-2">
-                                <button
-                                    onClick={() => setRcQuickAccessOpen(!rcQuickAccessOpen)}
-                                    className="w-full flex items-center justify-between text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
-                                >
-                                    <span>Quick Access (RC)</span>
-                                    <ChevronDown className={`w-4 h-4 transition-transform ${rcQuickAccessOpen ? 'rotate-180' : ''}`} />
-                                </button>
-
-                                {rcQuickAccessOpen && (
-                                    <div className="space-y-2 mt-2">
-                                        {/* Display RC links with role-based filtering */}
-                                        {customLinks
-                                            .filter((link) => link.section === 'rc' && link.roles.includes(session.user.role))
-                                            .map((link) => {
-                                                const isTeams = link.name.includes('Teams Portal');
-                                                const isLinkedIn = link.name.includes('LinkedIn');
-                                                const isWebsite = link.name.includes('Official Website');
-                                                const isResourceHub = link.name.includes('Resource Hub');
-
-                                                return (
-                                                    <a
-                                                        key={link.id}
-                                                        href={link.url}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isTeams ? 'bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20' :
-                                                            isLinkedIn ? 'bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20' :
-                                                                isWebsite ? 'bg-teal-600/10 hover:bg-teal-600/20 border border-teal-600/20' :
-                                                                    isResourceHub ? 'bg-purple-600/10 hover:bg-purple-600/20 border border-purple-600/20' :
-                                                                        'bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20'
-                                                            }`}
-                                                    >
-                                                        {isTeams && <Users className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />}
-                                                        {isLinkedIn && <Linkedin className="w-4 h-4 text-blue-400 group-hover:text-blue-300" />}
-                                                        {isWebsite && <Globe className="w-4 h-4 text-teal-400 group-hover:text-teal-300" />}
-                                                        {isResourceHub && <FolderOpen className="w-4 h-4 text-purple-400 group-hover:text-purple-300" />}
-                                                        {!isTeams && !isLinkedIn && !isWebsite && !isResourceHub && <ExternalLink className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />}
-                                                        <span className={`text-sm ${isTeams ? 'text-indigo-400 group-hover:text-indigo-300' :
-                                                            isLinkedIn ? 'text-blue-400 group-hover:text-blue-300' :
-                                                                isWebsite ? 'text-teal-400 group-hover:text-teal-300' :
-                                                                    isResourceHub ? 'text-purple-400 group-hover:text-purple-300' :
-                                                                        'text-indigo-400 group-hover:text-indigo-300'
-                                                            }`}>{link.name}</span>
-                                                    </a>
-                                                );
-                                            })}
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {/* IPSR Quick Access - Collapsible */}
-                        <div className="space-y-2">
-                            <button
-                                onClick={() => setOthersOpen(!othersOpen)}
-                                className="w-full flex items-center justify-between text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
-                            >
-                                <span>Quick Access (Others)</span>
-                                <ChevronDown className={`w-4 h-4 transition-transform ${othersOpen ? 'rotate-180' : ''}`} />
-                            </button>
-
-                            {othersOpen && (
-                                <div className="space-y-2 mt-2">
-                                    {/* Display custom links with edit/delete buttons */}
-                                    {customLinks
-                                        .filter((link) => link.section === 'others' && (!link.isSystem || link.roles.includes(session.user.role)))
-                                        .map((link) => (
-                                            <div key={link.id} className="relative group">
-                                                <a
-                                                    href={link.url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20 transition-all duration-200 group w-full pr-10"
-                                                >
-                                                    <ExternalLink className="w-4 h-4 text-blue-400 group-hover:text-blue-300" />
-                                                    <span className="text-sm text-blue-400 group-hover:text-blue-300 truncate">{link.name}</span>
-                                                </a>
-
-                                                {!link.isSystem && (
-                                                    <div className="absolute right-2 top-1/2 -translate-y-1/2">
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.preventDefault();
-                                                                e.stopPropagation();
-                                                                setLinkMenuOpenId(linkMenuOpenId === link.id ? null : link.id);
-                                                            }}
-                                                            className="p-1.5 rounded-md text-blue-400/70 hover:text-blue-300 hover:bg-blue-600/20 transition-colors"
-                                                        >
-                                                            <MoreHorizontal className="w-4 h-4" />
-                                                        </button>
-
-                                                        {linkMenuOpenId === link.id && (
-                                                            <>
-                                                                <div
-                                                                    className="fixed inset-0 z-40"
-                                                                    onClick={() => setLinkMenuOpenId(null)}
-                                                                />
-                                                                <div className="absolute right-0 top-full mt-1 w-32 bg-slate-900 border border-slate-700 rounded-lg shadow-xl z-50 py-1 overflow-hidden animate-in fade-in zoom-in-95 duration-100">
-                                                                    <button
-                                                                        onClick={(e) => {
-                                                                            e.stopPropagation();
-                                                                            setEditingLink(link);
-                                                                            setLinkMenuOpenId(null);
-                                                                        }}
-                                                                        className="flex items-center gap-2 w-full px-3 py-2 text-xs text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
-                                                                    >
-                                                                        <Pencil className="w-3.5 h-3.5" />
-                                                                        Edit
-                                                                    </button>
-                                                                    <button
-                                                                        onClick={(e) => {
-                                                                            e.stopPropagation();
-                                                                            handleDeleteLink(link.id);
-                                                                            setLinkMenuOpenId(null);
-                                                                        }}
-                                                                        className="flex items-center gap-2 w-full px-3 py-2 text-xs text-red-400 hover:bg-slate-800 hover:text-red-300 transition-colors"
-                                                                    >
-                                                                        <Trash2 className="w-3.5 h-3.5" />
-                                                                        Delete
-                                                                    </button>
-                                                                </div>
-                                                            </>
-                                                        )}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ))}
-
-                                    {/* Add Quick Access button for all users */}
-                                    <button
-                                        onClick={() => setShowAddLinkModal(true)}
-                                        className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium transition-all shadow-md"
-                                    >
-                                        <Plus className="w-4 h-4 text-white" />
-                                        <span className="text-sm">Add Quick Access</span>
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* RC Management - Collapsible (RC Members & Chairperson) */}
-                        {hasRCAccess(session.user.email, session.user.role) && (
-                            <div className="space-y-2">
-                                <button
-                                    onClick={() => setRcManagementOpen(!rcManagementOpen)}
-                                    className="w-full flex items-center justify-between text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
-                                >
-                                    <div className="flex items-center gap-2">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                                        </svg>
-                                        <span>RC Management</span>
-                                    </div>
-                                    <ChevronDown className={`w-4 h-4 transition-transform ${rcManagementOpen ? 'rotate-180' : ''}`} />
-                                </button>
-
-                                {rcManagementOpen && (
-                                    <div className="space-y-2 mt-2 ml-2 pl-3 border-l border-border">
-                                        <a
-                                            href="/rc-management/publications"
-                                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-emerald-600/10 hover:bg-emerald-600/20 border border-emerald-600/20 transition-all duration-200 group"
-                                        >
-                                            <svg className="w-4 h-4 text-emerald-400 group-hover:text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                                            </svg>
-                                            <span className="text-sm text-emerald-400 group-hover:text-emerald-300">RC Publications</span>
-                                        </a>
-                                        <a
-                                            href="/rc-management/postgraduate"
-                                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-purple-600/10 hover:bg-purple-600/20 border border-purple-600/20 transition-all duration-200 group"
-                                        >
-                                            <svg className="w-4 h-4 text-purple-400 group-hover:text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
-                                            </svg>
-                                            <span className="text-sm text-purple-400 group-hover:text-purple-300">RC Postgraduate</span>
-                                        </a>
-                                        <a
-                                            href="/rc-management/grants"
-                                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-amber-600/10 hover:bg-amber-600/20 border border-amber-600/20 transition-all duration-200 group"
-                                        >
-                                            <svg className="w-4 h-4 text-amber-400 group-hover:text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                            <span className="text-sm text-amber-400 group-hover:text-amber-300">RC Grants</span>
-                                        </a>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                </div>
+                <ChatSidebar
+                    sessions={chatSessions}
+                    currentSessionId={sessionId}
+                    customLinks={customLinks}
+                    onNewChat={handleNewChat}
+                    onSelectSession={loadMessages}
+                    onRenameSession={handleRenameSession}
+                    onDeleteSession={handleDeleteSession}
+                    onClearAllHistory={handleClearAllChatHistory}
+                    onAddLink={() => setShowAddLinkModal(true)}
+                    onEditLink={setEditingLink}
+                    onDeleteLink={handleDeleteLink}
+                    onOpenFeedback={() => setFeedbackModalOpen(true)}
+                />
             )}
 
             <div className="flex-1 flex flex-col">
