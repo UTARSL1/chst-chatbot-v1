@@ -536,7 +536,7 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading }: {
                             <tr className="border-b border-white/10">
                                 <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300">Name</th>
                                 <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300">Scopus ID</th>
-                                <th className="text-center py-3 px-4 text-sm font-semibold text-gray-300">Status</th>
+
                                 <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300">Publications ({selectedYears.join(', ')})</th>
                             </tr>
                         </thead>
@@ -547,14 +547,7 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading }: {
                                     <td className="py-3 px-4 text-sm text-gray-400 font-mono">
                                         {staff.scopusAuthorId !== 'NA' ? staff.scopusAuthorId : '-'}
                                     </td>
-                                    <td className="py-3 px-4 text-center">
-                                        <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${staff.scopusStatus === 'Available'
-                                                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                                                : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
-                                            }`}>
-                                            {staff.scopusStatus}
-                                        </span>
-                                    </td>
+
                                     <td className="py-3 px-4 text-right">
                                         <span className="inline-block px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold">
                                             {staff.yearPublications}
