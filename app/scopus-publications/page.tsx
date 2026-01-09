@@ -605,14 +605,15 @@ function DepartmentOverviewTab({ stats, selectedYears, departmentName }: {
                 <div className="flex items-end gap-8 h-64">
                     {stats.publicationsByYear.map((yearData: any) => {
                         const maxCount = Math.max(...stats.publicationsByYear.map((y: any) => y.count));
-                        const height = maxCount > 0 ? (yearData.count / maxCount) * 100 : 0;
+                        // Use 70% of container height to leave room for labels
+                        const height = maxCount > 0 ? (yearData.count / maxCount) * 70 : 0;
 
                         return (
-                            <div key={yearData.year} className="flex-1 flex flex-col items-center gap-3">
+                            <div key={yearData.year} className="flex-1 h-full flex flex-col items-center justify-end gap-3">
                                 <div className="text-2xl font-bold text-blue-300">{yearData.count}</div>
                                 <div
                                     className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-lg transition-all duration-500"
-                                    style={{ height: `${height}%`, minHeight: '20px' }}
+                                    style={{ height: `${height}%`, minHeight: '10px' }}
                                 />
                                 <div className="text-sm font-semibold text-gray-300">{yearData.year}</div>
                             </div>
