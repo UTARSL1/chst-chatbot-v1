@@ -20,7 +20,8 @@ import {
     LayoutGrid,
     MessageCircle,
     ChevronRight,
-    ChevronDown
+    ChevronDown,
+    Building2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { hasRCAccess } from '@/lib/utils/rc-member-check';
@@ -88,6 +89,7 @@ export function ChatSidebar({
 
     // Collapsible Sections State
     const [rcManagementOpen, setRcManagementOpen] = useState(true);
+    const [facultyDashboardOpen, setFacultyDashboardOpen] = useState(true);
     const [quickAccessRcOpen, setQuickAccessRcOpen] = useState(true);
     const [quickAccessOthersOpen, setQuickAccessOthersOpen] = useState(true);
 
@@ -318,6 +320,37 @@ export function ChatSidebar({
                                 )}
                             </div>
                         )}
+
+                        {/* 1.5. Faculty Dashboard Section */}
+                        <div className="space-y-1">
+                            <button
+                                onClick={() => setFacultyDashboardOpen(!facultyDashboardOpen)}
+                                className="flex items-center gap-2 w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors group p-1"
+                            >
+                                <div className={cn("transition-transform duration-200", facultyDashboardOpen ? "rotate-90" : "")}>
+                                    <ChevronRight className="w-3.5 h-3.5" />
+                                </div>
+                                <span className="flex items-center gap-2">
+                                    <Building2 className="w-3.5 h-3.5" /> Faculty Dashboard
+                                </span>
+                            </button>
+
+                            {facultyDashboardOpen && (
+                                <div className="grid gap-2 pl-2 animate-in slide-in-from-top-2 duration-200">
+                                    <a href="/scopus-publications" className="group">
+                                        <Card className="p-3 flex items-center gap-3 bg-gradient-to-br from-blue-600/10 to-blue-900/10 border-blue-500/20 hover:border-blue-500/40 transition-all hover:shadow-md hover:shadow-blue-500/5 cursor-pointer">
+                                            <div className="p-2 bg-blue-500/20 rounded-lg text-blue-400 group-hover:scale-110 transition-transform">
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" /></svg>
+                                            </div>
+                                            <div>
+                                                <h4 className="text-sm font-medium text-blue-100">Faculty Publications</h4>
+                                                <p className="text-[10px] text-blue-200/60">Scopus data analysis</p>
+                                            </div>
+                                        </Card>
+                                    </a>
+                                </div>
+                            )}
+                        </div>
 
                         {/* 2. Quick Access (RC) Section */}
                         {hasRCAccess(session.user.email, session.user.role) && (

@@ -1,0 +1,78 @@
+{
+  "generatedAt": "2026-01-09T02:33:34.534Z",
+  "totalCount": 9,
+  "staff": [
+    {
+      "name": "Encik Abd Muluk Bin Abd Manan",
+      "email": "abdmuluk@utar.edu.my",
+      "department": "DASD",
+      "departmentName": "DASD",
+      "designation": "Specialist I",
+      "scopusUrl": ""
+    },
+    {
+      "name": "Ar Husam Bin Abdul Fatah Haron",
+      "email": "husam@utar.edu.my",
+      "department": "DASD",
+      "departmentName": "DASD",
+      "designation": "Specialist I",
+      "scopusUrl": ""
+    },
+    {
+      "name": "Ar Liaw Kok Chuan",
+      "email": "liawkc@utar.edu.my",
+      "department": "DASD",
+      "departmentName": "DASD",
+      "designation": "Specialist I",
+      "scopusUrl": ""
+    },
+    {
+      "name": "Ar Loh Khang Yong",
+      "email": "kyloh@utar.edu.my",
+      "department": "DASD",
+      "departmentName": "DASD",
+      "designation": "Specialist I",
+      "scopusUrl": ""
+    },
+    {
+      "name": "Ar Mary Ng Lee Kim",
+      "email": "nglk@utar.edu.my",
+      "department": "DASD",
+      "departmentName": "DASD",
+      "designation": "Specialist II",
+      "scopusUrl": ""
+    },
+    {
+      "name": "Ar Ong Hun Boon",
+      "email": "onghb@utar.edu.my",
+      "department": "DASD",
+      "departmentName": "DASD",
+      "designation": "Specialist I",
+      "scopusUrl": ""
+    },
+    {
+      "name": "Ar Quake Huay Tin",
+      "email": "quakeht@utar.edu.my",
+      "department": "DASD",
+      "departmentName": "DASD",
+      "designation": "Specialist II",
+      "scopusUrl": ""
+    },
+    {
+      "name": "Ar Sam Chin Sing",
+      "email": "samcs@utar.edu.my",
+      "department": "DASD",
+      "departmentName": "DASD",
+      "designation": "Specialist I",
+      "scopusUrl": ""
+    },
+    {
+      "name": "Ts Bukhary Ikhwan Bin Ismail",
+      "email": "bukhary@utar.edu.my",
+      "department": "DC",
+      "departmentName": "DC",
+      "designation": "Specialist II",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=56102246500"
+    }
+  ]
+}

@@ -1,0 +1,324 @@
+{
+  "verifiedAt": "2026-01-09T02:29:53.448Z",
+  "totalStaff": 225,
+  "breakdown": {
+    "withScopusIds": 152,
+    "withoutScopusIds": 18,
+    "totalAccountedFor": 170
+  },
+  "publicationStats": {
+    "totalRecords": 196,
+    "staffWithPublications": 174,
+    "staffWith0Publications": 22,
+    "publications2023": 731,
+    "publications2024": 752,
+    "publications2025": 686,
+    "totalPublications": 2169,
+    "averagePerStaff": 11.07
+  },
+  "processingBatches": {
+    "initialBatch": 154,
+    "correctedIds": 29,
+    "csvBatch": 42,
+    "withoutScopusIds": 29
+  },
+  "isComplete": false,
+  "issues": {
+    "staffMissingFromPublicationJson": [
+      {
+        "name": "Ts Dr Chai Tong Yuen",
+        "email": "chaity@utar.edu.my",
+        "department": "DMBE",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=4006104220"
+      },
+      {
+        "name": "Ir Dr Danny Ng Wee Kiat",
+        "email": "ngwk@utar.edu.my",
+        "department": "DMBE",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57193488361"
+      },
+      {
+        "name": "Dr Low Jen Hahn",
+        "email": "lowjh@utar.edu.my",
+        "department": "DMBE",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57214495023"
+      },
+      {
+        "name": "Dr Shalini a/p Darmaraju",
+        "email": "shalinid@utar.edu.my",
+        "department": "DMBE",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=56023747100"
+      },
+      {
+        "name": "Dr Gulnaziya Issabayeva",
+        "email": "gulnaziya@utar.edu.my",
+        "department": "DCL",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=13609512600"
+      },
+      {
+        "name": "Ir Mohd Arif Bin Musa",
+        "email": "arifm@utar.edu.my",
+        "department": "DCL",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55612830400"
+      },
+      {
+        "name": "Ir Dr Sim Lan Ching",
+        "email": "simcl@utar.edu.my",
+        "department": "DCL",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=53667742000"
+      },
+      {
+        "name": "Dr Steven Lim",
+        "email": "stevenlim@utar.edu.my",
+        "department": "DCL",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57207802878"
+      },
+      {
+        "name": "ChM. Ts. Dr. Tee Shiau Foon",
+        "email": "teesf@utar.edu.my",
+        "department": "DCL",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=36085620800"
+      },
+      {
+        "name": "Ir. Prof. Dr. Khoo Hooi Ling @ Lai Hooi Ling",
+        "email": "khoohl@utar.edu.my",
+        "department": "DCI",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57708546895"
+      },
+      {
+        "name": "Ms Lam Foong Sin",
+        "email": "lamfs@utar.edu.my",
+        "department": "DCI",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=37297146910"
+      },
+      {
+        "name": "Ir Ts Dr Tan Ooi Kuan",
+        "email": "oktan@utar.edu.my",
+        "department": "DCI",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55793279400"
+      },
+      {
+        "name": "Prof. Dr Yasuo Tanaka",
+        "email": "yasuo@utar.edu.my",
+        "department": "DCI",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=7008518001"
+      },
+      {
+        "name": "Prof. Dr Chen Haoyong",
+        "email": "hychen@utar.edu.my",
+        "department": "D3E",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57210423928"
+      },
+      {
+        "name": "Ir. Academician Emeritus Prof. Tan Sri Dato' Seri Dr. Chuah Hean Teik",
+        "email": "chuahht@utar.edu.my",
+        "department": "D3E",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=36652697900"
+      },
+      {
+        "name": "Ir. Prof. Dato' Dr. Ewe Hong Tat",
+        "email": "eweht@utar.edu.my",
+        "department": "D3E",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=7102797370"
+      },
+      {
+        "name": "Prof Ts Dr Faidz bin Abd Rahman",
+        "email": "faidzar@utar.edu.my",
+        "department": "D3E",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57201580284"
+      },
+      {
+        "name": "Prof. Dr Mirza Salim Beg",
+        "email": "mirzasalimbeg@utar.edu.my",
+        "department": "D3E",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=58962466100"
+      },
+      {
+        "name": "Ts Dr See Yuen Chark",
+        "email": "seeyc@utar.edu.my",
+        "department": "D3E",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55914572800"
+      },
+      {
+        "name": "Ir Ts Dr Tham Mau Luen",
+        "email": "thamml@utar.edu.my",
+        "department": "D3E",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57937358900"
+      },
+      {
+        "name": "Puan Azimah Binti Mohd",
+        "email": "azimah@utar.edu.my",
+        "department": "DMAS",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=54900105700"
+      },
+      {
+        "name": "Mr Leong Chung Sum",
+        "email": "leongcs@utar.edu.my",
+        "department": "DS",
+        "scopusUrl": "https://www.scopus.com/dashboard.uri?origin=userDashboard&zone=TopNavBar"
+      },
+      {
+        "name": "Sr Mazianah Binti Rahmat",
+        "email": "mazianah@utar.edu.my",
+        "department": "DS",
+        "scopusUrl": "https://www.scopus.com/results/authorNamesList.uri?origin=searchauthorlookup&src=al&edit=&poppUp=&ba"
+      },
+      {
+        "name": "Ts Naziatul Syima Binti Mahbob",
+        "email": "syima@utar.edu.my",
+        "department": "DS",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57371685100"
+      },
+      {
+        "name": "Sr Nurdiana Binti Azmi",
+        "email": "nurdianaa@utar.edu.my",
+        "department": "DS",
+        "scopusUrl": "https://www.scopus.com/results/authorNamesList.uri?sort=count-f&src=al&affilName=Universiti+Tunku+Ab"
+      },
+      {
+        "name": "Sr Nurhayatul Khursniah Binti Hasim @ Mohamad Salleh",
+        "email": "khursniah@utar.edu.my",
+        "department": "DS",
+        "scopusUrl": "https://www.scopus.com/search/form.uri?display=basic#author"
+      },
+      {
+        "name": "Ts Dr Tan Kok Hong",
+        "email": "khtan@utar.edu.my",
+        "department": "",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57202646410"
+      },
+      {
+        "name": "Encik Abdul Rahim Bin Mohd Zin",
+        "email": "rahimmz@utar.edu.my",
+        "department": "",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57201011346"
+      },
+      {
+        "name": "Mr Fernando Paulo Da Costa Andrade",
+        "email": "fernando@utar.edu.my",
+        "department": "",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=56804045000"
+      },
+      {
+        "name": "Ts Leong Hung Sek",
+        "email": "leonghs@utar.edu.my",
+        "department": "",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57372696600"
+      },
+      {
+        "name": "Dr Lim Poh Im",
+        "email": "limpi@utar.edu.my",
+        "department": "",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=15137426100"
+      },
+      {
+        "name": "Mr Lim Yekey",
+        "email": "limyekey@utar.edu.my",
+        "department": "",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57000142000"
+      },
+      {
+        "name": "Ms Rahmawaty",
+        "email": "rahmawaty@utar.edu.my",
+        "department": "",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57114634400"
+      },
+      {
+        "name": "Mr Tan Yong Ann",
+        "email": "tanya@utar.edu.my",
+        "department": "",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=35105219200"
+      },
+      {
+        "name": "Mr Tew Bun Teck",
+        "email": "tewbt@utar.edu.my",
+        "department": "",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57554556900"
+      },
+      {
+        "name": "Ts Tsao Khee Ern",
+        "email": "tsaoke@utar.edu.my",
+        "department": "",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=7402818144"
+      },
+      {
+        "name": "Ts Dr Wong Yee Choong",
+        "email": "wongyc@utar.edu.my",
+        "department": "",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=56042127900"
+      },
+      {
+        "name": "Mr Yong Song Zhe",
+        "email": "yongsz@utar.edu.my",
+        "department": "",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=6005476980"
+      },
+      {
+        "name": "Dr Faranak Nejati",
+        "email": "faranak@utar.edu.my",
+        "department": "DC",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=undefined"
+      },
+      {
+        "name": "Mr Kelwin Tan Seen Tiong",
+        "email": "kelwintan@utar.edu.my",
+        "department": "DC",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=undefined"
+      },
+      {
+        "name": "Dr Noor Jamaliah binti Ibrahim",
+        "email": "njamaliah@utar.edu.my",
+        "department": "DC",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=undefined"
+      },
+      {
+        "name": "Ts Dr Sugumaran a/l Nallusamy",
+        "email": "sugumaran@utar.edu.my",
+        "department": "DC",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=undefined"
+      },
+      {
+        "name": "Prof. Dr Andy Chit Tan",
+        "email": "tanacc@utar.edu.my",
+        "department": "",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=undefined"
+      },
+      {
+        "name": "Dr Jeffrey Chin Kong Leong",
+        "email": "jeffreychin@utar.edu.my",
+        "department": "",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=undefined"
+      },
+      {
+        "name": "Ir Dr Kuan Seng How",
+        "email": "kuansh@utar.edu.my",
+        "department": "",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=undefined"
+      },
+      {
+        "name": "Ir Dr Liang Meng Suan",
+        "email": "liangms@utar.edu.my",
+        "department": "",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=undefined"
+      },
+      {
+        "name": "Dr Rubentheren a/l Viyapuri",
+        "email": "rubentheren@utar.edu.my",
+        "department": "",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=undefined"
+      },
+      {
+        "name": "Ir Dr Tey Jing Yuen",
+        "email": "teyjy@utar.edu.my",
+        "department": "",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=undefined"
+      },
+      {
+        "name": "Dr Wong Hong Mun",
+        "email": "wonghm@utar.edu.my",
+        "department": "",
+        "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=undefined"
+      }
+    ]
+  }
+}

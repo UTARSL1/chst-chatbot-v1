@@ -1,0 +1,6646 @@
+{
+  "metadata": {
+    "scrapedAt": "2026-01-08T16:14:11.527Z",
+    "faculty": "LKC FES",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "excludedDepartments": [
+      "DLMSA",
+      "FGO"
+    ],
+    "totalStaff": 234,
+    "accessibleStaff": 196,
+    "inaccessibleStaff": 29,
+    "successCount": 154,
+    "errorCount": 0,
+    "statistics": {
+      "publications2023": 562,
+      "publications2024": 604,
+      "publications2025": 537,
+      "totalPublications": 1703,
+      "averagePerStaff": 8.69
+    },
+    "lastUpdated": "2026-01-09T03:35:50.815Z",
+    "correctedIdsApplied": true,
+    "correctedIdsCount": 13,
+    "staffWithScopusData": 196,
+    "staffWithoutScopusData": 38
+  },
+  "results": [
+    {
+      "searchId": "15106",
+      "name": "Ir. Prof. Dr. Chee Pei Song",
+      "email": "cheeps@utar.edu.my",
+      "department": "Department of Mechatronics and BioMedical Engineering",
+      "departmentAcronym": "DMBE",
+      "designation": "Professor",
+      "scopusAuthorId": "37012425700",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=37012425700",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 14,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 15,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 17,
+          "success": true
+        }
+      ],
+      "totalPublications": 46,
+      "accessible": true
+    },
+    {
+      "searchId": "20003",
+      "name": "Ir Dr Goh Choon Hian",
+      "email": "gohch@utar.edu.my",
+      "department": "Department of Mechatronics and BioMedical Engineering",
+      "departmentAcronym": "DMBE",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "57033629100",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57033629100",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 7,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 17,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 5,
+          "success": true
+        }
+      ],
+      "totalPublications": 29,
+      "accessible": true
+    },
+    {
+      "searchId": "20058",
+      "name": "Ir Ts Dr Hau Lee Cheun",
+      "email": "haulc@utar.edu.my",
+      "department": "Department of Mechatronics and BioMedical Engineering",
+      "departmentAcronym": "DMBE",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57191358477",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57191358477",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 5,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 4,
+          "success": true
+        }
+      ],
+      "totalPublications": 12,
+      "accessible": true
+    },
+    {
+      "searchId": "07129",
+      "name": "Dr Chan Siow Cheng",
+      "email": "chansc@utar.edu.my",
+      "department": "Department of Mechatronics and BioMedical Engineering",
+      "departmentAcronym": "DMBE",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "55455872700",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55455872700",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 5,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 2,
+          "success": true
+        }
+      ],
+      "totalPublications": 9,
+      "accessible": true
+    },
+    {
+      "searchId": "07139",
+      "name": "Mr Chong Yu Zheng",
+      "email": "chongyz@utar.edu.my",
+      "department": "Department of Mechatronics and BioMedical Engineering",
+      "departmentAcronym": "DMBE",
+      "designation": "Lecturer",
+      "scopusAuthorId": "37107337600",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=37107337600",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 4,
+      "accessible": true
+    },
+    {
+      "searchId": "09220",
+      "name": "Ir. Prof. Dr. Goi Bok Min",
+      "email": "goibm@utar.edu.my",
+      "department": "Department of Mechatronics and BioMedical Engineering",
+      "departmentAcronym": "DMBE",
+      "designation": "Senior Professor",
+      "scopusAuthorId": "6508137561",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=6508137561",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 3,
+          "success": true
+        }
+      ],
+      "totalPublications": 12,
+      "accessible": true
+    },
+    {
+      "searchId": "16072",
+      "name": "Ir Ts Dr Hum Yan Chai",
+      "email": "humyc@utar.edu.my",
+      "department": "Department of Mechatronics and BioMedical Engineering",
+      "departmentAcronym": "DMBE",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "36989504500",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=36989504500",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 16,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 14,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 14,
+          "success": true
+        }
+      ],
+      "totalPublications": 44,
+      "accessible": true
+    },
+    {
+      "searchId": "14156",
+      "name": "Dr Kwan Ban Hoe",
+      "email": "kwanbh@utar.edu.my",
+      "department": "Department of Mechatronics and BioMedical Engineering",
+      "departmentAcronym": "DMBE",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "9338278000",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=9338278000",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 9,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 18,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 11,
+          "success": true
+        }
+      ],
+      "totalPublications": 38,
+      "accessible": true
+    },
+    {
+      "searchId": "10374",
+      "name": "Ts Dr Lee Jer Vui",
+      "email": "leejv@utar.edu.my",
+      "department": "Department of Mechatronics and BioMedical Engineering",
+      "departmentAcronym": "DMBE",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "55648453400",
+      "scopusUrl": "https://www-scopus-com.libezp2.utar.edu.my/authid/detail.uri?authorId=55648453400",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 1,
+      "accessible": true
+    },
+    {
+      "searchId": "07005",
+      "name": "Ts Dr Loo Joo Ling",
+      "email": "loojl@utar.edu.my",
+      "department": "Department of Mechatronics and BioMedical Engineering",
+      "departmentAcronym": "DMBE",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "55858477500",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55858477500",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 3,
+      "accessible": true
+    },
+    {
+      "searchId": "06224",
+      "name": "Dr Mok Siew Ying",
+      "email": "moksy@utar.edu.my",
+      "department": "Department of Mechatronics and BioMedical Engineering",
+      "departmentAcronym": "DMBE",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "26325746500",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=26325746500",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 3,
+          "success": true
+        }
+      ],
+      "totalPublications": 6,
+      "accessible": true
+    },
+    {
+      "searchId": "21038",
+      "name": "Ir Dr Mun Hou Kit",
+      "email": "munhk@utar.edu.my",
+      "department": "Department of Mechatronics and BioMedical Engineering",
+      "departmentAcronym": "DMBE",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "58627207500",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=58627207500",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 5,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 3,
+          "success": true
+        }
+      ],
+      "totalPublications": 10,
+      "accessible": true
+    },
+    {
+      "searchId": "05251",
+      "name": "Dr Tan Lee Fan",
+      "email": "tanlf@utar.edu.my",
+      "department": "Department of Mechatronics and BioMedical Engineering",
+      "departmentAcronym": "DMBE",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "35103569600",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=35103569600",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 4,
+      "accessible": true
+    },
+    {
+      "searchId": "09066",
+      "name": "Ms Tan Yin Qing",
+      "email": "tanyq@utar.edu.my",
+      "department": "Department of Mechatronics and BioMedical Engineering",
+      "departmentAcronym": "DMBE",
+      "scopusAuthorId": "57202599237",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 9
+    },
+    {
+      "searchId": "05218",
+      "name": "Dr Tang Pek Yee",
+      "email": "tangpy@utar.edu.my",
+      "department": "Department of Mechatronics and BioMedical Engineering",
+      "departmentAcronym": "DMBE",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "26029257800",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=26029257800",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 3,
+          "success": true
+        }
+      ],
+      "totalPublications": 8,
+      "accessible": true
+    },
+    {
+      "searchId": "16131",
+      "name": "Ir Dr Ng Law Yong",
+      "email": "lyng@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "scopusAuthorId": "58187243200",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 5,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 7,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 7,
+          "success": true
+        }
+      ],
+      "totalPublications": 19
+    },
+    {
+      "searchId": "18088",
+      "name": "Ts Dr Shuit Siew Hoong",
+      "email": "shuitsh@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "26644516100",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=26644516100",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 12,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 8,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 12,
+          "success": true
+        }
+      ],
+      "totalPublications": 32,
+      "accessible": true
+    },
+    {
+      "searchId": "10228",
+      "name": "Dr Azlyana Binti Ismail",
+      "email": "azlyana@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "55429663500",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55429663500",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 2,
+      "accessible": true
+    },
+    {
+      "searchId": "J21002",
+      "name": "Ir ChM Dr Chew Chun Ming",
+      "email": "chewcm@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "56468893600",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=56468893600",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 2,
+      "accessible": true
+    },
+    {
+      "searchId": "14171",
+      "name": "Ir Dr Chong Woon Chan",
+      "email": "chongwchan@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "55835144500",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55835144500",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 7,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 12,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 11,
+          "success": true
+        }
+      ],
+      "totalPublications": 30,
+      "accessible": true
+    },
+    {
+      "searchId": "06183",
+      "name": "Dr Lai Soon Onn",
+      "email": "laiso@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "scopusAuthorId": "56449986900",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 6,
+          "success": true
+        }
+      ],
+      "totalPublications": 16
+    },
+    {
+      "searchId": "11007",
+      "name": "Ir ChM Dr Lee Tin Sin",
+      "email": "leets@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "57201058826",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57201058826",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 7,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 3,
+          "success": true
+        }
+      ],
+      "totalPublications": 10,
+      "accessible": true
+    },
+    {
+      "searchId": "14203",
+      "name": "Dr Lee Zhi Hua",
+      "email": "leezh@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "55104004200",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55104004200",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 5,
+          "success": true
+        }
+      ],
+      "totalPublications": 6,
+      "accessible": true
+    },
+    {
+      "searchId": "14033",
+      "name": "Dr Mah Shee Keat",
+      "email": "mahsk@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "54785993900",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=54785993900",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 5,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 8,
+      "accessible": true
+    },
+    {
+      "searchId": "17002",
+      "name": "Dr Ng Yee Sern",
+      "email": "ngys@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "36551560100",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=36551560100",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 4,
+          "success": true
+        }
+      ],
+      "totalPublications": 9,
+      "accessible": true
+    },
+    {
+      "searchId": "15058",
+      "name": "Mr P. Prakas A/L S.Palanychamy",
+      "email": "prakassp@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "designation": "Lecturer",
+      "scopusAuthorId": "58131033200",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=58131033200",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 2,
+      "accessible": true
+    },
+    {
+      "searchId": "14267",
+      "name": "Dr Pang Yean Ling",
+      "email": "pangyl@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "57205217988",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57205217988",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 16,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 9,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 13,
+          "success": true
+        }
+      ],
+      "totalPublications": 38,
+      "accessible": true
+    },
+    {
+      "searchId": "11150",
+      "name": "Dr Sim Jia Huey",
+      "email": "simjh@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "scopusAuthorId": "56764104800",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 1
+    },
+    {
+      "searchId": "07381",
+      "name": "Ir Dr Teoh Hui Chieh",
+      "email": "teohhc@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "56348940300",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=56348940300",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 2,
+      "accessible": true
+    },
+    {
+      "searchId": "14044",
+      "name": "Dr Thiam Hui San",
+      "email": "thiamhs@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "37003956000",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=37003956000",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 7,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 5,
+          "success": true
+        }
+      ],
+      "totalPublications": 14,
+      "accessible": true
+    },
+    {
+      "searchId": "04233",
+      "name": "Dr Wong Kam Huei",
+      "email": "wongkh@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57200617930",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57200617930",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 2,
+          "success": true
+        }
+      ],
+      "totalPublications": 5,
+      "accessible": true
+    },
+    {
+      "searchId": "05135",
+      "name": "Dr Woo Kwan Kit",
+      "email": "wookk@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "36611101200",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=36611101200",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 3,
+          "success": true
+        }
+      ],
+      "totalPublications": 3,
+      "accessible": true
+    },
+    {
+      "searchId": "10344",
+      "name": "Prof. Dr Yamuna a/p Munusamy",
+      "email": "yamunam@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "designation": "Professor",
+      "scopusAuthorId": "22985700900",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=22985700900",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 5,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 13,
+          "success": true
+        }
+      ],
+      "totalPublications": 24,
+      "accessible": true
+    },
+    {
+      "searchId": "12081",
+      "name": "Dr Yap Yeow Hong",
+      "email": "yapyh@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "scopusAuthorId": "57206394849",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 5
+    },
+    {
+      "searchId": "16087",
+      "name": "Ir Ts Dr Leong Kah Hon",
+      "email": "khleong@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "57197467818",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57197467818",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 13,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 14,
+          "success": true
+        }
+      ],
+      "totalPublications": 33,
+      "accessible": true
+    },
+    {
+      "searchId": "20002",
+      "name": "Ts Dr Chin Ren Jie",
+      "email": "chinrj@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "57189222458",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57189222458",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 10,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 10,
+          "success": true
+        }
+      ],
+      "totalPublications": 26,
+      "accessible": true
+    },
+    {
+      "searchId": "08135",
+      "name": "Ir Dr Lim Siong Kang",
+      "email": "sklim@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "25225738600",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=25225738600",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 8,
+          "success": true
+        }
+      ],
+      "totalPublications": 18,
+      "accessible": true
+    },
+    {
+      "searchId": "15105",
+      "name": "Dr Chong Siaw Yah",
+      "email": "chongsiawy@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "56973362500",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=56973362500",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 2,
+          "success": true
+        }
+      ],
+      "totalPublications": 3,
+      "accessible": true
+    },
+    {
+      "searchId": "18042",
+      "name": "Dr Gan Chin Heng",
+      "email": "ganch@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "55169652900",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55169652900",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 2,
+      "accessible": true
+    },
+    {
+      "searchId": "11117",
+      "name": "Ir. Prof. Dr. Huang Yuk Feng",
+      "email": "huangyf@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Professor",
+      "scopusAuthorId": "55807263900",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55807263900",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 28,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 17,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 19,
+          "success": true
+        }
+      ],
+      "totalPublications": 64,
+      "accessible": true
+    },
+    {
+      "searchId": "09160",
+      "name": "Ir Dr Koo Chai Hoon",
+      "email": "kooch@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "scopusAuthorId": "57204843657",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 13,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 6,
+          "success": true
+        }
+      ],
+      "totalPublications": 22
+    },
+    {
+      "searchId": "18125",
+      "name": "Ir Ts Dr Kwong Kok Zee",
+      "email": "kwongkz@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57189376827",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57189376827",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 3,
+      "accessible": true
+    },
+    {
+      "searchId": "15097",
+      "name": "Ir Ts Dr Lau See Hung",
+      "email": "laush@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "37067350100",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=37067350100",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 3,
+          "success": true
+        }
+      ],
+      "totalPublications": 4,
+      "accessible": true
+    },
+    {
+      "searchId": "17031",
+      "name": "Ir Ts Dr Lee Foo Wei",
+      "email": "leefw@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "56239335100",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?origin=resultslist&authorId=56239335100&zone=",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 9,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 8,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 9,
+          "success": true
+        }
+      ],
+      "totalPublications": 26,
+      "accessible": true
+    },
+    {
+      "searchId": "16097",
+      "name": "Gs. Dr. Lee Yee Ling",
+      "email": "yllee@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "55597708000",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55597708000",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 5,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 3,
+          "success": true
+        }
+      ],
+      "totalPublications": 14,
+      "accessible": true
+    },
+    {
+      "searchId": "10270",
+      "name": "Ir Dr Lim Jee Hock",
+      "email": "limjh@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "56655789700",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=56655789700",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 7,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 2,
+          "success": true
+        }
+      ],
+      "totalPublications": 10,
+      "accessible": true
+    },
+    {
+      "searchId": "17128",
+      "name": "Gs. Dr. Lim Ming Han",
+      "email": "limmh@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57202418245",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57202418245",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 2,
+          "success": true
+        }
+      ],
+      "totalPublications": 11,
+      "accessible": true
+    },
+    {
+      "searchId": "15286",
+      "name": "Ir Dr Ling Lloyd",
+      "email": "linglloyd@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "56203785300",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=56203785300",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 9,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 12,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 4,
+          "success": true
+        }
+      ],
+      "totalPublications": 25,
+      "accessible": true
+    },
+    {
+      "searchId": "16068",
+      "name": "Dr Ong Chuan Fang",
+      "email": "ongcf@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "scopusAuthorId": "57054880400",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "20072",
+      "name": "Ir Ts Dr Wong Chee Fui",
+      "email": "cfwong@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57421107100",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57421107100",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 2,
+          "success": true
+        }
+      ],
+      "totalPublications": 7,
+      "accessible": true
+    },
+    {
+      "searchId": "12266",
+      "name": "Dr Woon Kai Siong",
+      "email": "woonks@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57205222734",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57205222734",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 1,
+      "accessible": true
+    },
+    {
+      "searchId": "15250",
+      "name": "Ir Ts Dr Yew Ming Kun",
+      "email": "yewmk@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "57891844900",
+      "scopusUrl": "https://www-scopus-com.libezp2.utar.edu.my/authid/detail.uri?authorId=57891844900",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 10,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 10,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 17,
+          "success": true
+        }
+      ],
+      "totalPublications": 37,
+      "accessible": true
+    },
+    {
+      "searchId": "16085",
+      "name": "Ir Ts Dr Yip Chun Chieh",
+      "email": "yipcc@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "56608756400",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=56608756400",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 5,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 6,
+          "success": true
+        }
+      ],
+      "totalPublications": 15,
+      "accessible": true
+    },
+    {
+      "searchId": "15247",
+      "name": "Ir. Prof. Dr. Chang Yoong Choon",
+      "email": "ycchang@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Professor",
+      "scopusAuthorId": "7501843364",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=7501843364",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 9,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 9,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 6,
+          "success": true
+        }
+      ],
+      "totalPublications": 24,
+      "accessible": true
+    },
+    {
+      "searchId": "07345",
+      "name": "Ts Dr Lee Kim Yee",
+      "email": "kylee@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "55549501700",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55549501700",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 5,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 6,
+          "success": true
+        }
+      ],
+      "totalPublications": 17,
+      "accessible": true
+    },
+    {
+      "searchId": "18104",
+      "name": "Ir Ts Dr Lee Ying Loong",
+      "email": "leeyingl@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "55813901600",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55813901600",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 12,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 10,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 6,
+          "success": true
+        }
+      ],
+      "totalPublications": 28,
+      "accessible": true
+    },
+    {
+      "searchId": "15003",
+      "name": "Ir Dr Wong Jianhui",
+      "email": "wongjh@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "37012907500",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=37012907500",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 9,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 6,
+          "success": true
+        }
+      ],
+      "totalPublications": 18,
+      "accessible": true
+    },
+    {
+      "searchId": "20082",
+      "name": "Ir Ts Dr Low Foo Wah",
+      "email": "lowfw@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "56513524700",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=56513524700",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 14,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 7,
+          "success": true
+        }
+      ],
+      "totalPublications": 24,
+      "accessible": true
+    },
+    {
+      "searchId": "19054",
+      "name": "Dr Tan Chun Hui",
+      "email": "tchui@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "57028423600",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57028423600",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 7,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 8,
+          "success": true
+        }
+      ],
+      "totalPublications": 19,
+      "accessible": true
+    },
+    {
+      "searchId": "08331",
+      "name": "Ts Dr Chew Kuew Wai",
+      "email": "chewkw@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "57214999607",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57214999607",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 4,
+          "success": true
+        }
+      ],
+      "totalPublications": 8,
+      "accessible": true
+    },
+    {
+      "searchId": "05068",
+      "name": "Prof. Dr Chong Kok Keong",
+      "email": "chongkk@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Senior Professor",
+      "scopusAuthorId": "25934082000",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=25934082000",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 9,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 5,
+          "success": true
+        }
+      ],
+      "totalPublications": 18,
+      "accessible": true
+    },
+    {
+      "searchId": "10037",
+      "name": "Ir. Prof. Dr. Chua Kein Huat",
+      "email": "chuakh@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Professor",
+      "scopusAuthorId": "57202070559",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57202070559",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 18,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 17,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 7,
+          "success": true
+        }
+      ],
+      "totalPublications": 42,
+      "accessible": true
+    },
+    {
+      "searchId": "17117",
+      "name": "Ir Ts Dr Chua Sing Yee",
+      "email": "sychua@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "55906807100",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55906807100",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 5,
+          "success": true
+        }
+      ],
+      "totalPublications": 8,
+      "accessible": true
+    },
+    {
+      "searchId": "08253",
+      "name": "Ir. Prof. Dr. Chung Boon Kuan",
+      "email": "chungbk@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Professor",
+      "scopusAuthorId": "57201190834",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57201190834",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 6,
+      "accessible": true
+    },
+    {
+      "searchId": "16130",
+      "name": "Ir Dr Gobi A/L Vetharatnam",
+      "email": "gobiv@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "11839773700",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=11839773700",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 2,
+          "success": true
+        }
+      ],
+      "totalPublications": 7,
+      "accessible": true
+    },
+    {
+      "searchId": "22158",
+      "name": "Ts Dr Hafiz Bin Basarudin",
+      "email": "hafizba@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "46160957000",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=46160957000",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 10,
+      "accessible": true
+    },
+    {
+      "searchId": "22050",
+      "name": "Ts Dr Hoon Yap",
+      "email": "hoonyap@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "56102883500",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=56102883500",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 2,
+          "success": true
+        }
+      ],
+      "totalPublications": 7,
+      "accessible": true
+    },
+    {
+      "searchId": "17132",
+      "name": "Dr Khaw Mei Kum",
+      "email": "khawmk@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "scopusAuthorId": "14019642000",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "14048",
+      "name": "Ts Dr Kong Sin Guan",
+      "email": "kongsg@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "scopusAuthorId": "26664650400",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "20019",
+      "name": "Dr Lee Yong Hong",
+      "email": "yhlee@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57202027944",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57202027944",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 6,
+      "accessible": true
+    },
+    {
+      "searchId": "14115",
+      "name": "Ir. Prof. Dr. Lim Boon Han",
+      "email": "limbhan@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Professor",
+      "scopusAuthorId": "57190258108",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57190258108",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 5,
+          "success": true
+        }
+      ],
+      "totalPublications": 11,
+      "accessible": true
+    },
+    {
+      "searchId": "08056",
+      "name": "Prof Ts Dr Lim Eng Hock",
+      "email": "limeh@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Senior Professor",
+      "scopusAuthorId": "24825036300",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=24825036300",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 18,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 24,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 22,
+          "success": true
+        }
+      ],
+      "totalPublications": 64,
+      "accessible": true
+    },
+    {
+      "searchId": "05204",
+      "name": "Ir. Prof. Dr. Lim Yun Seng",
+      "email": "yslim@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Senior Professor",
+      "scopusAuthorId": "55663177800",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55663177800",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 14,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 5,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 4,
+          "success": true
+        }
+      ],
+      "totalPublications": 23,
+      "accessible": true
+    },
+    {
+      "searchId": "13255",
+      "name": "Ts Dr Phua Yeong Nan",
+      "email": "phuayn@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "8270341000",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=8270341000",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 4,
+          "success": true
+        }
+      ],
+      "totalPublications": 8,
+      "accessible": true
+    },
+    {
+      "searchId": "14179",
+      "name": "Ts Dr Pua Chang Hong",
+      "email": "puach@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "16647118300",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=16647118300",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 2,
+          "success": true
+        }
+      ],
+      "totalPublications": 3,
+      "accessible": true
+    },
+    {
+      "searchId": "E08004",
+      "name": "Dr Stella Morris",
+      "email": "stellam@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "7403326024",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=7403326024",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 3,
+          "success": true
+        }
+      ],
+      "totalPublications": 9,
+      "accessible": true
+    },
+    {
+      "searchId": "13149",
+      "name": "Prof Ts Dr Yap Wun She",
+      "email": "yapws@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Professor",
+      "scopusAuthorId": "14827620500",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=14827620500",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 14,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 11,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 10,
+          "success": true
+        }
+      ],
+      "totalPublications": 35,
+      "accessible": true
+    },
+    {
+      "searchId": "09121",
+      "name": "Dr Yong Thian Khok",
+      "email": "yongtk@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "scopusAuthorId": "8643647800",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "18142",
+      "name": "Ir. Prof. Dr. Yow Ho Kwang",
+      "email": "yowhk@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Professor",
+      "scopusAuthorId": "6603875868",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=6603875868",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 3,
+      "accessible": true
+    },
+    {
+      "searchId": "14003",
+      "name": "Dr Wong Voon Hee",
+      "email": "wongvh@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "scopusAuthorId": "25029061700",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "20063",
+      "name": "Dr Wong Wai Kuan",
+      "email": "wongwk@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "scopusAuthorId": "57210268599",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 3
+    },
+    {
+      "searchId": "04196",
+      "name": "Dr Chen Huey Voon",
+      "email": "chenhv@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "36805675700",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=36805675700",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 4,
+      "accessible": true
+    },
+    {
+      "searchId": "04074",
+      "name": "Dr Denis Wong Chee Keong",
+      "email": "deniswong@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "55813782300",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55813782300",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 5,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 4,
+          "success": true
+        }
+      ],
+      "totalPublications": 13,
+      "accessible": true
+    },
+    {
+      "searchId": "22090",
+      "name": "Ms Gillian Woo Yi Han",
+      "email": "wooyh@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Lecturer",
+      "scopusAuthorId": "58155963600",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=58155963600",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 2,
+      "accessible": true
+    },
+    {
+      "searchId": "10381",
+      "name": "Dr Goh Yann Ling",
+      "email": "gohyl@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "55943689200",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55943689200",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 2,
+          "success": true
+        }
+      ],
+      "totalPublications": 3,
+      "accessible": true
+    },
+    {
+      "searchId": "05108",
+      "name": "Dr Goh Yong Kheng",
+      "email": "gohyk@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "55598318400",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55598318400",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 5,
+          "success": true
+        }
+      ],
+      "totalPublications": 13,
+      "accessible": true
+    },
+    {
+      "searchId": "14059",
+      "name": "Dr Kuang Kee Seng",
+      "email": "kuangks@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57190942011",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57190942011",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 3,
+          "success": true
+        }
+      ],
+      "totalPublications": 10,
+      "accessible": true
+    },
+    {
+      "searchId": "14163",
+      "name": "Dr Lee Yap Jia",
+      "email": "yjlee@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "scopusAuthorId": "57194233702",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "07004",
+      "name": "Dr Liew How Hui",
+      "email": "liewhh@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "scopusAuthorId": "57190939294",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 4,
+          "success": true
+        }
+      ],
+      "totalPublications": 6
+    },
+    {
+      "searchId": "22145",
+      "name": "Ts Dr Loh Wing Son",
+      "email": "lohws@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57374576700",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57374576700",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 8,
+      "accessible": true
+    },
+    {
+      "searchId": "12196",
+      "name": "Dr Ng Kooi Huat",
+      "email": "khng@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57195428222",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57195428222",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 4,
+      "accessible": true
+    },
+    {
+      "searchId": "04073",
+      "name": "Dr Ng Wei Shean",
+      "email": "ngws@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "35243129300",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=35243129300",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 2,
+          "success": true
+        }
+      ],
+      "totalPublications": 3,
+      "accessible": true
+    },
+    {
+      "searchId": "03047",
+      "name": "Dr Ong Poh Hwa",
+      "email": "ongph@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "14042345600",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=14042345600",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 1,
+      "accessible": true
+    },
+    {
+      "searchId": "10209",
+      "name": "Dr Pan Wei Yeing",
+      "email": "panwy@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "56427394200",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=56427394200",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 3,
+      "accessible": true
+    },
+    {
+      "searchId": "03068",
+      "name": "Dr Pang Sook Theng",
+      "email": "pangst@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "55598380400",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55598380400",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 1,
+      "accessible": true
+    },
+    {
+      "searchId": "18075",
+      "name": "Ts Dr Sim Hong Seng",
+      "email": "simhs@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "55802934400",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55802934400",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 4,
+          "success": true
+        }
+      ],
+      "totalPublications": 9,
+      "accessible": true
+    },
+    {
+      "searchId": "18112",
+      "name": "Dr Tan Wei Lun",
+      "email": "tanwl@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "scopusAuthorId": "55804400500",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "08011",
+      "name": "Ts Dr Teoh Lay Eng",
+      "email": "teohle@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "36775705100",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=36775705100",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 3,
+      "accessible": true
+    },
+    {
+      "searchId": "16166",
+      "name": "Dr Wong Kuan Wai",
+      "email": "wongkw@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57210268599",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57210268599",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 3,
+      "accessible": true
+    },
+    {
+      "searchId": "22128",
+      "name": "Dr Yap Hong Keat",
+      "email": "yaphk@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "46462052100",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=46462052100",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 1,
+      "accessible": true
+    },
+    {
+      "searchId": "08082",
+      "name": "Dr Yap Lee Ken",
+      "email": "lkyap@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "56199186600",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=56199186600",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 1,
+      "accessible": true
+    },
+    {
+      "searchId": "09174",
+      "name": "Dr Yeo Heng Giap Ivan",
+      "email": "yeohg@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "15072219200",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=15072219200",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 3,
+      "accessible": true
+    },
+    {
+      "searchId": "06255",
+      "name": "Dr Yong Chin Khian",
+      "email": "yongck@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "scopusAuthorId": "55909760300",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "06193",
+      "name": "Sr Ibtisam Azwani Binti Mat Ya'acob",
+      "email": "azwani@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "scopusAuthorId": "57205214162",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "16202",
+      "name": "Sr Dr Wong Phui Fung",
+      "email": "pfwong@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57117012400",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57117012400",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 5,
+          "success": true
+        }
+      ],
+      "totalPublications": 10,
+      "accessible": true
+    },
+    {
+      "searchId": "08342",
+      "name": "Dr Felicia Yong Yan Yan",
+      "email": "yongyy@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57219358202",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57219358202",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 4,
+          "success": true
+        }
+      ],
+      "totalPublications": 8,
+      "accessible": true
+    },
+    {
+      "searchId": "14181",
+      "name": "Ir. Prof. Ts. Dr Jeffrey Yap Boon Hui",
+      "email": "bhyap@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Professor",
+      "scopusAuthorId": "57190865356",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57190865356",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 9,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 6,
+          "success": true
+        }
+      ],
+      "totalPublications": 19,
+      "accessible": true
+    },
+    {
+      "searchId": "17021",
+      "name": "Sr Kiu Mee San",
+      "email": "kiums@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Lecturer",
+      "scopusAuthorId": "57193791654",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57193791654",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 2,
+          "success": true
+        }
+      ],
+      "totalPublications": 4,
+      "accessible": true
+    },
+    {
+      "searchId": "14077",
+      "name": "Ms Lay Pei Sin",
+      "email": "layps@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "scopusAuthorId": "57219279855",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "05239",
+      "name": "Ir Dr Lee Wah Peng",
+      "email": "leewp@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "55366390400",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55366390400",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 5,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 3,
+          "success": true
+        }
+      ],
+      "totalPublications": 10,
+      "accessible": true
+    },
+    {
+      "searchId": "08370",
+      "name": "Ir Dr Lew Yoke Lian",
+      "email": "lewyl@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "6701647980",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=6701647980",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 3,
+          "success": true
+        }
+      ],
+      "totalPublications": 12,
+      "accessible": true
+    },
+    {
+      "searchId": "13221",
+      "name": "Sr Li Zi Qian",
+      "email": "lizq@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "scopusAuthorId": "57194034852",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "14125",
+      "name": "Puan Nurulain Hanida Binti Mohamad Fodzi",
+      "email": "hanida@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Lecturer",
+      "scopusAuthorId": "57211626085",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57211626085",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 1,
+      "accessible": true
+    },
+    {
+      "searchId": "07070",
+      "name": "Ts Dr Toh Tien Choon",
+      "email": "tohtc@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "scopusAuthorId": "54791753100",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 6
+    },
+    {
+      "searchId": "15224",
+      "name": "Ts Tung Yew Hou",
+      "email": "tungyh@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "scopusAuthorId": "57340101900",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "10028",
+      "name": "Sr Dr Yow Li Ping",
+      "email": "yowlp@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57213194493",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57213194493",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 4,
+          "success": true
+        }
+      ],
+      "totalPublications": 5,
+      "accessible": true
+    },
+    {
+      "searchId": "17102",
+      "name": "LAr Ts Dr Beh Jing Han",
+      "email": "behjh@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57202002676",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57202002676&featureToggles=FEATURE_AUTHOR_DETAILS_",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 4,
+          "success": true
+        }
+      ],
+      "totalPublications": 10,
+      "accessible": true
+    },
+    {
+      "searchId": "03077",
+      "name": "Ts Dr Hoo Meei Hao",
+      "email": "hoomh@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "55916364700",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55916364700",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 7,
+      "accessible": true
+    },
+    {
+      "searchId": "07254",
+      "name": "Ts Dr Lee Chen Kang",
+      "email": "lckang@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "scopusAuthorId": "57204102747",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 5,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 9,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 3,
+          "success": true
+        }
+      ],
+      "totalPublications": 17
+    },
+    {
+      "searchId": "J22001",
+      "name": "Prof. Dr Azizah binti Abd Manaf",
+      "email": "azizahm@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "designation": "Professor",
+      "scopusAuthorId": "35609249400",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=35609249400",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 2,
+          "success": true
+        }
+      ],
+      "totalPublications": 5,
+      "accessible": true
+    },
+    {
+      "searchId": "07331",
+      "name": "Ms Beh Hooi Ching",
+      "email": "behhc@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "designation": "Lecturer",
+      "scopusAuthorId": "57216822281",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?origin=resultslist&authorId=57216822281&zone=",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 3,
+      "accessible": true
+    },
+    {
+      "searchId": "22144",
+      "name": "Dr Chia Kai Lin",
+      "email": "klchia@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57212018391",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57212018391",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 2,
+      "accessible": true
+    },
+    {
+      "searchId": "22119",
+      "name": "Dr Fatimah Audah binti Md. Zaki",
+      "email": "audah@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "36994722800",
+      "scopusUrl": "https://www-scopus-com.libezp2.utar.edu.my/authid/detail.uri?authorId=36994722800",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 4,
+      "accessible": true
+    },
+    {
+      "searchId": "19006",
+      "name": "Ms Gunavathi a/p Duraisamy",
+      "email": "gunavathi@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "scopusAuthorId": "6601962335",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "19040",
+      "name": "Dr Khor Kok Chin",
+      "email": "kckhor@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "scopusAuthorId": "57204545170",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 11,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 11,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 23
+    },
+    {
+      "searchId": "25010",
+      "name": "Dr Lai Yen Lung",
+      "email": "laiyl@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "57188928420",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57188928420",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 4,
+          "success": true
+        }
+      ],
+      "totalPublications": 9,
+      "accessible": true
+    },
+    {
+      "searchId": "25091",
+      "name": "Dr Mohamad Faiz bin Ahmad Johari",
+      "email": "mohamadfaiz@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "scopusAuthorId": "57190284846",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "E19009",
+      "name": "Dr Mohammad Babrdel Bonab",
+      "email": "babrdel@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "56394598000",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=56394598000",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 3,
+      "accessible": true
+    },
+    {
+      "searchId": "24054",
+      "name": "Cik Murni Fatehah Binti Alias",
+      "email": "fatehah@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "scopusAuthorId": "56405480700",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "E23001",
+      "name": "Dr Nawaf Hassan Mohammed Mohsen Shrifan",
+      "email": "nawaf@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57211321208",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57211321208",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 5,
+      "accessible": true
+    },
+    {
+      "searchId": "23104",
+      "name": "Dr Ng Keng Hoong",
+      "email": "nkhoong@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "25825429600",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=25825429600",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 6,
+      "accessible": true
+    },
+    {
+      "searchId": "22131",
+      "name": "Dr Noor Azeera Binti Abdul Aziz",
+      "email": "azeera@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "59255904100",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=59255904100",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 1,
+      "accessible": true
+    },
+    {
+      "searchId": "J22012",
+      "name": "Dr Norazah binti Yusof",
+      "email": "norazah@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "scopusAuthorId": "25825824000",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "E22006",
+      "name": "Dr Sneha Kanchan",
+      "email": "sneha@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57194384967",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57194384967",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 12,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 14,
+      "accessible": true
+    },
+    {
+      "searchId": "03124",
+      "name": "Dr Too Chian Wen",
+      "email": "toocw@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "56878660900",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=56878660900",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 6,
+      "accessible": true
+    },
+    {
+      "searchId": "04129",
+      "name": "Ts Dr Wong Whee Yen",
+      "email": "wongwy@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57203149088",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57203149088",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 6,
+      "accessible": true
+    },
+    {
+      "searchId": "21068",
+      "name": "Prof Ts Dr Yau Kok Lim",
+      "email": "yaukl@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "designation": "Professor",
+      "scopusAuthorId": "35147223900",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=35147223900",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 10,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 9,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 17,
+          "success": true
+        }
+      ],
+      "totalPublications": 36,
+      "accessible": true
+    },
+    {
+      "searchId": "09259",
+      "name": "Ts Dr Yeo Wei Hong",
+      "email": "yeowh@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "26024539700",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=26024539700",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 4,
+          "success": true
+        }
+      ],
+      "totalPublications": 14,
+      "accessible": true
+    },
+    {
+      "searchId": "08375",
+      "name": "Ir Dr Ting Chen Hunt",
+      "email": "tingch@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57193357476",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57193357476",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 4,
+          "success": true
+        }
+      ],
+      "totalPublications": 11,
+      "accessible": true
+    },
+    {
+      "searchId": "10014",
+      "name": "Ir Dr Bee Soo Tueen",
+      "email": "beest@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "45160993900",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=45160993900",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 5,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 6,
+          "success": true
+        }
+      ],
+      "totalPublications": 11,
+      "accessible": true
+    },
+    {
+      "searchId": "15153",
+      "name": "Ir. Prof. Ts. Dr Bernard Saw Lip Huat",
+      "email": "sawlh@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Professor",
+      "scopusAuthorId": "55791543200",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55791543200",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 14,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 13,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 7,
+          "success": true
+        }
+      ],
+      "totalPublications": 34,
+      "accessible": true
+    },
+    {
+      "searchId": "09224",
+      "name": "Mr Cheong Wen Chiet",
+      "email": "cheongwc@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Lecturer",
+      "scopusAuthorId": "55562158600",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55562158600",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 1,
+      "accessible": true
+    },
+    {
+      "searchId": "10382",
+      "name": "Ir Dr Chong Kok Chung",
+      "email": "chongkc@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "55331205700",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55331205700",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 5,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 7,
+          "success": true
+        }
+      ],
+      "totalPublications": 16,
+      "accessible": true
+    },
+    {
+      "searchId": "14127",
+      "name": "Ts Dr Jun Hieng Kiat",
+      "email": "junhk@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "55621218600",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55621218600",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 9,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 17,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 13,
+          "success": true
+        }
+      ],
+      "totalPublications": 39,
+      "accessible": true
+    },
+    {
+      "searchId": "11108",
+      "name": "Dr Kam Heng Keong",
+      "email": "kamhk@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "55560853300",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55560853300",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 1,
+      "accessible": true
+    },
+    {
+      "searchId": "07138",
+      "name": "Ts Dr Khaw Chwin Chieh",
+      "email": "khawcc@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "21234153000",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=21234153000",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 5,
+          "success": true
+        }
+      ],
+      "totalPublications": 8,
+      "accessible": true
+    },
+    {
+      "searchId": "22019",
+      "name": "Ir Ts Dr Koay Seong Chun",
+      "email": "koaysc@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "55190697600",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=55190697600",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 4,
+      "accessible": true
+    },
+    {
+      "searchId": "14174",
+      "name": "Ir Ts Dr Lee Hwang Sheng",
+      "email": "leehs@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "scopusAuthorId": "57204526790",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "06349",
+      "name": "Ts Dr Lee Poh Foong",
+      "email": "leepf@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "37108111400",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=37108111400",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 2,
+          "success": true
+        }
+      ],
+      "totalPublications": 12,
+      "accessible": true
+    },
+    {
+      "searchId": "08314",
+      "name": "Dr Low Foon Siang",
+      "email": "lowfs@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "56463719200",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=56463719200",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 6,
+      "accessible": true
+    },
+    {
+      "searchId": "15240",
+      "name": "Dr Ng Chai Yan",
+      "email": "ngchaiyan@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "36911481100",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=36911481100",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 8,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 5,
+          "success": true
+        }
+      ],
+      "totalPublications": 15,
+      "accessible": true
+    },
+    {
+      "searchId": "E17006",
+      "name": "Dr Rubina Bahar",
+      "email": "rubina@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "7003654332",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=7003654332",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 5,
+          "success": true
+        }
+      ],
+      "totalPublications": 8,
+      "accessible": true
+    },
+    {
+      "searchId": "22017",
+      "name": "Dr Tan Weng Cheong",
+      "email": "tanwc@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57217766932",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=57217766932",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 7,
+      "accessible": true
+    },
+    {
+      "searchId": "07321",
+      "name": "Ts Dr Wong Mee Chu",
+      "email": "mcwong@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "scopusAuthorId": "57200253780",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 1
+    },
+    {
+      "searchId": "25051",
+      "name": "Ts Dr Chai Tong Yuen",
+      "email": "chaity@utar.edu.my",
+      "department": "Department of Mechatronics and BioMedical Engineering",
+      "departmentAcronym": "DMBE",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "40661042200",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 2,
+          "success": true
+        }
+      ],
+      "totalPublications": 7
+    },
+    {
+      "searchId": "J23013",
+      "name": "Ir Dr Danny Ng Wee Kiat",
+      "email": "ngwk@utar.edu.my",
+      "department": "Department of Mechatronics and BioMedical Engineering",
+      "departmentAcronym": "DMBE",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57193488361",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "22051",
+      "name": "Dr Low Jen Hahn",
+      "email": "lowjh@utar.edu.my",
+      "department": "Department of Mechatronics and BioMedical Engineering",
+      "departmentAcronym": "DMBE",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57214495023",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "22083",
+      "name": "Dr Shalini a/p Darmaraju",
+      "email": "shalinid@utar.edu.my",
+      "department": "Department of Mechatronics and BioMedical Engineering",
+      "departmentAcronym": "DMBE",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "56023747100",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "E07004",
+      "name": "Dr Gulnaziya Issabayeva",
+      "email": "gulnaziya@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "13609512600",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "19101",
+      "name": "Ir Mohd Arif Bin Musa",
+      "email": "arifm@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "15170",
+      "name": "Ir Dr Sim Lan Ching",
+      "email": "simcl@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "55612830400",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "J25006",
+      "name": "Dr Steven Lim",
+      "email": "stevenlim@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "35366710400",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "08090",
+      "name": "ChM. Ts. Dr. Tee Shiau Foon",
+      "email": "teesf@utar.edu.my",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "57207802878",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "08145",
+      "name": "Ir. Prof. Dr. Khoo Hooi Ling @ Lai Hooi Ling",
+      "email": "khoohl@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Professor",
+      "scopusAuthorId": "22938118900",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "05315",
+      "name": "Ms Lam Foong Sin",
+      "email": "lamfs@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Lecturer",
+      "scopusAuthorId": "57208646895",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "15281",
+      "name": "Ir Ts Dr Tan Ooi Kuan",
+      "email": "oktan@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57217246926",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP21002",
+      "name": "Prof. Dr Yasuo Tanaka",
+      "email": "yasuo@utar.edu.my",
+      "department": "Department of Civil Engineering",
+      "departmentAcronym": "DCI",
+      "designation": "Adjunct Professor",
+      "scopusAuthorId": "55736279400",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP24013",
+      "name": "Prof. Dr Chen Haoyong",
+      "email": "hychen@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Adjunct Professor",
+      "scopusAuthorId": "8720685700",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "EP19001",
+      "name": "Ir. Academician Emeritus Prof. Tan Sri Dato' Seri Dr. Chuah Hean Teik",
+      "email": "chuahht@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Emeritus Professor",
+      "scopusAuthorId": "7005188026",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "08268",
+      "name": "Ir. Prof. Dato' Dr. Ewe Hong Tat",
+      "email": "eweht@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Senior Professor",
+      "scopusAuthorId": "55663557100",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP25027",
+      "name": "Prof Ts Dr Faidz bin Abd Rahman",
+      "email": "faidzar@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Adjunct Professor",
+      "scopusAuthorId": "57210423924",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP25031",
+      "name": "Prof. Dr Mirza Salim Beg",
+      "email": "mirzasalimbeg@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Adjunct Professor",
+      "scopusAuthorId": "58962466100",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "05153",
+      "name": "Ts Dr See Yuen Chark",
+      "email": "seeyc@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "56039675500",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP25041",
+      "name": "Ir Ts Dr Tham Mau Luen",
+      "email": "thamml@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Adjunct Professor",
+      "scopusAuthorId": "55277448200",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "21042",
+      "name": "Dr Toh Chia Ming",
+      "email": "tohcm@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57201580284",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "E25008",
+      "name": "Prof. Dr Yan Lei",
+      "email": "yanlei@utar.edu.my",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "designation": "Senior Professor",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "10306",
+      "name": "Puan Azimah Binti Mohd",
+      "email": "azimah@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Lecturer",
+      "scopusAuthorId": "58962466100",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP25011",
+      "name": "Prof. Dr Chia Gek Ling",
+      "email": "chiagl@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Adjunct Professor",
+      "scopusAuthorId": "55914572800",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "19110",
+      "name": "Mr Phoon Sheong Wei",
+      "email": "swphoon@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Lecturer",
+      "scopusAuthorId": "57937358900",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "10214",
+      "name": "Mr Tan Zong Ming",
+      "email": "tanzm@utar.edu.my",
+      "department": "Department of Mathematical and Actuarial Sciences",
+      "departmentAcronym": "DMAS",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "05109",
+      "name": "Dr Ananthan a/l Valitherm",
+      "email": "ananthan@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP25019",
+      "name": "Dr Chia Fah Choy",
+      "email": "chiafc@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Adjunct Associate Professor",
+      "scopusAuthorId": "54900105697",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "14109",
+      "name": "Mr Leong Chung Sum",
+      "email": "leongcs@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "19080",
+      "name": "Sr Mazianah Binti Rahmat",
+      "email": "mazianah@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "15053",
+      "name": "Ts Naziatul Syima Binti Mahbob",
+      "email": "syima@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "14159",
+      "name": "Dr Nur Aqlima Binti Ramli",
+      "email": "nuraqlima@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "19056",
+      "name": "Sr Nurdiana Binti Azmi",
+      "email": "nurdianaa@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "20066",
+      "name": "Sr Nurhayatul Khursniah Binti Hasim @ Mohamad Salleh",
+      "email": "khursniah@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "15032",
+      "name": "Cik Roslinda Binti Rosly",
+      "email": "roslinda@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "15016",
+      "name": "Cik Siti Solehah Binti Kadir",
+      "email": "solehah@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "14151",
+      "name": "Cik Umi Kalsom Binti Ariffin",
+      "email": "umik@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP23007",
+      "name": "Ir Dr Wang Hong Kok",
+      "email": "wanghk@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Adjunct Associate Professor",
+      "scopusAuthorId": "57371685097",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "J15004",
+      "name": "Sr Wee Yu Ni",
+      "email": "weeyn@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "14228",
+      "name": "Sr Zamharira Binti Sulaiman",
+      "email": "zamharira@utar.edu.my",
+      "department": "Department of Surveying",
+      "departmentAcronym": "DS",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "10223",
+      "name": "Ts Dr Tan Kok Hong",
+      "email": "khtan@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "14037",
+      "name": "Ts Yeow Kah Niam",
+      "email": "yeowkn@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "14090",
+      "name": "Encik Abd Muluk Bin Abd Manan",
+      "email": "abdmuluk@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Specialist I",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "J24013",
+      "name": "Encik Abdul Rahim Bin Mohd Zin",
+      "email": "rahimmz@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "E19006",
+      "name": "Mr Fernando Paulo Da Costa Andrade",
+      "email": "fernando@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "J18002",
+      "name": "Ar Husam Bin Abdul Fatah Haron",
+      "email": "husam@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Specialist I",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "J23002",
+      "name": "Ts Leong Hung Sek",
+      "email": "leonghs@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "J23012",
+      "name": "Ar Liaw Kok Chuan",
+      "email": "liawkc@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Specialist I",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "12175",
+      "name": "Dr Lim Poh Im",
+      "email": "limpi@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "25014",
+      "name": "Mr Lim Yekey",
+      "email": "limyekey@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "J19003",
+      "name": "Ar Loh Khang Yong",
+      "email": "kyloh@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Specialist I",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "J25005",
+      "name": "Ar Mary Ng Lee Kim",
+      "email": "nglk@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Specialist II",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "J18003",
+      "name": "Ar Ong Hun Boon",
+      "email": "onghb@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Specialist I",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "14018",
+      "name": "Ar Quake Huay Tin",
+      "email": "quakeht@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Specialist II",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "E18001",
+      "name": "Ms Rahmawaty",
+      "email": "rahmawaty@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "19115",
+      "name": "Ar Sam Chin Sing",
+      "email": "samcs@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Specialist I",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "24010",
+      "name": "Mr Tan Yong Ann",
+      "email": "tanya@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "J23009",
+      "name": "Mr Tew Bun Teck",
+      "email": "tewbt@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "16080",
+      "name": "Ts Tsao Khee Ern",
+      "email": "tsaoke@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "15285",
+      "name": "Ts Dr Wong Yee Choong",
+      "email": "wongyc@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "22041",
+      "name": "Mr Yong Song Zhe",
+      "email": "yongsz@utar.edu.my",
+      "department": "Department of Architecture & Sustainable Design",
+      "departmentAcronym": "DASD",
+      "designation": "Lecturer",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "24092",
+      "name": "Ts Bukhary Ikhwan Bin Ismail",
+      "email": "bukhary@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "designation": "Specialist II",
+      "scopusAuthorId": "56102246500",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "E23002",
+      "name": "Dr Faranak Nejati",
+      "email": "faranak@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57201011346",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "25007",
+      "name": "Mr Kelwin Tan Seen Tiong",
+      "email": "kelwintan@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "designation": "Lecturer",
+      "scopusAuthorId": "57193720365",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "25106",
+      "name": "Dr Noor Jamaliah binti Ibrahim",
+      "email": "njamaliah@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "55894045900",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "03079",
+      "name": "Ts Dr Sugumaran a/l Nallusamy",
+      "email": "sugumaran@utar.edu.my",
+      "department": "Department of Computing",
+      "departmentAcronym": "DC",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57372696600",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP21005",
+      "name": "Prof. Dr Andy Chit Tan",
+      "email": "tanacc@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Adjunct Professor",
+      "scopusAuthorId": "15137426100",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "17044",
+      "name": "Dr Jeffrey Chin Kong Leong",
+      "email": "jeffreychin@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57000142000",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "15157",
+      "name": "Ir Dr Kuan Seng How",
+      "email": "kuansh@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57114634300",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "J23006",
+      "name": "Ir Dr Liang Meng Suan",
+      "email": "liangms@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "35105219200",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "17068",
+      "name": "Dr Rubentheren a/l Viyapuri",
+      "email": "rubentheren@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "57156456900",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "15011",
+      "name": "Ir Dr Tey Jing Yuen",
+      "email": "teyjy@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Associate Professor",
+      "scopusAuthorId": "56042122900",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "09059",
+      "name": "Dr Wong Hong Mun",
+      "email": "wonghm@utar.edu.my",
+      "department": "Department of Mechanical and Materials Engineering",
+      "departmentAcronym": "DMME",
+      "designation": "Assistant Professor",
+      "scopusAuthorId": "60054769800",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP25034",
+      "name": "Prof. Dr Thomas Chung-Kuang Yang",
+      "email": "",
+      "department": "Department of Chemical Engineering",
+      "departmentAcronym": "DCL",
+      "scopusAuthorId": "36985669800",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP25022",
+      "name": "Prof. Dr Baochun Chen",
+      "email": "",
+      "department": "Department of Computer and Information Science",
+      "departmentAcronym": "DCI",
+      "scopusAuthorId": "55904134700",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP25009",
+      "name": "Prof. Dr Bala Venkatesh",
+      "email": "",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "scopusAuthorId": "7006518081",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP24003",
+      "name": "Ts Liew Choon Lian",
+      "email": "",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP24009",
+      "name": "Prof. Dr Loo Kok Keong",
+      "email": "",
+      "department": "Department of Electrical and Electronic Engineering",
+      "departmentAcronym": "D3E",
+      "scopusAuthorId": "36652697897",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP25039",
+      "name": "Ar. IDr. David Yek Tak Wai",
+      "email": "",
+      "department": "Department of Architecture and Sustainable Design",
+      "departmentAcronym": "DASD",
+      "scopusAuthorId": "N/A",
+      "scopusStatus": "Not Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP25023",
+      "name": "Prof. Dr Tan Choon Sooi",
+      "email": "",
+      "department": "Department of Mechanical and Material Engineering",
+      "departmentAcronym": "DMME",
+      "scopusAuthorId": "7402818141",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": false
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": false
+        }
+      ],
+      "totalPublications": 0
+    }
+  ]
+}

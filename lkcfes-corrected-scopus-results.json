@@ -1,0 +1,778 @@
+{
+  "metadata": {
+    "scrapedAt": "2026-01-08T17:41:12.379Z",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "totalStaff": 29,
+    "successCount": 29,
+    "errorCount": 0,
+    "statistics": {
+      "publications2023": 52,
+      "publications2024": 46,
+      "publications2025": 30,
+      "totalPublications": 128,
+      "averagePerStaff": 4.41,
+      "staffWithPublications": 12,
+      "staffStillZero": 17
+    }
+  },
+  "results": [
+    {
+      "email": "tanyq@utar.edu.my",
+      "name": "Ms Tan Yin Qing",
+      "orcid": "0000-0002-9284-685X",
+      "oldScopusId": "56621840000",
+      "newScopusId": "57202599237",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 9,
+      "success": true
+    },
+    {
+      "email": "lyng@utar.edu.my",
+      "name": "Ir Dr Ng Law Yong",
+      "orcid": "0000-0002-6868-4977",
+      "oldScopusId": "36680687200",
+      "newScopusId": "58187243200",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 5,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 7,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 7,
+          "success": true
+        }
+      ],
+      "totalPublications": 19,
+      "success": true
+    },
+    {
+      "email": "laiso@utar.edu.my",
+      "name": "Dr Lai Soon Onn",
+      "orcid": "0000-0001-5867-9843",
+      "oldScopusId": "7402935898",
+      "newScopusId": "56449986900",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 6,
+          "success": true
+        }
+      ],
+      "totalPublications": 16,
+      "success": true
+    },
+    {
+      "email": "simjh@utar.edu.my",
+      "name": "Dr Sim Jia Huey",
+      "orcid": "0000-0002-9931-2885",
+      "oldScopusId": "16032597600",
+      "newScopusId": "56764104800",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 1,
+      "success": true
+    },
+    {
+      "email": "yapyh@utar.edu.my",
+      "name": "Dr Yap Yeow Hong",
+      "orcid": "0000-0002-2226-7326",
+      "oldScopusId": "57191992158",
+      "newScopusId": "57206394849",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 5,
+      "success": true
+    },
+    {
+      "email": "kooch@utar.edu.my",
+      "name": "Ir Dr Koo Chai Hoon",
+      "orcid": "0000-0001-7287-3394",
+      "oldScopusId": "57195364917",
+      "newScopusId": "57204843657",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 13,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 6,
+          "success": true
+        }
+      ],
+      "totalPublications": 22,
+      "success": true
+    },
+    {
+      "email": "ongcf@utar.edu.my",
+      "name": "Dr Ong Chuan Fang",
+      "orcid": "0000-0001-7117-3839",
+      "oldScopusId": "57054880400",
+      "newScopusId": "57054880400",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0,
+      "success": true
+    },
+    {
+      "email": "khawmk@utar.edu.my",
+      "name": "Dr Khaw Mei Kum",
+      "orcid": "0000-0002-4049-8566",
+      "oldScopusId": "14019642000",
+      "newScopusId": "14019642000",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0,
+      "success": true
+    },
+    {
+      "email": "kongsg@utar.edu.my",
+      "name": "Ts Dr Kong Sin Guan",
+      "orcid": "0000-0001-8817-781X",
+      "oldScopusId": "26664650400",
+      "newScopusId": "26664650400",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0,
+      "success": true
+    },
+    {
+      "email": "yongtk@utar.edu.my",
+      "name": "Dr Yong Thian Khok",
+      "orcid": "0000-0002-3700-2451",
+      "oldScopusId": "8643647800",
+      "newScopusId": "8643647800",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0,
+      "success": true
+    },
+    {
+      "email": "wongvh@utar.edu.my",
+      "name": "Dr Wong Voon Hee",
+      "orcid": "0000-0002-7551-0342",
+      "oldScopusId": "25029061700",
+      "newScopusId": "25029061700",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0,
+      "success": true
+    },
+    {
+      "email": "wongwk@utar.edu.my",
+      "name": "Dr Wong Wai Kuan",
+      "orcid": "0000-0001-5539-536X",
+      "oldScopusId": "25022766000",
+      "newScopusId": "57210268599",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 3,
+      "success": true
+    },
+    {
+      "email": "yjlee@utar.edu.my",
+      "name": "Dr Lee Yap Jia",
+      "orcid": "0000-0002-4866-9630",
+      "oldScopusId": "57194233702",
+      "newScopusId": "57194233702",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0,
+      "success": true
+    },
+    {
+      "email": "liewhh@utar.edu.my",
+      "name": "Dr Liew How Hui",
+      "orcid": "0000-0002-3432-8317",
+      "oldScopusId": "7201507726",
+      "newScopusId": "57190939294",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 4,
+          "success": true
+        }
+      ],
+      "totalPublications": 6,
+      "success": true
+    },
+    {
+      "email": "tanwl@utar.edu.my",
+      "name": "Dr Tan Wei Lun",
+      "orcid": "0000-0002-0271-7676",
+      "oldScopusId": "55804400500",
+      "newScopusId": "55804400500",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0,
+      "success": true
+    },
+    {
+      "email": "yongck@utar.edu.my",
+      "name": "Dr Yong Chin Khian",
+      "orcid": "0000-0003-1262-7807",
+      "oldScopusId": "55909760300",
+      "newScopusId": "55909760300",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0,
+      "success": true
+    },
+    {
+      "email": "azwani@utar.edu.my",
+      "name": "Sr Ibtisam Azwani Binti Mat Ya'acob",
+      "orcid": "0000-0003-1493-2901",
+      "oldScopusId": "57205214162",
+      "newScopusId": "57205214162",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0,
+      "success": true
+    },
+    {
+      "email": "layps@utar.edu.my",
+      "name": "Ms Lay Pei Sin",
+      "orcid": "0000-0002-5413-2311",
+      "oldScopusId": "57219279855",
+      "newScopusId": "57219279855",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0,
+      "success": true
+    },
+    {
+      "email": "lizq@utar.edu.my",
+      "name": "Sr Li Zi Qian",
+      "orcid": "0000-0002-4605-3525",
+      "oldScopusId": "57194034852",
+      "newScopusId": "57194034852",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0,
+      "success": true
+    },
+    {
+      "email": "tohtc@utar.edu.my",
+      "name": "Ts Dr Toh Tien Choon",
+      "orcid": "0000-0002-2058-4459",
+      "oldScopusId": "57195942200",
+      "newScopusId": "54791753100",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 6,
+      "success": true
+    },
+    {
+      "email": "tungyh@utar.edu.my",
+      "name": "Ts Tung Yew Hou",
+      "orcid": "0000-0002-3701-8576",
+      "oldScopusId": "57340101900",
+      "newScopusId": "57340101900",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0,
+      "success": true
+    },
+    {
+      "email": "lckang@utar.edu.my",
+      "name": "Ts Dr Lee Chen Kang",
+      "orcid": "0000-0003-4426-9274",
+      "oldScopusId": "56739498000",
+      "newScopusId": "57204102747",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 5,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 9,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 3,
+          "success": true
+        }
+      ],
+      "totalPublications": 17,
+      "success": true
+    },
+    {
+      "email": "gunavathi@utar.edu.my",
+      "name": "Ms Gunavathi a/p Duraisamy",
+      "orcid": "0000-0002-1589-1286",
+      "oldScopusId": "6601962335",
+      "newScopusId": "6601962335",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0,
+      "success": true
+    },
+    {
+      "email": "kckhor@utar.edu.my",
+      "name": "Dr Khor Kok Chin",
+      "orcid": "0000-0001-9346-1479",
+      "oldScopusId": "15755930400",
+      "newScopusId": "57204545170",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 11,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 11,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 23,
+      "success": true
+    },
+    {
+      "email": "mohamadfaiz@utar.edu.my",
+      "name": "Dr Mohamad Faiz bin Ahmad Johari",
+      "orcid": "0000-0003-3405-7374",
+      "oldScopusId": "57190284846",
+      "newScopusId": "57190284846",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0,
+      "success": true
+    },
+    {
+      "email": "fatehah@utar.edu.my",
+      "name": "Cik Murni Fatehah Binti Alias",
+      "orcid": "0000-0003-2236-4000",
+      "oldScopusId": "56405480700",
+      "newScopusId": "56405480700",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0,
+      "success": true
+    },
+    {
+      "email": "norazah@utar.edu.my",
+      "name": "Dr Norazah binti Yusof",
+      "orcid": "0000-0001-7729-8149",
+      "oldScopusId": "25825824000",
+      "newScopusId": "25825824000",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0,
+      "success": true
+    },
+    {
+      "email": "leehs@utar.edu.my",
+      "name": "Ir Ts Dr Lee Hwang Sheng",
+      "orcid": "0000-0002-0053-7620",
+      "oldScopusId": "43861444100",
+      "newScopusId": "57204526790",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0,
+      "success": true
+    },
+    {
+      "email": "mcwong@utar.edu.my",
+      "name": "Ts Dr Wong Mee Chu",
+      "orcid": "0000-0002-8240-1187",
+      "oldScopusId": "7404759544",
+      "newScopusId": "57200253780",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 1,
+      "success": true
+    }
+  ]
+}

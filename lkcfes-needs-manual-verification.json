@@ -1,0 +1,810 @@
+{
+  "metadata": {
+    "generatedAt": "2026-01-08T16:29:43.644Z",
+    "totalNeedingAttention": 100,
+    "zeroPublications": 29,
+    "missingScopusIds": 71
+  },
+  "staff": [
+    {
+      "name": "Ms Tan Yin Qing",
+      "email": "tanyq@utar.edu.my",
+      "department": "DMBE",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "56621840000",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Ir Dr Ng Law Yong",
+      "email": "lyng@utar.edu.my",
+      "department": "DCL",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "36680687200",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Dr Lai Soon Onn",
+      "email": "laiso@utar.edu.my",
+      "department": "DCL",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "7402935898",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Dr Sim Jia Huey",
+      "email": "simjh@utar.edu.my",
+      "department": "DCL",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "16032597600",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Dr Yap Yeow Hong",
+      "email": "yapyh@utar.edu.my",
+      "department": "DCL",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "57191992158",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Ir Dr Koo Chai Hoon",
+      "email": "kooch@utar.edu.my",
+      "department": "DCI",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "57195364917",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Dr Ong Chuan Fang",
+      "email": "ongcf@utar.edu.my",
+      "department": "DCI",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "57054880400",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Dr Khaw Mei Kum",
+      "email": "khawmk@utar.edu.my",
+      "department": "D3E",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "14019642000",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Ts Dr Kong Sin Guan",
+      "email": "kongsg@utar.edu.my",
+      "department": "D3E",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "26664650400",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Dr Yong Thian Khok",
+      "email": "yongtk@utar.edu.my",
+      "department": "D3E",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "8643647800",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Dr Wong Voon Hee",
+      "email": "wongvh@utar.edu.my",
+      "department": "DMAS",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "25029061700",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Dr Wong Wai Kuan",
+      "email": "wongwk@utar.edu.my",
+      "department": "DMAS",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "25022766000",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Dr Lee Yap Jia",
+      "email": "yjlee@utar.edu.my",
+      "department": "DMAS",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "57194233702",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Dr Liew How Hui",
+      "email": "liewhh@utar.edu.my",
+      "department": "DMAS",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "7201507726",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Dr Tan Wei Lun",
+      "email": "tanwl@utar.edu.my",
+      "department": "DMAS",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "55804400500",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Dr Yong Chin Khian",
+      "email": "yongck@utar.edu.my",
+      "department": "DMAS",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "55909760300",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Sr Ibtisam Azwani Binti Mat Ya'acob",
+      "email": "azwani@utar.edu.my",
+      "department": "DS",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "57205214162",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Ms Lay Pei Sin",
+      "email": "layps@utar.edu.my",
+      "department": "DS",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "57219279855",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Sr Li Zi Qian",
+      "email": "lizq@utar.edu.my",
+      "department": "DS",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "57194034852",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Ts Dr Toh Tien Choon",
+      "email": "tohtc@utar.edu.my",
+      "department": "DS",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "57195942200",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Ts Tung Yew Hou",
+      "email": "tungyh@utar.edu.my",
+      "department": "DS",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "57340101900",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Ts Dr Lee Chen Kang",
+      "email": "lckang@utar.edu.my",
+      "department": "DC",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "56739498000",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Ms Gunavathi a/p Duraisamy",
+      "email": "gunavathi@utar.edu.my",
+      "department": "DC",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "6601962335",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Dr Khor Kok Chin",
+      "email": "kckhor@utar.edu.my",
+      "department": "DC",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "15755930400",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Dr Mohamad Faiz bin Ahmad Johari",
+      "email": "mohamadfaiz@utar.edu.my",
+      "department": "DC",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "57190284846",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Cik Murni Fatehah Binti Alias",
+      "email": "fatehah@utar.edu.my",
+      "department": "DC",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "56405480700",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Dr Norazah binti Yusof",
+      "email": "norazah@utar.edu.my",
+      "department": "DC",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "25825824000",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Ir Ts Dr Lee Hwang Sheng",
+      "email": "leehs@utar.edu.my",
+      "department": "",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "43861444100",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Ts Dr Wong Mee Chu",
+      "email": "mcwong@utar.edu.my",
+      "department": "",
+      "issue": "Zero publications - likely incorrect Scopus ID",
+      "currentScopusId": "7404759544",
+      "recommendedAction": "Verify Scopus ID by searching author name on Scopus website"
+    },
+    {
+      "name": "Ts Dr Chai Tong Yuen",
+      "email": "chaity@utar.edu.my",
+      "department": "DMBE",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ir Dr Danny Ng Wee Kiat",
+      "email": "ngwk@utar.edu.my",
+      "department": "DMBE",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Dr Low Jen Hahn",
+      "email": "lowjh@utar.edu.my",
+      "department": "DMBE",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Dr Shalini a/p Darmaraju",
+      "email": "shalinid@utar.edu.my",
+      "department": "DMBE",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Dr Gulnaziya Issabayeva",
+      "email": "gulnaziya@utar.edu.my",
+      "department": "DCL",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ir Mohd Arif Bin Musa",
+      "email": "arifm@utar.edu.my",
+      "department": "DCL",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ir Dr Sim Lan Ching",
+      "email": "simcl@utar.edu.my",
+      "department": "DCL",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Dr Steven Lim",
+      "email": "stevenlim@utar.edu.my",
+      "department": "DCL",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "ChM. Ts. Dr. Tee Shiau Foon",
+      "email": "teesf@utar.edu.my",
+      "department": "DCL",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Prof. Dr Thomas Chung-Kuang Yang",
+      "email": "",
+      "department": "DCL",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Prof. Dr Baochun Chen",
+      "email": "",
+      "department": "DCI",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ir. Prof. Dr. Khoo Hooi Ling @ Lai Hooi Ling",
+      "email": "khoohl@utar.edu.my",
+      "department": "DCI",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ms Lam Foong Sin",
+      "email": "lamfs@utar.edu.my",
+      "department": "DCI",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ir Ts Dr Tan Ooi Kuan",
+      "email": "oktan@utar.edu.my",
+      "department": "DCI",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Prof. Dr Yasuo Tanaka",
+      "email": "yasuo@utar.edu.my",
+      "department": "DCI",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Prof. Dr Bala Venkatesh",
+      "email": "",
+      "department": "D3E",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Prof. Dr Chen Haoyong",
+      "email": "hychen@utar.edu.my",
+      "department": "D3E",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ir. Academician Emeritus Prof. Tan Sri Dato' Seri Dr. Chuah Hean Teik",
+      "email": "chuahht@utar.edu.my",
+      "department": "D3E",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ir. Prof. Dato' Dr. Ewe Hong Tat",
+      "email": "eweht@utar.edu.my",
+      "department": "D3E",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Prof Ts Dr Faidz bin Abd Rahman",
+      "email": "faidzar@utar.edu.my",
+      "department": "D3E",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ts Liew Choon Lian",
+      "email": "",
+      "department": "D3E",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Prof. Dr Loo Kok Keong",
+      "email": "",
+      "department": "D3E",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Prof. Dr Mirza Salim Beg",
+      "email": "mirzasalimbeg@utar.edu.my",
+      "department": "D3E",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ts Dr See Yuen Chark",
+      "email": "seeyc@utar.edu.my",
+      "department": "D3E",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ir Ts Dr Tham Mau Luen",
+      "email": "thamml@utar.edu.my",
+      "department": "D3E",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Dr Toh Chia Ming",
+      "email": "tohcm@utar.edu.my",
+      "department": "D3E",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Prof. Dr Yan Lei",
+      "email": "yanlei@utar.edu.my",
+      "department": "D3E",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Puan Azimah Binti Mohd",
+      "email": "azimah@utar.edu.my",
+      "department": "DMAS",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Prof. Dr Chia Gek Ling",
+      "email": "chiagl@utar.edu.my",
+      "department": "DMAS",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Mr Phoon Sheong Wei",
+      "email": "swphoon@utar.edu.my",
+      "department": "DMAS",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Mr Tan Zong Ming",
+      "email": "tanzm@utar.edu.my",
+      "department": "DMAS",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Dr Ananthan a/l Valitherm",
+      "email": "ananthan@utar.edu.my",
+      "department": "DS",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Dr Chia Fah Choy",
+      "email": "chiafc@utar.edu.my",
+      "department": "DS",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Mr Leong Chung Sum",
+      "email": "leongcs@utar.edu.my",
+      "department": "DS",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Sr Mazianah Binti Rahmat",
+      "email": "mazianah@utar.edu.my",
+      "department": "DS",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ts Naziatul Syima Binti Mahbob",
+      "email": "syima@utar.edu.my",
+      "department": "DS",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Dr Nur Aqlima Binti Ramli",
+      "email": "nuraqlima@utar.edu.my",
+      "department": "DS",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Sr Nurdiana Binti Azmi",
+      "email": "nurdianaa@utar.edu.my",
+      "department": "DS",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Sr Nurhayatul Khursniah Binti Hasim @ Mohamad Salleh",
+      "email": "khursniah@utar.edu.my",
+      "department": "DS",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Cik Roslinda Binti Rosly",
+      "email": "roslinda@utar.edu.my",
+      "department": "DS",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Cik Siti Solehah Binti Kadir",
+      "email": "solehah@utar.edu.my",
+      "department": "DS",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Cik Umi Kalsom Binti Ariffin",
+      "email": "umik@utar.edu.my",
+      "department": "DS",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ir Dr Wang Hong Kok",
+      "email": "wanghk@utar.edu.my",
+      "department": "DS",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Sr Wee Yu Ni",
+      "email": "weeyn@utar.edu.my",
+      "department": "DS",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Sr Zamharira Binti Sulaiman",
+      "email": "zamharira@utar.edu.my",
+      "department": "DS",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ts Dr Tan Kok Hong",
+      "email": "khtan@utar.edu.my",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ts Yeow Kah Niam",
+      "email": "yeowkn@utar.edu.my",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Encik Abdul Rahim Bin Mohd Zin",
+      "email": "rahimmz@utar.edu.my",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ar. IDr. David Yek Tak Wai",
+      "email": "",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Mr Fernando Paulo Da Costa Andrade",
+      "email": "fernando@utar.edu.my",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ts Leong Hung Sek",
+      "email": "leonghs@utar.edu.my",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Dr Lim Poh Im",
+      "email": "limpi@utar.edu.my",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Mr Lim Yekey",
+      "email": "limyekey@utar.edu.my",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ms Rahmawaty",
+      "email": "rahmawaty@utar.edu.my",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Mr Tan Yong Ann",
+      "email": "tanya@utar.edu.my",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Mr Tew Bun Teck",
+      "email": "tewbt@utar.edu.my",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ts Tsao Khee Ern",
+      "email": "tsaoke@utar.edu.my",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ts Dr Wong Yee Choong",
+      "email": "wongyc@utar.edu.my",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Mr Yong Song Zhe",
+      "email": "yongsz@utar.edu.my",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Dr Faranak Nejati",
+      "email": "faranak@utar.edu.my",
+      "department": "DC",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Mr Kelwin Tan Seen Tiong",
+      "email": "kelwintan@utar.edu.my",
+      "department": "DC",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Dr Noor Jamaliah binti Ibrahim",
+      "email": "njamaliah@utar.edu.my",
+      "department": "DC",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ts Dr Sugumaran a/l Nallusamy",
+      "email": "sugumaran@utar.edu.my",
+      "department": "DC",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Prof. Dr Andy Chit Tan",
+      "email": "tanacc@utar.edu.my",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Dr Jeffrey Chin Kong Leong",
+      "email": "jeffreychin@utar.edu.my",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ir Dr Kuan Seng How",
+      "email": "kuansh@utar.edu.my",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ir Dr Liang Meng Suan",
+      "email": "liangms@utar.edu.my",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Dr Rubentheren a/l Viyapuri",
+      "email": "rubentheren@utar.edu.my",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Prof. Dr Tan Choon Sooi",
+      "email": "",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Ir Dr Tey Jing Yuen",
+      "email": "teyjy@utar.edu.my",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    },
+    {
+      "name": "Dr Wong Hong Mun",
+      "email": "wonghm@utar.edu.my",
+      "department": "",
+      "issue": "Missing Scopus ID",
+      "currentScopusId": null,
+      "recommendedAction": "Search for author on Scopus and add ID to staff directory"
+    }
+  ]
+}

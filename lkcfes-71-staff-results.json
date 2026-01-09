@@ -1,0 +1,1114 @@
+{
+  "metadata": {
+    "scrapedAt": "2026-01-09T02:21:51.588Z",
+    "source": "CSV file: Verified Scopus ID(71).csv",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "totalStaff": 42,
+    "successCount": 42,
+    "errorCount": 0,
+    "statistics": {
+      "publications2023": 171,
+      "publications2024": 151,
+      "publications2025": 151,
+      "totalPublications": 473
+    }
+  },
+  "results": [
+    {
+      "searchId": "",
+      "name": "Ts Dr Chai Tong Yuen",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "40661042200",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 2,
+          "success": true
+        }
+      ],
+      "totalPublications": 7
+    },
+    {
+      "searchId": "",
+      "name": "Ir Dr Danny Ng Wee Kiat",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "57193488361",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 6,
+          "success": true
+        }
+      ],
+      "totalPublications": 14
+    },
+    {
+      "searchId": "",
+      "name": "Dr Low Jen Hahn",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "57214495023",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 7,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 7,
+          "success": true
+        }
+      ],
+      "totalPublications": 20
+    },
+    {
+      "searchId": "",
+      "name": "Dr Shalini a/p Darmaraju",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "56023747100",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 2,
+          "success": true
+        }
+      ],
+      "totalPublications": 6
+    },
+    {
+      "searchId": "",
+      "name": "Dr Gulnaziya Issabayeva",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "13609512600",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 4
+    },
+    {
+      "searchId": "",
+      "name": "Ir Dr Sim Lan Ching",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "55612830400",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 5,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 8,
+          "success": true
+        }
+      ],
+      "totalPublications": 19
+    },
+    {
+      "searchId": "",
+      "name": "Dr Steven Lim",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "35366710400",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 14,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 10,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 13,
+          "success": true
+        }
+      ],
+      "totalPublications": 37
+    },
+    {
+      "searchId": "",
+      "name": "ChM. Ts. Dr. Tee Shiau Foon",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "57207802878",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 4,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 6,
+          "success": true
+        }
+      ],
+      "totalPublications": 13
+    },
+    {
+      "searchId": "",
+      "name": "Prof. Dr Thomas Chung-Kuang Yang",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "36985669800",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 9,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 18,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 6,
+          "success": true
+        }
+      ],
+      "totalPublications": 33
+    },
+    {
+      "searchId": "",
+      "name": "Prof. Dr Baochun Chen",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "55904134700",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 26,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 13,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 31,
+          "success": true
+        }
+      ],
+      "totalPublications": 70
+    },
+    {
+      "searchId": "",
+      "name": "Ir. Prof. Dr. Khoo Hooi Ling @ Lai Hooi Ling",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "22938118900",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 8,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 2,
+          "success": true
+        }
+      ],
+      "totalPublications": 12
+    },
+    {
+      "searchId": "",
+      "name": "Ms Lam Foong Sin",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "57208646895",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 2
+    },
+    {
+      "searchId": "",
+      "name": "Ir Ts Dr Tan Ooi Kuan",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "57217246926",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 3,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 2,
+          "success": true
+        }
+      ],
+      "totalPublications": 7
+    },
+    {
+      "searchId": "",
+      "name": "Prof. Dr Yasuo Tanaka",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "55736279400",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 2
+    },
+    {
+      "searchId": "",
+      "name": "Prof. Dr Bala Venkatesh",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "7006518081",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 14,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 10,
+          "success": true
+        }
+      ],
+      "totalPublications": 30
+    },
+    {
+      "searchId": "",
+      "name": "Prof. Dr Chen Haoyong",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "8720685700",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 22,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 30,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 19,
+          "success": true
+        }
+      ],
+      "totalPublications": 71
+    },
+    {
+      "searchId": "",
+      "name": "Ir. Academician Emeritus Prof. Tan Sri Dato' Seri Dr. Chuah Hean Teik",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "7005188026",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "",
+      "name": "Ir. Prof. Dato' Dr. Ewe Hong Tat",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "55663557100",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 2
+    },
+    {
+      "searchId": "",
+      "name": "Prof Ts Dr Faidz bin Abd Rahman",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "57210423924",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 1
+    },
+    {
+      "searchId": "",
+      "name": "Prof. Dr Loo Kok Keong",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "36652697900",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 10,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 5,
+          "success": true
+        }
+      ],
+      "totalPublications": 17
+    },
+    {
+      "searchId": "",
+      "name": "Prof. Dr Mirza Salim Beg",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "7102797370",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 1
+    },
+    {
+      "searchId": "",
+      "name": "Ts Dr See Yuen Chark",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "56039675500",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 1
+    },
+    {
+      "searchId": "",
+      "name": "Ir Ts Dr Tham Mau Luen",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "55277448200",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 21,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 11,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 6,
+          "success": true
+        }
+      ],
+      "totalPublications": 38
+    },
+    {
+      "searchId": "",
+      "name": "Dr Toh Chia Ming",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "57201580284",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "",
+      "name": "Puan Azimah Binti Mohd",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "58962466100",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 1
+    },
+    {
+      "searchId": "",
+      "name": "Prof. Dr Chia Gek Ling",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "55914572800",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 2,
+          "success": true
+        }
+      ],
+      "totalPublications": 4
+    },
+    {
+      "searchId": "",
+      "name": "Mr Phoon Sheong Wei",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "57937358900",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 1
+    },
+    {
+      "searchId": "",
+      "name": "Dr Chia Fah Choy",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "54900105700",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 2
+    },
+    {
+      "searchId": "",
+      "name": "Ir Dr Wang Hong Kok",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "57371685100",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 4,
+          "success": true
+        }
+      ],
+      "totalPublications": 7
+    },
+    {
+      "searchId": "",
+      "name": "Ts Dr Wong Yee Choong",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "57202646410",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 1
+    },
+    {
+      "searchId": "",
+      "name": "Dr Faranak Nejati",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "57201011346",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 3,
+          "success": true
+        }
+      ],
+      "totalPublications": 5
+    },
+    {
+      "searchId": "",
+      "name": "Mr Kelwin Tan Seen Tiong",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "57193720365",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 2
+    },
+    {
+      "searchId": "",
+      "name": "Dr Noor Jamaliah binti Ibrahim",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "55894045900",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 1
+    },
+    {
+      "searchId": "",
+      "name": "Ts Dr Sugumaran a/l Nallusamy",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "57372696600",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "",
+      "name": "Prof. Dr Andy Chit Tan",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "15137426100",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 7,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 5,
+          "success": true
+        }
+      ],
+      "totalPublications": 18
+    },
+    {
+      "searchId": "",
+      "name": "Dr Jeffrey Chin Kong Leong",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "57000142000",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "",
+      "name": "Ir Dr Kuan Seng How",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "57114634300",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 4
+    },
+    {
+      "searchId": "",
+      "name": "Ir Dr Liang Meng Suan",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "35105219200",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 1,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 1
+    },
+    {
+      "searchId": "",
+      "name": "Dr Rubentheren a/l Viyapuri",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "57156456900",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "",
+      "name": "Prof. Dr Tan Choon Sooi",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "7402818144",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 6,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 8
+    },
+    {
+      "searchId": "",
+      "name": "Ir Dr Tey Jing Yuen",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "56042122900",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 5,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 2,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 3,
+          "success": true
+        }
+      ],
+      "totalPublications": 10
+    },
+    {
+      "searchId": "",
+      "name": "Dr Wong Hong Mun",
+      "email": "",
+      "department": "",
+      "departmentAcronym": "",
+      "scopusAuthorId": "60054769800",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 1,
+          "success": true
+        }
+      ],
+      "totalPublications": 1
+    }
+  ]
+}

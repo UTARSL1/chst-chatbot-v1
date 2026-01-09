@@ -1,0 +1,647 @@
+{
+  "metadata": {
+    "generatedAt": "2026-01-08T16:04:11.611Z",
+    "totalCount": 71
+  },
+  "staff": [
+    {
+      "searchId": "25051",
+      "name": "Ts Dr Chai Tong Yuen",
+      "email": "chaity@utar.edu.my",
+      "department": "DMBE",
+      "designation": "Associate Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "J23013",
+      "name": "Ir Dr Danny Ng Wee Kiat",
+      "email": "ngwk@utar.edu.my",
+      "department": "DMBE",
+      "designation": "Assistant Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "22051",
+      "name": "Dr Low Jen Hahn",
+      "email": "lowjh@utar.edu.my",
+      "department": "DMBE",
+      "designation": "Assistant Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "22083",
+      "name": "Dr Shalini a/p Darmaraju",
+      "email": "shalinid@utar.edu.my",
+      "department": "DMBE",
+      "designation": "Assistant Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "E07004",
+      "name": "Dr Gulnaziya Issabayeva",
+      "email": "gulnaziya@utar.edu.my",
+      "department": "DCL",
+      "designation": "Associate Professor",
+      "scopusUrl": "https://orcid.org/0000-0002-9845-4005",
+      "reason": "Invalid Scopus URL format"
+    },
+    {
+      "searchId": "19101",
+      "name": "Ir Mohd Arif Bin Musa",
+      "email": "arifm@utar.edu.my",
+      "department": "DCL",
+      "designation": "Lecturer",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "15170",
+      "name": "Ir Dr Sim Lan Ching",
+      "email": "simcl@utar.edu.my",
+      "department": "DCL",
+      "designation": "Associate Professor",
+      "scopusUrl": "55612830400",
+      "reason": "Invalid Scopus URL format"
+    },
+    {
+      "searchId": "J25006",
+      "name": "Dr Steven Lim",
+      "email": "stevenlim@utar.edu.my",
+      "department": "DCL",
+      "designation": "Associate Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "08090",
+      "name": "ChM. Ts. Dr. Tee Shiau Foon",
+      "email": "teesf@utar.edu.my",
+      "department": "DCL",
+      "designation": "Associate Professor",
+      "scopusUrl": "https://docs.google.com/spreadsheets/d/1L2TfhkN2zGfOwIgjCtPw4rAF9dbsza5ESBsdcRnBoKM/edit?ts=5a103506",
+      "reason": "Invalid Scopus URL format"
+    },
+    {
+      "searchId": "AP25034",
+      "name": "Prof. Dr Thomas Chung-Kuang Yang",
+      "email": "",
+      "department": "DCL",
+      "designation": "Adjunct Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "AP25022",
+      "name": "Prof. Dr Baochun Chen",
+      "email": "",
+      "department": "DCI",
+      "designation": "Adjunct Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "08145",
+      "name": "Ir. Prof. Dr. Khoo Hooi Ling @ Lai Hooi Ling",
+      "email": "khoohl@utar.edu.my",
+      "department": "DCI",
+      "designation": "Professor",
+      "scopusUrl": "22938118900",
+      "reason": "Invalid Scopus URL format"
+    },
+    {
+      "searchId": "05315",
+      "name": "Ms Lam Foong Sin",
+      "email": "lamfs@utar.edu.my",
+      "department": "DCI",
+      "designation": "Lecturer",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "15281",
+      "name": "Ir Ts Dr Tan Ooi Kuan",
+      "email": "oktan@utar.edu.my",
+      "department": "DCI",
+      "designation": "Assistant Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "AP21002",
+      "name": "Prof. Dr Yasuo Tanaka",
+      "email": "yasuo@utar.edu.my",
+      "department": "DCI",
+      "designation": "Adjunct Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "AP25009",
+      "name": "Prof. Dr Bala Venkatesh",
+      "email": "",
+      "department": "D3E",
+      "designation": "Adjunct Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "AP24013",
+      "name": "Prof. Dr Chen Haoyong",
+      "email": "hychen@utar.edu.my",
+      "department": "D3E",
+      "designation": "Adjunct Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "EP19001",
+      "name": "Ir. Academician Emeritus Prof. Tan Sri Dato' Seri Dr. Chuah Hean Teik",
+      "email": "chuahht@utar.edu.my",
+      "department": "D3E",
+      "designation": "Emeritus Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "08268",
+      "name": "Ir. Prof. Dato' Dr. Ewe Hong Tat",
+      "email": "eweht@utar.edu.my",
+      "department": "D3E",
+      "designation": "Senior Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "AP25027",
+      "name": "Prof Ts Dr Faidz bin Abd Rahman",
+      "email": "faidzar@utar.edu.my",
+      "department": "D3E",
+      "designation": "Adjunct Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "AP24003",
+      "name": "Ts Liew Choon Lian",
+      "email": "",
+      "department": "D3E",
+      "designation": "Adjunct Professor (Industry)",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "AP24009",
+      "name": "Prof. Dr Loo Kok Keong",
+      "email": "",
+      "department": "D3E",
+      "designation": "Adjunct Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "AP25031",
+      "name": "Prof. Dr Mirza Salim Beg",
+      "email": "mirzasalimbeg@utar.edu.my",
+      "department": "D3E",
+      "designation": "Adjunct Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "05153",
+      "name": "Ts Dr See Yuen Chark",
+      "email": "seeyc@utar.edu.my",
+      "department": "D3E",
+      "designation": "Assistant Professor",
+      "scopusUrl": "https://www.scopus.com/inward/authorDetails.uri?authorID=56039675500",
+      "reason": "Invalid Scopus URL format"
+    },
+    {
+      "searchId": "AP25041",
+      "name": "Ir Ts Dr Tham Mau Luen",
+      "email": "thamml@utar.edu.my",
+      "department": "D3E",
+      "designation": "Adjunct Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "21042",
+      "name": "Dr Toh Chia Ming",
+      "email": "tohcm@utar.edu.my",
+      "department": "D3E",
+      "designation": "Assistant Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "E25008",
+      "name": "Prof. Dr Yan Lei",
+      "email": "yanlei@utar.edu.my",
+      "department": "D3E",
+      "designation": "Senior Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "10306",
+      "name": "Puan Azimah Binti Mohd",
+      "email": "azimah@utar.edu.my",
+      "department": "DMAS",
+      "designation": "Lecturer",
+      "scopusUrl": "https://id.elsevier.com/settings/redirect?code=fYwCm-d0jRUm3UG-98luSZr8oeOaG-4uBI5SavVx",
+      "reason": "Invalid Scopus URL format"
+    },
+    {
+      "searchId": "AP25011",
+      "name": "Prof. Dr Chia Gek Ling",
+      "email": "chiagl@utar.edu.my",
+      "department": "DMAS",
+      "designation": "Adjunct Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "19110",
+      "name": "Mr Phoon Sheong Wei",
+      "email": "swphoon@utar.edu.my",
+      "department": "DMAS",
+      "designation": "Lecturer",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "10214",
+      "name": "Mr Tan Zong Ming",
+      "email": "tanzm@utar.edu.my",
+      "department": "DMAS",
+      "designation": "Lecturer",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "05109",
+      "name": "Dr Ananthan a/l Valitherm",
+      "email": "ananthan@utar.edu.my",
+      "department": "DS",
+      "designation": "Assistant Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "AP25019",
+      "name": "Dr Chia Fah Choy",
+      "email": "chiafc@utar.edu.my",
+      "department": "DS",
+      "designation": "Adjunct Associate Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "14109",
+      "name": "Mr Leong Chung Sum",
+      "email": "leongcs@utar.edu.my",
+      "department": "DS",
+      "designation": "Lecturer",
+      "scopusUrl": "https://www.scopus.com/dashboard.uri?origin=userDashboard&zone=TopNavBar",
+      "reason": "Invalid Scopus URL format"
+    },
+    {
+      "searchId": "19080",
+      "name": "Sr Mazianah Binti Rahmat",
+      "email": "mazianah@utar.edu.my",
+      "department": "DS",
+      "designation": "Lecturer",
+      "scopusUrl": "https://www.scopus.com/results/authorNamesList.uri?origin=searchauthorlookup&src=al&edit=&poppUp=&ba",
+      "reason": "Invalid Scopus URL format"
+    },
+    {
+      "searchId": "15053",
+      "name": "Ts Naziatul Syima Binti Mahbob",
+      "email": "syima@utar.edu.my",
+      "department": "DS",
+      "designation": "Lecturer",
+      "scopusUrl": "nil",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "14159",
+      "name": "Dr Nur Aqlima Binti Ramli",
+      "email": "nuraqlima@utar.edu.my",
+      "department": "DS",
+      "designation": "Assistant Professor",
+      "scopusUrl": "NIL",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "19056",
+      "name": "Sr Nurdiana Binti Azmi",
+      "email": "nurdianaa@utar.edu.my",
+      "department": "DS",
+      "designation": "Lecturer",
+      "scopusUrl": "https://www.scopus.com/results/authorNamesList.uri?sort=count-f&src=al&affilName=Universiti+Tunku+Ab",
+      "reason": "Invalid Scopus URL format"
+    },
+    {
+      "searchId": "20066",
+      "name": "Sr Nurhayatul Khursniah Binti Hasim @ Mohamad Salleh",
+      "email": "khursniah@utar.edu.my",
+      "department": "DS",
+      "designation": "Lecturer",
+      "scopusUrl": "https://www.scopus.com/search/form.uri?display=basic#author",
+      "reason": "Invalid Scopus URL format"
+    },
+    {
+      "searchId": "15032",
+      "name": "Cik Roslinda Binti Rosly",
+      "email": "roslinda@utar.edu.my",
+      "department": "DS",
+      "designation": "Lecturer",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "15016",
+      "name": "Cik Siti Solehah Binti Kadir",
+      "email": "solehah@utar.edu.my",
+      "department": "DS",
+      "designation": "Lecturer",
+      "scopusUrl": "NIL",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "14151",
+      "name": "Cik Umi Kalsom Binti Ariffin",
+      "email": "umik@utar.edu.my",
+      "department": "DS",
+      "designation": "Lecturer",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "AP23007",
+      "name": "Ir Dr Wang Hong Kok",
+      "email": "wanghk@utar.edu.my",
+      "department": "DS",
+      "designation": "Adjunct Associate Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "J15004",
+      "name": "Sr Wee Yu Ni",
+      "email": "weeyn@utar.edu.my",
+      "department": "DS",
+      "designation": "Lecturer",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "14228",
+      "name": "Sr Zamharira Binti Sulaiman",
+      "email": "zamharira@utar.edu.my",
+      "department": "DS",
+      "designation": "Lecturer",
+      "scopusUrl": "https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q=zamharira+sulaiman&btnG=",
+      "reason": "Invalid Scopus URL format"
+    },
+    {
+      "searchId": "10223",
+      "name": "Ts Dr Tan Kok Hong",
+      "email": "khtan@utar.edu.my",
+      "department": "",
+      "designation": "Assistant Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "14037",
+      "name": "Ts Yeow Kah Niam",
+      "email": "yeowkn@utar.edu.my",
+      "department": "",
+      "designation": "Lecturer",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "J24013",
+      "name": "Encik Abdul Rahim Bin Mohd Zin",
+      "email": "rahimmz@utar.edu.my",
+      "department": "",
+      "designation": "Lecturer",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "AP25039",
+      "name": "Ar. IDr. David Yek Tak Wai",
+      "email": "",
+      "department": "",
+      "designation": "Adjunct Professor (Industry)",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "E19006",
+      "name": "Mr Fernando Paulo Da Costa Andrade",
+      "email": "fernando@utar.edu.my",
+      "department": "",
+      "designation": "Lecturer",
+      "scopusUrl": "https://www.scopus.com/results/authorNamesList.uri?origin=searchauthorlookup&src=al&edit=&poppUp=&ba",
+      "reason": "Invalid Scopus URL format"
+    },
+    {
+      "searchId": "J23002",
+      "name": "Ts Leong Hung Sek",
+      "email": "leonghs@utar.edu.my",
+      "department": "",
+      "designation": "Lecturer",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "12175",
+      "name": "Dr Lim Poh Im",
+      "email": "limpi@utar.edu.my",
+      "department": "",
+      "designation": "Assistant Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "25014",
+      "name": "Mr Lim Yekey",
+      "email": "limyekey@utar.edu.my",
+      "department": "",
+      "designation": "Lecturer",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "E18001",
+      "name": "Ms Rahmawaty",
+      "email": "rahmawaty@utar.edu.my",
+      "department": "",
+      "designation": "Lecturer",
+      "scopusUrl": "https://www.scopus.com/sources.uri?zone=TopNavBar&origin=userDashboard",
+      "reason": "Invalid Scopus URL format"
+    },
+    {
+      "searchId": "24010",
+      "name": "Mr Tan Yong Ann",
+      "email": "tanya@utar.edu.my",
+      "department": "",
+      "designation": "Lecturer",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "J23009",
+      "name": "Mr Tew Bun Teck",
+      "email": "tewbt@utar.edu.my",
+      "department": "",
+      "designation": "Lecturer",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "16080",
+      "name": "Ts Tsao Khee Ern",
+      "email": "tsaoke@utar.edu.my",
+      "department": "",
+      "designation": "Lecturer",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "15285",
+      "name": "Ts Dr Wong Yee Choong",
+      "email": "wongyc@utar.edu.my",
+      "department": "",
+      "designation": "Assistant Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "22041",
+      "name": "Mr Yong Song Zhe",
+      "email": "yongsz@utar.edu.my",
+      "department": "",
+      "designation": "Lecturer",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "E23002",
+      "name": "Dr Faranak Nejati",
+      "email": "faranak@utar.edu.my",
+      "department": "DC",
+      "designation": "Assistant Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "25007",
+      "name": "Mr Kelwin Tan Seen Tiong",
+      "email": "kelwintan@utar.edu.my",
+      "department": "DC",
+      "designation": "Lecturer",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "25106",
+      "name": "Dr Noor Jamaliah binti Ibrahim",
+      "email": "njamaliah@utar.edu.my",
+      "department": "DC",
+      "designation": "Assistant Professor",
+      "scopusUrl": "http://www.scopus.com/inward/authorDetails.url?authorID=55894045900&partnerID=MN8TOARS",
+      "reason": "Invalid Scopus URL format"
+    },
+    {
+      "searchId": "03079",
+      "name": "Ts Dr Sugumaran a/l Nallusamy",
+      "email": "sugumaran@utar.edu.my",
+      "department": "DC",
+      "designation": "Assistant Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "AP21005",
+      "name": "Prof. Dr Andy Chit Tan",
+      "email": "tanacc@utar.edu.my",
+      "department": "",
+      "designation": "Adjunct Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "17044",
+      "name": "Dr Jeffrey Chin Kong Leong",
+      "email": "jeffreychin@utar.edu.my",
+      "department": "",
+      "designation": "Assistant Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "15157",
+      "name": "Ir Dr Kuan Seng How",
+      "email": "kuansh@utar.edu.my",
+      "department": "",
+      "designation": "Assistant Professor",
+      "scopusUrl": "57114634300",
+      "reason": "Invalid Scopus URL format"
+    },
+    {
+      "searchId": "J23006",
+      "name": "Ir Dr Liang Meng Suan",
+      "email": "liangms@utar.edu.my",
+      "department": "",
+      "designation": "Associate Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "17068",
+      "name": "Dr Rubentheren a/l Viyapuri",
+      "email": "rubentheren@utar.edu.my",
+      "department": "",
+      "designation": "Assistant Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "AP25023",
+      "name": "Prof. Dr Tan Choon Sooi",
+      "email": "",
+      "department": "",
+      "designation": "Adjunct Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "15011",
+      "name": "Ir Dr Tey Jing Yuen",
+      "email": "teyjy@utar.edu.my",
+      "department": "",
+      "designation": "Associate Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    },
+    {
+      "searchId": "09059",
+      "name": "Dr Wong Hong Mun",
+      "email": "wonghm@utar.edu.my",
+      "department": "",
+      "designation": "Assistant Professor",
+      "scopusUrl": "",
+      "reason": "No Scopus URL in directory"
+    }
+  ]
+}

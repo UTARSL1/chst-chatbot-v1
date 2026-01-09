@@ -1,0 +1,39 @@
+﻿Total staff with 0 publications: 29
+Staff found in directory: 29
+
+ORCID IDs (semicolon-separated):
+
+0000-0002-9284-685X; 0000-0002-6868-4977; 0000-0001-5867-9843; 0000-0002-9931-2885; 0000-0002-2226-7326; 0000-0001-7287-3394; 0000-0001-7117-3839; 0000-0002-4049-8566; 0000-0001-8817-781X; 0000-0002-3700-2451; 0000-0002-7551-0342; 0000-0001-5539-536X; 0000-0002-4866-9630; 0000-0002-3432-8317; 0000-0002-0271-7676; 0000-0003-1262-7807; 0000-0003-1493-2901; 0000-0002-5413-2311; 0000-0002-4605-3525; 0000-0002-2058-4459; 0000-0002-3701-8576; 0000-0003-4426-9274; 0000-0002-1589-1286; 0000-0001-9346-1479; 0000-0003-3405-7374; 0000-0003-2236-4000; 0000-0001-7729-8149; 0000-0002-0053-7620; 0000-0002-8240-1187
+
+
+Detailed list:
+
+Ms┬áTan Yin Qing (tanyq@utar.edu.my): 0000-0002-9284-685X
+Ir Dr┬áNg Law Yong (lyng@utar.edu.my): 0000-0002-6868-4977
+Dr┬áLai Soon Onn (laiso@utar.edu.my): 0000-0001-5867-9843
+Dr┬áSim Jia Huey (simjh@utar.edu.my): 0000-0002-9931-2885
+Dr┬áYap Yeow Hong (yapyh@utar.edu.my): 0000-0002-2226-7326
+Ir Dr┬áKoo Chai Hoon (kooch@utar.edu.my): 0000-0001-7287-3394
+Dr┬áOng Chuan Fang (ongcf@utar.edu.my): 0000-0001-7117-3839
+Dr┬áKhaw Mei Kum (khawmk@utar.edu.my): 0000-0002-4049-8566
+Ts Dr┬áKong Sin Guan (kongsg@utar.edu.my): 0000-0001-8817-781X
+Dr┬áYong Thian Khok (yongtk@utar.edu.my): 0000-0002-3700-2451
+Dr┬áWong Voon Hee (wongvh@utar.edu.my): 0000-0002-7551-0342
+Dr┬áWong Wai Kuan (wongwk@utar.edu.my): 0000-0001-5539-536X
+Dr┬áLee Yap Jia (yjlee@utar.edu.my): 0000-0002-4866-9630
+Dr┬áLiew How Hui (liewhh@utar.edu.my): 0000-0002-3432-8317
+Dr┬áTan Wei Lun (tanwl@utar.edu.my): 0000-0002-0271-7676
+Dr┬áYong Chin Khian (yongck@utar.edu.my): 0000-0003-1262-7807
+Sr┬áIbtisam Azwani Binti Mat Ya'acob (azwani@utar.edu.my): 0000-0003-1493-2901
+Ms┬áLay Pei Sin (layps@utar.edu.my): 0000-0002-5413-2311
+Sr┬áLi Zi Qian (lizq@utar.edu.my): 0000-0002-4605-3525
+Ts Dr┬áToh Tien Choon (tohtc@utar.edu.my): 0000-0002-2058-4459
+Ts┬áTung Yew Hou (tungyh@utar.edu.my): 0000-0002-3701-8576
+Ts Dr┬áLee Chen Kang (lckang@utar.edu.my): 0000-0003-4426-9274
+Ms┬áGunavathi a/p Duraisamy (gunavathi@utar.edu.my): 0000-0002-1589-1286
+Dr┬áKhor Kok Chin (kckhor@utar.edu.my): 0000-0001-9346-1479
+Dr┬áMohamad Faiz bin Ahmad Johari (mohamadfaiz@utar.edu.my): 0000-0003-3405-7374
+Cik┬áMurni Fatehah Binti Alias (fatehah@utar.edu.my): 0000-0003-2236-4000
+Dr┬áNorazah binti Yusof (norazah@utar.edu.my): 0000-0001-7729-8149
+Ir Ts Dr┬áLee Hwang Sheng (leehs@utar.edu.my): 0000-0002-0053-7620
+Ts Dr┬áWong Mee Chu (mcwong@utar.edu.my): 0000-0002-8240-1187

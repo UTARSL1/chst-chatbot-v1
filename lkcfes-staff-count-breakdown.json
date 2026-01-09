@@ -1,0 +1,99 @@
+{
+  "generatedAt": "2026-01-09T02:49:13.030Z",
+  "totalStaff": 279,
+  "excludedFGO": 14,
+  "excludedDLMSA": 31,
+  "afterExclusions": 234,
+  "academicStaff": 225,
+  "nonAcademicStaff": 9,
+  "departments": [
+    {
+      "key": "D3E",
+      "name": "D3E",
+      "type": "Academic",
+      "totalStaff": 38,
+      "academic": 38,
+      "nonAcademic": 0
+    },
+    {
+      "key": "DASD",
+      "name": "DASD",
+      "type": "Academic",
+      "totalStaff": 23,
+      "academic": 15,
+      "nonAcademic": 8
+    },
+    {
+      "key": "DC",
+      "name": "DC",
+      "type": "Academic",
+      "totalStaff": 25,
+      "academic": 24,
+      "nonAcademic": 1
+    },
+    {
+      "key": "DCI",
+      "name": "DCI",
+      "type": "Academic",
+      "totalStaff": 24,
+      "academic": 24,
+      "nonAcademic": 0
+    },
+    {
+      "key": "DCL",
+      "name": "DCL",
+      "type": "Academic",
+      "totalStaff": 25,
+      "academic": 25,
+      "nonAcademic": 0
+    },
+    {
+      "key": "DLMSA",
+      "name": "DLMSA",
+      "type": "Academic",
+      "totalStaff": 31,
+      "academic": 1,
+      "nonAcademic": 30
+    },
+    {
+      "key": "DMAS",
+      "name": "DMAS",
+      "type": "Academic",
+      "totalStaff": 28,
+      "academic": 28,
+      "nonAcademic": 0
+    },
+    {
+      "key": "DMBE",
+      "name": "DMBE",
+      "type": "Academic",
+      "totalStaff": 19,
+      "academic": 19,
+      "nonAcademic": 0
+    },
+    {
+      "key": "DMME",
+      "name": "DMME",
+      "type": "Academic",
+      "totalStaff": 25,
+      "academic": 25,
+      "nonAcademic": 0
+    },
+    {
+      "key": "DS",
+      "name": "DS",
+      "type": "Academic",
+      "totalStaff": 27,
+      "academic": 27,
+      "nonAcademic": 0
+    },
+    {
+      "key": "FGO",
+      "name": "FGO",
+      "type": "Academic",
+      "totalStaff": 14,
+      "academic": 0,
+      "nonAcademic": 14
+    }
+  ]
+}

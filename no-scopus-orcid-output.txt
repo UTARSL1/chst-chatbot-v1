@@ -1,0 +1,84 @@
+﻿Total staff without Scopus IDs: 71
+
+ORCID IDs (semicolon-separated):
+
+NA; NA; 0000-0001-5321-6516; NA; 0000-0002-9845-4005; NA; 0000-0003-4002-6726; NA; NA; NA; NA; 0000-0002-7234-190X; 0000-0002-0662-1436; 0000-0003-1872-3699; NA; NA; NA; NA; NA; NA; NA; NA; NA; 0000-0002-0794-849X; NA; NA; NA; 0000-0002-0411-5644; NA; 0000-0003-4642-2367; 0000-0002-2809-6089; 0000-0001-5724-8670; NA; 0000-0001-6132-3741; 0000-0002-2988-7819; 0000-0003-0097-385X; 0000-0003-0544-1801; 0000-0002-4602-0491; 0000-0002-0993-6273; 0000-0001-9163-0304; 0000-0002-4472-0726; 0000-0001-9466-151X; NA; NA; 0000-0002-2956-0517; 0000-0001-8166-6864; NA; NA; NA; 0000-0002-1454-3140; NA; NA; NA; NA; NA; NA; 0000-0001-8536-9277; 0000-0001-6048-4885; NA; 0000-0001-8871-6211; 0009-0007-0734-1739; 0009-0008-9600-3869; 0000-0003-2332-4326; NA; NA; 0000-0002-1115-3761; NA; NA; NA; NA; 0009-0004-2322-5007
+
+
+Detailed list:
+
+1. Ts Dr┬áChai Tong Yuen (chaity@utar.edu.my): NA
+2. Ir Dr┬áDanny Ng Wee Kiat (ngwk@utar.edu.my): NA
+3. Dr┬áLow Jen Hahn (lowjh@utar.edu.my): 0000-0001-5321-6516
+4. Dr┬áShalini a/p Darmaraju (shalinid@utar.edu.my): NA
+5. Dr┬áGulnaziya Issabayeva (gulnaziya@utar.edu.my): 0000-0002-9845-4005
+6. Ir┬áMohd Arif Bin Musa (arifm@utar.edu.my): NA
+7. Ir Dr┬áSim Lan Ching (simcl@utar.edu.my): 0000-0003-4002-6726
+8. Dr┬áSteven Lim (stevenlim@utar.edu.my): NA
+9. ChM. Ts. Dr.┬áTee Shiau Foon (teesf@utar.edu.my): NA
+10. Prof. Dr┬áThomas Chung-Kuang Yang (): NA
+11. Prof. Dr┬áBaochun Chen (): NA
+12. Ir. Prof. Dr.┬áKhoo Hooi Ling @ Lai Hooi Ling (khoohl@utar.edu.my): 0000-0002-7234-190X
+13. Ms┬áLam Foong Sin (lamfs@utar.edu.my): 0000-0002-0662-1436
+14. Ir Ts Dr┬áTan Ooi Kuan (oktan@utar.edu.my): 0000-0003-1872-3699
+15. Prof. Dr┬áYasuo Tanaka (yasuo@utar.edu.my): NA
+16. Prof. Dr┬áBala Venkatesh (): NA
+17. Prof. Dr┬áChen Haoyong (hychen@utar.edu.my): NA
+18. Ir. Academician Emeritus Prof. Tan Sri Dato' Seri Dr.┬áChuah Hean Teik (chuahht@utar.edu.my): NA
+19. Ir. Prof. Dato' Dr.┬áEwe Hong Tat (eweht@utar.edu.my): NA
+20. Prof Ts Dr┬áFaidz bin Abd Rahman (faidzar@utar.edu.my): NA
+21. Ts┬áLiew Choon Lian (): NA
+22. Prof. Dr┬áLoo Kok Keong (): NA
+23. Prof. Dr┬áMirza Salim Beg (mirzasalimbeg@utar.edu.my): NA
+24. Ts Dr┬áSee Yuen Chark (seeyc@utar.edu.my): 0000-0002-0794-849X
+25. Ir Ts Dr┬áTham Mau Luen (thamml@utar.edu.my): NA
+26. Dr┬áToh Chia Ming (tohcm@utar.edu.my): NA
+27. Prof. Dr┬áYan Lei (yanlei@utar.edu.my): NA
+28. Puan┬áAzimah Binti Mohd (azimah@utar.edu.my): 0000-0002-0411-5644
+29. Prof. Dr┬áChia Gek Ling (chiagl@utar.edu.my): NA
+30. Mr┬áPhoon Sheong Wei (swphoon@utar.edu.my): 0000-0003-4642-2367
+31. Mr┬áTan Zong Ming (tanzm@utar.edu.my): 0000-0002-2809-6089
+32. Dr┬áAnanthan a/l Valitherm (ananthan@utar.edu.my): 0000-0001-5724-8670
+33. Dr┬áChia Fah Choy (chiafc@utar.edu.my): NA
+34. Mr┬áLeong Chung Sum (leongcs@utar.edu.my): 0000-0001-6132-3741
+35. Sr┬áMazianah Binti Rahmat (mazianah@utar.edu.my): 0000-0002-2988-7819
+36. Ts┬áNaziatul Syima Binti Mahbob (syima@utar.edu.my): 0000-0003-0097-385X
+37. Dr┬áNur Aqlima Binti Ramli (nuraqlima@utar.edu.my): 0000-0003-0544-1801
+38. Sr┬áNurdiana Binti Azmi (nurdianaa@utar.edu.my): 0000-0002-4602-0491
+39. Sr┬áNurhayatul Khursniah Binti Hasim @ Mohamad Salleh (khursniah@utar.edu.my): 0000-0002-0993-6273
+40. Cik┬áRoslinda Binti Rosly (roslinda@utar.edu.my): 0000-0001-9163-0304
+41. Cik┬áSiti Solehah Binti Kadir (solehah@utar.edu.my): 0000-0002-4472-0726
+42. Cik┬áUmi Kalsom Binti Ariffin (umik@utar.edu.my): 0000-0001-9466-151X
+43. Ir Dr┬áWang Hong Kok (wanghk@utar.edu.my): NA
+44. Sr┬áWee Yu Ni (weeyn@utar.edu.my): NA
+45. Sr┬áZamharira Binti Sulaiman (zamharira@utar.edu.my): 0000-0002-2956-0517
+46. Ts Dr┬áTan Kok Hong (khtan@utar.edu.my): 0000-0001-8166-6864
+47. Ts┬áYeow Kah Niam (yeowkn@utar.edu.my): NA
+48. Encik┬áAbdul Rahim Bin Mohd Zin (rahimmz@utar.edu.my): NA
+49. Ar. IDr.┬áDavid Yek Tak Wai (): NA
+50. Mr┬áFernando Paulo Da Costa Andrade (fernando@utar.edu.my): 0000-0002-1454-3140
+51. Ts┬áLeong Hung Sek (leonghs@utar.edu.my): NA
+52. Dr┬áLim Poh Im (limpi@utar.edu.my): NA
+53. Mr┬áLim Yekey (limyekey@utar.edu.my): NA
+54. Ms┬áRahmawaty (rahmawaty@utar.edu.my): NA
+55. Mr┬áTan Yong Ann (tanya@utar.edu.my): NA
+56. Mr┬áTew Bun Teck (tewbt@utar.edu.my): NA
+57. Ts┬áTsao Khee Ern (tsaoke@utar.edu.my): 0000-0001-8536-9277
+58. Ts Dr┬áWong Yee Choong (wongyc@utar.edu.my): 0000-0001-6048-4885
+59. Mr┬áYong Song Zhe (yongsz@utar.edu.my): NA
+60. Dr┬áFaranak Nejati (faranak@utar.edu.my): 0000-0001-8871-6211
+61. Mr┬áKelwin Tan Seen Tiong (kelwintan@utar.edu.my): 0009-0007-0734-1739
+62. Dr┬áNoor Jamaliah binti Ibrahim (njamaliah@utar.edu.my): 0009-0008-9600-3869
+63. Ts Dr┬áSugumaran a/l Nallusamy (sugumaran@utar.edu.my): 0000-0003-2332-4326
+64. Prof. Dr┬áAndy Chit Tan (tanacc@utar.edu.my): NA
+65. Dr┬áJeffrey Chin Kong Leong (jeffreychin@utar.edu.my): NA
+66. Ir Dr┬áKuan Seng How (kuansh@utar.edu.my): 0000-0002-1115-3761
+67. Ir Dr┬áLiang Meng Suan (liangms@utar.edu.my): NA
+68. Dr┬áRubentheren a/l Viyapuri (rubentheren@utar.edu.my): NA
+69. Prof. Dr┬áTan Choon Sooi (): NA
+70. Ir Dr┬áTey Jing Yuen (teyjy@utar.edu.my): NA
+71. Dr┬áWong Hong Mun (wonghm@utar.edu.my): 0009-0004-2322-5007
+
+Summary:
+  Staff with ORCID: 31
+  Staff without ORCID (NA): 40
