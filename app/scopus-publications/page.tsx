@@ -193,9 +193,11 @@ export default function ScopusPublicationsPage() {
     const calculateStats = useMemo(() => {
         if (!hasAccess) return null;
 
-        const filteredStaff = staffMembers.filter(s => s.scopusStatus === 'Available');
+        // Filter staff who have a valid Scopus ID (ignoring the unreliable scopusStatus field)
+        const filteredStaff = staffMembers.filter(s => s.scopusAuthorId && s.scopusAuthorId !== 'NA');
 
         const totalPublications = filteredStaff.reduce((sum, staff) => {
+            if (!staff.publications) return sum;
             const yearPubs = staff.publications
                 .filter(p => selectedYears.includes(p.year))
                 .reduce((s, p) => s + p.count, 0);
@@ -203,6 +205,7 @@ export default function ScopusPublicationsPage() {
         }, 0);
 
         const staffWithPublications = filteredStaff.filter(staff => {
+            if (!staff.publications) return false;
             const yearPubs = staff.publications
                 .filter(p => selectedYears.includes(p.year))
                 .reduce((s, p) => s + p.count, 0);
@@ -212,6 +215,7 @@ export default function ScopusPublicationsPage() {
         const publicationsByYear = selectedYears.map(year => ({
             year,
             count: filteredStaff.reduce((sum, staff) => {
+                if (!staff.publications) return sum;
                 const pub = staff.publications.find(p => p.year === year);
                 return sum + (pub?.count || 0);
             }, 0)
