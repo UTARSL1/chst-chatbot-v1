@@ -719,11 +719,24 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
 }) {
     // Calculate stats
     const publicationsByYear = selectedYears.map(year => {
-        const count = staffMembers.reduce((sum, staff) => {
+        // Filter valid staff first
+        const validStaff = staffMembers.filter(s => s.scopusAuthorId && s.scopusAuthorId !== 'NA');
+        const n = validStaff.length || 1;
+
+        // Get counts for this year
+        const staffCounts = validStaff.map(staff => {
             const pub = staff.publications?.find(p => p.year === year);
-            return sum + (pub ? pub.count : 0);
-        }, 0);
-        return { year, count };
+            return pub ? pub.count : 0;
+        });
+
+        const count = staffCounts.reduce((a, b) => a + b, 0);
+        const avg = count / n;
+
+        // Calculate SD
+        const sumSqDiff = staffCounts.reduce((acc, val) => acc + Math.pow(val - avg, 2), 0);
+        const sd = Math.sqrt(sumSqDiff / n);
+
+        return { year, count, avg, sd };
     }).sort((a, b) => a.year - b.year);
 
     const totalPublications = staffMembers.reduce((sum, staff) => {
@@ -793,7 +806,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
 
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
                     <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Std Deviation</div>
-                    <div className="text-3xl font-bold text-orange-400 print:text-orange-700 print:text-xl">{stdDeviation}</div>
+                    <div className="text-3xl font-bold text-green-400 print:text-green-700 print:text-xl">{stdDeviation}</div>
                 </div>
             </div>
 
@@ -804,48 +817,65 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
 
                     <div className="flex items-end justify-between gap-4 h-64 print:h-48 w-full px-4">
                         {publicationsByYear.map((yearData: any) => {
-                            const validStaffCount = staffWithScopusCount || 1;
-                            const avgPerStaff = yearData.count / validStaffCount;
-
                             const maxCount = Math.max(...publicationsByYear.map((y: any) => y.count));
-                            const maxAvg = Math.max(...publicationsByYear.map((y: any) => y.count / validStaffCount));
+                            // Scale Average and SD together on the same axis
+                            const maxMetric = Math.max(
+                                ...publicationsByYear.map((y: any) => Math.max(y.avg, y.sd))
+                            );
 
                             // Height percentages
                             const countHeight = maxCount > 0 ? (yearData.count / maxCount) * 70 : 0;
-                            const avgHeight = maxAvg > 0 ? (avgPerStaff / maxAvg) * 70 : 0;
+                            const avgHeight = maxMetric > 0 ? (yearData.avg / maxMetric) * 70 : 0;
+                            const sdHeight = maxMetric > 0 ? (yearData.sd / maxMetric) * 70 : 0;
 
                             return (
                                 <div key={yearData.year} className="flex-1 flex flex-col items-center justify-end gap-2 h-full">
-                                    <div className="w-full flex gap-2 items-end justify-center h-full max-w-[200px]">
+                                    <div className="w-full flex gap-2 items-end justify-center h-full max-w-[240px]">
                                         {/* Total Publications Bar */}
-                                        <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
-                                            <div className="text-sm font-bold text-blue-300 print:text-blue-700">{yearData.count}</div>
+                                        <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full group relative">
+                                            <div className="opacity-0 group-hover:opacity-100 absolute -top-8 text-xs bg-black text-white px-2 py-1 rounded transition-opacity whitespace-nowrap z-10">Total: {yearData.count}</div>
+                                            <div className="text-xs font-bold text-blue-300 print:text-blue-700">{yearData.count}</div>
                                             <div
-                                                className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t transition-all duration-500 print:bg-blue-600"
+                                                className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t transition-all duration-500 print:bg-blue-600 hover:from-blue-500 hover:to-blue-300"
                                                 style={{
                                                     height: `${countHeight}%`,
-                                                    minHeight: '10px',
+                                                    minHeight: '4px',
                                                     // @ts-ignore
                                                     printColorAdjust: 'exact',
                                                     WebkitPrintColorAdjust: 'exact'
                                                 }}
-                                                title={`Total: ${yearData.count}`}
                                             />
                                         </div>
 
                                         {/* Average Bar */}
-                                        <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
-                                            <div className="text-sm font-bold text-purple-300 print:text-purple-700">{avgPerStaff.toFixed(2)}</div>
+                                        <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full group relative">
+                                            <div className="opacity-0 group-hover:opacity-100 absolute -top-8 text-xs bg-black text-white px-2 py-1 rounded transition-opacity whitespace-nowrap z-10">Avg: {yearData.avg.toFixed(2)}</div>
+                                            <div className="text-xs font-bold text-purple-200/70 print:text-purple-400">{yearData.avg.toFixed(2)}</div>
                                             <div
-                                                className="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-t transition-all duration-500 print:bg-purple-600"
+                                                className="w-full bg-purple-300/40 rounded-t transition-all duration-500 print:bg-purple-300 hover:bg-purple-300/60"
                                                 style={{
                                                     height: `${avgHeight}%`,
-                                                    minHeight: '10px',
+                                                    minHeight: '4px',
                                                     // @ts-ignore
                                                     printColorAdjust: 'exact',
                                                     WebkitPrintColorAdjust: 'exact'
                                                 }}
-                                                title={`Average: ${avgPerStaff.toFixed(2)}`}
+                                            />
+                                        </div>
+
+                                        {/* Std Dev Bar */}
+                                        <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full group relative">
+                                            <div className="opacity-0 group-hover:opacity-100 absolute -top-8 text-xs bg-black text-white px-2 py-1 rounded transition-opacity whitespace-nowrap z-10">SD: {yearData.sd.toFixed(2)}</div>
+                                            <div className="text-xs font-bold text-green-200/70 print:text-green-400">{yearData.sd.toFixed(2)}</div>
+                                            <div
+                                                className="w-full bg-green-300/40 rounded-t transition-all duration-500 print:bg-green-300 hover:bg-green-300/60"
+                                                style={{
+                                                    height: `${sdHeight}%`,
+                                                    minHeight: '4px',
+                                                    // @ts-ignore
+                                                    printColorAdjust: 'exact',
+                                                    WebkitPrintColorAdjust: 'exact'
+                                                }}
                                             />
                                         </div>
                                     </div>
@@ -862,8 +892,12 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                             <span className="text-sm text-gray-300 print:text-gray-700">Total Publications</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 bg-gradient-to-t from-purple-600 to-purple-400 rounded print:bg-purple-600"></div>
-                            <span className="text-sm text-gray-300 print:text-gray-700">Average per Staff</span>
+                            <div className="w-4 h-4 bg-purple-300/40 rounded print:bg-purple-300"></div>
+                            <span className="text-sm text-gray-400 print:text-gray-600">Average per Staff</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 bg-green-300/40 rounded print:bg-green-300"></div>
+                            <span className="text-sm text-gray-400 print:text-gray-600">Std Deviation</span>
                         </div>
                     </div>
                 </div>
@@ -880,7 +914,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
     selectedYears: number[];
 }) {
     const [departmentStats, setDepartmentStats] = useState<any[]>([]);
-    const [publicationsByYear, setPublicationsByYear] = useState<{ year: number, count: number, avg: number }[]>([]);
+    const [publicationsByYear, setPublicationsByYear] = useState<{ year: number, count: number, avg: number, sd: number }[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -888,7 +922,13 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
             setLoading(true);
             const stats: any[] = [];
             const yearlyTotals: { [key: number]: number } = {};
-            selectedYears.forEach(y => yearlyTotals[y] = 0);
+            const yearlyStaffCounts: { [key: number]: number[] } = {}; // Store raw counts for SD calculation
+
+            selectedYears.forEach(y => {
+                yearlyTotals[y] = 0;
+                yearlyStaffCounts[y] = [];
+            });
+
             let totalFacultyStaff = 0;
             let totalFacultyStaffWithScopus = 0;
 
@@ -903,15 +943,22 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
 
                         const staffWithScopus = data.staff.filter((s: StaffMember) => s.scopusAuthorId && s.scopusAuthorId !== 'NA');
                         totalFacultyStaffWithScopus += staffWithScopus.length;
+
                         const totalPubs = staffWithScopus.reduce((sum: number, staff: StaffMember) => {
                             // Sum publications for all selected years
                             const staffPubs = staff.publications?.filter(p => selectedYears.includes(p.year)) || [];
 
-                            // Add to faculty yearly totals
+                            // Add to faculty yearly totals AND staff counts
                             staffPubs.forEach(p => {
                                 if (yearlyTotals[p.year] !== undefined) {
                                     yearlyTotals[p.year] += p.count;
                                 }
+                            });
+
+                            // For SD calculation: ensure we record count for EACH year for EACH staff
+                            selectedYears.forEach(year => {
+                                const pub = staff.publications?.find(p => p.year === year);
+                                yearlyStaffCounts[year].push(pub ? pub.count : 0);
                             });
 
                             const yearPubs = staffPubs.reduce((s, p) => s + p.count, 0) || 0;
@@ -933,11 +980,22 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
             }
 
             setDepartmentStats(stats);
-            setPublicationsByYear(Object.entries(yearlyTotals).map(([year, count]) => ({
-                year: parseInt(year),
-                count,
-                avg: totalFacultyStaffWithScopus > 0 ? count / totalFacultyStaffWithScopus : 0
-            })).sort((a, b) => a.year - b.year));
+            setPublicationsByYear(Object.entries(yearlyTotals).map(([yearStr, count]) => {
+                const year = parseInt(yearStr);
+                const counts = yearlyStaffCounts[year] || [];
+                const n = counts.length || 1;
+                const avg = counts.reduce((a, b) => a + b, 0) / n;
+
+                const sumSqDiff = counts.reduce((acc, val) => acc + Math.pow(val - avg, 2), 0);
+                const sd = Math.sqrt(sumSqDiff / n);
+
+                return {
+                    year,
+                    count,
+                    avg: totalFacultyStaffWithScopus > 0 ? count / totalFacultyStaffWithScopus : 0,
+                    sd
+                };
+            }).sort((a, b) => a.year - b.year));
             setLoading(false);
         };
 
@@ -1010,7 +1068,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
 
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
                     <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Std Deviation</div>
-                    <div className="text-3xl font-bold text-orange-400 print:text-orange-700 print:text-xl">{stdDeviation}</div>
+                    <div className="text-3xl font-bold text-green-400 print:text-green-700 print:text-xl">{stdDeviation}</div>
                 </div>
             </div>
 
@@ -1022,44 +1080,64 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                     <div className="flex items-end justify-between gap-4 h-64 print:h-48 w-full px-4">
                         {publicationsByYear.map((yearData: any) => {
                             const maxCount = Math.max(...publicationsByYear.map(y => y.count));
-                            const maxAvg = Math.max(...publicationsByYear.map(y => y.avg));
+                            // Scale Average and SD together on the same axis
+                            const maxMetric = Math.max(
+                                ...publicationsByYear.map(y => Math.max(y.avg, y.sd))
+                            );
 
                             // Height percentages
                             const countHeight = maxCount > 0 ? (yearData.count / maxCount) * 70 : 0;
-                            const avgHeight = maxAvg > 0 ? (yearData.avg / maxAvg) * 70 : 0;
+                            const avgHeight = maxMetric > 0 ? (yearData.avg / maxMetric) * 70 : 0;
+                            const sdHeight = maxMetric > 0 ? (yearData.sd / maxMetric) * 70 : 0;
 
                             return (
                                 <div key={yearData.year} className="flex-1 flex flex-col items-center justify-end gap-2 h-full">
-                                    <div className="w-full flex gap-2 items-end justify-center h-full max-w-[200px]">
+                                    <div className="w-full flex gap-2 items-end justify-center h-full max-w-[240px]">
                                         {/* Total Publications Bar */}
-                                        <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
-                                            <div className="text-sm font-bold text-blue-300 print:text-blue-700">{yearData.count}</div>
+                                        <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full group relative">
+                                            <div className="opacity-0 group-hover:opacity-100 absolute -top-8 text-xs bg-black text-white px-2 py-1 rounded transition-opacity whitespace-nowrap z-10">Total: {yearData.count}</div>
+                                            <div className="text-xs font-bold text-blue-300 print:text-blue-700">{yearData.count}</div>
                                             <div
-                                                className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t transition-all duration-500 print:bg-blue-600"
+                                                className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t transition-all duration-500 print:bg-blue-600 hover:from-blue-500 hover:to-blue-300"
                                                 style={{
                                                     height: `${countHeight}%`,
-                                                    minHeight: '10px',
+                                                    minHeight: '4px',
                                                     // @ts-ignore
                                                     printColorAdjust: 'exact',
                                                     WebkitPrintColorAdjust: 'exact'
                                                 }}
-                                                title={`Total: ${yearData.count}`}
                                             />
                                         </div>
 
                                         {/* Average Bar */}
-                                        <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
-                                            <div className="text-sm font-bold text-purple-300 print:text-purple-700">{yearData.avg.toFixed(2)}</div>
+                                        <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full group relative">
+                                            <div className="opacity-0 group-hover:opacity-100 absolute -top-8 text-xs bg-black text-white px-2 py-1 rounded transition-opacity whitespace-nowrap z-10">Avg: {yearData.avg.toFixed(2)}</div>
+                                            <div className="text-xs font-bold text-purple-200/70 print:text-purple-400">{yearData.avg.toFixed(2)}</div>
                                             <div
-                                                className="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-t transition-all duration-500 print:bg-purple-600"
+                                                className="w-full bg-purple-300/40 rounded-t transition-all duration-500 print:bg-purple-300 hover:bg-purple-300/60"
                                                 style={{
                                                     height: `${avgHeight}%`,
-                                                    minHeight: '10px',
+                                                    minHeight: '4px',
                                                     // @ts-ignore
                                                     printColorAdjust: 'exact',
                                                     WebkitPrintColorAdjust: 'exact'
                                                 }}
-                                                title={`Average: ${yearData.avg.toFixed(2)}`}
+                                            />
+                                        </div>
+
+                                        {/* Std Dev Bar */}
+                                        <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full group relative">
+                                            <div className="opacity-0 group-hover:opacity-100 absolute -top-8 text-xs bg-black text-white px-2 py-1 rounded transition-opacity whitespace-nowrap z-10">SD: {yearData.sd.toFixed(2)}</div>
+                                            <div className="text-xs font-bold text-green-200/70 print:text-green-400">{yearData.sd.toFixed(2)}</div>
+                                            <div
+                                                className="w-full bg-green-300/40 rounded-t transition-all duration-500 print:bg-green-300 hover:bg-green-300/60"
+                                                style={{
+                                                    height: `${sdHeight}%`,
+                                                    minHeight: '4px',
+                                                    // @ts-ignore
+                                                    printColorAdjust: 'exact',
+                                                    WebkitPrintColorAdjust: 'exact'
+                                                }}
                                             />
                                         </div>
                                     </div>
@@ -1068,6 +1146,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                             );
                         })}
                     </div>
+
                     {/* Legend */}
                     <div className="flex justify-center gap-6 mt-6 border-t border-white/10 pt-4 print:border-gray-300">
                         <div className="flex items-center gap-2">
@@ -1075,8 +1154,12 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                             <span className="text-sm text-gray-300 print:text-gray-700">Total Publications</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 bg-gradient-to-t from-purple-600 to-purple-400 rounded print:bg-purple-600"></div>
-                            <span className="text-sm text-gray-300 print:text-gray-700">Average per Staff</span>
+                            <div className="w-4 h-4 bg-purple-300/40 rounded print:bg-purple-300"></div>
+                            <span className="text-sm text-gray-400 print:text-gray-600">Average per Staff</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 bg-green-300/40 rounded print:bg-green-300"></div>
+                            <span className="text-sm text-gray-400 print:text-gray-600">Std Deviation</span>
                         </div>
                     </div>
                 </div>
