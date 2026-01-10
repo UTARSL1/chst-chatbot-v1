@@ -732,12 +732,12 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
             .reduce((s, p) => s + p.count, 0) || 0);
     }, 0);
 
-    const staffWithPublicationsCount = staffMembers.filter(staff =>
-        staff.publications?.some(p => selectedYears.includes(p.year) && p.count > 0)
+    const staffWithScopusCount = staffMembers.filter(staff =>
+        staff.scopusAuthorId && staff.scopusAuthorId !== 'NA'
     ).length;
 
-    const averagePerStaff = staffWithPublicationsCount > 0
-        ? (totalPublications / staffWithPublicationsCount).toFixed(2)
+    const averagePerStaff = staffWithScopusCount > 0
+        ? (totalPublications / staffWithScopusCount).toFixed(2)
         : '0.00';
 
     return (
@@ -783,11 +783,11 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
 
                     <div className="flex items-end justify-between gap-4 h-64 print:h-48 w-full px-4">
                         {publicationsByYear.map((yearData: any) => {
-                            const totalStaffCount = staffMembers.length || 1;
-                            const avgPerStaff = yearData.count / totalStaffCount;
+                            const validStaffCount = staffWithScopusCount || 1;
+                            const avgPerStaff = yearData.count / validStaffCount;
 
                             const maxCount = Math.max(...publicationsByYear.map((y: any) => y.count));
-                            const maxAvg = Math.max(...publicationsByYear.map((y: any) => y.count / totalStaffCount));
+                            const maxAvg = Math.max(...publicationsByYear.map((y: any) => y.count / validStaffCount));
 
                             // Height percentages
                             const countHeight = maxCount > 0 ? (yearData.count / maxCount) * 70 : 0;
@@ -869,6 +869,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
             const yearlyTotals: { [key: number]: number } = {};
             selectedYears.forEach(y => yearlyTotals[y] = 0);
             let totalFacultyStaff = 0;
+            let totalFacultyStaffWithScopus = 0;
 
             for (const dept of departments) {
                 try {
@@ -880,6 +881,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                         totalFacultyStaff += data.staff.length;
 
                         const staffWithScopus = data.staff.filter((s: StaffMember) => s.scopusAuthorId && s.scopusAuthorId !== 'NA');
+                        totalFacultyStaffWithScopus += staffWithScopus.length;
                         const totalPubs = staffWithScopus.reduce((sum: number, staff: StaffMember) => {
                             // Sum publications for all selected years
                             const staffPubs = staff.publications?.filter(p => selectedYears.includes(p.year)) || [];
@@ -913,7 +915,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
             setPublicationsByYear(Object.entries(yearlyTotals).map(([year, count]) => ({
                 year: parseInt(year),
                 count,
-                avg: totalFacultyStaff > 0 ? count / totalFacultyStaff : 0
+                avg: totalFacultyStaffWithScopus > 0 ? count / totalFacultyStaffWithScopus : 0
             })).sort((a, b) => a.year - b.year));
             setLoading(false);
         };
