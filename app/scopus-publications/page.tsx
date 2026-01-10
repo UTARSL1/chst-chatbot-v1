@@ -714,7 +714,7 @@ function DepartmentOverviewTab({ stats, selectedYears, departmentName }: {
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Staff</div>
+                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Academic Staff</div>
                     <div className="text-3xl font-bold text-white print:text-black print:text-xl">{stats.totalStaff}</div>
                 </div>
 
@@ -855,17 +855,7 @@ function FacultyOverviewTab({ facultyName, departments, selectedYears }: {
 
             {/* Faculty Summary Cards */}
             {facultyTotals && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                        <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Staff</div>
-                        <div className="text-3xl font-bold text-white print:text-black print:text-xl">{facultyTotals.totalStaff}</div>
-                    </div>
-
-                    <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                        <div className="text-sm text-gray-400 mb-1 print:text-gray-600">With Scopus Data</div>
-                        <div className="text-3xl font-bold text-emerald-400 print:text-emerald-700 print:text-xl">{facultyTotals.staffWithScopus}</div>
-                    </div>
-
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
                         <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Publications</div>
                         <div className="text-3xl font-bold text-blue-400 print:text-blue-700 print:text-xl">{facultyTotals.totalPublications}</div>
@@ -878,43 +868,79 @@ function FacultyOverviewTab({ facultyName, departments, selectedYears }: {
                 </div>
             )}
 
-            {/* Department Breakdown Table */}
+            {/* Department Comparison Chart */}
             <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none">
                 <div className="p-6 print:p-4">
-                    <h3 className="text-xl font-bold text-white mb-6 print:text-black print:mb-4">Department Breakdown</h3>
+                    <h3 className="text-xl font-bold text-white mb-6 print:text-black print:mb-4">Department Comparison</h3>
 
                     <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead>
-                                <tr className="border-b border-white/10 print:border-gray-300">
-                                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300 print:text-gray-700">Department</th>
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300 print:text-gray-700">Total Staff</th>
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300 print:text-gray-700">With Scopus</th>
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300 print:text-gray-700">Publications ({selectedYears.join(', ')})</th>
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300 print:text-gray-700">Avg/Staff</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {departmentStats
-                                    .sort((a, b) => b.totalPublications - a.totalPublications)
-                                    .map((dept, idx) => (
-                                        <tr key={idx} className="border-b border-white/5 hover:bg-white/5 transition-colors print:border-gray-200">
-                                            <td className="py-3 px-4 text-sm text-white print:text-black">
-                                                <div className="font-medium">{dept.acronym}</div>
-                                                <div className="text-xs text-gray-400 print:text-gray-600">{dept.name}</div>
-                                            </td>
-                                            <td className="py-3 px-4 text-right text-sm text-gray-300 print:text-gray-700">{dept.totalStaff}</td>
-                                            <td className="py-3 px-4 text-right text-sm text-emerald-400 print:text-emerald-700">{dept.staffWithScopus}</td>
-                                            <td className="py-3 px-4 text-right">
-                                                <span className="inline-block px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold print:bg-transparent print:border-0 print:text-blue-700">
-                                                    {dept.totalPublications}
-                                                </span>
-                                            </td>
-                                            <td className="py-3 px-4 text-right text-sm text-purple-400 print:text-purple-700">{dept.averagePerStaff}</td>
-                                        </tr>
-                                    ))}
-                            </tbody>
-                        </table>
+                        <div className="min-w-[600px] h-96 print:h-80 flex items-end gap-4 pb-12">
+                            {departmentStats
+                                .sort((a, b) => b.totalPublications - a.totalPublications)
+                                .map((dept, idx) => {
+                                    const maxPubs = Math.max(...departmentStats.map(d => d.totalPublications));
+                                    const maxAvg = Math.max(...departmentStats.map(d => parseFloat(d.averagePerStaff)));
+
+                                    // Normalize heights to percentage of max
+                                    const pubHeight = maxPubs > 0 ? (dept.totalPublications / maxPubs) * 70 : 0;
+                                    const avgHeight = maxAvg > 0 ? (parseFloat(dept.averagePerStaff) / maxAvg) * 70 : 0;
+
+                                    return (
+                                        <div key={idx} className="flex-1 flex flex-col items-center justify-end gap-2 h-full">
+                                            <div className="w-full flex gap-1 items-end justify-center h-full">
+                                                {/* Total Publications Bar */}
+                                                <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
+                                                    <div className="text-xs font-bold text-blue-300 print:text-blue-700">{dept.totalPublications}</div>
+                                                    <div
+                                                        className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t transition-all duration-500 print:bg-blue-600"
+                                                        style={{
+                                                            height: `${pubHeight}%`,
+                                                            minHeight: '10px',
+                                                            // @ts-ignore
+                                                            printColorAdjust: 'exact',
+                                                            WebkitPrintColorAdjust: 'exact'
+                                                        }}
+                                                        title={`Publications: ${dept.totalPublications}`}
+                                                    />
+                                                </div>
+
+                                                {/* Average per Staff Bar */}
+                                                <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
+                                                    <div className="text-xs font-bold text-purple-300 print:text-purple-700">{dept.averagePerStaff}</div>
+                                                    <div
+                                                        className="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-t transition-all duration-500 print:bg-purple-600"
+                                                        style={{
+                                                            height: `${avgHeight}%`,
+                                                            minHeight: '10px',
+                                                            // @ts-ignore
+                                                            printColorAdjust: 'exact',
+                                                            WebkitPrintColorAdjust: 'exact'
+                                                        }}
+                                                        title={`Average: ${dept.averagePerStaff}`}
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            {/* Department Label */}
+                                            <div className="text-xs font-semibold text-gray-300 print:text-gray-700 text-center mt-2">
+                                                {dept.acronym}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                        </div>
+
+                        {/* Legend */}
+                        <div className="flex justify-center gap-6 mt-4 pt-4 border-t border-white/10 print:border-gray-300">
+                            <div className="flex items-center gap-2">
+                                <div className="w-4 h-4 bg-gradient-to-t from-blue-600 to-blue-400 rounded print:bg-blue-600"></div>
+                                <span className="text-sm text-gray-300 print:text-gray-700">Total Publications</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-4 h-4 bg-gradient-to-t from-purple-600 to-purple-400 rounded print:bg-purple-600"></div>
+                                <span className="text-sm text-gray-300 print:text-gray-700">Average per Staff</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
