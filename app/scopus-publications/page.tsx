@@ -26,6 +26,18 @@ interface DepartmentData {
     staffCount: number;
 }
 
+const FACULTY_FULL_NAMES: Record<string, string> = {
+    'LKC FES': 'Lee Kong Chian Faculty of Engineering and Science',
+    'FAM': 'Faculty of Accountancy and Management',
+    'FCI': 'Faculty of Creative Industries',
+    'FSc': 'Faculty of Science',
+    'FEGT': 'Faculty of Engineering and Green Technology',
+    'FMHS': 'Faculty of Medicine and Health Sciences',
+    'FBF': 'Faculty of Business and Finance',
+    'FAS': 'Faculty of Arts and Social Science',
+    'ICS': 'Institute of Chinese Studies'
+};
+
 export default function ScopusPublicationsPage() {
     const router = useRouter();
     const { data: session, status } = useSession();
@@ -472,15 +484,18 @@ export default function ScopusPublicationsPage() {
 
                                         {activeTab === 'department' && calculateStats && (
                                             <DepartmentOverviewTab
+                                                staffMembers={staffMembers}
+                                                departments={departments}
                                                 selectedYears={selectedYears}
                                                 departmentName={departments.find(d => d.acronym === selectedDepartment)?.name || ''}
-                                                staffMembers={staffMembers}
+                                                departmentAcronym={selectedDepartment}
                                             />
                                         )}
 
                                         {activeTab === 'faculty' && (
                                             <FacultyOverviewTab
-                                                facultyName={selectedFaculty}
+                                                facultyName={FACULTY_FULL_NAMES[selectedFaculty] || selectedFaculty}
+                                                facultyAcronym={selectedFaculty}
                                                 departments={departments}
                                                 selectedYears={selectedYears}
                                             />
@@ -695,26 +710,22 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
 }
 
 // Department Overview Tab Component
-// Department Overview Tab Component
-function DepartmentOverviewTab({ selectedYears, departmentName, staffMembers }: {
+function DepartmentOverviewTab({ staffMembers, departments, selectedYears, departmentName, departmentAcronym }: {
+    staffMembers: StaffMember[];
+    departments: DepartmentData[];
     selectedYears: number[];
     departmentName: string;
-    staffMembers: StaffMember[];
+    departmentAcronym: string;
 }) {
-    // Calculate Top 10 Staff
-    const topStaff = staffMembers.map(staff => {
-        const count = staff.publications
-            ?.filter(p => selectedYears.includes(p.year))
-            .reduce((sum, p) => sum + p.count, 0) || 0;
-        return {
-            ...staff,
-            yearPublications: count
-        };
-    })
-        .filter(s => s.yearPublications > 0)
-        .sort((a, b) => b.yearPublications - a.yearPublications);
+    // Calculate stats
+    const publicationsByYear = selectedYears.map(year => {
+        const count = staffMembers.reduce((sum, staff) => {
+            const pub = staff.publications?.find(p => p.year === year);
+            return sum + (pub ? pub.count : 0);
+        }, 0);
+        return { year, count };
+    }).sort((a, b) => a.year - b.year);
 
-    // Calculate department stats
     const totalPublications = staffMembers.reduce((sum, staff) => {
         return sum + (staff.publications
             ?.filter(p => selectedYears.includes(p.year))
@@ -729,34 +740,26 @@ function DepartmentOverviewTab({ selectedYears, departmentName, staffMembers }: 
         ? (totalPublications / staffWithPublicationsCount).toFixed(2)
         : '0.00';
 
-    const publicationsByYearMap = new Map<number, number>();
-    selectedYears.forEach(year => publicationsByYearMap.set(year, 0));
-
-    staffMembers.forEach(staff => {
-        staff.publications?.forEach(pub => {
-            if (selectedYears.includes(pub.year)) {
-                publicationsByYearMap.set(pub.year, (publicationsByYearMap.get(pub.year) || 0) + pub.count);
-            }
-        });
-    });
-
-    const publicationsByYear = Array.from(publicationsByYearMap.entries())
-        .map(([year, count]) => ({ year, count }))
-        .sort((a, b) => a.year - b.year);
-
     return (
         <div className="space-y-6 print:space-y-4">
             <div className="flex justify-end gap-2 print:hidden -mb-4">
                 <button
                     onClick={() => window.print()}
-                    className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium"
                 >
-                    <Printer className="w-4 h-4" /> Export PDF
+                    <Printer size={16} />
+                    Export PDF
                 </button>
             </div>
 
             {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Department</div>
+                    <div className="text-lg font-bold text-white print:text-black leading-tight mb-1">{departmentName}</div>
+                    <div className="text-sm font-mono text-cyan-400 print:text-cyan-700">{departmentAcronym}</div>
+                </div>
+
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
                     <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Academic Staff</div>
                     <div className="text-3xl font-bold text-white print:text-black print:text-xl">{staffMembers.length}</div>
@@ -849,8 +852,9 @@ function DepartmentOverviewTab({ selectedYears, departmentName, staffMembers }: 
 }
 
 // Faculty Overview Tab Component
-function FacultyOverviewTab({ facultyName, departments, selectedYears }: {
+function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selectedYears }: {
     facultyName: string;
+    facultyAcronym: string;
     departments: DepartmentData[];
     selectedYears: number[];
 }) {
@@ -919,18 +923,12 @@ function FacultyOverviewTab({ facultyName, departments, selectedYears }: {
         }
     }, [departments, selectedYears]);
 
-    const facultyTotals = useMemo(() => {
-        if (departmentStats.length === 0) return null;
-
-        return {
-            totalStaff: departmentStats.reduce((sum, d) => sum + d.totalStaff, 0),
-            staffWithScopus: departmentStats.reduce((sum, d) => sum + d.staffWithScopus, 0),
-            totalPublications: departmentStats.reduce((sum, d) => sum + d.totalPublications, 0),
-            averagePerStaff: departmentStats.reduce((sum, d) => sum + d.staffWithScopus, 0) > 0
-                ? (departmentStats.reduce((sum, d) => sum + d.totalPublications, 0) / departmentStats.reduce((sum, d) => sum + d.staffWithScopus, 0)).toFixed(2)
-                : '0.00'
-        };
-    }, [departmentStats]);
+    const totalPublications = departmentStats.reduce((acc, curr) => acc + curr.totalPublications, 0);
+    const totalFacultyStaff = departmentStats.reduce((acc, curr) => acc + curr.totalStaff, 0);
+    const staffWithScopusCount = departmentStats.reduce((acc, curr) => acc + curr.staffWithScopus, 0);
+    const averagePerStaff = staffWithScopusCount > 0
+        ? (totalPublications / staffWithScopusCount).toFixed(2)
+        : '0.00';
 
     if (loading) {
         return (
@@ -948,33 +946,43 @@ function FacultyOverviewTab({ facultyName, departments, selectedYears }: {
             <div className="flex justify-end gap-2 print:hidden -mb-4">
                 <button
                     onClick={() => window.print()}
-                    className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium"
                 >
-                    <Printer className="w-4 h-4" /> Export PDF
+                    <Printer size={16} />
+                    Export PDF
                 </button>
             </div>
 
-            {/* Faculty Summary Cards */}
-            {facultyTotals && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                        <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Publications</div>
-                        <div className="text-3xl font-bold text-blue-400 print:text-blue-700 print:text-xl">{facultyTotals.totalPublications}</div>
-                    </div>
-
-                    <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                        <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Average per Staff</div>
-                        <div className="text-3xl font-bold text-purple-400 print:text-purple-700 print:text-xl">{facultyTotals.averagePerStaff}</div>
-                    </div>
+            {/* Summary Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Faculty</div>
+                    <div className="text-lg font-bold text-white print:text-black leading-tight mb-1">{facultyName}</div>
+                    <div className="text-sm font-mono text-cyan-400 print:text-cyan-700">{facultyAcronym}</div>
                 </div>
-            )}
 
-            {/* Faculty Publications by Year Chart (Newly Added) */}
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Academic Staff</div>
+                    <div className="text-3xl font-bold text-white print:text-black print:text-xl">{totalFacultyStaff}</div>
+                </div>
+
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Publications</div>
+                    <div className="text-3xl font-bold text-blue-400 print:text-blue-700 print:text-xl">{totalPublications}</div>
+                </div>
+
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Average per Staff</div>
+                    <div className="text-3xl font-bold text-purple-400 print:text-purple-700 print:text-xl">{averagePerStaff}</div>
+                </div>
+            </div>
+
+            {/* Faculty Publications by Year Chart */}
             <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none">
                 <div className="p-6 print:p-4">
                     <h3 className="text-xl font-bold text-white mb-6 print:text-black print:mb-4">Faculty Publications by Year</h3>
 
-                    <div className="flex items-end gap-12 h-64 print:h-48 justify-center">
+                    <div className="flex items-end justify-between gap-4 h-64 print:h-48 w-full px-4">
                         {publicationsByYear.map((yearData: any) => {
                             const maxCount = Math.max(...publicationsByYear.map(y => y.count));
                             const maxAvg = Math.max(...publicationsByYear.map(y => y.avg));
@@ -984,8 +992,8 @@ function FacultyOverviewTab({ facultyName, departments, selectedYears }: {
                             const avgHeight = maxAvg > 0 ? (yearData.avg / maxAvg) * 70 : 0;
 
                             return (
-                                <div key={yearData.year} className="flex-1 max-w-[120px] h-full flex flex-col items-center justify-end gap-2">
-                                    <div className="w-full flex gap-2 items-end justify-center h-full">
+                                <div key={yearData.year} className="flex-1 flex flex-col items-center justify-end gap-2 h-full">
+                                    <div className="w-full flex gap-2 items-end justify-center h-full max-w-[200px]">
                                         {/* Total Publications Bar */}
                                         <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
                                             <div className="text-sm font-bold text-blue-300 print:text-blue-700">{yearData.count}</div>
@@ -998,6 +1006,7 @@ function FacultyOverviewTab({ facultyName, departments, selectedYears }: {
                                                     printColorAdjust: 'exact',
                                                     WebkitPrintColorAdjust: 'exact'
                                                 }}
+                                                title={`Total: ${yearData.count}`}
                                             />
                                         </div>
 
@@ -1013,6 +1022,7 @@ function FacultyOverviewTab({ facultyName, departments, selectedYears }: {
                                                     printColorAdjust: 'exact',
                                                     WebkitPrintColorAdjust: 'exact'
                                                 }}
+                                                title={`Average: ${yearData.avg.toFixed(2)}`}
                                             />
                                         </div>
                                     </div>
