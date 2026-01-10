@@ -538,10 +538,15 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
     const handleExportCSV = () => {
         const csvContent = [
             ['Name', `Publications (${selectedYears.join(', ')})`],
-            ...staffWithPublications.map(staff => [`"${staff.name}"`, staff.yearPublications])
+            ...staffWithPublications.map(staff => {
+                // Sanitize name: Remove 'Â' artifacts and replace non-breaking spaces
+                const cleanName = staff.name.replace(/Â/g, '').replace(/\u00A0/g, ' ').trim();
+                return [`"${cleanName}"`, staff.yearPublications];
+            })
         ].map(e => e.join(',')).join('\n');
 
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        // Add BOM (\uFEFF) for Excel to correctly recognize UTF-8
+        const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
         if (link.download !== undefined) {
             const url = URL.createObjectURL(blob);
