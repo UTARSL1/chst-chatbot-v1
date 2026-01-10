@@ -11,23 +11,23 @@
       "DLMSA",
       "FGO"
     ],
-    "totalStaff": 234,
-    "accessibleStaff": 196,
+    "totalStaff": 235,
+    "accessibleStaff": 235,
     "inaccessibleStaff": 29,
     "successCount": 154,
     "errorCount": 0,
     "statistics": {
-      "publications2023": 562,
-      "publications2024": 604,
-      "publications2025": 537,
-      "totalPublications": 1703,
-      "averagePerStaff": 8.69
+      "publications2023": 664,
+      "publications2024": 711,
+      "publications2025": 629,
+      "totalPublications": 2004,
+      "averagePerStaff": 8.53
     },
-    "lastUpdated": "2026-01-09T03:35:50.815Z",
+    "lastUpdated": "2026-01-10T20:44:45.363Z",
     "correctedIdsApplied": true,
     "correctedIdsCount": 13,
-    "staffWithScopusData": 196,
-    "staffWithoutScopusData": 38
+    "staffWithScopusData": 235,
+    "staffWithoutScopusData": 0
   },
   "results": [
     {
@@ -4449,21 +4449,21 @@
       "publications": [
         {
           "year": 2023,
-          "count": 0,
-          "success": false
+          "count": 2,
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 6,
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 6,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 14
     },
     {
       "searchId": "22051",
@@ -4477,21 +4477,21 @@
       "publications": [
         {
           "year": 2023,
-          "count": 0,
-          "success": false
+          "count": 6,
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 7,
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 7,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 20
     },
     {
       "searchId": "22083",
@@ -4505,21 +4505,21 @@
       "publications": [
         {
           "year": 2023,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 3,
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 2,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 6
     },
     {
       "searchId": "E07004",
@@ -4533,21 +4533,21 @@
       "publications": [
         {
           "year": 2023,
-          "count": 0,
-          "success": false
+          "count": 2,
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 4
     },
     {
       "searchId": "19101",
@@ -4562,17 +4562,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -4589,21 +4592,21 @@
       "publications": [
         {
           "year": 2023,
-          "count": 0,
-          "success": false
+          "count": 6,
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 5,
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 8,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 19
     },
     {
       "searchId": "J25006",
@@ -4617,21 +4620,21 @@
       "publications": [
         {
           "year": 2023,
-          "count": 0,
-          "success": false
+          "count": 14,
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 10,
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 13,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 37
     },
     {
       "searchId": "08090",
@@ -4645,21 +4648,21 @@
       "publications": [
         {
           "year": 2023,
-          "count": 0,
-          "success": false
+          "count": 4,
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 3,
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 6,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 13
     },
     {
       "searchId": "08145",
@@ -4673,21 +4676,21 @@
       "publications": [
         {
           "year": 2023,
-          "count": 0,
-          "success": false
+          "count": 2,
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 8,
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 2,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 12
     },
     {
       "searchId": "05315",
@@ -4702,20 +4705,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 2
     },
     {
       "searchId": "15281",
@@ -4729,21 +4732,21 @@
       "publications": [
         {
           "year": 2023,
-          "count": 0,
-          "success": false
+          "count": 3,
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 2,
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 2,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 7
     },
     {
       "searchId": "AP21002",
@@ -4758,20 +4761,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 2
     },
     {
       "searchId": "AP24013",
@@ -4785,21 +4788,21 @@
       "publications": [
         {
           "year": 2023,
-          "count": 0,
-          "success": false
+          "count": 22,
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 30,
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 19,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 71
     },
     {
       "searchId": "EP19001",
@@ -4814,17 +4817,17 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": true
         }
       ],
       "totalPublications": 0
@@ -4841,21 +4844,21 @@
       "publications": [
         {
           "year": 2023,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 2
     },
     {
       "searchId": "AP25027",
@@ -4870,20 +4873,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 1
     },
     {
       "searchId": "AP25031",
@@ -4898,20 +4901,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 1
     },
     {
       "searchId": "05153",
@@ -4926,20 +4929,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 1
     },
     {
       "searchId": "AP25041",
@@ -4953,21 +4956,21 @@
       "publications": [
         {
           "year": 2023,
-          "count": 0,
-          "success": false
+          "count": 21,
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 11,
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 6,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 38
     },
     {
       "searchId": "21042",
@@ -4982,17 +4985,17 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": true
         }
       ],
       "totalPublications": 0
@@ -5010,17 +5013,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5038,20 +5044,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 1
     },
     {
       "searchId": "AP25011",
@@ -5066,20 +5072,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 2,
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 2,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 4
     },
     {
       "searchId": "19110",
@@ -5094,20 +5100,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 1
     },
     {
       "searchId": "10214",
@@ -5122,17 +5128,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5150,17 +5159,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5178,17 +5190,17 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": true
         }
       ],
       "totalPublications": 0
@@ -5206,17 +5218,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5234,17 +5249,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5262,17 +5280,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5290,17 +5311,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5318,17 +5342,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5346,17 +5373,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5374,17 +5404,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5402,17 +5435,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5430,17 +5466,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5458,17 +5497,17 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": true
         }
       ],
       "totalPublications": 0
@@ -5486,17 +5525,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5514,17 +5556,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5542,17 +5587,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5570,17 +5618,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5598,17 +5649,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5626,17 +5680,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5654,17 +5711,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5682,17 +5742,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5710,17 +5773,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5738,17 +5804,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5766,17 +5835,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5794,17 +5866,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5822,17 +5897,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5850,17 +5928,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5878,17 +5959,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5906,17 +5990,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5934,17 +6021,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5962,17 +6052,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -5990,17 +6083,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -6018,17 +6114,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -6046,17 +6145,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -6074,17 +6176,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -6102,17 +6207,20 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": false,
+          "error": "HTTP 400: {\"service-error\":{\"status\":{\"statusCode\":\"INVALID_INPUT\",\"statusText\":\"Error translating query\"}}}"
         }
       ],
       "totalPublications": 0
@@ -6129,21 +6237,21 @@
       "publications": [
         {
           "year": 2023,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 2,
+          "success": true
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 3
     },
     {
       "searchId": "E23002",
@@ -6157,21 +6265,21 @@
       "publications": [
         {
           "year": 2023,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 3,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 5
     },
     {
       "searchId": "25007",
@@ -6185,21 +6293,21 @@
       "publications": [
         {
           "year": 2023,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 2
     },
     {
       "searchId": "25106",
@@ -6213,21 +6321,21 @@
       "publications": [
         {
           "year": 2023,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 1
     },
     {
       "searchId": "03079",
@@ -6242,17 +6350,17 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": true
         }
       ],
       "totalPublications": 0
@@ -6269,21 +6377,21 @@
       "publications": [
         {
           "year": 2023,
-          "count": 0,
-          "success": false
+          "count": 6,
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 7,
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 5,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 18
     },
     {
       "searchId": "17044",
@@ -6298,17 +6406,17 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": true
         }
       ],
       "totalPublications": 0
@@ -6325,21 +6433,21 @@
       "publications": [
         {
           "year": 2023,
-          "count": 0,
-          "success": false
+          "count": 2,
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 4
     },
     {
       "searchId": "J23006",
@@ -6353,21 +6461,21 @@
       "publications": [
         {
           "year": 2023,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 1
     },
     {
       "searchId": "17068",
@@ -6382,17 +6490,17 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": true
         }
       ],
       "totalPublications": 0
@@ -6409,21 +6517,21 @@
       "publications": [
         {
           "year": 2023,
-          "count": 0,
-          "success": false
+          "count": 5,
+          "success": true
         },
         {
           "year": 2024,
-          "count": 0,
-          "success": false
+          "count": 2,
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 3,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 10
     },
     {
       "searchId": "09059",
@@ -6438,179 +6546,44 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2025,
-          "count": 0,
-          "success": false
+          "count": 1,
+          "success": true
         }
       ],
-      "totalPublications": 0
+      "totalPublications": 1
     },
     {
-      "searchId": "AP25034",
-      "name": "Prof. Dr Thomas Chung-Kuang Yang",
+      "searchId": "AP25023",
+      "name": "Prof. Dr Tan Choon Sooi",
       "email": "",
-      "department": "Department of Chemical Engineering",
-      "departmentAcronym": "DCL",
-      "scopusAuthorId": "36985669800",
+      "department": "Department of Mechanical and Material Engineering",
+      "departmentAcronym": "DMME",
+      "scopusAuthorId": "7402818141",
       "scopusStatus": "Available",
       "publications": [
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
-        }
-      ],
-      "totalPublications": 0
-    },
-    {
-      "searchId": "AP25022",
-      "name": "Prof. Dr Baochun Chen",
-      "email": "",
-      "department": "Department of Computer and Information Science",
-      "departmentAcronym": "DCI",
-      "scopusAuthorId": "55904134700",
-      "scopusStatus": "Available",
-      "publications": [
-        {
-          "year": 2023,
-          "count": 0,
-          "success": false
-        },
-        {
-          "year": 2024,
-          "count": 0,
-          "success": false
-        },
-        {
-          "year": 2025,
-          "count": 0,
-          "success": false
-        }
-      ],
-      "totalPublications": 0
-    },
-    {
-      "searchId": "AP25009",
-      "name": "Prof. Dr Bala Venkatesh",
-      "email": "",
-      "department": "Department of Electrical and Electronic Engineering",
-      "departmentAcronym": "D3E",
-      "scopusAuthorId": "7006518081",
-      "scopusStatus": "Available",
-      "publications": [
-        {
-          "year": 2023,
-          "count": 0,
-          "success": false
-        },
-        {
-          "year": 2024,
-          "count": 0,
-          "success": false
-        },
-        {
-          "year": 2025,
-          "count": 0,
-          "success": false
-        }
-      ],
-      "totalPublications": 0
-    },
-    {
-      "searchId": "AP24003",
-      "name": "Ts Liew Choon Lian",
-      "email": "",
-      "department": "Department of Electrical and Electronic Engineering",
-      "departmentAcronym": "D3E",
-      "scopusAuthorId": "N/A",
-      "scopusStatus": "Not Available",
-      "publications": [
-        {
-          "year": 2023,
-          "count": 0,
-          "success": false
-        },
-        {
-          "year": 2024,
-          "count": 0,
-          "success": false
-        },
-        {
-          "year": 2025,
-          "count": 0,
-          "success": false
-        }
-      ],
-      "totalPublications": 0
-    },
-    {
-      "searchId": "AP24009",
-      "name": "Prof. Dr Loo Kok Keong",
-      "email": "",
-      "department": "Department of Electrical and Electronic Engineering",
-      "departmentAcronym": "D3E",
-      "scopusAuthorId": "36652697897",
-      "scopusStatus": "Available",
-      "publications": [
-        {
-          "year": 2023,
-          "count": 0,
-          "success": false
-        },
-        {
-          "year": 2024,
-          "count": 0,
-          "success": false
-        },
-        {
-          "year": 2025,
-          "count": 0,
-          "success": false
-        }
-      ],
-      "totalPublications": 0
-    },
-    {
-      "searchId": "AP25039",
-      "name": "Ar. IDr. David Yek Tak Wai",
-      "email": "",
-      "department": "Department of Architecture and Sustainable Design",
-      "departmentAcronym": "DASD",
-      "scopusAuthorId": "N/A",
-      "scopusStatus": "Not Available",
-      "publications": [
-        {
-          "year": 2023,
-          "count": 0,
-          "success": false
-        },
-        {
-          "year": 2024,
-          "count": 0,
-          "success": false
-        },
-        {
-          "year": 2025,
-          "count": 0,
-          "success": false
+          "success": true
         }
       ],
       "totalPublications": 0
@@ -6627,17 +6600,179 @@
         {
           "year": 2023,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2024,
           "count": 0,
-          "success": false
+          "success": true
         },
         {
           "year": 2025,
           "count": 0,
-          "success": false
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP25023",
+      "name": "Prof. Dr Tan Choon Sooi",
+      "email": "",
+      "department": "Department of Mechanical and Material Engineering",
+      "departmentAcronym": "DMME",
+      "scopusAuthorId": "7402818141",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP25023",
+      "name": "Prof. Dr Tan Choon Sooi",
+      "email": "",
+      "department": "Department of Mechanical and Material Engineering",
+      "departmentAcronym": "DMME",
+      "scopusAuthorId": "7402818141",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP25023",
+      "name": "Prof. Dr Tan Choon Sooi",
+      "email": "",
+      "department": "Department of Mechanical and Material Engineering",
+      "departmentAcronym": "DMME",
+      "scopusAuthorId": "7402818141",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP25023",
+      "name": "Prof. Dr Tan Choon Sooi",
+      "email": "",
+      "department": "Department of Mechanical and Material Engineering",
+      "departmentAcronym": "DMME",
+      "scopusAuthorId": "7402818141",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "AP25023",
+      "name": "Prof. Dr Tan Choon Sooi",
+      "email": "",
+      "department": "Department of Mechanical and Material Engineering",
+      "departmentAcronym": "DMME",
+      "scopusAuthorId": "7402818141",
+      "scopusStatus": "Available",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
+        }
+      ],
+      "totalPublications": 0
+    },
+    {
+      "searchId": "",
+      "name": "Prof. Dr Tan Choon Sooi",
+      "email": "NA",
+      "department": "",
+      "departmentAcronym": "DMME",
+      "scopusAuthorId": "7402818141",
+      "scopusUrl": "https://www.scopus.com/authid/detail.uri?authorId=7402818141",
+      "publications": [
+        {
+          "year": 2023,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2024,
+          "count": 0,
+          "success": true
+        },
+        {
+          "year": 2025,
+          "count": 0,
+          "success": true
         }
       ],
       "totalPublications": 0
