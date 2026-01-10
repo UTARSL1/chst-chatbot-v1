@@ -712,8 +712,7 @@ function DepartmentOverviewTab({ selectedYears, departmentName, staffMembers }: 
         };
     })
         .filter(s => s.yearPublications > 0)
-        .sort((a, b) => b.yearPublications - a.yearPublications)
-        .slice(0, 10);
+        .sort((a, b) => b.yearPublications - a.yearPublications);
 
     // Calculate department stats
     const totalPublications = staffMembers.reduce((sum, staff) => {
@@ -799,36 +798,72 @@ function DepartmentOverviewTab({ selectedYears, departmentName, staffMembers }: 
                 </div>
             </div>
 
-            {/* Top 10 Staff */}
-            {topStaff.length > 0 && (
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-4">
-                    <h3 className="text-xl font-bold text-white mb-6 print:text-black print:mb-4">Top 10 Staff ({selectedYears.join(', ')})</h3>
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead>
-                                <tr className="border-b border-white/10">
-                                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300">Rank</th>
-                                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300">Name</th>
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300">Publications</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {topStaff.map((staff, index) => (
-                                    <tr key={staff.scopusAuthorId || staff.name} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                                        <td className="py-3 px-4 text-sm text-gray-400">{index + 1}</td>
-                                        <td className="py-3 px-4 text-sm text-white">{staff.name}</td>
-                                        <td className="py-3 px-4 text-right">
-                                            <span className="inline-block px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold">
-                                                {staff.yearPublications}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+            {/* All Staff Comparison Chart (Horizontal) */}
+            <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none">
+                <div className="p-6 print:p-4">
+                    <h3 className="text-xl font-bold text-white mb-6 print:text-black print:mb-4">Academic Staff Analysis</h3>
+
+                    <div className="flex flex-col gap-6">
+                        {topStaff.map((staff, idx) => {
+                            const maxPubs = Math.max(...topStaff.map(s => s.yearPublications));
+                            const maxAvg = Math.max(...topStaff.map(s => s.yearPublications / selectedYears.length));
+
+                            // Normalize widths to percentage of max (leave some space for labels)
+                            const pubWidth = maxPubs > 0 ? (staff.yearPublications / maxPubs) * 100 : 0;
+                            const avgWidth = maxAvg > 0 ? ((staff.yearPublications / selectedYears.length) / maxAvg) * 100 : 0;
+                            const avgVal = (staff.yearPublications / selectedYears.length).toFixed(1);
+
+                            return (
+                                <div key={idx} className="flex gap-4 items-center">
+                                    {/* Staff Name */}
+                                    <div className="w-48 text-sm font-medium text-gray-300 print:text-black truncate text-right flex-shrink-0" title={staff.name}>
+                                        {staff.name}
+                                    </div>
+
+                                    {/* Bars Container */}
+                                    <div className="flex-1 flex flex-col gap-1">
+                                        {/* Total Publications Bar */}
+                                        <div className="flex items-center gap-2 h-6">
+                                            <div
+                                                className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-r transition-all duration-500 print:bg-blue-600 relative group"
+                                                style={{ width: `${pubWidth}%`, minWidth: '4px' }}
+                                            >
+                                                <span className="absolute left-full ml-2 text-xs font-bold text-blue-300 print:text-blue-700 top-1/2 -translate-y-1/2">
+                                                    {staff.yearPublications}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {/* Average per Year Bar */}
+                                        <div className="flex items-center gap-2 h-6">
+                                            <div
+                                                className="h-full bg-gradient-to-r from-purple-600 to-purple-400 rounded-r transition-all duration-500 print:bg-purple-600 relative group"
+                                                style={{ width: `${avgWidth}%`, minWidth: '4px' }}
+                                            >
+                                                <span className="absolute left-full ml-2 text-xs font-bold text-purple-300 print:text-purple-700 top-1/2 -translate-y-1/2">
+                                                    {avgVal}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    {/* Legend */}
+                    <div className="flex justify-center gap-6 mt-8 pt-4 border-t border-white/10 print:border-gray-300">
+                        <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 bg-gradient-to-r from-blue-600 to-blue-400 rounded print:bg-blue-600"></div>
+                            <span className="text-sm text-gray-300 print:text-gray-700">Total Publications</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 bg-gradient-to-r from-purple-600 to-purple-400 rounded print:bg-purple-600"></div>
+                            <span className="text-sm text-gray-300 print:text-gray-700">Average per Year</span>
+                        </div>
                     </div>
                 </div>
-            )}
+            </div>
         </div>
     );
 }
