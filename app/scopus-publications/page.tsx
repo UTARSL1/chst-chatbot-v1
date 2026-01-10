@@ -537,7 +537,7 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
 
     const handleExportCSV = () => {
         const csvContent = [
-            ['Name', `Publications (${selectedYears.join(', ')})`],
+            ['Name', `"Publications (${selectedYears.join(', ')})"`],
             ...staffWithPublications.map(staff => {
                 // Sanitize name: Remove 'Â' artifacts and replace non-breaking spaces
                 const cleanName = staff.name.replace(/Â/g, '').replace(/\u00A0/g, ' ').trim();
