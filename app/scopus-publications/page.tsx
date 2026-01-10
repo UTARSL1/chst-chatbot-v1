@@ -626,30 +626,30 @@ function DepartmentOverviewTab({ stats, selectedYears, departmentName }: {
 
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)]">
-                    <div className="text-sm text-gray-400 mb-1">Total Staff</div>
-                    <div className="text-3xl font-bold text-white">{stats.totalStaff}</div>
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none">
+                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Staff</div>
+                    <div className="text-3xl font-bold text-white print:text-black">{stats.totalStaff}</div>
                 </div>
 
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)]">
-                    <div className="text-sm text-gray-400 mb-1">With Scopus Data</div>
-                    <div className="text-3xl font-bold text-emerald-400">{stats.staffWithScopus}</div>
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none">
+                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">With Scopus Data</div>
+                    <div className="text-3xl font-bold text-emerald-400 print:text-emerald-700">{stats.staffWithScopus}</div>
                 </div>
 
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)]">
-                    <div className="text-sm text-gray-400 mb-1">Total Publications</div>
-                    <div className="text-3xl font-bold text-blue-400">{stats.totalPublications}</div>
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none">
+                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Publications</div>
+                    <div className="text-3xl font-bold text-blue-400 print:text-blue-700">{stats.totalPublications}</div>
                 </div>
 
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)]">
-                    <div className="text-sm text-gray-400 mb-1">Average per Staff</div>
-                    <div className="text-3xl font-bold text-purple-400">{stats.averagePerStaff}</div>
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none">
+                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Average per Staff</div>
+                    <div className="text-3xl font-bold text-purple-400 print:text-purple-700">{stats.averagePerStaff}</div>
                 </div>
             </div>
 
             {/* Publications by Year Chart */}
-            <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)]">
-                <h3 className="text-xl font-bold text-white mb-6">Publications by Year</h3>
+            <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none">
+                <h3 className="text-xl font-bold text-white mb-6 print:text-black">Publications by Year</h3>
 
                 <div className="flex items-end gap-8 h-64">
                     {stats.publicationsByYear.map((yearData: any) => {
@@ -659,12 +659,18 @@ function DepartmentOverviewTab({ stats, selectedYears, departmentName }: {
 
                         return (
                             <div key={yearData.year} className="flex-1 h-full flex flex-col items-center justify-end gap-3">
-                                <div className="text-2xl font-bold text-blue-300">{yearData.count}</div>
+                                <div className="text-2xl font-bold text-blue-300 print:text-blue-700">{yearData.count}</div>
                                 <div
-                                    className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-lg transition-all duration-500"
-                                    style={{ height: `${height}%`, minHeight: '10px' }}
+                                    className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-lg transition-all duration-500 print:bg-blue-600"
+                                    style={{
+                                        height: `${height}%`,
+                                        minHeight: '10px',
+                                        // @ts-ignore
+                                        printColorAdjust: 'exact',
+                                        WebkitPrintColorAdjust: 'exact'
+                                    }}
                                 />
-                                <div className="text-sm font-semibold text-gray-300">{yearData.year}</div>
+                                <div className="text-sm font-semibold text-gray-300 print:text-gray-700">{yearData.year}</div>
                             </div>
                         );
                     })}
