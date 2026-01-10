@@ -52,6 +52,9 @@ export default function ScopusPublicationsPage() {
     // Year selection
     const [selectedYears, setSelectedYears] = useState<number[]>([2023, 2024, 2025]);
 
+    // Column visibility for Individual Staff table
+    const [visibleColumns, setVisibleColumns] = useState<string[]>(['scopusId', 'publications']);
+
     // Access control
     useEffect(() => {
         if (status === 'loading') return;
@@ -404,12 +407,55 @@ export default function ScopusPublicationsPage() {
 
                                         {/* Tab Content */}
                                         {activeTab === 'individual' && (
-                                            <IndividualStaffTab
-                                                staffMembers={staffMembers}
-                                                selectedYears={selectedYears}
-                                                loading={loading}
-                                                departmentName={departments.find(d => d.acronym === selectedDepartment)?.name || selectedDepartment}
-                                            />
+                                            <>
+                                                {/* Column Selection for Individual Staff */}
+                                                <div className="mb-6 bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-4 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:hidden">
+                                                    <label className="block text-sm font-medium text-gray-300 mb-3">
+                                                        <Users className="inline w-4 h-4 mr-2" />
+                                                        Select Columns to Display
+                                                    </label>
+                                                    <div className="flex flex-wrap gap-3">
+                                                        <label className="flex items-center gap-2 cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={visibleColumns.includes('scopusId')}
+                                                                onChange={(e) => {
+                                                                    if (e.target.checked) {
+                                                                        setVisibleColumns([...visibleColumns, 'scopusId']);
+                                                                    } else {
+                                                                        setVisibleColumns(visibleColumns.filter(c => c !== 'scopusId'));
+                                                                    }
+                                                                }}
+                                                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900"
+                                                            />
+                                                            <span className="text-sm text-gray-300">Scopus ID</span>
+                                                        </label>
+                                                        <label className="flex items-center gap-2 cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={visibleColumns.includes('publications')}
+                                                                onChange={(e) => {
+                                                                    if (e.target.checked) {
+                                                                        setVisibleColumns([...visibleColumns, 'publications']);
+                                                                    } else {
+                                                                        setVisibleColumns(visibleColumns.filter(c => c !== 'publications'));
+                                                                    }
+                                                                }}
+                                                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900"
+                                                            />
+                                                            <span className="text-sm text-gray-300">Publications ({selectedYears.join(', ')})</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <IndividualStaffTab
+                                                    staffMembers={staffMembers}
+                                                    selectedYears={selectedYears}
+                                                    loading={loading}
+                                                    departmentName={departments.find(d => d.acronym === selectedDepartment)?.name || selectedDepartment}
+                                                    visibleColumns={visibleColumns}
+                                                />
+                                            </>
                                         )}
 
                                         {activeTab === 'department' && calculateStats && (
@@ -507,11 +553,12 @@ export default function ScopusPublicationsPage() {
 }
 
 // Individual Staff Tab Component
-function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentName }: {
+function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentName, visibleColumns }: {
     staffMembers: StaffMember[];
     selectedYears: number[];
     loading: boolean;
     departmentName: string;
+    visibleColumns: string[];
 }) {
     if (loading) {
         return (
@@ -536,14 +583,28 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
     }).sort((a, b) => b.yearPublications - a.yearPublications);
 
     const handleExportCSV = () => {
-        const csvContent = [
-            ['Name', `"Publications (${selectedYears.join(', ')})"`],
-            ...staffWithPublications.map(staff => {
-                // Sanitize name: Remove 'Â' artifacts and replace non-breaking spaces
-                const cleanName = staff.name.replace(/Â/g, '').replace(/\u00A0/g, ' ').trim();
-                return [`"${cleanName}"`, staff.yearPublications];
-            })
-        ].map(e => e.join(',')).join('\n');
+        // Build CSV headers based on visible columns
+        const headers = ['Name'];
+        if (visibleColumns.includes('scopusId')) headers.push('Scopus ID');
+        if (visibleColumns.includes('publications')) headers.push(`"Publications (${selectedYears.join(', ')})"`);
+
+        // Build CSV rows based on visible columns
+        const rows = staffWithPublications.map(staff => {
+            // Sanitize name: Remove 'Â' artifacts and replace non-breaking spaces
+            const cleanName = staff.name.replace(/Â/g, '').replace(/\u00A0/g, ' ').trim();
+            const row = [`"${cleanName}"`];
+
+            if (visibleColumns.includes('scopusId')) {
+                row.push(staff.scopusAuthorId !== 'NA' ? staff.scopusAuthorId : '-');
+            }
+            if (visibleColumns.includes('publications')) {
+                row.push(staff.yearPublications.toString());
+            }
+
+            return row;
+        });
+
+        const csvContent = [headers, ...rows].map(e => e.join(',')).join('\n');
 
         // Add BOM (\uFEFF) for Excel to correctly recognize UTF-8
         const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -579,24 +640,30 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
                         <thead>
                             <tr className="border-b border-white/10">
                                 <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300">Name</th>
-                                <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300">Scopus ID</th>
-
-                                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300">Publications ({selectedYears.join(', ')})</th>
+                                {visibleColumns.includes('scopusId') && (
+                                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300">Scopus ID</th>
+                                )}
+                                {visibleColumns.includes('publications') && (
+                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300">Publications ({selectedYears.join(', ')})</th>
+                                )}
                             </tr>
                         </thead>
                         <tbody>
                             {staffWithPublications.map((staff, idx) => (
                                 <tr key={idx} className="border-b border-white/5 hover:bg-white/5 transition-colors">
                                     <td className="py-3 px-4 text-sm text-white">{staff.name}</td>
-                                    <td className="py-3 px-4 text-sm text-gray-400 font-mono">
-                                        {staff.scopusAuthorId !== 'NA' ? staff.scopusAuthorId : '-'}
-                                    </td>
-
-                                    <td className="py-3 px-4 text-right">
-                                        <span className="inline-block px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold">
-                                            {staff.yearPublications}
-                                        </span>
-                                    </td>
+                                    {visibleColumns.includes('scopusId') && (
+                                        <td className="py-3 px-4 text-sm text-gray-400 font-mono">
+                                            {staff.scopusAuthorId !== 'NA' ? staff.scopusAuthorId : '-'}
+                                        </td>
+                                    )}
+                                    {visibleColumns.includes('publications') && (
+                                        <td className="py-3 px-4 text-right">
+                                            <span className="inline-block px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold">
+                                                {staff.yearPublications}
+                                            </span>
+                                        </td>
+                                    )}
                                 </tr>
                             ))}
                         </tbody>
