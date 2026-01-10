@@ -774,27 +774,72 @@ function DepartmentOverviewTab({ selectedYears, departmentName, staffMembers }: 
 
                 <div className="flex items-end gap-12 h-64 print:h-48 justify-center">
                     {publicationsByYear.map((yearData: any) => {
+                        const totalStaffCount = staffMembers.length || 1;
+                        const avgPerStaff = yearData.count / totalStaffCount;
+
                         const maxCount = Math.max(...publicationsByYear.map((y: any) => y.count));
-                        // Use 70% of container height to leave room for labels
-                        const height = maxCount > 0 ? (yearData.count / maxCount) * 70 : 0;
+                        // Determine max average for scaling avg bars independently or relative to max count?
+                        // Usually distinct scales are better for visualization if magnitudes differ greatly (100 vs 5).
+                        // But strictly side-by-side relies on max values.
+                        // Let's normalize both to 70% height max.
+
+                        const maxAvg = Math.max(...publicationsByYear.map((y: any) => y.count / totalStaffCount));
+
+                        // Height percentages
+                        const countHeight = maxCount > 0 ? (yearData.count / maxCount) * 70 : 0;
+                        const avgHeight = maxAvg > 0 ? (avgPerStaff / maxAvg) * 70 : 0;
 
                         return (
-                            <div key={yearData.year} className="flex-1 max-w-[100px] h-full flex flex-col items-center justify-end gap-3">
-                                <div className="text-2xl font-bold text-blue-300 print:text-blue-700">{yearData.count}</div>
-                                <div
-                                    className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-lg transition-all duration-500 print:bg-blue-600"
-                                    style={{
-                                        height: `${height}%`,
-                                        minHeight: '10px',
-                                        // @ts-ignore
-                                        printColorAdjust: 'exact',
-                                        WebkitPrintColorAdjust: 'exact'
-                                    }}
-                                />
-                                <div className="text-sm font-semibold text-gray-300 print:text-gray-700">{yearData.year}</div>
+                            <div key={yearData.year} className="flex-1 max-w-[120px] h-full flex flex-col items-center justify-end gap-2">
+                                <div className="w-full flex gap-2 items-end justify-center h-full">
+                                    {/* Total Publications Bar */}
+                                    <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
+                                        <div className="text-sm font-bold text-blue-300 print:text-blue-700">{yearData.count}</div>
+                                        <div
+                                            className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t transition-all duration-500 print:bg-blue-600"
+                                            style={{
+                                                height: `${countHeight}%`,
+                                                minHeight: '10px',
+                                                // @ts-ignore
+                                                printColorAdjust: 'exact',
+                                                WebkitPrintColorAdjust: 'exact'
+                                            }}
+                                            title={`Total: ${yearData.count}`}
+                                        />
+                                    </div>
+
+                                    {/* Average Bar */}
+                                    <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
+                                        <div className="text-sm font-bold text-purple-300 print:text-purple-700">{avgPerStaff.toFixed(2)}</div>
+                                        <div
+                                            className="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-t transition-all duration-500 print:bg-purple-600"
+                                            style={{
+                                                height: `${avgHeight}%`,
+                                                minHeight: '10px',
+                                                // @ts-ignore
+                                                printColorAdjust: 'exact',
+                                                WebkitPrintColorAdjust: 'exact'
+                                            }}
+                                            title={`Average: ${avgPerStaff.toFixed(2)}`}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="text-sm font-semibold text-gray-300 print:text-gray-700 mt-2">{yearData.year}</div>
                             </div>
                         );
                     })}
+                </div>
+
+                {/* Legend */}
+                <div className="flex justify-center gap-6 mt-6 border-t border-white/10 pt-4 print:border-gray-300">
+                    <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 bg-gradient-to-t from-blue-600 to-blue-400 rounded print:bg-blue-600"></div>
+                        <span className="text-sm text-gray-300 print:text-gray-700">Total Publications</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 bg-gradient-to-t from-purple-600 to-purple-400 rounded print:bg-purple-600"></div>
+                        <span className="text-sm text-gray-300 print:text-gray-700">Average per Staff</span>
+                    </div>
                 </div>
             </div>
 
@@ -875,7 +920,7 @@ function FacultyOverviewTab({ facultyName, departments, selectedYears }: {
     selectedYears: number[];
 }) {
     const [departmentStats, setDepartmentStats] = useState<any[]>([]);
-    const [publicationsByYear, setPublicationsByYear] = useState<{ year: number, count: number }[]>([]);
+    const [publicationsByYear, setPublicationsByYear] = useState<{ year: number, count: number, avg: number }[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -884,6 +929,7 @@ function FacultyOverviewTab({ facultyName, departments, selectedYears }: {
             const stats: any[] = [];
             const yearlyTotals: { [key: number]: number } = {};
             selectedYears.forEach(y => yearlyTotals[y] = 0);
+            let totalFacultyStaff = 0;
 
             for (const dept of departments) {
                 try {
@@ -891,6 +937,9 @@ function FacultyOverviewTab({ facultyName, departments, selectedYears }: {
                     const data = await res.json();
 
                     if (data.success && data.staff) {
+                        // Count total staff for faculty average
+                        totalFacultyStaff += data.staff.length;
+
                         const staffWithScopus = data.staff.filter((s: StaffMember) => s.scopusAuthorId && s.scopusAuthorId !== 'NA');
                         const totalPubs = staffWithScopus.reduce((sum: number, staff: StaffMember) => {
                             // Sum publications for all selected years
@@ -924,7 +973,8 @@ function FacultyOverviewTab({ facultyName, departments, selectedYears }: {
             setDepartmentStats(stats);
             setPublicationsByYear(Object.entries(yearlyTotals).map(([year, count]) => ({
                 year: parseInt(year),
-                count
+                count,
+                avg: totalFacultyStaff > 0 ? count / totalFacultyStaff : 0
             })).sort((a, b) => a.year - b.year));
             setLoading(false);
         };
@@ -992,26 +1042,60 @@ function FacultyOverviewTab({ facultyName, departments, selectedYears }: {
                     <div className="flex items-end gap-12 h-64 print:h-48 justify-center">
                         {publicationsByYear.map((yearData: any) => {
                             const maxCount = Math.max(...publicationsByYear.map(y => y.count));
-                            // Use 70% of container height to leave room for labels
-                            const height = maxCount > 0 ? (yearData.count / maxCount) * 70 : 0;
+                            const maxAvg = Math.max(...publicationsByYear.map(y => y.avg));
+
+                            // Height percentages
+                            const countHeight = maxCount > 0 ? (yearData.count / maxCount) * 70 : 0;
+                            const avgHeight = maxAvg > 0 ? (yearData.avg / maxAvg) * 70 : 0;
 
                             return (
-                                <div key={yearData.year} className="flex-1 max-w-[100px] h-full flex flex-col items-center justify-end gap-3">
-                                    <div className="text-2xl font-bold text-blue-300 print:text-blue-700">{yearData.count}</div>
-                                    <div
-                                        className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-lg transition-all duration-500 print:bg-blue-600"
-                                        style={{
-                                            height: `${height}%`,
-                                            minHeight: '10px',
-                                            // @ts-ignore
-                                            printColorAdjust: 'exact',
-                                            WebkitPrintColorAdjust: 'exact'
-                                        }}
-                                    />
-                                    <div className="text-sm font-semibold text-gray-300 print:text-gray-700">{yearData.year}</div>
+                                <div key={yearData.year} className="flex-1 max-w-[120px] h-full flex flex-col items-center justify-end gap-2">
+                                    <div className="w-full flex gap-2 items-end justify-center h-full">
+                                        {/* Total Publications Bar */}
+                                        <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
+                                            <div className="text-sm font-bold text-blue-300 print:text-blue-700">{yearData.count}</div>
+                                            <div
+                                                className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t transition-all duration-500 print:bg-blue-600"
+                                                style={{
+                                                    height: `${countHeight}%`,
+                                                    minHeight: '10px',
+                                                    // @ts-ignore
+                                                    printColorAdjust: 'exact',
+                                                    WebkitPrintColorAdjust: 'exact'
+                                                }}
+                                            />
+                                        </div>
+
+                                        {/* Average Bar */}
+                                        <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
+                                            <div className="text-sm font-bold text-purple-300 print:text-purple-700">{yearData.avg.toFixed(2)}</div>
+                                            <div
+                                                className="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-t transition-all duration-500 print:bg-purple-600"
+                                                style={{
+                                                    height: `${avgHeight}%`,
+                                                    minHeight: '10px',
+                                                    // @ts-ignore
+                                                    printColorAdjust: 'exact',
+                                                    WebkitPrintColorAdjust: 'exact'
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="text-sm font-semibold text-gray-300 print:text-gray-700 mt-2">{yearData.year}</div>
                                 </div>
                             );
                         })}
+                    </div>
+                    {/* Legend */}
+                    <div className="flex justify-center gap-6 mt-6 border-t border-white/10 pt-4 print:border-gray-300">
+                        <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 bg-gradient-to-t from-blue-600 to-blue-400 rounded print:bg-blue-600"></div>
+                            <span className="text-sm text-gray-300 print:text-gray-700">Total Publications</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 bg-gradient-to-t from-purple-600 to-purple-400 rounded print:bg-purple-600"></div>
+                            <span className="text-sm text-gray-300 print:text-gray-700">Average per Staff</span>
+                        </div>
                     </div>
                 </div>
             </div>
