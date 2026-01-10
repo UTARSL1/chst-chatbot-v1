@@ -43,6 +43,8 @@ interface ScrapedResult {
     scopusUrl: string;
     publications: PublicationData[];
     totalPublications: number;
+    hIndex: number;
+    citationCount: number;
 }
 
 function parseCSV(csvContent: string): CSVStaff[] {
@@ -112,6 +114,64 @@ async function getScopusPublicationCount(
         const errorMessage = error instanceof Error ? error.message : String(error);
         return { count: 0, error: errorMessage };
     }
+}
+
+async function getAuthorMetrics(authorId: string): Promise<{ hIndex: number; citationCount: number }> {
+    let hIndex = 0;
+    let citationCount = 0;
+    let start = 0;
+    const countPerRequest = 25;
+    const maxPages = 4; // Fetch up to 100 top-cited papers
+
+    try {
+        for (let page = 0; page < maxPages; page++) {
+            const query = `AU-ID(${authorId})`;
+            const url = new URL(SCOPUS_SEARCH_ENDPOINT);
+            url.searchParams.append('query', query);
+            url.searchParams.append('apiKey', SCOPUS_API_KEY);
+            url.searchParams.append('count', countPerRequest.toString());
+            url.searchParams.append('start', start.toString());
+            url.searchParams.append('sort', 'citedby-count');
+            url.searchParams.append('httpAccept', 'application/json');
+
+            const response = await fetch(url.toString(), {
+                headers: { 'Accept': 'application/json' }
+            });
+
+            if (!response.ok) {
+                console.log(`    ⚠️ Metrics Error: HTTP ${response.status}`);
+                break;
+            }
+
+            const data = await response.json();
+            const entries = data['search-results']['entry'];
+
+            if (!entries || entries.length === 0) break;
+
+            // Process entries
+            entries.forEach((entry: any, index: number) => {
+                const globalRank = start + index + 1;
+                const citations = parseInt(entry['citedby-count'] || '0');
+
+                citationCount += citations;
+
+                // H-Index Calc
+                if (citations >= globalRank) {
+                    hIndex = globalRank;
+                }
+            });
+
+            // If we processed fewer than requested, we are done
+            if (entries.length < countPerRequest) break;
+
+            start += countPerRequest;
+            await sleep(RATE_LIMIT_DELAY_MS);
+        }
+    } catch (error) {
+        console.error(`    ⚠️ Metrics Exception: ${error}`);
+    }
+
+    return { hIndex, citationCount };
 }
 
 function sleep(ms: number): Promise<void> {
@@ -202,6 +262,11 @@ async function rescrapeAll234Staff(): Promise<void> {
 
         const totalPublications = publications.reduce((sum, p) => sum + p.count, 0);
 
+        // Get Metrics (H-index, Citations)
+        console.log(`    Fetching metrics...`);
+        const { hIndex, citationCount } = await getAuthorMetrics(csvEntry.scopusId);
+        console.log(`    H-index: ${hIndex}, Citations: ${citationCount}`);
+
         // Get staff details from directory
         const staffMember = staffDetailsMap.get(csvEntry.email);
         const searchId = staffMember?.searchId || '';
@@ -218,6 +283,8 @@ async function rescrapeAll234Staff(): Promise<void> {
             scopusUrl: `https://www.scopus.com/authid/detail.uri?authorId=${csvEntry.scopusId}`,
             publications,
             totalPublications,
+            hIndex,
+            citationCount,
         });
 
         console.log(`  Total (2023-2025): ${totalPublications} publications`);
@@ -249,6 +316,8 @@ async function rescrapeAll234Staff(): Promise<void> {
             scopusUrl: '',
             publications: [],
             totalPublications: 0,
+            hIndex: 0,
+            citationCount: 0,
         });
     }
 
@@ -287,6 +356,7 @@ async function rescrapeAll234Staff(): Promise<void> {
     console.log(`  2025: ${totalPubs2025}`);
     console.log(`  Total: ${totalPubs}`);
     console.log(`  Average per staff (with IDs): ${avgPerStaff.toFixed(2)}`);
+    console.log(`  Total Citations: ${scrapedResults.reduce((s, r) => s + r.citationCount, 0)}`);
     console.log();
 
     // Save results
@@ -329,15 +399,15 @@ async function rescrapeAll234Staff(): Promise<void> {
     console.log('='.repeat(80));
 }
 
-if (require.main === module) {
-    rescrapeAll234Staff()
-        .then(() => {
-            process.exit(0);
-        })
-        .catch((error) => {
-            console.error('Fatal error:', error);
-            process.exit(1);
-        });
-}
+
+// Execute immediately
+rescrapeAll234Staff()
+    .then(() => {
+        process.exit(0);
+    })
+    .catch((error) => {
+        console.error('Fatal error:', error);
+        process.exit(1);
+    });
 
 export { rescrapeAll234Staff };
