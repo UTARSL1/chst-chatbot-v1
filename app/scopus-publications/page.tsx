@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect, useMemo } from 'react';
-import { ArrowLeft, Building2, Users, BarChart3, ChevronDown, Lock, Shield, Trash2, Plus, X } from 'lucide-react';
+import { ArrowLeft, Building2, Users, BarChart3, ChevronDown, Lock, Shield, Trash2, Plus, X, Download, Printer } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
@@ -243,7 +243,7 @@ export default function ScopusPublicationsPage() {
         <div className="min-h-screen bg-slate-950 p-6">
             <div className="max-w-7xl mx-auto">
                 {/* Back Link */}
-                <div className="mb-6">
+                <div className="mb-6 print:hidden">
                     <Link href="/chat" className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
                         <ArrowLeft size={20} />
                         <span>Back to Chat</span>
@@ -261,9 +261,15 @@ export default function ScopusPublicationsPage() {
                         </p>
                     </div>
 
+                    {/* Print Only Header */}
+                    <div className="hidden print:block text-black mb-8">
+                        <h1 className="text-2xl font-bold">{selectedDepartment}</h1>
+                        <p className="text-gray-600">Publications Analysis: {selectedYears.join(', ')}</p>
+                    </div>
+
                     {/* Permission Message or Button */}
                     {selectedDepartment && hasAccess && (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 print:hidden">
                             {isChairperson ? (
                                 <button
                                     onClick={() => setShowAccessModal(true)}
@@ -282,7 +288,7 @@ export default function ScopusPublicationsPage() {
                 </div>
 
                 {/* Faculty and Department Selection */}
-                <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4 print:hidden">
                     {/* Faculty Dropdown */}
                     <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-4 shadow-[0_0_15px_rgba(255,255,255,0.07)]">
                         <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -347,7 +353,7 @@ export default function ScopusPublicationsPage() {
                         ) : (
                             <>
                                 {/* Year Selection */}
-                                <div className="mb-6 bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-4 shadow-[0_0_15px_rgba(255,255,255,0.07)]">
+                                <div className="mb-6 bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-4 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:hidden">
                                     <label className="block text-sm font-medium text-gray-300 mb-3">
                                         <BarChart3 className="inline w-4 h-4 mr-2" />
                                         Select Years to Analyze
@@ -373,7 +379,7 @@ export default function ScopusPublicationsPage() {
                                 {/* Tabs */}
                                 {selectedYears.length > 0 && (
                                     <>
-                                        <div className="mb-8 border-b border-white/10">
+                                        <div className="mb-8 border-b border-white/10 print:hidden">
                                             <div className="flex gap-1">
                                                 <button
                                                     onClick={() => setActiveTab('individual')}
@@ -402,6 +408,7 @@ export default function ScopusPublicationsPage() {
                                                 staffMembers={staffMembers}
                                                 selectedYears={selectedYears}
                                                 loading={loading}
+                                                departmentName={departments.find(d => d.acronym === selectedDepartment)?.name || selectedDepartment}
                                             />
                                         )}
 
@@ -500,10 +507,11 @@ export default function ScopusPublicationsPage() {
 }
 
 // Individual Staff Tab Component
-function IndividualStaffTab({ staffMembers, selectedYears, loading }: {
+function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentName }: {
     staffMembers: StaffMember[];
     selectedYears: number[];
     loading: boolean;
+    departmentName: string;
 }) {
     if (loading) {
         return (
@@ -527,12 +535,39 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading }: {
         };
     }).sort((a, b) => b.yearPublications - a.yearPublications);
 
+    const handleExportCSV = () => {
+        const csvContent = [
+            ['Name', `Publications (${selectedYears.join(', ')})`],
+            ...staffWithPublications.map(staff => [`"${staff.name}"`, staff.yearPublications])
+        ].map(e => e.join(',')).join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        if (link.download !== undefined) {
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `${departmentName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_publications_${selectedYears.join('-')}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    };
+
     return (
         <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.07)]">
             <div className="p-6">
-                <h3 className="text-xl font-bold text-white mb-4">
-                    Individual Staff Publications ({staffWithPublications.length} staff)
-                </h3>
+                <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-xl font-bold text-white">
+                        Individual Staff Publications ({staffWithPublications.length} staff)
+                    </h3>
+                    <button
+                        onClick={handleExportCSV}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded transition-colors print:hidden"
+                    >
+                        <Download className="w-4 h-4" /> Export CSV
+                    </button>
+                </div>
 
                 <div className="overflow-x-auto">
                     <table className="w-full">
@@ -575,6 +610,15 @@ function DepartmentOverviewTab({ stats, selectedYears, departmentName }: {
 }) {
     return (
         <div className="space-y-6">
+            <div className="flex justify-end gap-2 print:hidden -mb-4">
+                <button
+                    onClick={() => window.print()}
+                    className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors"
+                >
+                    <Printer className="w-4 h-4" /> Export PDF
+                </button>
+            </div>
+
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)]">
