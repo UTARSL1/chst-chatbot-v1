@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
             .filter(([key]) => key !== 'FGO' && key !== 'DLMSA')
             .map(([acronym, deptData]: [string, any]) => ({
                 acronym,
-                name: deptData.name || acronym,
+                name: deptData.canonical || deptData.name || acronym,
                 staffCount: deptData.staff?.length || 0
             }))
             .sort((a, b) => a.name.localeCompare(b.name));
