@@ -472,9 +472,9 @@ export default function ScopusPublicationsPage() {
 
                                         {activeTab === 'department' && calculateStats && (
                                             <DepartmentOverviewTab
-                                                stats={calculateStats}
                                                 selectedYears={selectedYears}
                                                 departmentName={departments.find(d => d.acronym === selectedDepartment)?.name || ''}
+                                                staffMembers={staffMembers}
                                             />
                                         )}
 
@@ -695,11 +695,56 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
 }
 
 // Department Overview Tab Component
-function DepartmentOverviewTab({ stats, selectedYears, departmentName }: {
-    stats: any;
+// Department Overview Tab Component
+function DepartmentOverviewTab({ selectedYears, departmentName, staffMembers }: {
     selectedYears: number[];
     departmentName: string;
+    staffMembers: StaffMember[];
 }) {
+    // Calculate Top 10 Staff
+    const topStaff = staffMembers.map(staff => {
+        const count = staff.publications
+            ?.filter(p => selectedYears.includes(p.year))
+            .reduce((sum, p) => sum + p.count, 0) || 0;
+        return {
+            ...staff,
+            yearPublications: count
+        };
+    })
+        .filter(s => s.yearPublications > 0)
+        .sort((a, b) => b.yearPublications - a.yearPublications)
+        .slice(0, 10);
+
+    // Calculate department stats
+    const totalPublications = staffMembers.reduce((sum, staff) => {
+        return sum + (staff.publications
+            ?.filter(p => selectedYears.includes(p.year))
+            .reduce((s, p) => s + p.count, 0) || 0);
+    }, 0);
+
+    const staffWithPublicationsCount = staffMembers.filter(staff =>
+        staff.publications?.some(p => selectedYears.includes(p.year) && p.count > 0)
+    ).length;
+
+    const averagePerStaff = staffWithPublicationsCount > 0
+        ? (totalPublications / staffWithPublicationsCount).toFixed(2)
+        : '0.00';
+
+    const publicationsByYearMap = new Map<number, number>();
+    selectedYears.forEach(year => publicationsByYearMap.set(year, 0));
+
+    staffMembers.forEach(staff => {
+        staff.publications?.forEach(pub => {
+            if (selectedYears.includes(pub.year)) {
+                publicationsByYearMap.set(pub.year, (publicationsByYearMap.get(pub.year) || 0) + pub.count);
+            }
+        });
+    });
+
+    const publicationsByYear = Array.from(publicationsByYearMap.entries())
+        .map(([year, count]) => ({ year, count }))
+        .sort((a, b) => a.year - b.year);
+
     return (
         <div className="space-y-6 print:space-y-4">
             <div className="flex justify-end gap-2 print:hidden -mb-4">
@@ -712,25 +757,15 @@ function DepartmentOverviewTab({ stats, selectedYears, departmentName }: {
             </div>
 
             {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Academic Staff</div>
-                    <div className="text-3xl font-bold text-white print:text-black print:text-xl">{stats.totalStaff}</div>
-                </div>
-
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">With Scopus Data</div>
-                    <div className="text-3xl font-bold text-emerald-400 print:text-emerald-700 print:text-xl">{stats.staffWithScopus}</div>
-                </div>
-
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
                     <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Publications</div>
-                    <div className="text-3xl font-bold text-blue-400 print:text-blue-700 print:text-xl">{stats.totalPublications}</div>
+                    <div className="text-3xl font-bold text-blue-400 print:text-blue-700 print:text-xl">{totalPublications}</div>
                 </div>
 
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
                     <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Average per Staff</div>
-                    <div className="text-3xl font-bold text-purple-400 print:text-purple-700 print:text-xl">{stats.averagePerStaff}</div>
+                    <div className="text-3xl font-bold text-purple-400 print:text-purple-700 print:text-xl">{averagePerStaff}</div>
                 </div>
             </div>
 
@@ -738,14 +773,14 @@ function DepartmentOverviewTab({ stats, selectedYears, departmentName }: {
             <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-4">
                 <h3 className="text-xl font-bold text-white mb-6 print:text-black print:mb-4">Publications by Year</h3>
 
-                <div className="flex items-end gap-8 h-64 print:h-48">
-                    {stats.publicationsByYear.map((yearData: any) => {
-                        const maxCount = Math.max(...stats.publicationsByYear.map((y: any) => y.count));
+                <div className="flex items-end gap-12 h-64 print:h-48 justify-center">
+                    {publicationsByYear.map((yearData: any) => {
+                        const maxCount = Math.max(...publicationsByYear.map((y: any) => y.count));
                         // Use 70% of container height to leave room for labels
                         const height = maxCount > 0 ? (yearData.count / maxCount) * 70 : 0;
 
                         return (
-                            <div key={yearData.year} className="flex-1 h-full flex flex-col items-center justify-end gap-3">
+                            <div key={yearData.year} className="flex-1 max-w-[100px] h-full flex flex-col items-center justify-end gap-3">
                                 <div className="text-2xl font-bold text-blue-300 print:text-blue-700">{yearData.count}</div>
                                 <div
                                     className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-lg transition-all duration-500 print:bg-blue-600"
@@ -763,6 +798,37 @@ function DepartmentOverviewTab({ stats, selectedYears, departmentName }: {
                     })}
                 </div>
             </div>
+
+            {/* Top 10 Staff */}
+            {topStaff.length > 0 && (
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-4">
+                    <h3 className="text-xl font-bold text-white mb-6 print:text-black print:mb-4">Top 10 Staff ({selectedYears.join(', ')})</h3>
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead>
+                                <tr className="border-b border-white/10">
+                                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300">Rank</th>
+                                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300">Name</th>
+                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300">Publications</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {topStaff.map((staff, index) => (
+                                    <tr key={staff.scopusAuthorId || staff.name} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                        <td className="py-3 px-4 text-sm text-gray-400">{index + 1}</td>
+                                        <td className="py-3 px-4 text-sm text-white">{staff.name}</td>
+                                        <td className="py-3 px-4 text-right">
+                                            <span className="inline-block px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold">
+                                                {staff.yearPublications}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
@@ -774,12 +840,15 @@ function FacultyOverviewTab({ facultyName, departments, selectedYears }: {
     selectedYears: number[];
 }) {
     const [departmentStats, setDepartmentStats] = useState<any[]>([]);
+    const [publicationsByYear, setPublicationsByYear] = useState<{ year: number, count: number }[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const loadFacultyData = async () => {
             setLoading(true);
             const stats: any[] = [];
+            const yearlyTotals: { [key: number]: number } = {};
+            selectedYears.forEach(y => yearlyTotals[y] = 0);
 
             for (const dept of departments) {
                 try {
@@ -789,9 +858,17 @@ function FacultyOverviewTab({ facultyName, departments, selectedYears }: {
                     if (data.success && data.staff) {
                         const staffWithScopus = data.staff.filter((s: StaffMember) => s.scopusAuthorId && s.scopusAuthorId !== 'NA');
                         const totalPubs = staffWithScopus.reduce((sum: number, staff: StaffMember) => {
-                            const yearPubs = staff.publications
-                                ?.filter(p => selectedYears.includes(p.year))
-                                .reduce((s, p) => s + p.count, 0) || 0;
+                            // Sum publications for all selected years
+                            const staffPubs = staff.publications?.filter(p => selectedYears.includes(p.year)) || [];
+
+                            // Add to faculty yearly totals
+                            staffPubs.forEach(p => {
+                                if (yearlyTotals[p.year] !== undefined) {
+                                    yearlyTotals[p.year] += p.count;
+                                }
+                            });
+
+                            const yearPubs = staffPubs.reduce((s, p) => s + p.count, 0) || 0;
                             return sum + yearPubs;
                         }, 0);
 
@@ -810,6 +887,10 @@ function FacultyOverviewTab({ facultyName, departments, selectedYears }: {
             }
 
             setDepartmentStats(stats);
+            setPublicationsByYear(Object.entries(yearlyTotals).map(([year, count]) => ({
+                year: parseInt(year),
+                count
+            })).sort((a, b) => a.year - b.year));
             setLoading(false);
         };
 
@@ -868,13 +949,45 @@ function FacultyOverviewTab({ facultyName, departments, selectedYears }: {
                 </div>
             )}
 
+            {/* Faculty Publications by Year Chart (Newly Added) */}
+            <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none">
+                <div className="p-6 print:p-4">
+                    <h3 className="text-xl font-bold text-white mb-6 print:text-black print:mb-4">Faculty Publications by Year</h3>
+
+                    <div className="flex items-end gap-12 h-64 print:h-48 justify-center">
+                        {publicationsByYear.map((yearData: any) => {
+                            const maxCount = Math.max(...publicationsByYear.map(y => y.count));
+                            // Use 70% of container height to leave room for labels
+                            const height = maxCount > 0 ? (yearData.count / maxCount) * 70 : 0;
+
+                            return (
+                                <div key={yearData.year} className="flex-1 max-w-[100px] h-full flex flex-col items-center justify-end gap-3">
+                                    <div className="text-2xl font-bold text-blue-300 print:text-blue-700">{yearData.count}</div>
+                                    <div
+                                        className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-lg transition-all duration-500 print:bg-blue-600"
+                                        style={{
+                                            height: `${height}%`,
+                                            minHeight: '10px',
+                                            // @ts-ignore
+                                            printColorAdjust: 'exact',
+                                            WebkitPrintColorAdjust: 'exact'
+                                        }}
+                                    />
+                                    <div className="text-sm font-semibold text-gray-300 print:text-gray-700">{yearData.year}</div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
+
             {/* Department Comparison Chart */}
             <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none">
                 <div className="p-6 print:p-4">
                     <h3 className="text-xl font-bold text-white mb-6 print:text-black print:mb-4">Department Comparison</h3>
 
                     <div className="overflow-x-auto">
-                        <div className="min-w-[600px] h-96 print:h-80 flex items-end gap-4 pb-12">
+                        <div className="min-w-[600px] h-96 print:h-80 flex items-end gap-8 pb-12 px-4">
                             {departmentStats
                                 .sort((a, b) => b.totalPublications - a.totalPublications)
                                 .map((dept, idx) => {
@@ -886,8 +999,8 @@ function FacultyOverviewTab({ facultyName, departments, selectedYears }: {
                                     const avgHeight = maxAvg > 0 ? (parseFloat(dept.averagePerStaff) / maxAvg) * 70 : 0;
 
                                     return (
-                                        <div key={idx} className="flex-1 flex flex-col items-center justify-end gap-2 h-full">
-                                            <div className="w-full flex gap-1 items-end justify-center h-full">
+                                        <div key={idx} className="flex-1 max-w-[120px] flex flex-col items-center justify-end gap-2 h-full">
+                                            <div className="w-full flex gap-2 items-end justify-center h-full">
                                                 {/* Total Publications Bar */}
                                                 <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
                                                     <div className="text-xs font-bold text-blue-300 print:text-blue-700">{dept.totalPublications}</div>
