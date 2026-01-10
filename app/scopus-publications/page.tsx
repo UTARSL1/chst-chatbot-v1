@@ -740,6 +740,22 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
         ? (totalPublications / staffWithScopusCount).toFixed(2)
         : '0.00';
 
+    // Calculate standard deviation of publications across staff with valid Scopus IDs
+    const staffPublications = staffMembers
+        .filter(staff => staff.scopusAuthorId && staff.scopusAuthorId !== 'NA')
+        .map(staff => {
+            return staff.publications
+                ?.filter(p => selectedYears.includes(p.year))
+                .reduce((s, p) => s + p.count, 0) || 0;
+        });
+
+    const stdDeviation = staffWithScopusCount > 1 ? (() => {
+        const mean = totalPublications / staffWithScopusCount;
+        const squaredDiffs = staffPublications.map(pub => Math.pow(pub - mean, 2));
+        const variance = squaredDiffs.reduce((sum, val) => sum + val, 0) / staffWithScopusCount;
+        return Math.sqrt(variance).toFixed(2);
+    })() : '0.00';
+
     return (
         <div className="space-y-6 print:space-y-4">
             <div className="flex justify-end gap-2 print:hidden -mb-4">
@@ -753,7 +769,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
             </div>
 
             {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
                     <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Department</div>
                     <div className="text-lg font-bold text-white print:text-black leading-tight mb-1">{departmentName}</div>
@@ -773,6 +789,11 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
                     <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Average per Staff</div>
                     <div className="text-3xl font-bold text-purple-400 print:text-purple-700 print:text-xl">{averagePerStaff}</div>
+                </div>
+
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Std Deviation</div>
+                    <div className="text-3xl font-bold text-orange-400 print:text-orange-700 print:text-xl">{stdDeviation}</div>
                 </div>
             </div>
 
@@ -932,6 +953,15 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
         ? (totalPublications / staffWithScopusCount).toFixed(2)
         : '0.00';
 
+    // Calculate standard deviation of publications across departments
+    const deptPublicationCounts = departmentStats.map(dept => dept.totalPublications);
+    const stdDeviation = departmentStats.length > 1 ? (() => {
+        const mean = totalPublications / departmentStats.length;
+        const squaredDiffs = deptPublicationCounts.map(pub => Math.pow(pub - mean, 2));
+        const variance = squaredDiffs.reduce((sum, val) => sum + val, 0) / departmentStats.length;
+        return Math.sqrt(variance).toFixed(2);
+    })() : '0.00';
+
     if (loading) {
         return (
             <div className="bg-slate-900/80 rounded-lg border border-white/20 p-12 flex items-center justify-center">
@@ -956,7 +986,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
             </div>
 
             {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
                     <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Faculty</div>
                     <div className="text-lg font-bold text-white print:text-black leading-tight mb-1">{facultyName}</div>
@@ -976,6 +1006,11 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
                     <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Average per Staff</div>
                     <div className="text-3xl font-bold text-purple-400 print:text-purple-700 print:text-xl">{averagePerStaff}</div>
+                </div>
+
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Std Deviation</div>
+                    <div className="text-3xl font-bold text-orange-400 print:text-orange-700 print:text-xl">{stdDeviation}</div>
                 </div>
             </div>
 
