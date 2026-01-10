@@ -36,7 +36,7 @@ export default function ScopusPublicationsPage() {
     const [departments, setDepartments] = useState<DepartmentData[]>([]);
     const [staffMembers, setStaffMembers] = useState<StaffMember[]>([]);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<'individual' | 'department'>('individual');
+    const [activeTab, setActiveTab] = useState<'individual' | 'department' | 'faculty'>('individual');
 
     // Permission State
     const [hasAccess, setHasAccess] = useState(false);
@@ -54,6 +54,9 @@ export default function ScopusPublicationsPage() {
 
     // Column visibility for Individual Staff table
     const [visibleColumns, setVisibleColumns] = useState<string[]>(['scopusId', 'publications']);
+
+    // Faculty-level data
+    const [facultyStaffData, setFacultyStaffData] = useState<{ [key: string]: StaffMember[] }>({});
 
     // Access control
     useEffect(() => {
@@ -402,6 +405,15 @@ export default function ScopusPublicationsPage() {
                                                 >
                                                     Department Overview
                                                 </button>
+                                                <button
+                                                    onClick={() => setActiveTab('faculty')}
+                                                    className={`px-6 py-3 font-medium transition-all ${activeTab === 'faculty'
+                                                        ? 'text-blue-400 border-b-2 border-blue-400'
+                                                        : 'text-gray-400 hover:text-gray-300'
+                                                        }`}
+                                                >
+                                                    Faculty Overview
+                                                </button>
                                             </div>
                                         </div>
 
@@ -463,6 +475,14 @@ export default function ScopusPublicationsPage() {
                                                 stats={calculateStats}
                                                 selectedYears={selectedYears}
                                                 departmentName={departments.find(d => d.acronym === selectedDepartment)?.name || ''}
+                                            />
+                                        )}
+
+                                        {activeTab === 'faculty' && (
+                                            <FacultyOverviewTab
+                                                facultyName={selectedFaculty}
+                                                departments={departments}
+                                                selectedYears={selectedYears}
                                             />
                                         )}
                                     </>
@@ -746,3 +766,159 @@ function DepartmentOverviewTab({ stats, selectedYears, departmentName }: {
         </div>
     );
 }
+
+// Faculty Overview Tab Component
+function FacultyOverviewTab({ facultyName, departments, selectedYears }: {
+    facultyName: string;
+    departments: DepartmentData[];
+    selectedYears: number[];
+}) {
+    const [departmentStats, setDepartmentStats] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadFacultyData = async () => {
+            setLoading(true);
+            const stats: any[] = [];
+
+            for (const dept of departments) {
+                try {
+                    const res = await fetch(`/api/scopus-publications/staff?department=${encodeURIComponent(dept.acronym)}`);
+                    const data = await res.json();
+
+                    if (data.success && data.staff) {
+                        const staffWithScopus = data.staff.filter((s: StaffMember) => s.scopusAuthorId && s.scopusAuthorId !== 'NA');
+                        const totalPubs = staffWithScopus.reduce((sum: number, staff: StaffMember) => {
+                            const yearPubs = staff.publications
+                                ?.filter(p => selectedYears.includes(p.year))
+                                .reduce((s, p) => s + p.count, 0) || 0;
+                            return sum + yearPubs;
+                        }, 0);
+
+                        stats.push({
+                            name: dept.name,
+                            acronym: dept.acronym,
+                            totalStaff: data.staff.length,
+                            staffWithScopus: staffWithScopus.length,
+                            totalPublications: totalPubs,
+                            averagePerStaff: staffWithScopus.length > 0 ? (totalPubs / staffWithScopus.length).toFixed(2) : '0.00'
+                        });
+                    }
+                } catch (error) {
+                    console.error(`Error loading data for ${dept.acronym}:`, error);
+                }
+            }
+
+            setDepartmentStats(stats);
+            setLoading(false);
+        };
+
+        if (departments.length > 0) {
+            loadFacultyData();
+        }
+    }, [departments, selectedYears]);
+
+    const facultyTotals = useMemo(() => {
+        if (departmentStats.length === 0) return null;
+
+        return {
+            totalStaff: departmentStats.reduce((sum, d) => sum + d.totalStaff, 0),
+            staffWithScopus: departmentStats.reduce((sum, d) => sum + d.staffWithScopus, 0),
+            totalPublications: departmentStats.reduce((sum, d) => sum + d.totalPublications, 0),
+            averagePerStaff: departmentStats.reduce((sum, d) => sum + d.staffWithScopus, 0) > 0
+                ? (departmentStats.reduce((sum, d) => sum + d.totalPublications, 0) / departmentStats.reduce((sum, d) => sum + d.staffWithScopus, 0)).toFixed(2)
+                : '0.00'
+        };
+    }, [departmentStats]);
+
+    if (loading) {
+        return (
+            <div className="bg-slate-900/80 rounded-lg border border-white/20 p-12 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                    <p className="text-gray-400">Loading faculty data...</p>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="space-y-6 print:space-y-4">
+            <div className="flex justify-end gap-2 print:hidden -mb-4">
+                <button
+                    onClick={() => window.print()}
+                    className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors"
+                >
+                    <Printer className="w-4 h-4" /> Export PDF
+                </button>
+            </div>
+
+            {/* Faculty Summary Cards */}
+            {facultyTotals && (
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                        <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Staff</div>
+                        <div className="text-3xl font-bold text-white print:text-black print:text-xl">{facultyTotals.totalStaff}</div>
+                    </div>
+
+                    <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                        <div className="text-sm text-gray-400 mb-1 print:text-gray-600">With Scopus Data</div>
+                        <div className="text-3xl font-bold text-emerald-400 print:text-emerald-700 print:text-xl">{facultyTotals.staffWithScopus}</div>
+                    </div>
+
+                    <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                        <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Publications</div>
+                        <div className="text-3xl font-bold text-blue-400 print:text-blue-700 print:text-xl">{facultyTotals.totalPublications}</div>
+                    </div>
+
+                    <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                        <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Average per Staff</div>
+                        <div className="text-3xl font-bold text-purple-400 print:text-purple-700 print:text-xl">{facultyTotals.averagePerStaff}</div>
+                    </div>
+                </div>
+            )}
+
+            {/* Department Breakdown Table */}
+            <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none">
+                <div className="p-6 print:p-4">
+                    <h3 className="text-xl font-bold text-white mb-6 print:text-black print:mb-4">Department Breakdown</h3>
+
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead>
+                                <tr className="border-b border-white/10 print:border-gray-300">
+                                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300 print:text-gray-700">Department</th>
+                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300 print:text-gray-700">Total Staff</th>
+                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300 print:text-gray-700">With Scopus</th>
+                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300 print:text-gray-700">Publications ({selectedYears.join(', ')})</th>
+                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300 print:text-gray-700">Avg/Staff</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {departmentStats
+                                    .sort((a, b) => b.totalPublications - a.totalPublications)
+                                    .map((dept, idx) => (
+                                        <tr key={idx} className="border-b border-white/5 hover:bg-white/5 transition-colors print:border-gray-200">
+                                            <td className="py-3 px-4 text-sm text-white print:text-black">
+                                                <div className="font-medium">{dept.acronym}</div>
+                                                <div className="text-xs text-gray-400 print:text-gray-600">{dept.name}</div>
+                                            </td>
+                                            <td className="py-3 px-4 text-right text-sm text-gray-300 print:text-gray-700">{dept.totalStaff}</td>
+                                            <td className="py-3 px-4 text-right text-sm text-emerald-400 print:text-emerald-700">{dept.staffWithScopus}</td>
+                                            <td className="py-3 px-4 text-right">
+                                                <span className="inline-block px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold print:bg-transparent print:border-0 print:text-blue-700">
+                                                    {dept.totalPublications}
+                                                </span>
+                                            </td>
+                                            <td className="py-3 px-4 text-right text-sm text-purple-400 print:text-purple-700">{dept.averagePerStaff}</td>
+                                        </tr>
+                                    ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
