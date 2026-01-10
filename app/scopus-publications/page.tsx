@@ -240,7 +240,7 @@ export default function ScopusPublicationsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-950 p-6">
+        <div className="min-h-screen bg-slate-950 p-6 print:p-2 print:bg-white">
             <div className="max-w-7xl mx-auto">
                 {/* Back Link */}
                 <div className="mb-6 print:hidden">
@@ -262,7 +262,7 @@ export default function ScopusPublicationsPage() {
                     </div>
 
                     {/* Print Only Header */}
-                    <div className="hidden print:block text-black mb-8">
+                    <div className="hidden print:block text-black mb-8 print:mb-4">
                         <h1 className="text-2xl font-bold">{selectedDepartment}</h1>
                         <p className="text-gray-600">Publications Analysis: {selectedYears.join(', ')}</p>
                     </div>
@@ -614,7 +614,7 @@ function DepartmentOverviewTab({ stats, selectedYears, departmentName }: {
     departmentName: string;
 }) {
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 print:space-y-4">
             <div className="flex justify-end gap-2 print:hidden -mb-4">
                 <button
                     onClick={() => window.print()}
@@ -626,32 +626,32 @@ function DepartmentOverviewTab({ stats, selectedYears, departmentName }: {
 
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none">
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
                     <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Staff</div>
-                    <div className="text-3xl font-bold text-white print:text-black">{stats.totalStaff}</div>
+                    <div className="text-3xl font-bold text-white print:text-black print:text-xl">{stats.totalStaff}</div>
                 </div>
 
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none">
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
                     <div className="text-sm text-gray-400 mb-1 print:text-gray-600">With Scopus Data</div>
-                    <div className="text-3xl font-bold text-emerald-400 print:text-emerald-700">{stats.staffWithScopus}</div>
+                    <div className="text-3xl font-bold text-emerald-400 print:text-emerald-700 print:text-xl">{stats.staffWithScopus}</div>
                 </div>
 
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none">
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
                     <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Publications</div>
-                    <div className="text-3xl font-bold text-blue-400 print:text-blue-700">{stats.totalPublications}</div>
+                    <div className="text-3xl font-bold text-blue-400 print:text-blue-700 print:text-xl">{stats.totalPublications}</div>
                 </div>
 
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none">
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
                     <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Average per Staff</div>
-                    <div className="text-3xl font-bold text-purple-400 print:text-purple-700">{stats.averagePerStaff}</div>
+                    <div className="text-3xl font-bold text-purple-400 print:text-purple-700 print:text-xl">{stats.averagePerStaff}</div>
                 </div>
             </div>
 
             {/* Publications by Year Chart */}
-            <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none">
-                <h3 className="text-xl font-bold text-white mb-6 print:text-black">Publications by Year</h3>
+            <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-4">
+                <h3 className="text-xl font-bold text-white mb-6 print:text-black print:mb-4">Publications by Year</h3>
 
-                <div className="flex items-end gap-8 h-64">
+                <div className="flex items-end gap-8 h-64 print:h-48">
                     {stats.publicationsByYear.map((yearData: any) => {
                         const maxCount = Math.max(...stats.publicationsByYear.map((y: any) => y.count));
                         // Use 70% of container height to leave room for labels
