@@ -897,6 +897,26 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
         return Math.sqrt(variance).toFixed(2);
     })() : '0.00';
 
+    // NEW METRICS for Phase 1
+    // Average H-Index
+    const staffWithHIndex = staffMembers.filter(s => s.hIndex !== undefined && s.hIndex > 0);
+    const averageHIndex = staffWithHIndex.length > 0
+        ? (staffWithHIndex.reduce((sum, s) => sum + (s.hIndex || 0), 0) / staffWithHIndex.length).toFixed(2)
+        : '0.00';
+
+    // Total Citations (for selected years - using lifetime as proxy since we don't have year-specific citations)
+    const totalCitations = staffMembers.reduce((sum, s) => sum + (s.citationCount || 0), 0);
+
+    // Top H-Index staff
+    const topHIndexStaff = staffMembers.reduce((top, staff) => {
+        if (!staff.hIndex) return top;
+        if (!top || (staff.hIndex > (top.hIndex || 0))) return staff;
+        return top;
+    }, null as StaffMember | null);
+
+    // Total Lifetime Publications
+    const totalLifetimePublications = staffMembers.reduce((sum, s) => sum + (s.lifetimePublications || 0), 0);
+
     return (
         <div className="space-y-6 print:space-y-4">
             <div className="flex justify-end gap-2 print:hidden -mb-4">
@@ -909,8 +929,8 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                 </button>
             </div>
 
-            {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            {/* Summary Cards - Updated with new metrics */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
                     <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Department</div>
                     <div className="text-lg font-bold text-white print:text-black leading-tight mb-1">{departmentName}</div>
@@ -923,18 +943,49 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                 </div>
 
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Publications</div>
+                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Publications ({selectedYears.join(', ')})</div>
                     <div className="text-3xl font-bold text-blue-400 print:text-blue-700 print:text-xl">{totalPublications}</div>
                 </div>
 
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Average per Staff</div>
+                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Avg Pubs ({selectedYears.join(', ')}) per Staff</div>
                     <div className="text-3xl font-bold text-purple-400 print:text-purple-700 print:text-xl">{averagePerStaff}</div>
                 </div>
 
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
                     <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Std Deviation</div>
                     <div className="text-3xl font-bold text-orange-400 print:text-orange-700 print:text-xl">{stdDeviation}</div>
+                </div>
+            </div>
+
+            {/* NEW Summary Cards Row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-xl rounded-lg border border-purple-500/30 p-6 shadow-[0_0_15px_rgba(168,85,247,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-purple-300 mb-1 print:text-gray-600">Average H-Index</div>
+                    <div className="text-3xl font-bold text-purple-100 print:text-black print:text-xl">{averageHIndex}</div>
+                    <div className="text-xs text-purple-400 mt-1 print:text-gray-500">Lifetime metric</div>
+                </div>
+
+                <div className="bg-gradient-to-br from-green-900/40 to-green-800/40 backdrop-blur-xl rounded-lg border border-green-500/30 p-6 shadow-[0_0_15px_rgba(34,197,94,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-green-300 mb-1 print:text-gray-600">Total Citations</div>
+                    <div className="text-3xl font-bold text-green-100 print:text-black print:text-xl">{totalCitations.toLocaleString()}</div>
+                    <div className="text-xs text-green-400 mt-1 print:text-gray-500">Lifetime metric</div>
+                </div>
+
+                <div className="bg-gradient-to-br from-amber-900/40 to-amber-800/40 backdrop-blur-xl rounded-lg border border-amber-500/30 p-6 shadow-[0_0_15px_rgba(251,191,36,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-amber-300 mb-1 print:text-gray-600">Top H-Index</div>
+                    <div className="text-2xl font-bold text-amber-100 print:text-black print:text-lg">
+                        {topHIndexStaff ? topHIndexStaff.hIndex : '-'}
+                    </div>
+                    <div className="text-xs text-amber-400 mt-1 truncate print:text-gray-500">
+                        {topHIndexStaff ? topHIndexStaff.name : 'N/A'}
+                    </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/40 backdrop-blur-xl rounded-lg border border-cyan-500/30 p-6 shadow-[0_0_15px_rgba(6,182,212,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-cyan-300 mb-1 print:text-gray-600">Total Publications (Lifetime)</div>
+                    <div className="text-3xl font-bold text-cyan-100 print:text-black print:text-xl">{totalLifetimePublications.toLocaleString()}</div>
+                    <div className="text-xs text-cyan-400 mt-1 print:text-gray-500">All staff combined</div>
                 </div>
             </div>
 
@@ -1006,7 +1057,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 
@@ -1020,6 +1071,14 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
     const [departmentStats, setDepartmentStats] = useState<any[]>([]);
     const [publicationsByYear, setPublicationsByYear] = useState<{ year: number, count: number, avg: number }[]>([]);
     const [loading, setLoading] = useState(true);
+
+    // NEW: Faculty-wide metrics state
+    const [facultyMetrics, setFacultyMetrics] = useState({
+        averageHIndex: '0.00',
+        totalCitations: 0,
+        topHIndexStaff: null as StaffMember | null,
+        totalLifetimePublications: 0
+    });
 
     useEffect(() => {
         const loadFacultyData = async () => {
@@ -1036,6 +1095,9 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
             let totalFacultyStaff = 0;
             let totalFacultyStaffWithScopus = 0;
 
+            // NEW: Faculty-wide metric accumulators
+            let allStaffMembers: StaffMember[] = [];
+
             for (const dept of departments) {
                 try {
                     const res = await fetch(`/api/scopus-publications/staff?department=${encodeURIComponent(dept.acronym)}`);
@@ -1044,6 +1106,9 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                     if (data.success && data.staff) {
                         // Count total staff for faculty average
                         totalFacultyStaff += data.staff.length;
+
+                        // NEW: Collect all staff for faculty metrics
+                        allStaffMembers = allStaffMembers.concat(data.staff);
 
                         const staffWithScopus = data.staff.filter((s: StaffMember) => s.scopusAuthorId && s.scopusAuthorId !== 'NA');
                         totalFacultyStaffWithScopus += staffWithScopus.length;
@@ -1096,6 +1161,30 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                     avg: totalFacultyStaffWithScopus > 0 ? count / totalFacultyStaffWithScopus : 0
                 };
             }).sort((a, b) => a.year - b.year));
+
+            // NEW: Calculate faculty-wide metrics
+            const staffWithHIndex = allStaffMembers.filter(s => s.hIndex !== undefined && s.hIndex > 0);
+            const avgHIndex = staffWithHIndex.length > 0
+                ? (staffWithHIndex.reduce((sum, s) => sum + (s.hIndex || 0), 0) / staffWithHIndex.length).toFixed(2)
+                : '0.00';
+
+            const totalCites = allStaffMembers.reduce((sum, s) => sum + (s.citationCount || 0), 0);
+
+            const topStaff = allStaffMembers.reduce((top, staff) => {
+                if (!staff.hIndex) return top;
+                if (!top || (staff.hIndex > (top.hIndex || 0))) return staff;
+                return top;
+            }, null as StaffMember | null);
+
+            const totalLifePubs = allStaffMembers.reduce((sum, s) => sum + (s.lifetimePublications || 0), 0);
+
+            setFacultyMetrics({
+                averageHIndex: avgHIndex,
+                totalCitations: totalCites,
+                topHIndexStaff: topStaff,
+                totalLifetimePublications: totalLifePubs
+            });
+
             setLoading(false);
         };
 
@@ -1144,7 +1233,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
             </div>
 
             {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
                     <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Faculty</div>
                     <div className="text-lg font-bold text-white print:text-black leading-tight mb-1">{facultyName}</div>
@@ -1157,18 +1246,49 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                 </div>
 
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Publications</div>
+                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Publications ({selectedYears.join(', ')})</div>
                     <div className="text-3xl font-bold text-blue-400 print:text-blue-700 print:text-xl">{totalPublications}</div>
                 </div>
 
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Average per Staff</div>
+                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Avg Pubs ({selectedYears.join(', ')}) per Staff</div>
                     <div className="text-3xl font-bold text-purple-400 print:text-purple-700 print:text-xl">{averagePerStaff}</div>
                 </div>
 
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
                     <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Std Deviation</div>
                     <div className="text-3xl font-bold text-orange-400 print:text-orange-700 print:text-xl">{stdDeviation}</div>
+                </div>
+            </div>
+
+            {/* NEW Summary Cards Row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-xl rounded-lg border border-purple-500/30 p-6 shadow-[0_0_15px_rgba(168,85,247,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-purple-300 mb-1 print:text-gray-600">Average H-Index</div>
+                    <div className="text-3xl font-bold text-purple-100 print:text-black print:text-xl">{facultyMetrics.averageHIndex}</div>
+                    <div className="text-xs text-purple-400 mt-1 print:text-gray-500">Lifetime metric</div>
+                </div>
+
+                <div className="bg-gradient-to-br from-green-900/40 to-green-800/40 backdrop-blur-xl rounded-lg border border-green-500/30 p-6 shadow-[0_0_15px_rgba(34,197,94,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-green-300 mb-1 print:text-gray-600">Total Citations</div>
+                    <div className="text-3xl font-bold text-green-100 print:text-black print:text-xl">{facultyMetrics.totalCitations.toLocaleString()}</div>
+                    <div className="text-xs text-green-400 mt-1 print:text-gray-500">Lifetime metric</div>
+                </div>
+
+                <div className="bg-gradient-to-br from-amber-900/40 to-amber-800/40 backdrop-blur-xl rounded-lg border border-amber-500/30 p-6 shadow-[0_0_15px_rgba(251,191,36,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-amber-300 mb-1 print:text-gray-600">Top H-Index</div>
+                    <div className="text-2xl font-bold text-amber-100 print:text-black print:text-lg">
+                        {facultyMetrics.topHIndexStaff ? facultyMetrics.topHIndexStaff.hIndex : '-'}
+                    </div>
+                    <div className="text-xs text-amber-400 mt-1 truncate print:text-gray-500">
+                        {facultyMetrics.topHIndexStaff ? facultyMetrics.topHIndexStaff.name : 'N/A'}
+                    </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/40 backdrop-blur-xl rounded-lg border border-cyan-500/30 p-6 shadow-[0_0_15px_rgba(6,182,212,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-cyan-300 mb-1 print:text-gray-600">Total Publications (Lifetime)</div>
+                    <div className="text-3xl font-bold text-cyan-100 print:text-black print:text-xl">{facultyMetrics.totalLifetimePublications.toLocaleString()}</div>
+                    <div className="text-xs text-cyan-400 mt-1 print:text-gray-500">All staff combined</div>
                 </div>
             </div>
 
