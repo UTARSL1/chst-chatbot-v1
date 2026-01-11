@@ -45,6 +45,7 @@ interface ScrapedResult {
     totalPublications: number;
     hIndex: number;
     citationCount: number;
+    lifetimePublications: number;
 }
 
 function parseCSV(csvContent: string): CSVStaff[] {
@@ -182,6 +183,34 @@ async function getAuthorMetrics(authorId: string): Promise<{ hIndex: number; cit
     return { hIndex, citationCount };
 }
 
+async function getLifetimePublications(authorId: string): Promise<number> {
+    try {
+        const query = `AU-ID(${authorId})`;
+        const url = new URL(SCOPUS_SEARCH_ENDPOINT);
+        url.searchParams.append('query', query);
+        url.searchParams.append('apiKey', SCOPUS_API_KEY);
+        url.searchParams.append('count', '0'); // We only need the total count
+        url.searchParams.append('httpAccept', 'application/json');
+
+        const response = await fetch(url.toString(), {
+            headers: { 'Accept': 'application/json' }
+        });
+
+        if (!response.ok) {
+            console.log(`    ⚠️ Lifetime Pubs Error: HTTP ${response.status}`);
+            return 0;
+        }
+
+        const data = await response.json();
+        const totalResults = parseInt(data['search-results']['opensearch:totalResults'], 10);
+
+        return totalResults || 0;
+    } catch (error) {
+        console.error(`    ⚠️ Lifetime Pubs Exception: ${error}`);
+        return 0;
+    }
+}
+
 function sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -273,7 +302,13 @@ async function rescrapeAll234Staff(): Promise<void> {
         // Get Metrics (H-index, Citations)
         console.log(`    Fetching metrics...`);
         const { hIndex, citationCount } = await getAuthorMetrics(csvEntry.scopusId);
-        console.log(`    H-index: ${hIndex}, Citations: ${citationCount}`);
+        await sleep(RATE_LIMIT_DELAY_MS);
+
+        // Fetch Lifetime Publications
+        const lifetimePublications = await getLifetimePublications(csvEntry.scopusId);
+        await sleep(RATE_LIMIT_DELAY_MS);
+
+        console.log(`    H-index: ${hIndex}, Citations: ${citationCount}, Lifetime Pubs: ${lifetimePublications}`);
 
         // Get staff details from directory
         const staffMember = staffDetailsMap.get(csvEntry.email);
@@ -293,6 +328,7 @@ async function rescrapeAll234Staff(): Promise<void> {
             totalPublications,
             hIndex,
             citationCount,
+            lifetimePublications,
         });
 
         console.log(`  Total (2023-2025): ${totalPublications} publications`);
@@ -326,6 +362,7 @@ async function rescrapeAll234Staff(): Promise<void> {
             totalPublications: 0,
             hIndex: 0,
             citationCount: 0,
+            lifetimePublications: 0,
         });
     }
 

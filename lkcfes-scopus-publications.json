@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "scrapedAt": "2026-01-11T02:51:59.861Z",
+    "scrapedAt": "2026-01-11T04:28:43.045Z",
     "faculty": "LKC FES",
     "years": [
       2023,
@@ -23,7 +23,7 @@
       "totalPublications": 2141,
       "averagePerStaff": 10.92
     },
-    "lastUpdated": "2026-01-11T02:51:59.862Z",
+    "lastUpdated": "2026-01-11T04:28:43.046Z",
     "staffWithScopusData": 196,
     "staffWithoutScopusData": 38
   },
@@ -56,7 +56,8 @@
       ],
       "totalPublications": 46,
       "hIndex": 22,
-      "citationCount": 1285
+      "citationCount": 1285,
+      "lifetimePublications": 112
     },
     {
       "searchId": "20003",
@@ -86,7 +87,8 @@
       ],
       "totalPublications": 29,
       "hIndex": 10,
-      "citationCount": 479
+      "citationCount": 479,
+      "lifetimePublications": 52
     },
     {
       "searchId": "20058",
@@ -116,7 +118,8 @@
       ],
       "totalPublications": 12,
       "hIndex": 6,
-      "citationCount": 92
+      "citationCount": 92,
+      "lifetimePublications": 27
     },
     {
       "searchId": "07129",
@@ -146,7 +149,8 @@
       ],
       "totalPublications": 9,
       "hIndex": 3,
-      "citationCount": 32
+      "citationCount": 32,
+      "lifetimePublications": 27
     },
     {
       "searchId": "07139",
@@ -176,7 +180,8 @@
       ],
       "totalPublications": 4,
       "hIndex": 6,
-      "citationCount": 302
+      "citationCount": 302,
+      "lifetimePublications": 39
     },
     {
       "searchId": "09220",
@@ -206,7 +211,8 @@
       ],
       "totalPublications": 12,
       "hIndex": 24,
-      "citationCount": 2227
+      "citationCount": 2227,
+      "lifetimePublications": 177
     },
     {
       "searchId": "16072",
@@ -236,7 +242,8 @@
       ],
       "totalPublications": 44,
       "hIndex": 18,
-      "citationCount": 1021
+      "citationCount": 1021,
+      "lifetimePublications": 110
     },
     {
       "searchId": "14156",
@@ -266,7 +273,8 @@
       ],
       "totalPublications": 38,
       "hIndex": 9,
-      "citationCount": 242
+      "citationCount": 242,
+      "lifetimePublications": 52
     },
     {
       "searchId": "10374",
@@ -296,7 +304,8 @@
       ],
       "totalPublications": 1,
       "hIndex": 7,
-      "citationCount": 232
+      "citationCount": 232,
+      "lifetimePublications": 17
     },
     {
       "searchId": "07005",
@@ -326,7 +335,8 @@
       ],
       "totalPublications": 3,
       "hIndex": 6,
-      "citationCount": 93
+      "citationCount": 93,
+      "lifetimePublications": 11
     },
     {
       "searchId": "06224",
@@ -356,7 +366,8 @@
       ],
       "totalPublications": 6,
       "hIndex": 5,
-      "citationCount": 49
+      "citationCount": 49,
+      "lifetimePublications": 16
     },
     {
       "searchId": "21038",
@@ -386,7 +397,8 @@
       ],
       "totalPublications": 10,
       "hIndex": 9,
-      "citationCount": 246
+      "citationCount": 246,
+      "lifetimePublications": 33
     },
     {
       "searchId": "05251",
@@ -416,7 +428,8 @@
       ],
       "totalPublications": 4,
       "hIndex": 4,
-      "citationCount": 106
+      "citationCount": 106,
+      "lifetimePublications": 13
     },
     {
       "searchId": "09066",
@@ -446,7 +459,8 @@
       ],
       "totalPublications": 9,
       "hIndex": 2,
-      "citationCount": 22
+      "citationCount": 22,
+      "lifetimePublications": 24
     },
     {
       "searchId": "05218",
@@ -476,7 +490,8 @@
       ],
       "totalPublications": 8,
       "hIndex": 12,
-      "citationCount": 460
+      "citationCount": 460,
+      "lifetimePublications": 44
     },
     {
       "searchId": "16131",
@@ -506,7 +521,8 @@
       ],
       "totalPublications": 19,
       "hIndex": 25,
-      "citationCount": 5508
+      "citationCount": 5508,
+      "lifetimePublications": 68
     },
     {
       "searchId": "18088",
@@ -536,7 +552,8 @@
       ],
       "totalPublications": 32,
       "hIndex": 22,
-      "citationCount": 2354
+      "citationCount": 2354,
+      "lifetimePublications": 80
     },
     {
       "searchId": "10228",
@@ -566,7 +583,8 @@
       ],
       "totalPublications": 2,
       "hIndex": 6,
-      "citationCount": 148
+      "citationCount": 148,
+      "lifetimePublications": 8
     },
     {
       "searchId": "J21002",
@@ -596,7 +614,8 @@
       ],
       "totalPublications": 2,
       "hIndex": 7,
-      "citationCount": 452
+      "citationCount": 452,
+      "lifetimePublications": 15
     },
     {
       "searchId": "14171",
@@ -626,7 +645,8 @@
       ],
       "totalPublications": 30,
       "hIndex": 27,
-      "citationCount": 2850
+      "citationCount": 2850,
+      "lifetimePublications": 79
     },
     {
       "searchId": "06183",
@@ -656,7 +676,8 @@
       ],
       "totalPublications": 16,
       "hIndex": 24,
-      "citationCount": 2458
+      "citationCount": 2458,
+      "lifetimePublications": 75
     },
     {
       "searchId": "11007",
@@ -686,7 +707,8 @@
       ],
       "totalPublications": 10,
       "hIndex": 30,
-      "citationCount": 3930
+      "citationCount": 3930,
+      "lifetimePublications": 104
     },
     {
       "searchId": "14203",
@@ -716,7 +738,8 @@
       ],
       "totalPublications": 6,
       "hIndex": 6,
-      "citationCount": 326
+      "citationCount": 326,
+      "lifetimePublications": 14
     },
     {
       "searchId": "14033",
@@ -746,7 +769,8 @@
       ],
       "totalPublications": 8,
       "hIndex": 11,
-      "citationCount": 653
+      "citationCount": 653,
+      "lifetimePublications": 22
     },
     {
       "searchId": "17002",
@@ -776,7 +800,8 @@
       ],
       "totalPublications": 9,
       "hIndex": 11,
-      "citationCount": 600
+      "citationCount": 600,
+      "lifetimePublications": 26
     },
     {
       "searchId": "15058",
@@ -806,7 +831,8 @@
       ],
       "totalPublications": 2,
       "hIndex": 1,
-      "citationCount": 21
+      "citationCount": 21,
+      "lifetimePublications": 3
     },
     {
       "searchId": "14267",
@@ -836,7 +862,8 @@
       ],
       "totalPublications": 38,
       "hIndex": 40,
-      "citationCount": 6223
+      "citationCount": 6223,
+      "lifetimePublications": 123
     },
     {
       "searchId": "11150",
@@ -866,7 +893,8 @@
       ],
       "totalPublications": 1,
       "hIndex": 4,
-      "citationCount": 70
+      "citationCount": 70,
+      "lifetimePublications": 6
     },
     {
       "searchId": "07381",
@@ -896,7 +924,8 @@
       ],
       "totalPublications": 2,
       "hIndex": 6,
-      "citationCount": 360
+      "citationCount": 360,
+      "lifetimePublications": 14
     },
     {
       "searchId": "14044",
@@ -926,7 +955,8 @@
       ],
       "totalPublications": 14,
       "hIndex": 15,
-      "citationCount": 1318
+      "citationCount": 1318,
+      "lifetimePublications": 43
     },
     {
       "searchId": "04233",
@@ -956,7 +986,8 @@
       ],
       "totalPublications": 5,
       "hIndex": 5,
-      "citationCount": 168
+      "citationCount": 168,
+      "lifetimePublications": 12
     },
     {
       "searchId": "05135",
@@ -986,7 +1017,8 @@
       ],
       "totalPublications": 3,
       "hIndex": 9,
-      "citationCount": 349
+      "citationCount": 349,
+      "lifetimePublications": 21
     },
     {
       "searchId": "10344",
@@ -1016,7 +1048,8 @@
       ],
       "totalPublications": 24,
       "hIndex": 18,
-      "citationCount": 1209
+      "citationCount": 1209,
+      "lifetimePublications": 75
     },
     {
       "searchId": "12081",
@@ -1046,7 +1079,8 @@
       ],
       "totalPublications": 5,
       "hIndex": 11,
-      "citationCount": 267
+      "citationCount": 267,
+      "lifetimePublications": 18
     },
     {
       "searchId": "16087",
@@ -1076,7 +1110,8 @@
       ],
       "totalPublications": 33,
       "hIndex": 29,
-      "citationCount": 3364
+      "citationCount": 3364,
+      "lifetimePublications": 101
     },
     {
       "searchId": "20002",
@@ -1106,7 +1141,8 @@
       ],
       "totalPublications": 26,
       "hIndex": 12,
-      "citationCount": 405
+      "citationCount": 405,
+      "lifetimePublications": 51
     },
     {
       "searchId": "08135",
@@ -1136,7 +1172,8 @@
       ],
       "totalPublications": 18,
       "hIndex": 16,
-      "citationCount": 1063
+      "citationCount": 1063,
+      "lifetimePublications": 66
     },
     {
       "searchId": "15105",
@@ -1166,7 +1203,8 @@
       ],
       "totalPublications": 3,
       "hIndex": 7,
-      "citationCount": 132
+      "citationCount": 132,
+      "lifetimePublications": 23
     },
     {
       "searchId": "18042",
@@ -1196,7 +1234,8 @@
       ],
       "totalPublications": 2,
       "hIndex": 7,
-      "citationCount": 107
+      "citationCount": 107,
+      "lifetimePublications": 16
     },
     {
       "searchId": "11117",
@@ -1226,7 +1265,8 @@
       ],
       "totalPublications": 64,
       "hIndex": 38,
-      "citationCount": 4396
+      "citationCount": 4396,
+      "lifetimePublications": 164
     },
     {
       "searchId": "09160",
@@ -1256,7 +1296,8 @@
       ],
       "totalPublications": 22,
       "hIndex": 31,
-      "citationCount": 2708
+      "citationCount": 2708,
+      "lifetimePublications": 92
     },
     {
       "searchId": "18125",
@@ -1286,7 +1327,8 @@
       ],
       "totalPublications": 4,
       "hIndex": 6,
-      "citationCount": 246
+      "citationCount": 246,
+      "lifetimePublications": 17
     },
     {
       "searchId": "15097",
@@ -1316,7 +1358,8 @@
       ],
       "totalPublications": 4,
       "hIndex": 5,
-      "citationCount": 72
+      "citationCount": 72,
+      "lifetimePublications": 20
     },
     {
       "searchId": "17031",
@@ -1346,7 +1389,8 @@
       ],
       "totalPublications": 27,
       "hIndex": 11,
-      "citationCount": 399
+      "citationCount": 399,
+      "lifetimePublications": 58
     },
     {
       "searchId": "16097",
@@ -1376,7 +1420,8 @@
       ],
       "totalPublications": 14,
       "hIndex": 11,
-      "citationCount": 493
+      "citationCount": 493,
+      "lifetimePublications": 44
     },
     {
       "searchId": "10270",
@@ -1406,7 +1451,8 @@
       ],
       "totalPublications": 10,
       "hIndex": 9,
-      "citationCount": 293
+      "citationCount": 293,
+      "lifetimePublications": 38
     },
     {
       "searchId": "17128",
@@ -1436,7 +1482,8 @@
       ],
       "totalPublications": 11,
       "hIndex": 6,
-      "citationCount": 83
+      "citationCount": 83,
+      "lifetimePublications": 26
     },
     {
       "searchId": "15286",
@@ -1466,7 +1513,8 @@
       ],
       "totalPublications": 26,
       "hIndex": 10,
-      "citationCount": 424
+      "citationCount": 424,
+      "lifetimePublications": 58
     },
     {
       "searchId": "16068",
@@ -1496,7 +1544,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 6,
-      "citationCount": 410
+      "citationCount": 410,
+      "lifetimePublications": 9
     },
     {
       "searchId": "20072",
@@ -1526,7 +1575,8 @@
       ],
       "totalPublications": 7,
       "hIndex": 3,
-      "citationCount": 21
+      "citationCount": 21,
+      "lifetimePublications": 9
     },
     {
       "searchId": "12266",
@@ -1556,7 +1606,8 @@
       ],
       "totalPublications": 1,
       "hIndex": 3,
-      "citationCount": 15
+      "citationCount": 15,
+      "lifetimePublications": 8
     },
     {
       "searchId": "15250",
@@ -1586,7 +1637,8 @@
       ],
       "totalPublications": 37,
       "hIndex": 23,
-      "citationCount": 1849
+      "citationCount": 1849,
+      "lifetimePublications": 99
     },
     {
       "searchId": "16085",
@@ -1616,7 +1668,8 @@
       ],
       "totalPublications": 16,
       "hIndex": 8,
-      "citationCount": 270
+      "citationCount": 270,
+      "lifetimePublications": 38
     },
     {
       "searchId": "15247",
@@ -1646,7 +1699,8 @@
       ],
       "totalPublications": 24,
       "hIndex": 14,
-      "citationCount": 932
+      "citationCount": 932,
+      "lifetimePublications": 94
     },
     {
       "searchId": "07345",
@@ -1676,7 +1730,8 @@
       ],
       "totalPublications": 17,
       "hIndex": 11,
-      "citationCount": 406
+      "citationCount": 406,
+      "lifetimePublications": 68
     },
     {
       "searchId": "18104",
@@ -1706,7 +1761,8 @@
       ],
       "totalPublications": 28,
       "hIndex": 16,
-      "citationCount": 964
+      "citationCount": 964,
+      "lifetimePublications": 55
     },
     {
       "searchId": "15003",
@@ -1736,7 +1792,8 @@
       ],
       "totalPublications": 18,
       "hIndex": 12,
-      "citationCount": 605
+      "citationCount": 605,
+      "lifetimePublications": 54
     },
     {
       "searchId": "20082",
@@ -1766,7 +1823,8 @@
       ],
       "totalPublications": 24,
       "hIndex": 18,
-      "citationCount": 1204
+      "citationCount": 1204,
+      "lifetimePublications": 67
     },
     {
       "searchId": "19054",
@@ -1796,7 +1854,8 @@
       ],
       "totalPublications": 19,
       "hIndex": 11,
-      "citationCount": 435
+      "citationCount": 435,
+      "lifetimePublications": 38
     },
     {
       "searchId": "08331",
@@ -1826,7 +1885,8 @@
       ],
       "totalPublications": 8,
       "hIndex": 8,
-      "citationCount": 254
+      "citationCount": 254,
+      "lifetimePublications": 39
     },
     {
       "searchId": "05068",
@@ -1856,7 +1916,8 @@
       ],
       "totalPublications": 18,
       "hIndex": 29,
-      "citationCount": 2586
+      "citationCount": 2586,
+      "lifetimePublications": 108
     },
     {
       "searchId": "10037",
@@ -1886,7 +1947,8 @@
       ],
       "totalPublications": 42,
       "hIndex": 14,
-      "citationCount": 798
+      "citationCount": 798,
+      "lifetimePublications": 96
     },
     {
       "searchId": "17117",
@@ -1916,7 +1978,8 @@
       ],
       "totalPublications": 8,
       "hIndex": 8,
-      "citationCount": 173
+      "citationCount": 173,
+      "lifetimePublications": 29
     },
     {
       "searchId": "08253",
@@ -1946,7 +2009,8 @@
       ],
       "totalPublications": 6,
       "hIndex": 22,
-      "citationCount": 1528
+      "citationCount": 1528,
+      "lifetimePublications": 84
     },
     {
       "searchId": "16130",
@@ -1976,7 +2040,8 @@
       ],
       "totalPublications": 7,
       "hIndex": 6,
-      "citationCount": 130
+      "citationCount": 130,
+      "lifetimePublications": 25
     },
     {
       "searchId": "22158",
@@ -2006,7 +2071,8 @@
       ],
       "totalPublications": 10,
       "hIndex": 5,
-      "citationCount": 98
+      "citationCount": 98,
+      "lifetimePublications": 35
     },
     {
       "searchId": "22050",
@@ -2036,7 +2102,8 @@
       ],
       "totalPublications": 7,
       "hIndex": 15,
-      "citationCount": 907
+      "citationCount": 907,
+      "lifetimePublications": 42
     },
     {
       "searchId": "17132",
@@ -2066,7 +2133,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 7,
-      "citationCount": 285
+      "citationCount": 285,
+      "lifetimePublications": 15
     },
     {
       "searchId": "14048",
@@ -2096,7 +2164,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 3,
-      "citationCount": 45
+      "citationCount": 45,
+      "lifetimePublications": 5
     },
     {
       "searchId": "20019",
@@ -2126,7 +2195,8 @@
       ],
       "totalPublications": 6,
       "hIndex": 10,
-      "citationCount": 282
+      "citationCount": 282,
+      "lifetimePublications": 30
     },
     {
       "searchId": "14115",
@@ -2156,7 +2226,8 @@
       ],
       "totalPublications": 11,
       "hIndex": 16,
-      "citationCount": 883
+      "citationCount": 883,
+      "lifetimePublications": 58
     },
     {
       "searchId": "08056",
@@ -2186,7 +2257,8 @@
       ],
       "totalPublications": 64,
       "hIndex": 31,
-      "citationCount": 2701
+      "citationCount": 2701,
+      "lifetimePublications": 203
     },
     {
       "searchId": "05204",
@@ -2216,7 +2288,8 @@
       ],
       "totalPublications": 23,
       "hIndex": 23,
-      "citationCount": 2001
+      "citationCount": 2001,
+      "lifetimePublications": 116
     },
     {
       "searchId": "13255",
@@ -2246,7 +2319,8 @@
       ],
       "totalPublications": 8,
       "hIndex": 4,
-      "citationCount": 74
+      "citationCount": 74,
+      "lifetimePublications": 32
     },
     {
       "searchId": "14179",
@@ -2276,7 +2350,8 @@
       ],
       "totalPublications": 3,
       "hIndex": 14,
-      "citationCount": 579
+      "citationCount": 579,
+      "lifetimePublications": 49
     },
     {
       "searchId": "E08004",
@@ -2306,7 +2381,8 @@
       ],
       "totalPublications": 9,
       "hIndex": 14,
-      "citationCount": 877
+      "citationCount": 877,
+      "lifetimePublications": 58
     },
     {
       "searchId": "13149",
@@ -2336,7 +2412,8 @@
       ],
       "totalPublications": 35,
       "hIndex": 21,
-      "citationCount": 1361
+      "citationCount": 1361,
+      "lifetimePublications": 114
     },
     {
       "searchId": "09121",
@@ -2366,7 +2443,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 9,
-      "citationCount": 238
+      "citationCount": 238,
+      "lifetimePublications": 21
     },
     {
       "searchId": "18142",
@@ -2396,7 +2474,8 @@
       ],
       "totalPublications": 3,
       "hIndex": 12,
-      "citationCount": 521
+      "citationCount": 521,
+      "lifetimePublications": 54
     },
     {
       "searchId": "14003",
@@ -2426,7 +2505,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 4,
-      "citationCount": 190
+      "citationCount": 190,
+      "lifetimePublications": 5
     },
     {
       "searchId": "20063",
@@ -2456,7 +2536,8 @@
       ],
       "totalPublications": 3,
       "hIndex": 4,
-      "citationCount": 33
+      "citationCount": 33,
+      "lifetimePublications": 8
     },
     {
       "searchId": "04196",
@@ -2486,7 +2567,8 @@
       ],
       "totalPublications": 4,
       "hIndex": 2,
-      "citationCount": 22
+      "citationCount": 22,
+      "lifetimePublications": 20
     },
     {
       "searchId": "04074",
@@ -2516,7 +2598,8 @@
       ],
       "totalPublications": 13,
       "hIndex": 7,
-      "citationCount": 142
+      "citationCount": 142,
+      "lifetimePublications": 40
     },
     {
       "searchId": "22090",
@@ -2546,7 +2629,8 @@
       ],
       "totalPublications": 2,
       "hIndex": 1,
-      "citationCount": 2
+      "citationCount": 2,
+      "lifetimePublications": 2
     },
     {
       "searchId": "10381",
@@ -2576,7 +2660,8 @@
       ],
       "totalPublications": 3,
       "hIndex": 3,
-      "citationCount": 32
+      "citationCount": 32,
+      "lifetimePublications": 16
     },
     {
       "searchId": "05108",
@@ -2606,7 +2691,8 @@
       ],
       "totalPublications": 13,
       "hIndex": 6,
-      "citationCount": 112
+      "citationCount": 112,
+      "lifetimePublications": 36
     },
     {
       "searchId": "14059",
@@ -2636,7 +2722,8 @@
       ],
       "totalPublications": 10,
       "hIndex": 2,
-      "citationCount": 15
+      "citationCount": 15,
+      "lifetimePublications": 16
     },
     {
       "searchId": "14163",
@@ -2666,7 +2753,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 1,
-      "citationCount": 1
+      "citationCount": 1,
+      "lifetimePublications": 2
     },
     {
       "searchId": "07004",
@@ -2696,7 +2784,8 @@
       ],
       "totalPublications": 6,
       "hIndex": 1,
-      "citationCount": 5
+      "citationCount": 5,
+      "lifetimePublications": 11
     },
     {
       "searchId": "22145",
@@ -2726,7 +2815,8 @@
       ],
       "totalPublications": 8,
       "hIndex": 3,
-      "citationCount": 26
+      "citationCount": 26,
+      "lifetimePublications": 10
     },
     {
       "searchId": "12196",
@@ -2756,7 +2846,8 @@
       ],
       "totalPublications": 4,
       "hIndex": 4,
-      "citationCount": 76
+      "citationCount": 76,
+      "lifetimePublications": 15
     },
     {
       "searchId": "04073",
@@ -2786,7 +2877,8 @@
       ],
       "totalPublications": 3,
       "hIndex": 2,
-      "citationCount": 12
+      "citationCount": 12,
+      "lifetimePublications": 8
     },
     {
       "searchId": "03047",
@@ -2816,7 +2908,8 @@
       ],
       "totalPublications": 1,
       "hIndex": 2,
-      "citationCount": 15
+      "citationCount": 15,
+      "lifetimePublications": 6
     },
     {
       "searchId": "10209",
@@ -2846,7 +2939,8 @@
       ],
       "totalPublications": 3,
       "hIndex": 3,
-      "citationCount": 20
+      "citationCount": 20,
+      "lifetimePublications": 11
     },
     {
       "searchId": "03068",
@@ -2876,7 +2970,8 @@
       ],
       "totalPublications": 1,
       "hIndex": 2,
-      "citationCount": 11
+      "citationCount": 11,
+      "lifetimePublications": 8
     },
     {
       "searchId": "18075",
@@ -2906,7 +3001,8 @@
       ],
       "totalPublications": 9,
       "hIndex": 2,
-      "citationCount": 21
+      "citationCount": 21,
+      "lifetimePublications": 19
     },
     {
       "searchId": "18112",
@@ -2936,7 +3032,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 4,
-      "citationCount": 120
+      "citationCount": 120,
+      "lifetimePublications": 9
     },
     {
       "searchId": "08011",
@@ -2966,7 +3063,8 @@
       ],
       "totalPublications": 3,
       "hIndex": 6,
-      "citationCount": 226
+      "citationCount": 226,
+      "lifetimePublications": 18
     },
     {
       "searchId": "16166",
@@ -2996,7 +3094,8 @@
       ],
       "totalPublications": 3,
       "hIndex": 4,
-      "citationCount": 33
+      "citationCount": 33,
+      "lifetimePublications": 8
     },
     {
       "searchId": "22128",
@@ -3026,7 +3125,8 @@
       ],
       "totalPublications": 1,
       "hIndex": 3,
-      "citationCount": 24
+      "citationCount": 24,
+      "lifetimePublications": 8
     },
     {
       "searchId": "08082",
@@ -3056,7 +3156,8 @@
       ],
       "totalPublications": 1,
       "hIndex": 2,
-      "citationCount": 48
+      "citationCount": 48,
+      "lifetimePublications": 7
     },
     {
       "searchId": "09174",
@@ -3086,7 +3187,8 @@
       ],
       "totalPublications": 3,
       "hIndex": 2,
-      "citationCount": 44
+      "citationCount": 44,
+      "lifetimePublications": 9
     },
     {
       "searchId": "06255",
@@ -3116,7 +3218,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 3,
-      "citationCount": 26
+      "citationCount": 26,
+      "lifetimePublications": 7
     },
     {
       "searchId": "06193",
@@ -3146,7 +3249,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 3,
-      "citationCount": 23
+      "citationCount": 23,
+      "lifetimePublications": 3
     },
     {
       "searchId": "16202",
@@ -3176,7 +3280,8 @@
       ],
       "totalPublications": 10,
       "hIndex": 12,
-      "citationCount": 558
+      "citationCount": 558,
+      "lifetimePublications": 27
     },
     {
       "searchId": "08342",
@@ -3206,7 +3311,8 @@
       ],
       "totalPublications": 8,
       "hIndex": 3,
-      "citationCount": 34
+      "citationCount": 34,
+      "lifetimePublications": 15
     },
     {
       "searchId": "14181",
@@ -3236,7 +3342,8 @@
       ],
       "totalPublications": 19,
       "hIndex": 24,
-      "citationCount": 1819
+      "citationCount": 1819,
+      "lifetimePublications": 86
     },
     {
       "searchId": "17021",
@@ -3266,7 +3373,8 @@
       ],
       "totalPublications": 4,
       "hIndex": 5,
-      "citationCount": 262
+      "citationCount": 262,
+      "lifetimePublications": 10
     },
     {
       "searchId": "14077",
@@ -3296,7 +3404,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 1,
-      "citationCount": 4
+      "citationCount": 4,
+      "lifetimePublications": 1
     },
     {
       "searchId": "05239",
@@ -3326,7 +3435,8 @@
       ],
       "totalPublications": 10,
       "hIndex": 7,
-      "citationCount": 454
+      "citationCount": 454,
+      "lifetimePublications": 18
     },
     {
       "searchId": "08370",
@@ -3356,7 +3466,8 @@
       ],
       "totalPublications": 12,
       "hIndex": 7,
-      "citationCount": 137
+      "citationCount": 137,
+      "lifetimePublications": 21
     },
     {
       "searchId": "13221",
@@ -3386,7 +3497,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 1,
-      "citationCount": 22
+      "citationCount": 22,
+      "lifetimePublications": 1
     },
     {
       "searchId": "14125",
@@ -3416,7 +3528,8 @@
       ],
       "totalPublications": 1,
       "hIndex": 2,
-      "citationCount": 7
+      "citationCount": 7,
+      "lifetimePublications": 6
     },
     {
       "searchId": "07070",
@@ -3446,7 +3559,8 @@
       ],
       "totalPublications": 6,
       "hIndex": 5,
-      "citationCount": 113
+      "citationCount": 113,
+      "lifetimePublications": 27
     },
     {
       "searchId": "15224",
@@ -3476,7 +3590,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 2,
-      "citationCount": 21
+      "citationCount": 21,
+      "lifetimePublications": 3
     },
     {
       "searchId": "10028",
@@ -3506,7 +3621,8 @@
       ],
       "totalPublications": 5,
       "hIndex": 2,
-      "citationCount": 15
+      "citationCount": 15,
+      "lifetimePublications": 9
     },
     {
       "searchId": "17102",
@@ -3536,7 +3652,8 @@
       ],
       "totalPublications": 10,
       "hIndex": 10,
-      "citationCount": 346
+      "citationCount": 346,
+      "lifetimePublications": 28
     },
     {
       "searchId": "03077",
@@ -3566,7 +3683,8 @@
       ],
       "totalPublications": 7,
       "hIndex": 5,
-      "citationCount": 63
+      "citationCount": 63,
+      "lifetimePublications": 17
     },
     {
       "searchId": "07254",
@@ -3596,7 +3714,8 @@
       ],
       "totalPublications": 17,
       "hIndex": 6,
-      "citationCount": 138
+      "citationCount": 138,
+      "lifetimePublications": 31
     },
     {
       "searchId": "J22001",
@@ -3626,7 +3745,8 @@
       ],
       "totalPublications": 5,
       "hIndex": 25,
-      "citationCount": 2351
+      "citationCount": 2351,
+      "lifetimePublications": 133
     },
     {
       "searchId": "07331",
@@ -3656,7 +3776,8 @@
       ],
       "totalPublications": 3,
       "hIndex": 1,
-      "citationCount": 9
+      "citationCount": 9,
+      "lifetimePublications": 5
     },
     {
       "searchId": "22144",
@@ -3686,7 +3807,8 @@
       ],
       "totalPublications": 2,
       "hIndex": 1,
-      "citationCount": 3
+      "citationCount": 3,
+      "lifetimePublications": 3
     },
     {
       "searchId": "22119",
@@ -3716,7 +3838,8 @@
       ],
       "totalPublications": 4,
       "hIndex": 4,
-      "citationCount": 82
+      "citationCount": 82,
+      "lifetimePublications": 12
     },
     {
       "searchId": "19006",
@@ -3746,7 +3869,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 1,
-      "citationCount": 6
+      "citationCount": 6,
+      "lifetimePublications": 3
     },
     {
       "searchId": "19040",
@@ -3776,7 +3900,8 @@
       ],
       "totalPublications": 23,
       "hIndex": 9,
-      "citationCount": 359
+      "citationCount": 359,
+      "lifetimePublications": 56
     },
     {
       "searchId": "25010",
@@ -3806,7 +3931,8 @@
       ],
       "totalPublications": 9,
       "hIndex": 10,
-      "citationCount": 538
+      "citationCount": 538,
+      "lifetimePublications": 29
     },
     {
       "searchId": "25091",
@@ -3836,7 +3962,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 6,
-      "citationCount": 587
+      "citationCount": 587,
+      "lifetimePublications": 11
     },
     {
       "searchId": "E19009",
@@ -3866,7 +3993,8 @@
       ],
       "totalPublications": 3,
       "hIndex": 5,
-      "citationCount": 74
+      "citationCount": 74,
+      "lifetimePublications": 16
     },
     {
       "searchId": "24054",
@@ -3896,7 +4024,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 3,
-      "citationCount": 44
+      "citationCount": 44,
+      "lifetimePublications": 3
     },
     {
       "searchId": "E23001",
@@ -3926,7 +4055,8 @@
       ],
       "totalPublications": 5,
       "hIndex": 9,
-      "citationCount": 280
+      "citationCount": 280,
+      "lifetimePublications": 12
     },
     {
       "searchId": "23104",
@@ -3956,7 +4086,8 @@
       ],
       "totalPublications": 6,
       "hIndex": 6,
-      "citationCount": 155
+      "citationCount": 155,
+      "lifetimePublications": 26
     },
     {
       "searchId": "22131",
@@ -3986,7 +4117,8 @@
       ],
       "totalPublications": 1,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 1
     },
     {
       "searchId": "J22012",
@@ -4016,7 +4148,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 12,
-      "citationCount": 428
+      "citationCount": 428,
+      "lifetimePublications": 39
     },
     {
       "searchId": "E22006",
@@ -4046,7 +4179,8 @@
       ],
       "totalPublications": 14,
       "hIndex": 7,
-      "citationCount": 135
+      "citationCount": 135,
+      "lifetimePublications": 27
     },
     {
       "searchId": "03124",
@@ -4076,7 +4210,8 @@
       ],
       "totalPublications": 6,
       "hIndex": 4,
-      "citationCount": 40
+      "citationCount": 40,
+      "lifetimePublications": 14
     },
     {
       "searchId": "04129",
@@ -4106,7 +4241,8 @@
       ],
       "totalPublications": 6,
       "hIndex": 6,
-      "citationCount": 78
+      "citationCount": 78,
+      "lifetimePublications": 20
     },
     {
       "searchId": "21068",
@@ -4136,7 +4272,8 @@
       ],
       "totalPublications": 36,
       "hIndex": 36,
-      "citationCount": 4634
+      "citationCount": 4634,
+      "lifetimePublications": 152
     },
     {
       "searchId": "09259",
@@ -4166,7 +4303,8 @@
       ],
       "totalPublications": 14,
       "hIndex": 13,
-      "citationCount": 569
+      "citationCount": 569,
+      "lifetimePublications": 48
     },
     {
       "searchId": "08375",
@@ -4196,7 +4334,8 @@
       ],
       "totalPublications": 11,
       "hIndex": 6,
-      "citationCount": 247
+      "citationCount": 247,
+      "lifetimePublications": 29
     },
     {
       "searchId": "10014",
@@ -4226,7 +4365,8 @@
       ],
       "totalPublications": 11,
       "hIndex": 24,
-      "citationCount": 2988
+      "citationCount": 2988,
+      "lifetimePublications": 85
     },
     {
       "searchId": "15153",
@@ -4256,7 +4396,8 @@
       ],
       "totalPublications": 34,
       "hIndex": 28,
-      "citationCount": 4967
+      "citationCount": 4967,
+      "lifetimePublications": 141
     },
     {
       "searchId": "09224",
@@ -4286,7 +4427,8 @@
       ],
       "totalPublications": 1,
       "hIndex": 4,
-      "citationCount": 29
+      "citationCount": 29,
+      "lifetimePublications": 8
     },
     {
       "searchId": "10382",
@@ -4316,7 +4458,8 @@
       ],
       "totalPublications": 16,
       "hIndex": 13,
-      "citationCount": 540
+      "citationCount": 540,
+      "lifetimePublications": 44
     },
     {
       "searchId": "14127",
@@ -4346,7 +4489,8 @@
       ],
       "totalPublications": 39,
       "hIndex": 15,
-      "citationCount": 910
+      "citationCount": 910,
+      "lifetimePublications": 74
     },
     {
       "searchId": "11108",
@@ -4376,7 +4520,8 @@
       ],
       "totalPublications": 1,
       "hIndex": 4,
-      "citationCount": 32
+      "citationCount": 32,
+      "lifetimePublications": 11
     },
     {
       "searchId": "07138",
@@ -4406,7 +4551,8 @@
       ],
       "totalPublications": 8,
       "hIndex": 15,
-      "citationCount": 638
+      "citationCount": 638,
+      "lifetimePublications": 42
     },
     {
       "searchId": "22019",
@@ -4436,7 +4582,8 @@
       ],
       "totalPublications": 4,
       "hIndex": 22,
-      "citationCount": 1377
+      "citationCount": 1377,
+      "lifetimePublications": 64
     },
     {
       "searchId": "14174",
@@ -4466,7 +4613,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 6,
-      "citationCount": 152
+      "citationCount": 152,
+      "lifetimePublications": 14
     },
     {
       "searchId": "06349",
@@ -4496,7 +4644,8 @@
       ],
       "totalPublications": 12,
       "hIndex": 15,
-      "citationCount": 748
+      "citationCount": 748,
+      "lifetimePublications": 57
     },
     {
       "searchId": "08314",
@@ -4526,7 +4675,8 @@
       ],
       "totalPublications": 6,
       "hIndex": 5,
-      "citationCount": 116
+      "citationCount": 116,
+      "lifetimePublications": 12
     },
     {
       "searchId": "15240",
@@ -4556,7 +4706,8 @@
       ],
       "totalPublications": 15,
       "hIndex": 11,
-      "citationCount": 329
+      "citationCount": 329,
+      "lifetimePublications": 34
     },
     {
       "searchId": "E17006",
@@ -4586,7 +4737,8 @@
       ],
       "totalPublications": 8,
       "hIndex": 8,
-      "citationCount": 359
+      "citationCount": 359,
+      "lifetimePublications": 32
     },
     {
       "searchId": "22017",
@@ -4616,7 +4768,8 @@
       ],
       "totalPublications": 7,
       "hIndex": 7,
-      "citationCount": 283
+      "citationCount": 283,
+      "lifetimePublications": 14
     },
     {
       "searchId": "07321",
@@ -4646,7 +4799,8 @@
       ],
       "totalPublications": 1,
       "hIndex": 6,
-      "citationCount": 146
+      "citationCount": 146,
+      "lifetimePublications": 13
     },
     {
       "searchId": "25051",
@@ -4676,7 +4830,8 @@
       ],
       "totalPublications": 7,
       "hIndex": 10,
-      "citationCount": 374
+      "citationCount": 374,
+      "lifetimePublications": 47
     },
     {
       "searchId": "J23013",
@@ -4706,7 +4861,8 @@
       ],
       "totalPublications": 14,
       "hIndex": 7,
-      "citationCount": 169
+      "citationCount": 169,
+      "lifetimePublications": 29
     },
     {
       "searchId": "22051",
@@ -4736,7 +4892,8 @@
       ],
       "totalPublications": 20,
       "hIndex": 8,
-      "citationCount": 254
+      "citationCount": 254,
+      "lifetimePublications": 29
     },
     {
       "searchId": "22083",
@@ -4766,7 +4923,8 @@
       ],
       "totalPublications": 6,
       "hIndex": 5,
-      "citationCount": 39
+      "citationCount": 39,
+      "lifetimePublications": 10
     },
     {
       "searchId": "E07004",
@@ -4796,7 +4954,8 @@
       ],
       "totalPublications": 4,
       "hIndex": 11,
-      "citationCount": 782
+      "citationCount": 782,
+      "lifetimePublications": 23
     },
     {
       "searchId": "15170",
@@ -4826,7 +4985,8 @@
       ],
       "totalPublications": 19,
       "hIndex": 29,
-      "citationCount": 3307
+      "citationCount": 3307,
+      "lifetimePublications": 82
     },
     {
       "searchId": "J25006",
@@ -4856,7 +5016,8 @@
       ],
       "totalPublications": 37,
       "hIndex": 37,
-      "citationCount": 5076
+      "citationCount": 5076,
+      "lifetimePublications": 135
     },
     {
       "searchId": "08090",
@@ -4886,7 +5047,8 @@
       ],
       "totalPublications": 13,
       "hIndex": 9,
-      "citationCount": 294
+      "citationCount": 294,
+      "lifetimePublications": 37
     },
     {
       "searchId": "08145",
@@ -4916,7 +5078,8 @@
       ],
       "totalPublications": 12,
       "hIndex": 16,
-      "citationCount": 833
+      "citationCount": 833,
+      "lifetimePublications": 57
     },
     {
       "searchId": "05315",
@@ -4946,7 +5109,8 @@
       ],
       "totalPublications": 2,
       "hIndex": 1,
-      "citationCount": 7
+      "citationCount": 7,
+      "lifetimePublications": 4
     },
     {
       "searchId": "15281",
@@ -4976,7 +5140,8 @@
       ],
       "totalPublications": 7,
       "hIndex": 3,
-      "citationCount": 30
+      "citationCount": 30,
+      "lifetimePublications": 15
     },
     {
       "searchId": "AP21002",
@@ -5006,7 +5171,8 @@
       ],
       "totalPublications": 2,
       "hIndex": 10,
-      "citationCount": 921
+      "citationCount": 921,
+      "lifetimePublications": 43
     },
     {
       "searchId": "AP24013",
@@ -5036,7 +5202,8 @@
       ],
       "totalPublications": 71,
       "hIndex": 43,
-      "citationCount": 4596
+      "citationCount": 4596,
+      "lifetimePublications": 319
     },
     {
       "searchId": "EP19001",
@@ -5066,7 +5233,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 20,
-      "citationCount": 1351
+      "citationCount": 1351,
+      "lifetimePublications": 156
     },
     {
       "searchId": "08268",
@@ -5096,7 +5264,8 @@
       ],
       "totalPublications": 2,
       "hIndex": 16,
-      "citationCount": 925
+      "citationCount": 925,
+      "lifetimePublications": 135
     },
     {
       "searchId": "AP25027",
@@ -5126,7 +5295,8 @@
       ],
       "totalPublications": 1,
       "hIndex": 18,
-      "citationCount": 949
+      "citationCount": 949,
+      "lifetimePublications": 97
     },
     {
       "searchId": "AP25031",
@@ -5156,7 +5326,8 @@
       ],
       "totalPublications": 1,
       "hIndex": 1,
-      "citationCount": 5
+      "citationCount": 5,
+      "lifetimePublications": 1
     },
     {
       "searchId": "05153",
@@ -5186,7 +5357,8 @@
       ],
       "totalPublications": 1,
       "hIndex": 5,
-      "citationCount": 53
+      "citationCount": 53,
+      "lifetimePublications": 13
     },
     {
       "searchId": "AP25041",
@@ -5216,7 +5388,8 @@
       ],
       "totalPublications": 38,
       "hIndex": 12,
-      "citationCount": 688
+      "citationCount": 688,
+      "lifetimePublications": 70
     },
     {
       "searchId": "21042",
@@ -5246,7 +5419,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 4,
-      "citationCount": 27
+      "citationCount": 27,
+      "lifetimePublications": 5
     },
     {
       "searchId": "10306",
@@ -5276,7 +5450,8 @@
       ],
       "totalPublications": 1,
       "hIndex": 1,
-      "citationCount": 5
+      "citationCount": 5,
+      "lifetimePublications": 1
     },
     {
       "searchId": "AP25011",
@@ -5306,7 +5481,8 @@
       ],
       "totalPublications": 4,
       "hIndex": 8,
-      "citationCount": 185
+      "citationCount": 185,
+      "lifetimePublications": 45
     },
     {
       "searchId": "19110",
@@ -5336,7 +5512,8 @@
       ],
       "totalPublications": 1,
       "hIndex": 1,
-      "citationCount": 2
+      "citationCount": 2,
+      "lifetimePublications": 3
     },
     {
       "searchId": "AP25019",
@@ -5366,7 +5543,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "AP23007",
@@ -5396,7 +5574,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "24092",
@@ -5426,7 +5605,8 @@
       ],
       "totalPublications": 3,
       "hIndex": 6,
-      "citationCount": 333
+      "citationCount": 333,
+      "lifetimePublications": 21
     },
     {
       "searchId": "E23002",
@@ -5456,7 +5636,8 @@
       ],
       "totalPublications": 5,
       "hIndex": 3,
-      "citationCount": 26
+      "citationCount": 26,
+      "lifetimePublications": 8
     },
     {
       "searchId": "25007",
@@ -5486,7 +5667,8 @@
       ],
       "totalPublications": 2,
       "hIndex": 2,
-      "citationCount": 12
+      "citationCount": 12,
+      "lifetimePublications": 4
     },
     {
       "searchId": "25106",
@@ -5516,7 +5698,8 @@
       ],
       "totalPublications": 1,
       "hIndex": 3,
-      "citationCount": 51
+      "citationCount": 51,
+      "lifetimePublications": 4
     },
     {
       "searchId": "03079",
@@ -5546,7 +5729,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 1,
-      "citationCount": 3
+      "citationCount": 3,
+      "lifetimePublications": 3
     },
     {
       "searchId": "AP21005",
@@ -5576,7 +5760,8 @@
       ],
       "totalPublications": 18,
       "hIndex": 34,
-      "citationCount": 5640
+      "citationCount": 5640,
+      "lifetimePublications": 163
     },
     {
       "searchId": "17044",
@@ -5606,7 +5791,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 4,
-      "citationCount": 76
+      "citationCount": 76,
+      "lifetimePublications": 8
     },
     {
       "searchId": "15157",
@@ -5636,7 +5822,8 @@
       ],
       "totalPublications": 4,
       "hIndex": 10,
-      "citationCount": 775
+      "citationCount": 775,
+      "lifetimePublications": 20
     },
     {
       "searchId": "J23006",
@@ -5666,7 +5853,8 @@
       ],
       "totalPublications": 1,
       "hIndex": 4,
-      "citationCount": 164
+      "citationCount": 164,
+      "lifetimePublications": 8
     },
     {
       "searchId": "17068",
@@ -5696,7 +5884,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 7,
-      "citationCount": 570
+      "citationCount": 570,
+      "lifetimePublications": 9
     },
     {
       "searchId": "15011",
@@ -5726,7 +5915,8 @@
       ],
       "totalPublications": 10,
       "hIndex": 11,
-      "citationCount": 326
+      "citationCount": 326,
+      "lifetimePublications": 35
     },
     {
       "searchId": "09059",
@@ -5756,7 +5946,8 @@
       ],
       "totalPublications": 1,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 1
     },
     {
       "searchId": "",
@@ -5786,7 +5977,8 @@
       ],
       "totalPublications": 33,
       "hIndex": 49,
-      "citationCount": 5932
+      "citationCount": 5932,
+      "lifetimePublications": 237
     },
     {
       "searchId": "",
@@ -5816,7 +6008,8 @@
       ],
       "totalPublications": 70,
       "hIndex": 34,
-      "citationCount": 4074
+      "citationCount": 4074,
+      "lifetimePublications": 413
     },
     {
       "searchId": "",
@@ -5846,7 +6039,8 @@
       ],
       "totalPublications": 30,
       "hIndex": 37,
-      "citationCount": 5232
+      "citationCount": 5232,
+      "lifetimePublications": 228
     },
     {
       "searchId": "",
@@ -5876,7 +6070,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "",
@@ -5906,7 +6101,8 @@
       ],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "19101",
@@ -5920,7 +6116,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "E25008",
@@ -5934,7 +6131,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "10214",
@@ -5948,7 +6146,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "05109",
@@ -5962,7 +6161,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "14109",
@@ -5976,7 +6176,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "19080",
@@ -5990,7 +6191,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "15053",
@@ -6004,7 +6206,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "14159",
@@ -6018,7 +6221,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "19056",
@@ -6032,7 +6236,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "20066",
@@ -6046,7 +6251,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "15032",
@@ -6060,7 +6266,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "15016",
@@ -6074,7 +6281,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "14151",
@@ -6088,7 +6296,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "J15004",
@@ -6102,7 +6311,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "14228",
@@ -6116,7 +6326,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "10223",
@@ -6130,7 +6341,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "14037",
@@ -6144,7 +6356,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "14090",
@@ -6158,7 +6371,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "J24013",
@@ -6172,7 +6386,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "E19006",
@@ -6186,7 +6401,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "J18002",
@@ -6200,7 +6416,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "J23002",
@@ -6214,7 +6431,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "J23012",
@@ -6228,7 +6446,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "12175",
@@ -6242,7 +6461,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "25014",
@@ -6256,7 +6476,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "J19003",
@@ -6270,7 +6491,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "J25005",
@@ -6284,7 +6506,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "J18003",
@@ -6298,7 +6521,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "14018",
@@ -6312,7 +6536,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "E18001",
@@ -6326,7 +6551,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "19115",
@@ -6340,7 +6566,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "24010",
@@ -6354,7 +6581,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "J23009",
@@ -6368,7 +6596,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "16080",
@@ -6382,7 +6611,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "15285",
@@ -6396,7 +6626,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "22041",
@@ -6410,7 +6641,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "",
@@ -6424,7 +6656,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     },
     {
       "searchId": "",
@@ -6438,7 +6671,8 @@
       "publications": [],
       "totalPublications": 0,
       "hIndex": 0,
-      "citationCount": 0
+      "citationCount": 0,
+      "lifetimePublications": 0
     }
   ]
 }
