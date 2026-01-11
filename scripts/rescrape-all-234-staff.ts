@@ -59,7 +59,15 @@ function parseCSV(csvContent: string): CSVStaff[] {
         // Split by comma, handling potential quotes
         const columns = line.split(',').map(col => col.trim().replace(/^"|"$/g, ''));
 
-        const name = columns[0] || '';
+        // Sanitize name: Remove non-breaking spaces, replacement characters, and other artifacts
+        let name = columns[0] || '';
+        name = name
+            .replace(/\u00A0/g, ' ')  // Non-breaking space
+            .replace(/�/g, ' ')        // Replacement character
+            .replace(/\uFFFD/g, ' ')   // Unicode replacement character
+            .replace(/\s+/g, ' ')      // Multiple spaces to single space
+            .trim();
+
         const email = columns[1] || '';
         const scopusId = columns[2] || 'NA';
         const department = columns[3] || '';
