@@ -5,6 +5,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { ArrowLeft, Building2, Users, BarChart3, ChevronDown, Lock, Shield, Trash2, Plus, X, Download, Printer } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { ResponsiveContainer, ScatterChart, Scatter, XAxis, YAxis, ZAxis, Tooltip as RechartsTooltip, Cell, ReferenceLine } from 'recharts';
 
 interface StaffMember {
     name: string;
@@ -933,7 +934,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
     });
 
     // State for chart metric selection
-    const [chartMetric, setChartMetric] = useState<'publications' | 'citations' | 'hIndex' | 'lifetimePubs' | 'avgLifetimePubs'>('publications');
+    const [chartMetric, setChartMetric] = useState<'publications' | 'avgPublications' | 'combinedPublications' | 'citations' | 'hIndex' | 'lifetimePubs' | 'avgLifetimePubs'>('publications');
 
     return (
         <div className="space-y-6 print:space-y-4">
@@ -1106,7 +1107,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                 <div className="p-6 print:p-4">
                     <div className="flex items-center justify-between mb-6 print:mb-4">
                         <h3 className="text-xl font-bold text-white print:text-black">
-                            {chartMetric === 'publications'
+                            {chartMetric === 'publications' || chartMetric === 'avgPublications' || chartMetric === 'combinedPublications'
                                 ? 'Publications by Year'
                                 : chartMetric === 'citations' ? 'Top 20 Staff by Citations (Lifetime)'
                                     : chartMetric === 'hIndex' ? 'Top 20 Staff by H-Index'
@@ -1120,7 +1121,9 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                                 onChange={(e) => setChartMetric(e.target.value as any)}
                                 className="bg-slate-800 text-white border border-white/20 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
-                                <option value="publications">Total Publications + Avg per Staff</option>
+                                <option value="publications">Total Publications (Vol)</option>
+                                <option value="avgPublications">Average per Staff (Efficiency)</option>
+                                <option value="combinedPublications">Combined (Vol + Efficiency)</option>
                                 <option value="lifetimePubs">Total Lifetime Publications</option>
                                 <option value="avgLifetimePubs">Avg Lifetime Pubs per Staff</option>
                                 <option value="citations">Total Citations (Lifetime)</option>
@@ -1129,7 +1132,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                         </div>
                     </div>
 
-                    {chartMetric === 'publications' ? (
+                    {['publications', 'avgPublications', 'combinedPublications'].includes(chartMetric) ? (
                         <div className="flex items-end justify-between gap-4 h-64 print:h-48 w-full px-4">
                             {publicationsByYear.map((yearData: any) => {
                                 const maxCount = Math.max(...publicationsByYear.map((y: any) => y.count));
@@ -1143,36 +1146,40 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                                     <div key={yearData.year} className="flex-1 flex flex-col items-center justify-end gap-2 h-full">
                                         <div className="w-full flex gap-2 items-end justify-center h-full max-w-[200px]">
                                             {/* Total Publications Bar */}
-                                            <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full group relative">
-                                                <div className="opacity-0 group-hover:opacity-100 absolute -top-8 text-xs bg-black text-white px-2 py-1 rounded transition-opacity whitespace-nowrap z-10">Total: {yearData.count}</div>
-                                                <div className="text-xs font-bold text-blue-300 print:text-blue-700">{yearData.count}</div>
-                                                <div
-                                                    className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t transition-all duration-500 print:bg-blue-600 hover:from-blue-500 hover:to-blue-300"
-                                                    style={{
-                                                        height: `${countHeight}%`,
-                                                        minHeight: '4px',
-                                                        // @ts-ignore
-                                                        printColorAdjust: 'exact',
-                                                        WebkitPrintColorAdjust: 'exact'
-                                                    }}
-                                                />
-                                            </div>
+                                            {(chartMetric === 'publications' || chartMetric === 'combinedPublications') && (
+                                                <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full group relative">
+                                                    <div className="opacity-0 group-hover:opacity-100 absolute -top-8 text-xs bg-black text-white px-2 py-1 rounded transition-opacity whitespace-nowrap z-10">Total: {yearData.count}</div>
+                                                    <div className="text-xs font-bold text-blue-300 print:text-blue-700">{yearData.count}</div>
+                                                    <div
+                                                        className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t transition-all duration-500 print:bg-blue-600 hover:from-blue-500 hover:to-blue-300"
+                                                        style={{
+                                                            height: `${countHeight}%`,
+                                                            minHeight: '4px',
+                                                            // @ts-ignore
+                                                            printColorAdjust: 'exact',
+                                                            WebkitPrintColorAdjust: 'exact'
+                                                        }}
+                                                    />
+                                                </div>
+                                            )}
 
                                             {/* Average Bar */}
-                                            <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full group relative">
-                                                <div className="opacity-0 group-hover:opacity-100 absolute -top-8 text-xs bg-black text-white px-2 py-1 rounded transition-opacity whitespace-nowrap z-10">Avg: {yearData.avg.toFixed(2)}</div>
-                                                <div className="text-xs font-bold text-purple-300 print:text-purple-700">{yearData.avg.toFixed(2)}</div>
-                                                <div
-                                                    className="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-t transition-all duration-500 print:bg-purple-600 hover:from-purple-500 hover:to-purple-300"
-                                                    style={{
-                                                        height: `${avgHeight}%`,
-                                                        minHeight: '4px',
-                                                        // @ts-ignore
-                                                        printColorAdjust: 'exact',
-                                                        WebkitPrintColorAdjust: 'exact'
-                                                    }}
-                                                />
-                                            </div>
+                                            {(chartMetric === 'avgPublications' || chartMetric === 'combinedPublications') && (
+                                                <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full group relative">
+                                                    <div className="opacity-0 group-hover:opacity-100 absolute -top-8 text-xs bg-black text-white px-2 py-1 rounded transition-opacity whitespace-nowrap z-10">Avg: {yearData.avg.toFixed(2)}</div>
+                                                    <div className="text-xs font-bold text-purple-300 print:text-purple-700">{yearData.avg.toFixed(2)}</div>
+                                                    <div
+                                                        className="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-t transition-all duration-500 print:bg-purple-600 hover:from-purple-500 hover:to-purple-300"
+                                                        style={{
+                                                            height: `${avgHeight}%`,
+                                                            minHeight: '4px',
+                                                            // @ts-ignore
+                                                            printColorAdjust: 'exact',
+                                                            WebkitPrintColorAdjust: 'exact'
+                                                        }}
+                                                    />
+                                                </div>
+                                            )}
                                         </div>
                                         <div className="text-sm font-semibold text-gray-300 print:text-gray-700 mt-2">{yearData.year}</div>
                                     </div>
@@ -1246,16 +1253,20 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                     )}
 
                     {/* Legend */}
-                    {chartMetric === 'publications' ? (
+                    {['publications', 'avgPublications', 'combinedPublications'].includes(chartMetric) ? (
                         <div className="flex justify-center gap-6 mt-6 border-t border-white/10 pt-4 print:border-gray-300">
-                            <div className="flex items-center gap-2">
-                                <div className="w-4 h-4 bg-gradient-to-t from-blue-600 to-blue-400 rounded print:bg-blue-600"></div>
-                                <span className="text-sm text-gray-300 print:text-gray-700">Total Publications</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <div className="w-4 h-4 bg-gradient-to-t from-purple-600 to-purple-400 rounded print:bg-purple-600"></div>
-                                <span className="text-sm text-gray-300 print:text-gray-700">Average per Staff</span>
-                            </div>
+                            {(chartMetric === 'publications' || chartMetric === 'combinedPublications') && (
+                                <div className="flex items-center gap-2">
+                                    <div className="w-4 h-4 bg-gradient-to-t from-blue-600 to-blue-400 rounded print:bg-blue-600"></div>
+                                    <span className="text-sm text-gray-300 print:text-gray-700">Total Publications</span>
+                                </div>
+                            )}
+                            {(chartMetric === 'avgPublications' || chartMetric === 'combinedPublications') && (
+                                <div className="flex items-center gap-2">
+                                    <div className="w-4 h-4 bg-gradient-to-t from-purple-600 to-purple-400 rounded print:bg-purple-600"></div>
+                                    <span className="text-sm text-gray-300 print:text-gray-700">Average per Staff</span>
+                                </div>
+                            )}
                         </div>
                     ) : (
                         <div className="flex justify-center gap-6 mt-6 border-t border-white/10 pt-4 print:border-gray-300">
@@ -1267,7 +1278,15 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                     )}
                 </div>
             </div>
-        </div >
+
+            {/* NEW: VISUALIZATIONS */}
+            <StaffPerformanceBubbleChart staffMembers={staffMembers} selectedYears={selectedYears} />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <StaffDistributionChart staffMembers={staffMembers} metric="hIndex" title="H-Index Distribution" />
+                <StaffDistributionChart staffMembers={staffMembers} metric="citations" title="Citations Distribution" />
+            </div>
+        </div>
     );
 }
 
@@ -1301,7 +1320,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
     });
 
     // State for chart metric selection
-    const [chartMetric, setChartMetric] = useState<'publications' | 'citations' | 'hIndex' | 'lifetimePubs' | 'avgLifetimePubs'>('publications');
+    const [chartMetric, setChartMetric] = useState<'publications' | 'avgPublications' | 'combinedPublications' | 'citations' | 'hIndex' | 'lifetimePubs' | 'avgLifetimePubs'>('publications');
 
     useEffect(() => {
         const loadFacultyData = async () => {
@@ -1699,7 +1718,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                 <div className="p-6 print:p-4">
                     <div className="flex items-center justify-between mb-6 print:mb-4">
                         <h3 className="text-xl font-bold text-white print:text-black">
-                            {chartMetric === 'publications' ? 'Department Comparison (Selected Years)'
+                            {['publications', 'avgPublications', 'combinedPublications'].includes(chartMetric) ? 'Department Comparison (Selected Years)'
                                 : chartMetric === 'lifetimePubs' ? 'Department Comparison (Lifetime Pubs)'
                                     : chartMetric === 'avgLifetimePubs' ? 'Department Comparison (Avg Lifetime Pubs)'
                                         : chartMetric === 'citations' ? 'Department Comparison (Total Citations)'
@@ -1712,7 +1731,9 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                                 onChange={(e) => setChartMetric(e.target.value as any)}
                                 className="bg-slate-800 text-white border border-white/20 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
-                                <option value="publications">Total Publications + Avg per Staff</option>
+                                <option value="publications">Total Publications (Vol)</option>
+                                <option value="avgPublications">Average per Staff (Efficiency)</option>
+                                <option value="combinedPublications">Combined (Vol + Efficiency)</option>
                                 <option value="lifetimePubs">Total Lifetime Publications</option>
                                 <option value="avgLifetimePubs">Avg Lifetime Pubs per Staff</option>
                                 <option value="citations">Total Citations (Lifetime)</option>
@@ -1725,7 +1746,8 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                         <div className="min-w-[600px] h-96 print:h-80 flex items-end gap-8 pb-12 px-4">
                             {departmentStats
                                 .sort((a, b) => {
-                                    if (chartMetric === 'publications') return b.totalPublications - a.totalPublications;
+                                    if (chartMetric === 'publications' || chartMetric === 'combinedPublications') return b.totalPublications - a.totalPublications;
+                                    if (chartMetric === 'avgPublications') return parseFloat(b.averagePerStaff) - parseFloat(a.averagePerStaff);
                                     if (chartMetric === 'lifetimePubs') return b.totalLifetimePublications - a.totalLifetimePublications;
                                     if (chartMetric === 'avgLifetimePubs') return parseFloat(b.averageLifetimePerStaff) - parseFloat(a.averageLifetimePerStaff);
                                     if (chartMetric === 'citations') return b.totalCitations - a.totalCitations;
@@ -1739,7 +1761,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                                     let val = 0;
                                     let avg = 0;
 
-                                    if (chartMetric === 'publications') {
+                                    if (['publications', 'avgPublications', 'combinedPublications'].includes(chartMetric)) {
                                         maxVal = Math.max(...departmentStats.map(d => d.totalPublications));
                                         maxAvg = Math.max(...departmentStats.map(d => parseFloat(d.averagePerStaff)));
                                         val = dept.totalPublications;
@@ -1764,7 +1786,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                                         <div key={idx} className="flex-1 max-w-[120px] flex flex-col items-center justify-end gap-2 h-full">
                                             <div className="w-full flex gap-2 items-end justify-center h-full">
                                                 {/* Primary Bar (Blue/Cyan/Green) */}
-                                                {(chartMetric !== 'hIndex') && (
+                                                {(chartMetric !== 'hIndex' && chartMetric !== 'avgPublications' && chartMetric !== 'avgLifetimePubs') && (
                                                     <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full font-bold text-xs">
                                                         <div className={`
                                                             ${chartMetric === 'citations' ? 'text-green-300 print:text-green-700' :
@@ -1789,7 +1811,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                                                 )}
 
                                                 {/* Secondary Bar (Purple/Indigo) - for Averages */}
-                                                {(chartMetric === 'publications' || chartMetric.includes('lifetime') || chartMetric === 'hIndex') && (
+                                                {(chartMetric === 'avgPublications' || chartMetric === 'combinedPublications' || chartMetric === 'avgLifetimePubs' || chartMetric === 'hIndex') && (
                                                     <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full font-bold text-xs">
                                                         <div className={`
                                                             ${chartMetric === 'hIndex' ? 'text-purple-300 print:text-purple-700' :
@@ -1825,7 +1847,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
 
                         {/* Legend */}
                         <div className="flex justify-center gap-6 mt-4 pt-4 border-t border-white/10 print:border-gray-300">
-                            {chartMetric !== 'hIndex' && (
+                            {(chartMetric !== 'hIndex' && chartMetric !== 'avgPublications' && chartMetric !== 'avgLifetimePubs') && (
                                 <div className="flex items-center gap-2">
                                     <div className={`w-4 h-4 rounded 
                                         ${chartMetric === 'citations' ? 'bg-green-500' :
@@ -1839,7 +1861,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                                 </div>
                             )}
 
-                            {(chartMetric === 'publications' || chartMetric.includes('lifetime') || chartMetric === 'hIndex') && (
+                            {(chartMetric === 'avgPublications' || chartMetric === 'combinedPublications' || chartMetric === 'avgLifetimePubs' || chartMetric === 'hIndex') && (
                                 <div className="flex items-center gap-2">
                                     <div className={`w-4 h-4 rounded 
                                         ${chartMetric.includes('lifetime') ? 'bg-indigo-500' :
@@ -1854,6 +1876,165 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    );
+}
+
+// NEW: Bubble Chart Component for Staff Performance
+function StaffPerformanceBubbleChart({ staffMembers, selectedYears }: { staffMembers: StaffMember[], selectedYears: number[] }) {
+    const data = staffMembers
+        .filter(s => s.scopusAuthorId && s.scopusAuthorId !== 'NA')
+        .map(staff => ({
+            name: staff.name,
+            publications: staff.publications
+                ?.filter(p => selectedYears.includes(p.year))
+                .reduce((s, p) => s + p.count, 0) || 0,
+            citations: staff.citationCount || 0,
+            hIndex: staff.hIndex || 0,
+            department: staff.departmentAcronym
+        }))
+        .filter(d => d.publications > 0 || d.citations > 0);
+
+    return (
+        <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300">
+            <h3 className="text-xl font-bold text-white mb-2 print:text-black">Staff Performance Matrix</h3>
+            <p className="text-sm text-gray-400 mb-6 print:text-gray-600">
+                Visualizing Volume (X), Impact (Y), and Consistency (Size/H-Index).
+                <br />
+                <span className="text-xs text-gray-500">Larger bubbles indicate higher H-Index.</span>
+            </p>
+
+            <div className="h-[400px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                    <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                        <XAxis
+                            type="number"
+                            dataKey="publications"
+                            name="Publications"
+                            label={{ value: `Publications (${selectedYears.join('-')})`, position: 'bottom', offset: 0, fill: '#94a3b8' }}
+                            stroke="#475569"
+                            tick={{ fill: '#94a3b8' }}
+                        />
+                        <YAxis
+                            type="number"
+                            dataKey="citations"
+                            name="Citations"
+                            label={{ value: 'Total Citations', angle: -90, position: 'left', fill: '#94a3b8' }}
+                            stroke="#475569"
+                            tick={{ fill: '#94a3b8' }}
+                        />
+                        <ZAxis type="number" dataKey="hIndex" range={[50, 400]} name="H-Index" />
+                        <RechartsTooltip
+                            cursor={{ strokeDasharray: '3 3' }}
+                            content={({ active, payload }: any) => {
+                                if (active && payload && payload.length) {
+                                    const data = payload[0].payload;
+                                    return (
+                                        <div className="bg-slate-800 border border-slate-700 p-3 rounded shadow-xl text-xs">
+                                            <p className="font-bold text-white mb-1">{data.name}</p>
+                                            <p className="text-cyan-300">{data.department}</p>
+                                            <div className="mt-2 space-y-1 text-gray-300">
+                                                <p>Pubs: {data.publications}</p>
+                                                <p>Cites: {data.citations}</p>
+                                                <p className="text-purple-400 font-bold">H-Index: {data.hIndex}</p>
+                                            </div>
+                                        </div>
+                                    );
+                                }
+                                return null;
+                            }}
+                        />
+                        <Scatter name="Staff" data={data} fill="#8884d8">
+                            {data.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.hIndex > 10 ? '#a855f7' : '#3b82f6'} fillOpacity={0.6} />
+                            ))}
+                        </Scatter>
+                    </ScatterChart>
+                </ResponsiveContainer>
+            </div>
+        </div>
+    );
+}
+
+// NEW: Beeswarm/Jitter Plot for Distribution
+function StaffDistributionChart({ staffMembers, metric, title }: { staffMembers: StaffMember[], metric: 'hIndex' | 'citations' | 'lifetimePublications', title: string }) {
+    // Add jitter to X-axis to simulate beeswarm
+    const data = staffMembers
+        .filter(s => s.scopusAuthorId && s.scopusAuthorId !== 'NA')
+        .map((staff, index) => {
+            let val = 0;
+            if (metric === 'citations') {
+                val = staff.citationCount || 0;
+            } else if (metric === 'hIndex') {
+                val = staff.hIndex || 0;
+            } else if (metric === 'lifetimePublications') {
+                val = staff.lifetimePublications || 0;
+            }
+
+            return {
+                name: staff.name,
+                value: val,
+                // Random jitter between 0 and 100
+                jitter: Math.random() * 100,
+                department: staff.departmentAcronym
+            };
+        })
+        .filter(d => d.value > 0);
+
+    return (
+        <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300">
+            <h3 className="text-xl font-bold text-white mb-2 print:text-black">{title}</h3>
+            <p className="text-sm text-gray-400 mb-6 print:text-gray-600">
+                Distribution of staff performance. Each dot represents a staff member.
+            </p>
+
+            <div className="h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                    <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                        <XAxis
+                            type="number"
+                            dataKey="jitter"
+                            hide={true} // Hide the jitter axis
+                            domain={[0, 100]}
+                        />
+                        <YAxis
+                            type="number"
+                            dataKey="value"
+                            name="Value"
+                            stroke="#475569"
+                            tick={{ fill: '#94a3b8' }}
+                            label={{ value: 'Value', angle: -90, position: 'insideLeft', fill: '#94a3b8' }}
+                        />
+                        <RechartsTooltip
+                            cursor={{ strokeDasharray: '3 3' }}
+                            content={({ active, payload }: any) => {
+                                if (active && payload && payload.length) {
+                                    const data = payload[0].payload;
+                                    return (
+                                        <div className="bg-slate-800 border border-slate-700 p-2 rounded shadow-xl text-xs">
+                                            <p className="font-bold text-white mb-1">{data.name}</p>
+                                            <p className="text-gray-400">{data.department}</p>
+                                            <p className="text-blue-300 font-bold mt-1">Value: {data.value}</p>
+                                        </div>
+                                    );
+                                }
+                                return null;
+                            }}
+                        />
+                        <Scatter name="Distribution" data={data} fill="#60a5fa" fillOpacity={0.6}>
+                            {data.map((entry, index) => (
+                                <Cell
+                                    key={`cell-${index}`}
+                                    fill={
+                                        metric === 'hIndex' ? '#c084fc' :
+                                            metric === 'citations' ? '#4ade80' : '#22d3ee'
+                                    }
+                                />
+                            ))}
+                        </Scatter>
+                    </ScatterChart>
+                </ResponsiveContainer>
             </div>
         </div>
     );
