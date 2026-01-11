@@ -926,6 +926,9 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
         topPerformer: false
     });
 
+    // State for chart metric selection
+    const [chartMetric, setChartMetric] = useState<'publications' | 'citations' | 'hIndex' | 'lifetimePubs'>('publications');
+
     return (
         <div className="space-y-6 print:space-y-4">
             <div className="flex justify-end gap-2 print:hidden -mb-4">
@@ -1078,7 +1081,23 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
             {/* Comparison Chart */}
             <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none">
                 <div className="p-6 print:p-4">
-                    <h3 className="text-xl font-bold text-white mb-6 print:text-black print:mb-4">Publications by Year</h3>
+                    <div className="flex items-center justify-between mb-6 print:mb-4">
+                        <h3 className="text-xl font-bold text-white print:text-black">Publications by Year</h3>
+
+                        {/* Chart Metric Selector */}
+                        <div className="print:hidden">
+                            <select
+                                value={chartMetric}
+                                onChange={(e) => setChartMetric(e.target.value as any)}
+                                className="bg-slate-800 text-white border border-white/20 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                <option value="publications">Total Publications + Avg per Staff</option>
+                                <option value="citations">Total Citations (Lifetime)</option>
+                                <option value="hIndex">Average H-Index (Lifetime)</option>
+                                <option value="lifetimePubs">Total Lifetime Publications</option>
+                            </select>
+                        </div>
+                    </div>
 
                     <div className="flex items-end justify-between gap-4 h-64 print:h-48 w-full px-4">
                         {publicationsByYear.map((yearData: any) => {
