@@ -18,6 +18,8 @@ interface StaffMember {
         year: number;
         count: number;
     }>;
+    hIndex?: number;
+    citationCount?: number;
 }
 
 interface DepartmentData {
@@ -65,7 +67,7 @@ export default function ScopusPublicationsPage() {
     const [selectedYears, setSelectedYears] = useState<number[]>([2023, 2024, 2025]);
 
     // Column visibility for Individual Staff table
-    const [visibleColumns, setVisibleColumns] = useState<string[]>(['scopusId', 'publications']);
+    const [visibleColumns, setVisibleColumns] = useState<string[]>(['scopusId', 'hIndex', 'citations', 'publications']);
 
     // Faculty-level data
     const [facultyStaffData, setFacultyStaffData] = useState<{ [key: string]: StaffMember[] }>({});
@@ -457,6 +459,36 @@ export default function ScopusPublicationsPage() {
                                                         <label className="flex items-center gap-2 cursor-pointer">
                                                             <input
                                                                 type="checkbox"
+                                                                checked={visibleColumns.includes('hIndex')}
+                                                                onChange={(e) => {
+                                                                    if (e.target.checked) {
+                                                                        setVisibleColumns([...visibleColumns, 'hIndex']);
+                                                                    } else {
+                                                                        setVisibleColumns(visibleColumns.filter(c => c !== 'hIndex'));
+                                                                    }
+                                                                }}
+                                                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900"
+                                                            />
+                                                            <span className="text-sm text-gray-300">H-Index</span>
+                                                        </label>
+                                                        <label className="flex items-center gap-2 cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={visibleColumns.includes('citations')}
+                                                                onChange={(e) => {
+                                                                    if (e.target.checked) {
+                                                                        setVisibleColumns([...visibleColumns, 'citations']);
+                                                                    } else {
+                                                                        setVisibleColumns(visibleColumns.filter(c => c !== 'citations'));
+                                                                    }
+                                                                }}
+                                                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900"
+                                                            />
+                                                            <span className="text-sm text-gray-300">Citations</span>
+                                                        </label>
+                                                        <label className="flex items-center gap-2 cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
                                                                 checked={visibleColumns.includes('publications')}
                                                                 onChange={(e) => {
                                                                     if (e.target.checked) {
@@ -621,6 +653,8 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
         // Build CSV headers based on visible columns
         const headers = ['Name'];
         if (visibleColumns.includes('scopusId')) headers.push('Scopus ID');
+        if (visibleColumns.includes('hIndex')) headers.push('H-Index');
+        if (visibleColumns.includes('citations')) headers.push('Total Citations');
         if (visibleColumns.includes('publications')) headers.push(`"Publications (${selectedYears.join(', ')})"`);
 
         // Build CSV rows based on visible columns
@@ -631,6 +665,12 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
 
             if (visibleColumns.includes('scopusId')) {
                 row.push(staff.scopusAuthorId !== 'NA' ? staff.scopusAuthorId : '-');
+            }
+            if (visibleColumns.includes('hIndex')) {
+                row.push(staff.hIndex !== undefined ? staff.hIndex.toString() : '-');
+            }
+            if (visibleColumns.includes('citations')) {
+                row.push(staff.citationCount !== undefined ? staff.citationCount.toString() : '-');
             }
             if (visibleColumns.includes('publications')) {
                 row.push(staff.yearPublications.toString());
@@ -678,6 +718,12 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
                                 {visibleColumns.includes('scopusId') && (
                                     <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300">Scopus ID</th>
                                 )}
+                                {visibleColumns.includes('hIndex') && (
+                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300">H-Index</th>
+                                )}
+                                {visibleColumns.includes('citations') && (
+                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300">Citations</th>
+                                )}
                                 {visibleColumns.includes('publications') && (
                                     <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300">Publications ({selectedYears.join(', ')})</th>
                                 )}
@@ -690,6 +736,16 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
                                     {visibleColumns.includes('scopusId') && (
                                         <td className="py-3 px-4 text-sm text-gray-400 font-mono">
                                             {staff.scopusAuthorId !== 'NA' ? staff.scopusAuthorId : '-'}
+                                        </td>
+                                    )}
+                                    {visibleColumns.includes('hIndex') && (
+                                        <td className="py-3 px-4 text-sm text-gray-300 text-right font-mono">
+                                            {staff.hIndex ?? '-'}
+                                        </td>
+                                    )}
+                                    {visibleColumns.includes('citations') && (
+                                        <td className="py-3 px-4 text-sm text-gray-300 text-right font-mono">
+                                            {staff.citationCount !== undefined ? staff.citationCount.toLocaleString() : '-'}
                                         </td>
                                     )}
                                     {visibleColumns.includes('publications') && (
