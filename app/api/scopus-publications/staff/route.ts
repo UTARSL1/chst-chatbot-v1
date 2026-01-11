@@ -53,10 +53,19 @@ export async function GET(request: NextRequest) {
             staff.departmentAcronym === department
         );
 
-        return NextResponse.json({
-            success: true,
-            staff: departmentStaff
-        });
+        return NextResponse.json(
+            {
+                success: true,
+                staff: departmentStaff
+            },
+            {
+                headers: {
+                    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0',
+                }
+            }
+        );
     } catch (error) {
         console.error('Error fetching staff:', error);
         return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
