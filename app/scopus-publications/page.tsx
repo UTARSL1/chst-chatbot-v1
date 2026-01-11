@@ -929,63 +929,72 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                 </button>
             </div>
 
-            {/* Summary Cards - Updated with new metrics */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Department</div>
-                    <div className="text-lg font-bold text-white print:text-black leading-tight mb-1">{departmentName}</div>
-                    <div className="text-sm font-mono text-cyan-400 print:text-cyan-700">{departmentAcronym}</div>
+            {/* Row 1: Context and Scale */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Wide Identity Card */}
+                <div className="md:col-span-1 bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-xs uppercase tracking-wide text-gray-500 mb-2 print:text-gray-600">Department</div>
+                    <div className="text-2xl font-bold text-white print:text-black leading-tight mb-1">{departmentName}</div>
+                    <div className="text-sm font-mono text-cyan-400 print:text-cyan-700 mb-2">{departmentAcronym}</div>
+                    <div className="text-xs text-gray-500 print:text-gray-600">Reporting Period: {selectedYears.join(', ')}</div>
                 </div>
 
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Academic Staff</div>
-                    <div className="text-3xl font-bold text-white print:text-black print:text-xl">{staffMembers.length}</div>
-                </div>
-
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Publications ({selectedYears.join(', ')})</div>
-                    <div className="text-3xl font-bold text-blue-400 print:text-blue-700 print:text-xl">{totalPublications}</div>
-                </div>
-
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Avg Pubs ({selectedYears.join(', ')}) per Staff</div>
-                    <div className="text-3xl font-bold text-purple-400 print:text-purple-700 print:text-xl">{averagePerStaff}</div>
-                </div>
-
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Std Deviation</div>
-                    <div className="text-3xl font-bold text-orange-400 print:text-orange-700 print:text-xl">{stdDeviation}</div>
-                </div>
-            </div>
-
-            {/* NEW Summary Cards Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-xl rounded-lg border border-purple-500/30 p-6 shadow-[0_0_15px_rgba(168,85,247,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-purple-300 mb-1 print:text-gray-600">Average H-Index</div>
-                    <div className="text-3xl font-bold text-purple-100 print:text-black print:text-xl">{averageHIndex}</div>
-                    <div className="text-xs text-purple-400 mt-1 print:text-gray-500">Lifetime metric</div>
-                </div>
-
-                <div className="bg-gradient-to-br from-green-900/40 to-green-800/40 backdrop-blur-xl rounded-lg border border-green-500/30 p-6 shadow-[0_0_15px_rgba(34,197,94,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-green-300 mb-1 print:text-gray-600">Total Citations</div>
-                    <div className="text-3xl font-bold text-green-100 print:text-black print:text-xl">{totalCitations.toLocaleString()}</div>
-                    <div className="text-xs text-green-400 mt-1 print:text-gray-500">Lifetime metric</div>
-                </div>
-
-                <div className="bg-gradient-to-br from-amber-900/40 to-amber-800/40 backdrop-blur-xl rounded-lg border border-amber-500/30 p-6 shadow-[0_0_15px_rgba(251,191,36,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-amber-300 mb-1 print:text-gray-600">Top H-Index</div>
-                    <div className="text-2xl font-bold text-amber-100 print:text-black print:text-lg">
-                        {topHIndexStaff ? topHIndexStaff.hIndex : '-'}
-                    </div>
-                    <div className="text-xs text-amber-400 mt-1 truncate print:text-gray-500">
-                        {topHIndexStaff ? topHIndexStaff.name : 'N/A'}
-                    </div>
+                    <div className="text-sm text-gray-400 mb-2 print:text-gray-600">Total Academic Staff</div>
+                    <div className="text-4xl font-bold text-white print:text-black print:text-2xl">{staffMembers.length}</div>
+                    <div className="text-xs text-gray-500 mt-1 print:text-gray-600">{staffWithScopusCount} with Scopus profiles</div>
                 </div>
 
                 <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/40 backdrop-blur-xl rounded-lg border border-cyan-500/30 p-6 shadow-[0_0_15px_rgba(6,182,212,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-cyan-300 mb-1 print:text-gray-600">Total Publications (Lifetime)</div>
-                    <div className="text-3xl font-bold text-cyan-100 print:text-black print:text-xl">{totalLifetimePublications.toLocaleString()}</div>
-                    <div className="text-xs text-cyan-400 mt-1 print:text-gray-500">All staff combined</div>
+                    <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Total Publications (Lifetime)</div>
+                    <div className="text-4xl font-bold text-cyan-100 print:text-black print:text-2xl">{totalLifetimePublications.toLocaleString()}</div>
+                    <div className="text-xs text-cyan-400 mt-1 print:text-gray-600">All staff combined</div>
+                </div>
+            </div>
+
+            {/* Row 2: Research Performance */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-gray-400 mb-2 print:text-gray-600">Total Publications ({selectedYears.join(', ')})</div>
+                    <div className="text-4xl font-bold text-blue-400 print:text-blue-700 print:text-2xl">{totalPublications}</div>
+                    <div className="text-xs text-gray-500 mt-1 print:text-gray-600">Recent 3-year output</div>
+                </div>
+
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-gray-400 mb-2 print:text-gray-600">Avg Publications per Staff ({selectedYears.join(', ')})</div>
+                    <div className="text-4xl font-bold text-purple-400 print:text-purple-700 print:text-2xl">{averagePerStaff}</div>
+                    <div className="text-xs text-gray-500 mt-1 print:text-gray-600">Per researcher with Scopus</div>
+                </div>
+
+                <div className="bg-gradient-to-br from-green-900/40 to-green-800/40 backdrop-blur-xl rounded-lg border border-green-500/30 p-6 shadow-[0_0_15px_rgba(34,197,94,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-green-300 mb-2 print:text-gray-600">Total Citations</div>
+                    <div className="text-4xl font-bold text-green-100 print:text-black print:text-2xl">{totalCitations.toLocaleString()}</div>
+                    <div className="text-xs text-green-400 mt-1 print:text-gray-600">Lifetime research impact</div>
+                </div>
+            </div>
+
+            {/* Row 3: Quality and Distribution */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-xl rounded-lg border border-purple-500/30 p-6 shadow-[0_0_15px_rgba(168,85,247,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-purple-300 mb-2 print:text-gray-600">Average H-Index</div>
+                    <div className="text-4xl font-bold text-purple-100 print:text-black print:text-2xl">{averageHIndex}</div>
+                    <div className="text-xs text-purple-400 mt-1 print:text-gray-600">Research quality indicator</div>
+                </div>
+
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-gray-400 mb-2 print:text-gray-600">Output Variability Across Staff</div>
+                    <div className="text-4xl font-bold text-orange-400 print:text-orange-700 print:text-2xl">{stdDeviation}</div>
+                    <div className="text-xs text-gray-500 mt-1 print:text-gray-600">Standard deviation</div>
+                </div>
+
+                <div className="bg-gradient-to-br from-amber-900/40 to-amber-800/40 backdrop-blur-xl rounded-lg border border-amber-500/30 p-6 shadow-[0_0_15px_rgba(251,191,36,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-amber-300 mb-2 print:text-gray-600">Top H-Index Performer</div>
+                    <div className="text-3xl font-bold text-amber-100 print:text-black print:text-xl">
+                        {topHIndexStaff ? topHIndexStaff.hIndex : '-'}
+                    </div>
+                    <div className="text-sm text-amber-200 mt-1 truncate print:text-gray-700 font-medium">
+                        {topHIndexStaff ? topHIndexStaff.name : 'N/A'}
+                    </div>
                 </div>
             </div>
 
@@ -1232,63 +1241,72 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                 </button>
             </div>
 
-            {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Faculty</div>
-                    <div className="text-lg font-bold text-white print:text-black leading-tight mb-1">{facultyName}</div>
-                    <div className="text-sm font-mono text-cyan-400 print:text-cyan-700">{facultyAcronym}</div>
+            {/* Row 1: Context and Scale */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Wide Identity Card */}
+                <div className="md:col-span-1 bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-xs uppercase tracking-wide text-gray-500 mb-2 print:text-gray-600">Faculty</div>
+                    <div className="text-2xl font-bold text-white print:text-black leading-tight mb-1">{facultyName}</div>
+                    <div className="text-sm font-mono text-cyan-400 print:text-cyan-700 mb-2">{facultyAcronym}</div>
+                    <div className="text-xs text-gray-500 print:text-gray-600">Reporting Period: {selectedYears.join(', ')}</div>
                 </div>
 
                 <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Academic Staff</div>
-                    <div className="text-3xl font-bold text-white print:text-black print:text-xl">{totalFacultyStaff}</div>
-                </div>
-
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Total Publications ({selectedYears.join(', ')})</div>
-                    <div className="text-3xl font-bold text-blue-400 print:text-blue-700 print:text-xl">{totalPublications}</div>
-                </div>
-
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Avg Pubs ({selectedYears.join(', ')}) per Staff</div>
-                    <div className="text-3xl font-bold text-purple-400 print:text-purple-700 print:text-xl">{averagePerStaff}</div>
-                </div>
-
-                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-gray-400 mb-1 print:text-gray-600">Std Deviation</div>
-                    <div className="text-3xl font-bold text-orange-400 print:text-orange-700 print:text-xl">{stdDeviation}</div>
-                </div>
-            </div>
-
-            {/* NEW Summary Cards Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-xl rounded-lg border border-purple-500/30 p-6 shadow-[0_0_15px_rgba(168,85,247,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-purple-300 mb-1 print:text-gray-600">Average H-Index</div>
-                    <div className="text-3xl font-bold text-purple-100 print:text-black print:text-xl">{facultyMetrics.averageHIndex}</div>
-                    <div className="text-xs text-purple-400 mt-1 print:text-gray-500">Lifetime metric</div>
-                </div>
-
-                <div className="bg-gradient-to-br from-green-900/40 to-green-800/40 backdrop-blur-xl rounded-lg border border-green-500/30 p-6 shadow-[0_0_15px_rgba(34,197,94,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-green-300 mb-1 print:text-gray-600">Total Citations</div>
-                    <div className="text-3xl font-bold text-green-100 print:text-black print:text-xl">{facultyMetrics.totalCitations.toLocaleString()}</div>
-                    <div className="text-xs text-green-400 mt-1 print:text-gray-500">Lifetime metric</div>
-                </div>
-
-                <div className="bg-gradient-to-br from-amber-900/40 to-amber-800/40 backdrop-blur-xl rounded-lg border border-amber-500/30 p-6 shadow-[0_0_15px_rgba(251,191,36,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-amber-300 mb-1 print:text-gray-600">Top H-Index</div>
-                    <div className="text-2xl font-bold text-amber-100 print:text-black print:text-lg">
-                        {facultyMetrics.topHIndexStaff ? facultyMetrics.topHIndexStaff.hIndex : '-'}
-                    </div>
-                    <div className="text-xs text-amber-400 mt-1 truncate print:text-gray-500">
-                        {facultyMetrics.topHIndexStaff ? facultyMetrics.topHIndexStaff.name : 'N/A'}
-                    </div>
+                    <div className="text-sm text-gray-400 mb-2 print:text-gray-600">Total Academic Staff</div>
+                    <div className="text-4xl font-bold text-white print:text-black print:text-2xl">{totalFacultyStaff}</div>
+                    <div className="text-xs text-gray-500 mt-1 print:text-gray-600">{staffWithScopusCount} with Scopus profiles</div>
                 </div>
 
                 <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/40 backdrop-blur-xl rounded-lg border border-cyan-500/30 p-6 shadow-[0_0_15px_rgba(6,182,212,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
-                    <div className="text-sm text-cyan-300 mb-1 print:text-gray-600">Total Publications (Lifetime)</div>
-                    <div className="text-3xl font-bold text-cyan-100 print:text-black print:text-xl">{facultyMetrics.totalLifetimePublications.toLocaleString()}</div>
-                    <div className="text-xs text-cyan-400 mt-1 print:text-gray-500">All staff combined</div>
+                    <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Total Publications (Lifetime)</div>
+                    <div className="text-4xl font-bold text-cyan-100 print:text-black print:text-2xl">{facultyMetrics.totalLifetimePublications.toLocaleString()}</div>
+                    <div className="text-xs text-cyan-400 mt-1 print:text-gray-600">All staff combined</div>
+                </div>
+            </div>
+
+            {/* Row 2: Research Performance */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-gray-400 mb-2 print:text-gray-600">Total Publications ({selectedYears.join(', ')})</div>
+                    <div className="text-4xl font-bold text-blue-400 print:text-blue-700 print:text-2xl">{totalPublications}</div>
+                    <div className="text-xs text-gray-500 mt-1 print:text-gray-600">Recent 3-year output</div>
+                </div>
+
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-gray-400 mb-2 print:text-gray-600">Avg Publications per Staff ({selectedYears.join(', ')})</div>
+                    <div className="text-4xl font-bold text-purple-400 print:text-purple-700 print:text-2xl">{averagePerStaff}</div>
+                    <div className="text-xs text-gray-500 mt-1 print:text-gray-600">Per researcher with Scopus</div>
+                </div>
+
+                <div className="bg-gradient-to-br from-green-900/40 to-green-800/40 backdrop-blur-xl rounded-lg border border-green-500/30 p-6 shadow-[0_0_15px_rgba(34,197,94,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-green-300 mb-2 print:text-gray-600">Total Citations</div>
+                    <div className="text-4xl font-bold text-green-100 print:text-black print:text-2xl">{facultyMetrics.totalCitations.toLocaleString()}</div>
+                    <div className="text-xs text-green-400 mt-1 print:text-gray-600">Lifetime research impact</div>
+                </div>
+            </div>
+
+            {/* Row 3: Quality and Distribution */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-xl rounded-lg border border-purple-500/30 p-6 shadow-[0_0_15px_rgba(168,85,247,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-purple-300 mb-2 print:text-gray-600">Average H-Index</div>
+                    <div className="text-4xl font-bold text-purple-100 print:text-black print:text-2xl">{facultyMetrics.averageHIndex}</div>
+                    <div className="text-xs text-purple-400 mt-1 print:text-gray-600">Research quality indicator</div>
+                </div>
+
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-gray-400 mb-2 print:text-gray-600">Output Variability Across Staff</div>
+                    <div className="text-4xl font-bold text-orange-400 print:text-orange-700 print:text-2xl">{stdDeviation}</div>
+                    <div className="text-xs text-gray-500 mt-1 print:text-gray-600">Standard deviation</div>
+                </div>
+
+                <div className="bg-gradient-to-br from-amber-900/40 to-amber-800/40 backdrop-blur-xl rounded-lg border border-amber-500/30 p-6 shadow-[0_0_15px_rgba(251,191,36,0.15)] print:bg-white print:border print:border-gray-300 print:shadow-none print:p-3">
+                    <div className="text-sm text-amber-300 mb-2 print:text-gray-600">Top H-Index Performer</div>
+                    <div className="text-3xl font-bold text-amber-100 print:text-black print:text-xl">
+                        {facultyMetrics.topHIndexStaff ? facultyMetrics.topHIndexStaff.hIndex : '-'}
+                    </div>
+                    <div className="text-sm text-amber-200 mt-1 truncate print:text-gray-700 font-medium">
+                        {facultyMetrics.topHIndexStaff ? facultyMetrics.topHIndexStaff.name : 'N/A'}
+                    </div>
                 </div>
             </div>
 
