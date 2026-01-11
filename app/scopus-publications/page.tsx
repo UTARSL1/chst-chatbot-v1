@@ -20,6 +20,7 @@ interface StaffMember {
     }>;
     hIndex?: number;
     citationCount?: number;
+    lifetimePublications?: number;
 }
 
 interface DepartmentData {
@@ -67,7 +68,7 @@ export default function ScopusPublicationsPage() {
     const [selectedYears, setSelectedYears] = useState<number[]>([2023, 2024, 2025]);
 
     // Column visibility for Individual Staff table
-    const [visibleColumns, setVisibleColumns] = useState<string[]>(['scopusId', 'publications']);
+    const [visibleColumns, setVisibleColumns] = useState<string[]>(['scopusId', 'lifetimePublications', 'publications']);
 
     // Faculty-level data
     const [facultyStaffData, setFacultyStaffData] = useState<{ [key: string]: StaffMember[] }>({});
@@ -498,6 +499,27 @@ export default function ScopusPublicationsPage() {
                                                                 </span>
                                                             </span>
                                                         </label>
+                                                        <label className="flex items-center gap-2 cursor-pointer group">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={visibleColumns.includes('lifetimePublications')}
+                                                                onChange={(e) => {
+                                                                    if (e.target.checked) {
+                                                                        setVisibleColumns([...visibleColumns, 'lifetimePublications']);
+                                                                    } else {
+                                                                        setVisibleColumns(visibleColumns.filter(c => c !== 'lifetimePublications'));
+                                                                    }
+                                                                }}
+                                                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900"
+                                                            />
+                                                            <span className="text-sm text-gray-300">Total Publications (Lifetime)</span>
+                                                            <span className="relative group/tooltip">
+                                                                <span className="text-xs text-gray-500 cursor-help">ⓘ</span>
+                                                                <span className="invisible group-hover/tooltip:visible absolute left-0 top-6 w-48 bg-slate-800 text-xs text-gray-300 p-2 rounded border border-slate-600 shadow-lg z-10">
+                                                                    Lifetime metric - not affected by year selection
+                                                                </span>
+                                                            </span>
+                                                        </label>
                                                         <label className="flex items-center gap-2 cursor-pointer">
                                                             <input
                                                                 type="checkbox"
@@ -667,6 +689,7 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
         if (visibleColumns.includes('scopusId')) headers.push('Scopus ID');
         if (visibleColumns.includes('hIndex')) headers.push('H-Index (Lifetime)');
         if (visibleColumns.includes('citations')) headers.push('Citations (Lifetime)');
+        if (visibleColumns.includes('lifetimePublications')) headers.push('Total Publications (Lifetime)');
         if (visibleColumns.includes('publications')) headers.push(`"Publications (${selectedYears.join(', ')})"`);
 
         // Build CSV rows based on visible columns
@@ -683,6 +706,9 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
             }
             if (visibleColumns.includes('citations')) {
                 row.push(staff.citationCount !== undefined ? staff.citationCount.toString() : '-');
+            }
+            if (visibleColumns.includes('lifetimePublications')) {
+                row.push(staff.lifetimePublications !== undefined ? staff.lifetimePublications.toString() : '-');
             }
             if (visibleColumns.includes('publications')) {
                 row.push(staff.yearPublications.toString());
@@ -756,6 +782,19 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
                                         </span>
                                     </th>
                                 )}
+                                {visibleColumns.includes('lifetimePublications') && (
+                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300 bg-slate-800/30">
+                                        <span className="inline-flex items-center gap-1">
+                                            Total Publications (Lifetime)
+                                            <span className="relative group/tooltip">
+                                                <span className="text-xs text-gray-500 cursor-help">ⓘ</span>
+                                                <span className="invisible group-hover/tooltip:visible absolute left-0 top-6 w-48 bg-slate-800 text-xs text-gray-300 p-2 rounded border border-slate-600 shadow-lg z-10">
+                                                    Lifetime metric - not affected by year selection
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </th>
+                                )}
                                 {visibleColumns.includes('publications') && (
                                     <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300">Publications ({selectedYears.join(', ')})</th>
                                 )}
@@ -778,6 +817,11 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
                                     {visibleColumns.includes('citations') && (
                                         <td className="py-3 px-4 text-sm text-gray-300 text-right font-mono bg-slate-800/20">
                                             {staff.citationCount !== undefined ? staff.citationCount.toLocaleString() : '-'}
+                                        </td>
+                                    )}
+                                    {visibleColumns.includes('lifetimePublications') && (
+                                        <td className="py-3 px-4 text-sm text-gray-300 text-right font-mono bg-slate-800/20">
+                                            {staff.lifetimePublications !== undefined ? staff.lifetimePublications.toLocaleString() : '-'}
                                         </td>
                                     )}
                                     {visibleColumns.includes('publications') && (
