@@ -917,9 +917,15 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
     // Total Lifetime Publications
     const totalLifetimePublications = staffMembers.reduce((sum, s) => sum + (s.lifetimePublications || 0), 0);
 
+    // Average Lifetime Publications per Staff
+    const averageLifetimePerStaff = staffWithScopusCount > 0
+        ? (totalLifetimePublications / staffWithScopusCount).toFixed(2)
+        : '0.00';
+
     // State for visible metrics
     const [visibleMetrics, setVisibleMetrics] = useState({
         lifetimePublications: false,
+        avgLifetimePerStaff: false,
         citations: false,
         hIndex: false,
         variability: false,
@@ -927,7 +933,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
     });
 
     // State for chart metric selection
-    const [chartMetric, setChartMetric] = useState<'publications' | 'citations' | 'hIndex' | 'lifetimePubs'>('publications');
+    const [chartMetric, setChartMetric] = useState<'publications' | 'citations' | 'hIndex' | 'lifetimePubs' | 'avgLifetimePubs'>('publications');
 
     return (
         <div className="space-y-6 print:space-y-4">
@@ -968,6 +974,15 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                             className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
                         />
                         Lifetime Publications
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                        <input
+                            type="checkbox"
+                            checked={visibleMetrics.avgLifetimePerStaff}
+                            onChange={(e) => setVisibleMetrics({ ...visibleMetrics, avgLifetimePerStaff: e.target.checked })}
+                            className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                        />
+                        Avg Lifetime Pubs per Staff
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
                         <input
@@ -1030,13 +1045,21 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
             </div>
 
             {/* Optional Metrics (Conditionally Visible) */}
-            {(visibleMetrics.lifetimePublications || visibleMetrics.citations || visibleMetrics.hIndex || visibleMetrics.variability || visibleMetrics.topPerformer) && (
+            {(visibleMetrics.lifetimePublications || visibleMetrics.avgLifetimePerStaff || visibleMetrics.citations || visibleMetrics.hIndex || visibleMetrics.variability || visibleMetrics.topPerformer) && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {visibleMetrics.lifetimePublications && (
                         <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/40 backdrop-blur-xl rounded-lg border border-cyan-500/30 p-6 shadow-[0_0_15px_rgba(6,182,212,0.15)] print:bg-white print:border print:border-gray-300">
                             <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Total Publications (Lifetime)</div>
                             <div className="text-4xl font-bold text-cyan-100 print:text-black print:text-2xl">{totalLifetimePublications.toLocaleString()}</div>
                             <div className="text-xs text-cyan-400 mt-1 print:text-gray-600">All staff combined</div>
+                        </div>
+                    )}
+
+                    {visibleMetrics.avgLifetimePerStaff && (
+                        <div className="bg-gradient-to-br from-indigo-900/40 to-indigo-800/40 backdrop-blur-xl rounded-lg border border-indigo-500/30 p-6 shadow-[0_0_15px_rgba(99,102,241,0.15)] print:bg-white print:border print:border-gray-300">
+                            <div className="text-sm text-indigo-300 mb-2 print:text-gray-600">Avg Publications (Lifetime) per Staff</div>
+                            <div className="text-4xl font-bold text-indigo-100 print:text-black print:text-2xl">{averageLifetimePerStaff}</div>
+                            <div className="text-xs text-indigo-400 mt-1 print:text-gray-600">Per researcher with Scopus</div>
                         </div>
                     )}
 
@@ -1082,7 +1105,13 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
             <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none">
                 <div className="p-6 print:p-4">
                     <div className="flex items-center justify-between mb-6 print:mb-4">
-                        <h3 className="text-xl font-bold text-white print:text-black">Publications by Year</h3>
+                        <h3 className="text-xl font-bold text-white print:text-black">
+                            {chartMetric === 'publications'
+                                ? 'Publications by Year'
+                                : chartMetric === 'citations' ? 'Top 20 Staff by Citations (Lifetime)'
+                                    : chartMetric === 'hIndex' ? 'Top 20 Staff by H-Index'
+                                        : 'Top 20 Staff by Lifetime Publications'}
+                        </h3>
 
                         {/* Chart Metric Selector */}
                         <div className="print:hidden">
@@ -1092,74 +1121,150 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                                 className="bg-slate-800 text-white border border-white/20 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                                 <option value="publications">Total Publications + Avg per Staff</option>
+                                <option value="lifetimePubs">Total Lifetime Publications</option>
+                                <option value="avgLifetimePubs">Avg Lifetime Pubs per Staff</option>
                                 <option value="citations">Total Citations (Lifetime)</option>
                                 <option value="hIndex">Average H-Index (Lifetime)</option>
-                                <option value="lifetimePubs">Total Lifetime Publications</option>
                             </select>
                         </div>
                     </div>
 
-                    <div className="flex items-end justify-between gap-4 h-64 print:h-48 w-full px-4">
-                        {publicationsByYear.map((yearData: any) => {
-                            const maxCount = Math.max(...publicationsByYear.map((y: any) => y.count));
-                            const maxAvg = Math.max(...publicationsByYear.map((y: any) => y.avg));
+                    {chartMetric === 'publications' ? (
+                        <div className="flex items-end justify-between gap-4 h-64 print:h-48 w-full px-4">
+                            {publicationsByYear.map((yearData: any) => {
+                                const maxCount = Math.max(...publicationsByYear.map((y: any) => y.count));
+                                const maxAvg = Math.max(...publicationsByYear.map((y: any) => y.avg));
 
-                            // Height percentages
-                            const countHeight = maxCount > 0 ? (yearData.count / maxCount) * 70 : 0;
-                            const avgHeight = maxAvg > 0 ? (yearData.avg / maxAvg) * 70 : 0;
+                                // Height percentages
+                                const countHeight = maxCount > 0 ? (yearData.count / maxCount) * 70 : 0;
+                                const avgHeight = maxAvg > 0 ? (yearData.avg / maxAvg) * 70 : 0;
 
-                            return (
-                                <div key={yearData.year} className="flex-1 flex flex-col items-center justify-end gap-2 h-full">
-                                    <div className="w-full flex gap-2 items-end justify-center h-full max-w-[200px]">
-                                        {/* Total Publications Bar */}
-                                        <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full group relative">
-                                            <div className="opacity-0 group-hover:opacity-100 absolute -top-8 text-xs bg-black text-white px-2 py-1 rounded transition-opacity whitespace-nowrap z-10">Total: {yearData.count}</div>
-                                            <div className="text-xs font-bold text-blue-300 print:text-blue-700">{yearData.count}</div>
-                                            <div
-                                                className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t transition-all duration-500 print:bg-blue-600 hover:from-blue-500 hover:to-blue-300"
-                                                style={{
-                                                    height: `${countHeight}%`,
-                                                    minHeight: '4px',
-                                                    // @ts-ignore
-                                                    printColorAdjust: 'exact',
-                                                    WebkitPrintColorAdjust: 'exact'
-                                                }}
-                                            />
+                                return (
+                                    <div key={yearData.year} className="flex-1 flex flex-col items-center justify-end gap-2 h-full">
+                                        <div className="w-full flex gap-2 items-end justify-center h-full max-w-[200px]">
+                                            {/* Total Publications Bar */}
+                                            <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full group relative">
+                                                <div className="opacity-0 group-hover:opacity-100 absolute -top-8 text-xs bg-black text-white px-2 py-1 rounded transition-opacity whitespace-nowrap z-10">Total: {yearData.count}</div>
+                                                <div className="text-xs font-bold text-blue-300 print:text-blue-700">{yearData.count}</div>
+                                                <div
+                                                    className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t transition-all duration-500 print:bg-blue-600 hover:from-blue-500 hover:to-blue-300"
+                                                    style={{
+                                                        height: `${countHeight}%`,
+                                                        minHeight: '4px',
+                                                        // @ts-ignore
+                                                        printColorAdjust: 'exact',
+                                                        WebkitPrintColorAdjust: 'exact'
+                                                    }}
+                                                />
+                                            </div>
+
+                                            {/* Average Bar */}
+                                            <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full group relative">
+                                                <div className="opacity-0 group-hover:opacity-100 absolute -top-8 text-xs bg-black text-white px-2 py-1 rounded transition-opacity whitespace-nowrap z-10">Avg: {yearData.avg.toFixed(2)}</div>
+                                                <div className="text-xs font-bold text-purple-300 print:text-purple-700">{yearData.avg.toFixed(2)}</div>
+                                                <div
+                                                    className="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-t transition-all duration-500 print:bg-purple-600 hover:from-purple-500 hover:to-purple-300"
+                                                    style={{
+                                                        height: `${avgHeight}%`,
+                                                        minHeight: '4px',
+                                                        // @ts-ignore
+                                                        printColorAdjust: 'exact',
+                                                        WebkitPrintColorAdjust: 'exact'
+                                                    }}
+                                                />
+                                            </div>
                                         </div>
-
-                                        {/* Average Bar */}
-                                        <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full group relative">
-                                            <div className="opacity-0 group-hover:opacity-100 absolute -top-8 text-xs bg-black text-white px-2 py-1 rounded transition-opacity whitespace-nowrap z-10">Avg: {yearData.avg.toFixed(2)}</div>
-                                            <div className="text-xs font-bold text-purple-300 print:text-purple-700">{yearData.avg.toFixed(2)}</div>
-                                            <div
-                                                className="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-t transition-all duration-500 print:bg-purple-600 hover:from-purple-500 hover:to-purple-300"
-                                                style={{
-                                                    height: `${avgHeight}%`,
-                                                    minHeight: '4px',
-                                                    // @ts-ignore
-                                                    printColorAdjust: 'exact',
-                                                    WebkitPrintColorAdjust: 'exact'
-                                                }}
-                                            />
-                                        </div>
+                                        <div className="text-sm font-semibold text-gray-300 print:text-gray-700 mt-2">{yearData.year}</div>
                                     </div>
-                                    <div className="text-sm font-semibold text-gray-300 print:text-gray-700 mt-2">{yearData.year}</div>
-                                </div>
-                            );
-                        })}
-                    </div>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <div className="flex items-end gap-2 h-64 print:h-48 w-full px-4 overflow-x-auto pb-2">
+                            {(() => {
+                                const metricKey = chartMetric === 'citations' ? 'citationCount'
+                                    : chartMetric === 'hIndex' ? 'hIndex'
+                                        : 'lifetimePublications';
+
+                                const sortedStaff = [...staffMembers]
+                                    .filter(s => (s[metricKey as keyof StaffMember] as number) > 0)
+                                    .sort((a, b) => ((b[metricKey as keyof StaffMember] as number) || 0) - ((a[metricKey as keyof StaffMember] as number) || 0))
+                                    .slice(0, 20);
+
+                                const maxValue = Math.max(...sortedStaff.map(s => (s[metricKey as keyof StaffMember] as number) || 0));
+
+                                return sortedStaff.map((staff, idx) => {
+                                    const value = (staff[metricKey as keyof StaffMember] as number) || 0;
+                                    const height = maxValue > 0 ? (value / maxValue) * 85 : 0;
+
+                                    let barColorFrom = 'from-cyan-600';
+                                    let barColorTo = 'to-cyan-400';
+                                    let textColor = 'text-cyan-300';
+                                    let printColor = 'print:bg-cyan-600';
+
+                                    if (chartMetric === 'citations') {
+                                        barColorFrom = 'from-green-600';
+                                        barColorTo = 'to-green-400';
+                                        textColor = 'text-green-300';
+                                        printColor = 'print:bg-green-600';
+                                    } else if (chartMetric === 'hIndex') {
+                                        barColorFrom = 'from-purple-600';
+                                        barColorTo = 'to-purple-400';
+                                        textColor = 'text-purple-300';
+                                        printColor = 'print:bg-purple-600';
+                                    }
+
+                                    // Get initials or short name for x-axis
+                                    const shortName = staff.name.split(' ').slice(0, 2).join(' ').substring(0, 10) + (staff.name.length > 10 ? '..' : '');
+
+                                    return (
+                                        <div key={staff.scopusAuthorId || idx} className="flex-1 min-w-[40px] flex flex-col items-center justify-end gap-1 h-full group relative">
+                                            {/* Tooltip */}
+                                            <div className="opacity-0 group-hover:opacity-100 absolute bottom-full mb-2 left-1/2 -translate-x-1/2 text-xs bg-black text-white px-2 py-1 rounded transition-opacity whitespace-nowrap z-20 pointer-events-none">
+                                                {staff.name}: {value}
+                                            </div>
+
+                                            <div className={`text-xs font-bold ${textColor} print:text-black`}>{value}</div>
+                                            <div
+                                                className={`w-full max-w-[40px] bg-gradient-to-t ${barColorFrom} ${barColorTo} rounded-t transition-all duration-500 ${printColor} hover:brightness-110`}
+                                                style={{
+                                                    height: `${height}%`,
+                                                    minHeight: '4px',
+                                                    // @ts-ignore
+                                                    printColorAdjust: 'exact',
+                                                    WebkitPrintColorAdjust: 'exact'
+                                                }}
+                                            />
+                                            <div className="text-[9px] text-gray-400 print:text-gray-700 mt-1 w-full text-center truncate px-1" title={staff.name}>
+                                                {shortName}
+                                            </div>
+                                        </div>
+                                    );
+                                });
+                            })()}
+                        </div>
+                    )}
 
                     {/* Legend */}
-                    <div className="flex justify-center gap-6 mt-6 border-t border-white/10 pt-4 print:border-gray-300">
-                        <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 bg-gradient-to-t from-blue-600 to-blue-400 rounded print:bg-blue-600"></div>
-                            <span className="text-sm text-gray-300 print:text-gray-700">Total Publications</span>
+                    {chartMetric === 'publications' ? (
+                        <div className="flex justify-center gap-6 mt-6 border-t border-white/10 pt-4 print:border-gray-300">
+                            <div className="flex items-center gap-2">
+                                <div className="w-4 h-4 bg-gradient-to-t from-blue-600 to-blue-400 rounded print:bg-blue-600"></div>
+                                <span className="text-sm text-gray-300 print:text-gray-700">Total Publications</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-4 h-4 bg-gradient-to-t from-purple-600 to-purple-400 rounded print:bg-purple-600"></div>
+                                <span className="text-sm text-gray-300 print:text-gray-700">Average per Staff</span>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 bg-gradient-to-t from-purple-600 to-purple-400 rounded print:bg-purple-600"></div>
-                            <span className="text-sm text-gray-300 print:text-gray-700">Average per Staff</span>
+                    ) : (
+                        <div className="flex justify-center gap-6 mt-6 border-t border-white/10 pt-4 print:border-gray-300">
+                            <div className="text-sm text-gray-400 italic">Showing top 20 staff members ranked by {
+                                chartMetric === 'citations' ? 'total citations' :
+                                    chartMetric === 'hIndex' ? 'H-Index' : 'lifetime publications'
+                            }</div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </div >
@@ -1188,11 +1293,15 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
     // State for visible metrics
     const [visibleMetrics, setVisibleMetrics] = useState({
         lifetimePublications: false,
+        avgLifetimePerStaff: false,
         citations: false,
         hIndex: false,
         variability: false,
         topPerformer: false
     });
+
+    // State for chart metric selection
+    const [chartMetric, setChartMetric] = useState<'publications' | 'citations' | 'hIndex' | 'lifetimePubs' | 'avgLifetimePubs'>('publications');
 
     useEffect(() => {
         const loadFacultyData = async () => {
@@ -1248,13 +1357,25 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                             return sum + yearPubs;
                         }, 0);
 
+                        // Calculate per-department metrics
+                        const deptTotalLifePubs = data.staff.reduce((sum: number, s: any) => sum + (s.lifetimePublications || 0), 0);
+                        const deptTotalCitations = data.staff.reduce((sum: number, s: any) => sum + (s.citationCount || 0), 0);
+                        const deptAvgHIndex = staffWithScopus.length > 0
+                            ? (staffWithScopus.reduce((sum: number, s: any) => sum + (s.hIndex || 0), 0) / staffWithScopus.length).toFixed(2)
+                            : '0.00';
+
                         stats.push({
                             name: dept.name,
                             acronym: dept.acronym,
                             totalStaff: data.staff.length,
                             staffWithScopus: staffWithScopus.length,
-                            totalPublications: totalPubs,
-                            averagePerStaff: staffWithScopus.length > 0 ? (totalPubs / staffWithScopus.length).toFixed(2) : '0.00'
+                            totalPublications: totalPubs, // Selected Years
+                            averagePerStaff: staffWithScopus.length > 0 ? (totalPubs / staffWithScopus.length).toFixed(2) : '0.00',
+                            // Lifetime/Total Metrics for Comparison
+                            totalLifetimePublications: deptTotalLifePubs,
+                            averageLifetimePerStaff: staffWithScopus.length > 0 ? (deptTotalLifePubs / staffWithScopus.length).toFixed(2) : '0.00',
+                            totalCitations: deptTotalCitations,
+                            averageHIndex: deptAvgHIndex
                         });
                     }
                 } catch (error) {
@@ -1312,6 +1433,10 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
     const staffWithScopusCount = departmentStats.reduce((acc, curr) => acc + curr.staffWithScopus, 0);
     const averagePerStaff = staffWithScopusCount > 0
         ? (totalPublications / staffWithScopusCount).toFixed(2)
+        : '0.00';
+
+    const averageLifetimePerStaff = staffWithScopusCount > 0
+        ? (facultyMetrics.totalLifetimePublications / staffWithScopusCount).toFixed(2)
         : '0.00';
 
     // Calculate standard deviation of publications across departments
@@ -1373,6 +1498,15 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                             className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
                         />
                         Lifetime Publications
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                        <input
+                            type="checkbox"
+                            checked={visibleMetrics.avgLifetimePerStaff}
+                            onChange={(e) => setVisibleMetrics({ ...visibleMetrics, avgLifetimePerStaff: e.target.checked })}
+                            className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                        />
+                        Avg Lifetime Pubs per Staff
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
                         <input
@@ -1442,6 +1576,14 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                             <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Total Publications (Lifetime)</div>
                             <div className="text-4xl font-bold text-cyan-100 print:text-black print:text-2xl">{facultyMetrics.totalLifetimePublications.toLocaleString()}</div>
                             <div className="text-xs text-cyan-400 mt-1 print:text-gray-600">All staff combined</div>
+                        </div>
+                    )}
+
+                    {visibleMetrics.avgLifetimePerStaff && (
+                        <div className="bg-gradient-to-br from-indigo-900/40 to-indigo-800/40 backdrop-blur-xl rounded-lg border border-indigo-500/30 p-6 shadow-[0_0_15px_rgba(99,102,241,0.15)] print:bg-white print:border print:border-gray-300">
+                            <div className="text-sm text-indigo-300 mb-2 print:text-gray-600">Avg Publications (Lifetime) per Staff</div>
+                            <div className="text-4xl font-bold text-indigo-100 print:text-black print:text-2xl">{averageLifetimePerStaff}</div>
+                            <div className="text-xs text-indigo-400 mt-1 print:text-gray-600">Per researcher with Scopus</div>
                         </div>
                     )}
 
@@ -1555,54 +1697,121 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
             {/* Department Comparison Chart */}
             <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300 print:shadow-none">
                 <div className="p-6 print:p-4">
-                    <h3 className="text-xl font-bold text-white mb-6 print:text-black print:mb-4">Department Comparison</h3>
+                    <div className="flex items-center justify-between mb-6 print:mb-4">
+                        <h3 className="text-xl font-bold text-white print:text-black">
+                            {chartMetric === 'publications' ? 'Department Comparison (Selected Years)'
+                                : chartMetric === 'lifetimePubs' ? 'Department Comparison (Lifetime Pubs)'
+                                    : chartMetric === 'avgLifetimePubs' ? 'Department Comparison (Avg Lifetime Pubs)'
+                                        : chartMetric === 'citations' ? 'Department Comparison (Total Citations)'
+                                            : 'Department Comparison (Avg H-Index)'}
+                        </h3>
+
+                        <div className="print:hidden">
+                            <select
+                                value={chartMetric}
+                                onChange={(e) => setChartMetric(e.target.value as any)}
+                                className="bg-slate-800 text-white border border-white/20 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                <option value="publications">Total Publications + Avg per Staff</option>
+                                <option value="lifetimePubs">Total Lifetime Publications</option>
+                                <option value="avgLifetimePubs">Avg Lifetime Pubs per Staff</option>
+                                <option value="citations">Total Citations (Lifetime)</option>
+                                <option value="hIndex">Average H-Index (Lifetime)</option>
+                            </select>
+                        </div>
+                    </div>
 
                     <div className="overflow-x-auto">
                         <div className="min-w-[600px] h-96 print:h-80 flex items-end gap-8 pb-12 px-4">
                             {departmentStats
-                                .sort((a, b) => b.totalPublications - a.totalPublications)
+                                .sort((a, b) => {
+                                    if (chartMetric === 'publications') return b.totalPublications - a.totalPublications;
+                                    if (chartMetric === 'lifetimePubs') return b.totalLifetimePublications - a.totalLifetimePublications;
+                                    if (chartMetric === 'avgLifetimePubs') return parseFloat(b.averageLifetimePerStaff) - parseFloat(a.averageLifetimePerStaff);
+                                    if (chartMetric === 'citations') return b.totalCitations - a.totalCitations;
+                                    if (chartMetric === 'hIndex') return parseFloat(b.averageHIndex) - parseFloat(a.averageHIndex);
+                                    return 0;
+                                })
                                 .map((dept, idx) => {
-                                    const maxPubs = Math.max(...departmentStats.map(d => d.totalPublications));
-                                    const maxAvg = Math.max(...departmentStats.map(d => parseFloat(d.averagePerStaff)));
+                                    // Normalize heights
+                                    let maxVal = 0;
+                                    let maxAvg = 0;
+                                    let val = 0;
+                                    let avg = 0;
 
-                                    // Normalize heights to percentage of max
-                                    const pubHeight = maxPubs > 0 ? (dept.totalPublications / maxPubs) * 70 : 0;
-                                    const avgHeight = maxAvg > 0 ? (parseFloat(dept.averagePerStaff) / maxAvg) * 70 : 0;
+                                    if (chartMetric === 'publications') {
+                                        maxVal = Math.max(...departmentStats.map(d => d.totalPublications));
+                                        maxAvg = Math.max(...departmentStats.map(d => parseFloat(d.averagePerStaff)));
+                                        val = dept.totalPublications;
+                                        avg = parseFloat(dept.averagePerStaff);
+                                    } else if (chartMetric === 'lifetimePubs' || chartMetric === 'avgLifetimePubs') {
+                                        maxVal = Math.max(...departmentStats.map(d => d.totalLifetimePublications));
+                                        maxAvg = Math.max(...departmentStats.map(d => parseFloat(d.averageLifetimePerStaff)));
+                                        val = dept.totalLifetimePublications;
+                                        avg = parseFloat(dept.averageLifetimePerStaff);
+                                    } else if (chartMetric === 'citations') {
+                                        maxVal = Math.max(...departmentStats.map(d => d.totalCitations));
+                                        val = dept.totalCitations;
+                                    } else if (chartMetric === 'hIndex') {
+                                        maxAvg = Math.max(...departmentStats.map(d => parseFloat(d.averageHIndex)));
+                                        avg = parseFloat(dept.averageHIndex);
+                                    }
+
+                                    const valHeight = maxVal > 0 ? (val / maxVal) * 70 : 0;
+                                    const avgHeight = maxAvg > 0 ? (avg / maxAvg) * 70 : 0;
 
                                     return (
                                         <div key={idx} className="flex-1 max-w-[120px] flex flex-col items-center justify-end gap-2 h-full">
                                             <div className="w-full flex gap-2 items-end justify-center h-full">
-                                                {/* Total Publications Bar */}
-                                                <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
-                                                    <div className="text-xs font-bold text-blue-300 print:text-blue-700">{dept.totalPublications}</div>
-                                                    <div
-                                                        className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t transition-all duration-500 print:bg-blue-600"
-                                                        style={{
-                                                            height: `${pubHeight}%`,
-                                                            minHeight: '10px',
-                                                            // @ts-ignore
-                                                            printColorAdjust: 'exact',
-                                                            WebkitPrintColorAdjust: 'exact'
-                                                        }}
-                                                        title={`Publications: ${dept.totalPublications}`}
-                                                    />
-                                                </div>
+                                                {/* Primary Bar (Blue/Cyan/Green) */}
+                                                {(chartMetric !== 'hIndex') && (
+                                                    <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full font-bold text-xs">
+                                                        <div className={`
+                                                            ${chartMetric === 'citations' ? 'text-green-300 print:text-green-700' :
+                                                                chartMetric.includes('lifetime') ? 'text-cyan-300 print:text-cyan-700' :
+                                                                    'text-blue-300 print:text-blue-700'}
+                                                        `}>{val.toLocaleString()}</div>
+                                                        <div
+                                                            className={`w-full rounded-t transition-all duration-500 
+                                                                ${chartMetric === 'citations' ? 'bg-gradient-to-t from-green-600 to-green-400 print:bg-green-600' :
+                                                                    chartMetric.includes('lifetime') ? 'bg-gradient-to-t from-cyan-600 to-cyan-400 print:bg-cyan-600' :
+                                                                        'bg-gradient-to-t from-blue-600 to-blue-400 print:bg-blue-600'}
+                                                            `}
+                                                            style={{
+                                                                height: `${valHeight}%`,
+                                                                minHeight: '4px',
+                                                                // @ts-ignore
+                                                                printColorAdjust: 'exact',
+                                                                WebkitPrintColorAdjust: 'exact'
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
 
-                                                {/* Average per Staff Bar */}
-                                                <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
-                                                    <div className="text-xs font-bold text-purple-300 print:text-purple-700">{dept.averagePerStaff}</div>
-                                                    <div
-                                                        className="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-t transition-all duration-500 print:bg-purple-600"
-                                                        style={{
-                                                            height: `${avgHeight}%`,
-                                                            minHeight: '10px',
-                                                            // @ts-ignore
-                                                            printColorAdjust: 'exact',
-                                                            WebkitPrintColorAdjust: 'exact'
-                                                        }}
-                                                        title={`Average: ${dept.averagePerStaff}`}
-                                                    />
-                                                </div>
+                                                {/* Secondary Bar (Purple/Indigo) - for Averages */}
+                                                {(chartMetric === 'publications' || chartMetric.includes('lifetime') || chartMetric === 'hIndex') && (
+                                                    <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full font-bold text-xs">
+                                                        <div className={`
+                                                            ${chartMetric === 'hIndex' ? 'text-purple-300 print:text-purple-700' :
+                                                                chartMetric.includes('lifetime') ? 'text-indigo-300 print:text-indigo-700' :
+                                                                    'text-purple-300 print:text-purple-700'}
+                                                        `}>{avg.toFixed(2)}</div>
+                                                        <div
+                                                            className={`w-full rounded-t transition-all duration-500 
+                                                                ${chartMetric === 'hIndex' ? 'bg-gradient-to-t from-purple-600 to-purple-400 print:bg-purple-600' :
+                                                                    chartMetric.includes('lifetime') ? 'bg-gradient-to-t from-indigo-600 to-indigo-400 print:bg-indigo-600' :
+                                                                        'bg-gradient-to-t from-purple-600 to-purple-400 print:bg-purple-600'}
+                                                            `}
+                                                            style={{
+                                                                height: `${avgHeight}%`,
+                                                                minHeight: '4px',
+                                                                // @ts-ignore
+                                                                printColorAdjust: 'exact',
+                                                                WebkitPrintColorAdjust: 'exact'
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
                                             </div>
 
                                             {/* Department Label */}
@@ -1616,14 +1825,32 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
 
                         {/* Legend */}
                         <div className="flex justify-center gap-6 mt-4 pt-4 border-t border-white/10 print:border-gray-300">
-                            <div className="flex items-center gap-2">
-                                <div className="w-4 h-4 bg-gradient-to-t from-blue-600 to-blue-400 rounded print:bg-blue-600"></div>
-                                <span className="text-sm text-gray-300 print:text-gray-700">Total Publications</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <div className="w-4 h-4 bg-gradient-to-t from-purple-600 to-purple-400 rounded print:bg-purple-600"></div>
-                                <span className="text-sm text-gray-300 print:text-gray-700">Average per Staff</span>
-                            </div>
+                            {chartMetric !== 'hIndex' && (
+                                <div className="flex items-center gap-2">
+                                    <div className={`w-4 h-4 rounded 
+                                        ${chartMetric === 'citations' ? 'bg-green-500' :
+                                            chartMetric.includes('lifetime') ? 'bg-cyan-500' :
+                                                'bg-blue-500'}`}></div>
+                                    <span className="text-sm text-gray-300 print:text-gray-700">
+                                        {chartMetric === 'citations' ? 'Total Citations' :
+                                            chartMetric.includes('lifetime') ? 'Total Lifetime Pubs' :
+                                                'Total Publications'}
+                                    </span>
+                                </div>
+                            )}
+
+                            {(chartMetric === 'publications' || chartMetric.includes('lifetime') || chartMetric === 'hIndex') && (
+                                <div className="flex items-center gap-2">
+                                    <div className={`w-4 h-4 rounded 
+                                        ${chartMetric.includes('lifetime') ? 'bg-indigo-500' :
+                                            'bg-purple-500'}`}></div>
+                                    <span className="text-sm text-gray-300 print:text-gray-700">
+                                        {chartMetric === 'hIndex' ? 'Average H-Index' :
+                                            chartMetric.includes('lifetime') ? 'Avg Lifetime per Staff' :
+                                                'Average per Staff'}
+                                    </span>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
