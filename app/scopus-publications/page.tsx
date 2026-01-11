@@ -67,7 +67,7 @@ export default function ScopusPublicationsPage() {
     const [selectedYears, setSelectedYears] = useState<number[]>([2023, 2024, 2025]);
 
     // Column visibility for Individual Staff table
-    const [visibleColumns, setVisibleColumns] = useState<string[]>(['scopusId', 'hIndex', 'citations', 'publications']);
+    const [visibleColumns, setVisibleColumns] = useState<string[]>(['scopusId', 'publications']);
 
     // Faculty-level data
     const [facultyStaffData, setFacultyStaffData] = useState<{ [key: string]: StaffMember[] }>({});
@@ -456,7 +456,7 @@ export default function ScopusPublicationsPage() {
                                                             />
                                                             <span className="text-sm text-gray-300">Scopus ID</span>
                                                         </label>
-                                                        <label className="flex items-center gap-2 cursor-pointer">
+                                                        <label className="flex items-center gap-2 cursor-pointer group">
                                                             <input
                                                                 type="checkbox"
                                                                 checked={visibleColumns.includes('hIndex')}
@@ -469,9 +469,15 @@ export default function ScopusPublicationsPage() {
                                                                 }}
                                                                 className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900"
                                                             />
-                                                            <span className="text-sm text-gray-300">H-Index</span>
+                                                            <span className="text-sm text-gray-300">H-Index (Lifetime)</span>
+                                                            <span className="relative group/tooltip">
+                                                                <span className="text-xs text-gray-500 cursor-help">ⓘ</span>
+                                                                <span className="invisible group-hover/tooltip:visible absolute left-0 top-6 w-48 bg-slate-800 text-xs text-gray-300 p-2 rounded border border-slate-600 shadow-lg z-10">
+                                                                    Lifetime metric - not affected by year selection
+                                                                </span>
+                                                            </span>
                                                         </label>
-                                                        <label className="flex items-center gap-2 cursor-pointer">
+                                                        <label className="flex items-center gap-2 cursor-pointer group">
                                                             <input
                                                                 type="checkbox"
                                                                 checked={visibleColumns.includes('citations')}
@@ -484,7 +490,13 @@ export default function ScopusPublicationsPage() {
                                                                 }}
                                                                 className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900"
                                                             />
-                                                            <span className="text-sm text-gray-300">Citations</span>
+                                                            <span className="text-sm text-gray-300">Citations (Lifetime)</span>
+                                                            <span className="relative group/tooltip">
+                                                                <span className="text-xs text-gray-500 cursor-help">ⓘ</span>
+                                                                <span className="invisible group-hover/tooltip:visible absolute left-0 top-6 w-48 bg-slate-800 text-xs text-gray-300 p-2 rounded border border-slate-600 shadow-lg z-10">
+                                                                    Lifetime metric - not affected by year selection
+                                                                </span>
+                                                            </span>
                                                         </label>
                                                         <label className="flex items-center gap-2 cursor-pointer">
                                                             <input
@@ -653,8 +665,8 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
         // Build CSV headers based on visible columns
         const headers = ['Name'];
         if (visibleColumns.includes('scopusId')) headers.push('Scopus ID');
-        if (visibleColumns.includes('hIndex')) headers.push('H-Index');
-        if (visibleColumns.includes('citations')) headers.push('Total Citations');
+        if (visibleColumns.includes('hIndex')) headers.push('H-Index (Lifetime)');
+        if (visibleColumns.includes('citations')) headers.push('Citations (Lifetime)');
         if (visibleColumns.includes('publications')) headers.push(`"Publications (${selectedYears.join(', ')})"`);
 
         // Build CSV rows based on visible columns
@@ -719,10 +731,30 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
                                     <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300">Scopus ID</th>
                                 )}
                                 {visibleColumns.includes('hIndex') && (
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300">H-Index</th>
+                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300 bg-slate-800/30">
+                                        <span className="inline-flex items-center gap-1">
+                                            H-Index (Lifetime)
+                                            <span className="relative group/tooltip">
+                                                <span className="text-xs text-gray-500 cursor-help">ⓘ</span>
+                                                <span className="invisible group-hover/tooltip:visible absolute left-0 top-6 w-48 bg-slate-800 text-xs text-gray-300 p-2 rounded border border-slate-600 shadow-lg z-10">
+                                                    Lifetime metric - not affected by year selection
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </th>
                                 )}
                                 {visibleColumns.includes('citations') && (
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300">Citations</th>
+                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300 bg-slate-800/30">
+                                        <span className="inline-flex items-center gap-1">
+                                            Citations (Lifetime)
+                                            <span className="relative group/tooltip">
+                                                <span className="text-xs text-gray-500 cursor-help">ⓘ</span>
+                                                <span className="invisible group-hover/tooltip:visible absolute left-0 top-6 w-48 bg-slate-800 text-xs text-gray-300 p-2 rounded border border-slate-600 shadow-lg z-10">
+                                                    Lifetime metric - not affected by year selection
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </th>
                                 )}
                                 {visibleColumns.includes('publications') && (
                                     <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300">Publications ({selectedYears.join(', ')})</th>
@@ -739,12 +771,12 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
                                         </td>
                                     )}
                                     {visibleColumns.includes('hIndex') && (
-                                        <td className="py-3 px-4 text-sm text-gray-300 text-right font-mono">
+                                        <td className="py-3 px-4 text-sm text-gray-300 text-right font-mono bg-slate-800/20">
                                             {staff.hIndex ?? '-'}
                                         </td>
                                     )}
                                     {visibleColumns.includes('citations') && (
-                                        <td className="py-3 px-4 text-sm text-gray-300 text-right font-mono">
+                                        <td className="py-3 px-4 text-sm text-gray-300 text-right font-mono bg-slate-800/20">
                                             {staff.citationCount !== undefined ? staff.citationCount.toLocaleString() : '-'}
                                         </td>
                                     )}
