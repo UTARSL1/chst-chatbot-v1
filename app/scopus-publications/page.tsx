@@ -1160,7 +1160,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
     // State for visible metrics
     const [visibleMetrics, setVisibleMetrics] = useState({
         lifetimePublications: false,
-        avgLifetimePerStaff: true,
+        avgLifetimePerStaff: false,
         citations: false,
         hIndex: false,
         variability: false,
@@ -1546,7 +1546,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
     // State for visible metrics
     const [visibleMetrics, setVisibleMetrics] = useState({
         lifetimePublications: false,
-        avgLifetimePerStaff: true,
+        avgLifetimePerStaff: false,
         citations: false,
         hIndex: false,
         variability: false,
@@ -1822,7 +1822,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
             </div>
 
             {/* Optional Metrics (Conditionally Visible) */}
-            {(visibleMetrics.lifetimePublications || visibleMetrics.citations || visibleMetrics.hIndex || visibleMetrics.variability || visibleMetrics.topPerformer) && (
+            {(visibleMetrics.lifetimePublications || visibleMetrics.avgLifetimePerStaff || visibleMetrics.citations || visibleMetrics.hIndex || visibleMetrics.variability || visibleMetrics.topPerformer) && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {visibleMetrics.lifetimePublications && (
                         <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/40 backdrop-blur-xl rounded-lg border border-cyan-500/30 p-6 shadow-[0_0_15px_rgba(6,182,212,0.15)] print:bg-white print:border print:border-gray-300">
