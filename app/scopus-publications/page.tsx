@@ -71,6 +71,10 @@ export default function ScopusPublicationsPage() {
     // Column visibility for Individual Staff table
     const [visibleColumns, setVisibleColumns] = useState<string[]>(['scopusId', 'lifetimePublications', 'publications']);
 
+    // Sub-group selection state
+    const [selectedStaffIds, setSelectedStaffIds] = useState<string[]>([]);
+    const [showingSubGroup, setShowingSubGroup] = useState(false);
+
     // Faculty-level data
     const [facultyStaffData, setFacultyStaffData] = useState<{ [key: string]: StaffMember[] }>({});
 
@@ -93,6 +97,9 @@ export default function ScopusPublicationsPage() {
     useEffect(() => {
         if (selectedDepartment && selectedFaculty) {
             checkAccessAndLoadData(selectedFaculty, selectedDepartment);
+            // Reset sub-group selection when department changes
+            setSelectedStaffIds([]);
+            setShowingSubGroup(false);
         } else {
             setStaffMembers([]);
             setHasAccess(false);
@@ -404,14 +411,26 @@ export default function ScopusPublicationsPage() {
                                         <div className="mb-8 border-b border-white/10 print:hidden">
                                             <div className="flex gap-1">
                                                 <button
-                                                    onClick={() => setActiveTab('individual')}
-                                                    className={`px-6 py-3 font-medium transition-all ${activeTab === 'individual'
+                                                    onClick={() => { setActiveTab('individual'); setShowingSubGroup(false); }}
+                                                    className={`px-6 py-3 font-medium transition-all ${activeTab === 'individual' && !showingSubGroup
                                                         ? 'text-blue-400 border-b-2 border-blue-400'
                                                         : 'text-gray-400 hover:text-gray-300'
                                                         }`}
                                                 >
                                                     Individual Staff
                                                 </button>
+                                                {showingSubGroup && (
+                                                    <button
+                                                        onClick={() => setActiveTab('individual')}
+                                                        className={`px-6 py-3 font-medium transition-all ${showingSubGroup
+                                                            ? 'text-emerald-400 border-b-2 border-emerald-400'
+                                                            : 'text-gray-400 hover:text-gray-300'
+                                                            }`}
+                                                    >
+                                                        <Users className="inline w-4 h-4 mr-2" />
+                                                        Sub-group Analysis ({selectedStaffIds.length})
+                                                    </button>
+                                                )}
                                                 <button
                                                     onClick={() => setActiveTab('department')}
                                                     className={`px-6 py-3 font-medium transition-all ${activeTab === 'department'
@@ -539,13 +558,46 @@ export default function ScopusPublicationsPage() {
                                                     </div>
                                                 </div>
 
-                                                <IndividualStaffTab
-                                                    staffMembers={staffMembers}
-                                                    selectedYears={selectedYears}
-                                                    loading={loading}
-                                                    departmentName={departments.find(d => d.acronym === selectedDepartment)?.name || selectedDepartment}
-                                                    visibleColumns={visibleColumns}
-                                                />
+                                                {showingSubGroup ? (
+                                                    <div className="space-y-4">
+                                                        <div className="flex items-center justify-between bg-emerald-900/20 border border-emerald-500/30 p-4 rounded-lg">
+                                                            <div className="flex items-center gap-3">
+                                                                <div className="bg-emerald-500/20 p-2 rounded-full">
+                                                                    <Users className="w-5 h-5 text-emerald-400" />
+                                                                </div>
+                                                                <div>
+                                                                    <h3 className="text-lg font-semibold text-emerald-100">Custom Sub-group Analysis</h3>
+                                                                    <p className="text-emerald-400/80 text-sm">Analyzing {selectedStaffIds.length} selected staff members</p>
+                                                                </div>
+                                                            </div>
+                                                            <button
+                                                                onClick={() => setShowingSubGroup(false)}
+                                                                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition-colors text-sm"
+                                                            >
+                                                                Exit Sub-group View
+                                                            </button>
+                                                        </div>
+
+                                                        <DepartmentOverviewTab
+                                                            staffMembers={staffMembers.filter(s => selectedStaffIds.includes(s.email))}
+                                                            departments={[]}
+                                                            selectedYears={selectedYears}
+                                                            departmentName={`Custom Sub-group (${selectedStaffIds.length} staff)`}
+                                                            departmentAcronym="SUB-GROUP"
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <IndividualStaffTab
+                                                        staffMembers={staffMembers}
+                                                        selectedYears={selectedYears}
+                                                        loading={loading}
+                                                        departmentName={departments.find(d => d.acronym === selectedDepartment)?.name || selectedDepartment}
+                                                        visibleColumns={visibleColumns}
+                                                        selectedStaffIds={selectedStaffIds}
+                                                        onSelectStaff={setSelectedStaffIds}
+                                                        onAnalyzeSubGroup={() => setShowingSubGroup(true)}
+                                                    />
+                                                )}
                                             </>
                                         )}
 
@@ -655,12 +707,24 @@ export default function ScopusPublicationsPage() {
 }
 
 // Individual Staff Tab Component
-function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentName, visibleColumns }: {
+function IndividualStaffTab({
+    staffMembers,
+    selectedYears,
+    loading,
+    departmentName,
+    visibleColumns,
+    selectedStaffIds = [],
+    onSelectStaff,
+    onAnalyzeSubGroup
+}: {
     staffMembers: StaffMember[];
     selectedYears: number[];
     loading: boolean;
     departmentName: string;
     visibleColumns: string[];
+    selectedStaffIds?: string[];
+    onSelectStaff?: (ids: string[]) => void;
+    onAnalyzeSubGroup?: () => void;
 }) {
     if (loading) {
         return (
@@ -684,9 +748,33 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
         };
     }).sort((a, b) => b.yearPublications - a.yearPublications);
 
-    const handleExportCSV = () => {
+    // Selection handlers
+    const toggleSelection = (email: string) => {
+        if (!onSelectStaff) return;
+        if (selectedStaffIds.includes(email)) {
+            onSelectStaff(selectedStaffIds.filter(id => id !== email));
+        } else {
+            onSelectStaff([...selectedStaffIds, email]);
+        }
+    };
+
+    const toggleSelectAll = () => {
+        if (!onSelectStaff) return;
+        if (selectedStaffIds.length === staffWithPublications.length) {
+            onSelectStaff([]);
+        } else {
+            onSelectStaff(staffWithPublications.map(s => s.email));
+        }
+    };
+
+    const handleExportCSV = (onlySelected: boolean = false) => {
+        // Filter staff if exporting only selected
+        const staffToExport = onlySelected
+            ? staffWithPublications.filter(s => selectedStaffIds.includes(s.email))
+            : staffWithPublications;
+
         // Build CSV headers based on visible columns
-        const headers = ['Name'];
+        const headers = ['Name', 'Email'];
         if (visibleColumns.includes('scopusId')) headers.push('Scopus ID');
         if (visibleColumns.includes('hIndex')) headers.push('H-Index (Lifetime)');
         if (visibleColumns.includes('citations')) headers.push('Citations (Lifetime)');
@@ -694,10 +782,10 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
         if (visibleColumns.includes('publications')) headers.push(`"Publications (${selectedYears.join(', ')})"`);
 
         // Build CSV rows based on visible columns
-        const rows = staffWithPublications.map(staff => {
+        const rows = staffToExport.map(staff => {
             // Sanitize name: Remove 'Â' artifacts and replace non-breaking spaces
             const cleanName = staff.name.replace(/Â/g, '').replace(/\u00A0/g, ' ').trim();
-            const row = [`"${cleanName}"`];
+            const row = [`"${cleanName}"`, staff.email];
 
             if (visibleColumns.includes('scopusId')) {
                 row.push(staff.scopusAuthorId !== 'NA' ? staff.scopusAuthorId : '-');
@@ -726,7 +814,8 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
         if (link.download !== undefined) {
             const url = URL.createObjectURL(blob);
             link.setAttribute('href', url);
-            link.setAttribute('download', `${departmentName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_publications_${selectedYears.join('-')}.csv`);
+            const prefix = onlySelected ? 'subgroup' : departmentName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            link.setAttribute('download', `${prefix}_publications_${selectedYears.join('-')}.csv`);
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
@@ -741,18 +830,53 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
                     <h3 className="text-xl font-bold text-white">
                         Individual Staff Publications ({staffWithPublications.length} staff)
                     </h3>
-                    <button
-                        onClick={handleExportCSV}
-                        className="flex items-center gap-2 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded transition-colors print:hidden"
-                    >
-                        <Download className="w-4 h-4" /> Export CSV
-                    </button>
+                    <div className="flex gap-2">
+                        {selectedStaffIds.length > 0 && onSelectStaff && onAnalyzeSubGroup && (
+                            <div className="flex items-center gap-2 mr-4 bg-emerald-900/30 px-3 py-1 rounded-lg border border-emerald-500/30 animate-in fade-in slide-in-from-right-4">
+                                <span className="text-emerald-400 text-sm font-medium">{selectedStaffIds.length} Selected</span>
+                                <div className="h-4 w-px bg-emerald-700/50 mx-1"></div>
+                                <button
+                                    onClick={onAnalyzeSubGroup}
+                                    className="text-xs bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-1 rounded transition-colors flex items-center gap-1"
+                                >
+                                    <BarChart3 className="w-3 h-3" /> Analyze
+                                </button>
+                                <button
+                                    onClick={() => handleExportCSV(true)}
+                                    className="text-xs bg-emerald-800 hover:bg-emerald-700 text-emerald-100 px-2 py-1 rounded transition-colors flex items-center gap-1"
+                                >
+                                    <Download className="w-3 h-3" /> CSV
+                                </button>
+                            </div>
+                        )}
+                        <button
+                            onClick={() => handleExportCSV(false)}
+                            className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors print:hidden"
+                        >
+                            <Download className="w-4 h-4" /> Export All CSV
+                        </button>
+                    </div>
                 </div>
 
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead>
                             <tr className="border-b border-white/10">
+                                {onSelectStaff && (
+                                    <th className="py-3 px-4 text-left w-10">
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedStaffIds.length > 0 && selectedStaffIds.length === staffWithPublications.length}
+                                            ref={input => {
+                                                if (input) {
+                                                    input.indeterminate = selectedStaffIds.length > 0 && selectedStaffIds.length < staffWithPublications.length;
+                                                }
+                                            }}
+                                            onChange={toggleSelectAll}
+                                            className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600 focus:ring-blue-500"
+                                        />
+                                    </th>
+                                )}
                                 <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300">Name</th>
                                 {visibleColumns.includes('scopusId') && (
                                     <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300">Scopus ID</th>
@@ -804,6 +928,16 @@ function IndividualStaffTab({ staffMembers, selectedYears, loading, departmentNa
                         <tbody>
                             {staffWithPublications.map((staff, idx) => (
                                 <tr key={idx} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                    {onSelectStaff && (
+                                        <td className="py-3 px-4">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedStaffIds.includes(staff.email)}
+                                                onChange={() => toggleSelection(staff.email)}
+                                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600 focus:ring-blue-500"
+                                            />
+                                        </td>
+                                    )}
                                     <td className="py-3 px-4 text-sm text-white">{staff.name}</td>
                                     {visibleColumns.includes('scopusId') && (
                                         <td className="py-3 px-4 text-sm text-gray-400 font-mono">
