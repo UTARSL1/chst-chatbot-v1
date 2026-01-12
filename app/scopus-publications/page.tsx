@@ -69,7 +69,7 @@ export default function ScopusPublicationsPage() {
     const [selectedYears, setSelectedYears] = useState<number[]>([2023, 2024, 2025]);
 
     // Column visibility for Individual Staff table
-    const [visibleColumns, setVisibleColumns] = useState<string[]>(['scopusId', 'lifetimePublications', 'publications']);
+    const [visibleColumns, setVisibleColumns] = useState<string[]>(['lifetimePublications', 'publications']);
 
     // Sub-group selection state
     const [selectedStaffIds, setSelectedStaffIds] = useState<string[]>([]);
