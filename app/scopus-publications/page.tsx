@@ -1255,123 +1255,125 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
             <div className="bg-slate-900/60 backdrop-blur-xl rounded-lg border border-white/10 p-4 print:hidden">
                 <div className="text-xs uppercase tracking-wide text-gray-500 mb-3">Optional Metrics</div>
 
-                {/* Publications Section */}
-                <div className="mb-4">
-                    <div className="text-xs font-semibold text-gray-400 mb-2">📊 Publications</div>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.lifetimePublications}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, lifetimePublications: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            Lifetime Publications
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.avgLifetimePerStaff}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, avgLifetimePerStaff: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            Avg Lifetime Pubs per Staff
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.publicationSpread}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, publicationSpread: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            Publication Spread
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.topPublicationPerformer}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, topPublicationPerformer: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            Top Performer (Publications)
-                        </label>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Publications Section */}
+                    <div>
+                        <div className="text-xs font-semibold text-gray-400 mb-2 border-b border-gray-700 pb-1">📊 Publications</div>
+                        <div className="flex flex-col gap-2">
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.lifetimePublications}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, lifetimePublications: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                Lifetime Publications
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.avgLifetimePerStaff}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, avgLifetimePerStaff: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                Avg Lifetime Pubs per Staff
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.publicationSpread}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, publicationSpread: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                Publication Spread
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.topPublicationPerformer}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, topPublicationPerformer: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                Top Performer (Publications)
+                            </label>
+                        </div>
                     </div>
-                </div>
 
-                {/* Citations Section */}
-                <div className="mb-4">
-                    <div className="text-xs font-semibold text-gray-400 mb-2">📚 Citations</div>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.citations}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, citations: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            Total Citations
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.avgCitationsPerStaff}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, avgCitationsPerStaff: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            Avg Citations per Staff
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.citationSpread}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, citationSpread: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            Citation Spread
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.topCitationPerformer}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, topCitationPerformer: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            Top Performer (Citations)
-                        </label>
+                    {/* Citations Section */}
+                    <div>
+                        <div className="text-xs font-semibold text-gray-400 mb-2 border-b border-gray-700 pb-1">📚 Citations</div>
+                        <div className="flex flex-col gap-2">
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.citations}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, citations: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                Total Citations
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.avgCitationsPerStaff}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, avgCitationsPerStaff: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                Avg Citations per Staff
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.citationSpread}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, citationSpread: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                Citation Spread
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.topCitationPerformer}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, topCitationPerformer: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                Top Performer (Citations)
+                            </label>
+                        </div>
                     </div>
-                </div>
 
-                {/* H-Index Section */}
-                <div>
-                    <div className="text-xs font-semibold text-gray-400 mb-2">🎯 H-Index</div>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.hIndex}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, hIndex: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            Average H-Index
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.hIndexSpread}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, hIndexSpread: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            H-Index Spread
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.topHIndexPerformer}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, topHIndexPerformer: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            Top Performer (H-Index)
-                        </label>
+                    {/* H-Index Section */}
+                    <div>
+                        <div className="text-xs font-semibold text-gray-400 mb-2 border-b border-gray-700 pb-1">🎯 H-Index</div>
+                        <div className="flex flex-col gap-2">
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.hIndex}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, hIndex: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                Average H-Index
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.hIndexSpread}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, hIndexSpread: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                H-Index Spread
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.topHIndexPerformer}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, topHIndexPerformer: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                Top Performer (H-Index)
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1970,123 +1972,125 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
             <div className="bg-slate-900/60 backdrop-blur-xl rounded-lg border border-white/10 p-4 print:hidden">
                 <div className="text-xs uppercase tracking-wide text-gray-500 mb-3">Optional Metrics</div>
 
-                {/* Publications Section */}
-                <div className="mb-4">
-                    <div className="text-xs font-semibold text-gray-400 mb-2">📊 Publications</div>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.lifetimePublications}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, lifetimePublications: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            Lifetime Publications
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.avgLifetimePerStaff}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, avgLifetimePerStaff: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            Avg Lifetime Pubs per Staff
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.publicationSpread}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, publicationSpread: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            Publication Spread
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.topPublicationPerformer}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, topPublicationPerformer: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            Top Performer (Publications)
-                        </label>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Publications Section */}
+                    <div>
+                        <div className="text-xs font-semibold text-gray-400 mb-2 border-b border-gray-700 pb-1">📊 Publications</div>
+                        <div className="flex flex-col gap-2">
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.lifetimePublications}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, lifetimePublications: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                Lifetime Publications
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.avgLifetimePerStaff}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, avgLifetimePerStaff: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                Avg Lifetime Pubs per Staff
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.publicationSpread}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, publicationSpread: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                Publication Spread
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.topPublicationPerformer}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, topPublicationPerformer: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                Top Performer (Publications)
+                            </label>
+                        </div>
                     </div>
-                </div>
 
-                {/* Citations Section */}
-                <div className="mb-4">
-                    <div className="text-xs font-semibold text-gray-400 mb-2">📚 Citations</div>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.citations}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, citations: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            Total Citations
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.avgCitationsPerStaff}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, avgCitationsPerStaff: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            Avg Citations per Staff
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.citationSpread}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, citationSpread: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            Citation Spread
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.topCitationPerformer}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, topCitationPerformer: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            Top Performer (Citations)
-                        </label>
+                    {/* Citations Section */}
+                    <div>
+                        <div className="text-xs font-semibold text-gray-400 mb-2 border-b border-gray-700 pb-1">📚 Citations</div>
+                        <div className="flex flex-col gap-2">
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.citations}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, citations: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                Total Citations
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.avgCitationsPerStaff}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, avgCitationsPerStaff: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                Avg Citations per Staff
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.citationSpread}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, citationSpread: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                Citation Spread
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.topCitationPerformer}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, topCitationPerformer: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                Top Performer (Citations)
+                            </label>
+                        </div>
                     </div>
-                </div>
 
-                {/* H-Index Section */}
-                <div>
-                    <div className="text-xs font-semibold text-gray-400 mb-2">🎯 H-Index</div>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.hIndex}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, hIndex: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            Average H-Index
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.hIndexSpread}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, hIndexSpread: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            H-Index Spread
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={visibleMetrics.topHIndexPerformer}
-                                onChange={(e) => setVisibleMetrics({ ...visibleMetrics, topHIndexPerformer: e.target.checked })}
-                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
-                            />
-                            Top Performer (H-Index)
-                        </label>
+                    {/* H-Index Section */}
+                    <div>
+                        <div className="text-xs font-semibold text-gray-400 mb-2 border-b border-gray-700 pb-1">🎯 H-Index</div>
+                        <div className="flex flex-col gap-2">
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.hIndex}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, hIndex: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                Average H-Index
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.hIndexSpread}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, hIndexSpread: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                H-Index Spread
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={visibleMetrics.topHIndexPerformer}
+                                    onChange={(e) => setVisibleMetrics({ ...visibleMetrics, topHIndexPerformer: e.target.checked })}
+                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
+                                />
+                                Top Performer (H-Index)
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
