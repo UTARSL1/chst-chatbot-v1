@@ -2017,6 +2017,8 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
 
 // NEW: Bubble Chart Component for Staff Performance
 function StaffPerformanceBubbleChart({ staffMembers, selectedYears }: { staffMembers: StaffMember[], selectedYears: number[] }) {
+    const [hIndexThreshold, setHIndexThreshold] = useState(15);
+
     const data = staffMembers
         .filter(s => s.scopusAuthorId && s.scopusAuthorId !== 'NA')
         .map(staff => ({
@@ -2033,11 +2035,37 @@ function StaffPerformanceBubbleChart({ staffMembers, selectedYears }: { staffMem
     return (
         <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-6 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:bg-white print:border print:border-gray-300">
             <h3 className="text-xl font-bold text-white mb-2 print:text-black">Staff Performance Matrix</h3>
-            <p className="text-sm text-gray-400 mb-6 print:text-gray-600">
+            <p className="text-sm text-gray-400 mb-2 print:text-gray-600">
                 Visualizing Volume (X), Impact (Y), and Consistency (Size/H-Index).
                 <br />
                 <span className="text-xs text-gray-500">Larger bubbles indicate higher H-Index.</span>
             </p>
+
+            {/* Threshold Control and Legend */}
+            <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-4 text-xs">
+                    <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-purple-500 opacity-60"></div>
+                        <span className="text-gray-400">H-Index &gt; {hIndexThreshold}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-blue-500 opacity-60"></div>
+                        <span className="text-gray-400">H-Index ≤ {hIndexThreshold}</span>
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                    <label className="text-xs text-gray-400">Threshold:</label>
+                    <input
+                        type="number"
+                        min="1"
+                        max="100"
+                        value={hIndexThreshold}
+                        onChange={(e) => setHIndexThreshold(Number(e.target.value) || 15)}
+                        className="w-16 px-2 py-1 text-xs bg-slate-800 border border-slate-600 rounded text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                </div>
+            </div>
 
             <div className="h-[400px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
@@ -2081,7 +2109,7 @@ function StaffPerformanceBubbleChart({ staffMembers, selectedYears }: { staffMem
                         />
                         <Scatter name="Staff" data={data} fill="#8884d8">
                             {data.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={entry.hIndex > 10 ? '#a855f7' : '#3b82f6'} fillOpacity={0.6} />
+                                <Cell key={`cell-${index}`} fill={entry.hIndex > hIndexThreshold ? '#a855f7' : '#3b82f6'} fillOpacity={0.6} />
                             ))}
                         </Scatter>
                     </ScatterChart>
@@ -2106,11 +2134,14 @@ function StaffDistributionChart({ staffMembers, metric, title }: { staffMembers:
                 val = staff.lifetimePublications || 0;
             }
 
+            // Deterministic jitter based on email hash (so dots don't move on re-render)
+            const hash = staff.email.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+            const jitter = (hash % 100);
+
             return {
                 name: staff.name,
                 value: val,
-                // Random jitter between 0 and 100
-                jitter: Math.random() * 100,
+                jitter: jitter,
                 department: staff.departmentAcronym
             };
         })
@@ -2135,10 +2166,15 @@ function StaffDistributionChart({ staffMembers, metric, title }: { staffMembers:
                         <YAxis
                             type="number"
                             dataKey="value"
-                            name="Value"
+                            name={metric === 'hIndex' ? 'H-Index' : metric === 'citations' ? 'Citations' : 'Publications'}
                             stroke="#475569"
                             tick={{ fill: '#94a3b8' }}
-                            label={{ value: 'Value', angle: -90, position: 'insideLeft', fill: '#94a3b8' }}
+                            label={{
+                                value: metric === 'hIndex' ? 'H-Index' : metric === 'citations' ? 'Citations (Lifetime)' : 'Publications (Lifetime)',
+                                angle: -90,
+                                position: 'insideLeft',
+                                fill: '#94a3b8'
+                            }}
                         />
                         <RechartsTooltip
                             cursor={{ strokeDasharray: '3 3' }}
