@@ -1413,18 +1413,18 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                         )}
 
                         {visibleMetrics.avgLifetimePerStaff && (
-                            <div className="bg-gradient-to-br from-indigo-900/40 to-indigo-800/40 backdrop-blur-xl rounded-lg border border-indigo-500/30 p-6 shadow-[0_0_15px_rgba(99,102,241,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-indigo-300 mb-2 print:text-gray-600">Avg Publications (Lifetime) per Staff</div>
-                                <div className="text-4xl font-bold text-indigo-100 print:text-black print:text-2xl">{averageLifetimePerStaff}</div>
-                                <div className="text-xs text-indigo-400 mt-1 print:text-gray-600">Per researcher with Scopus</div>
+                            <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/40 backdrop-blur-xl rounded-lg border border-cyan-500/30 p-6 shadow-[0_0_15px_rgba(6,182,212,0.15)] print:bg-white print:border print:border-gray-300">
+                                <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Avg Publications (Lifetime) per Staff</div>
+                                <div className="text-4xl font-bold text-cyan-100 print:text-black print:text-2xl">{averageLifetimePerStaff}</div>
+                                <div className="text-xs text-cyan-400 mt-1 print:text-gray-600">Per researcher with Scopus</div>
                             </div>
                         )}
 
                         {visibleMetrics.citations && (
-                            <div className="bg-gradient-to-br from-green-900/40 to-green-800/40 backdrop-blur-xl rounded-lg border border-green-500/30 p-6 shadow-[0_0_15px_rgba(34,197,94,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-green-300 mb-2 print:text-gray-600">Total Citations</div>
-                                <div className="text-4xl font-bold text-green-100 print:text-black print:text-2xl">{totalCitations.toLocaleString()}</div>
-                                <div className="text-xs text-green-400 mt-1 print:text-gray-600">Lifetime research impact</div>
+                            <div className="bg-gradient-to-br from-emerald-900/40 to-emerald-800/40 backdrop-blur-xl rounded-lg border border-emerald-500/30 p-6 shadow-[0_0_15px_rgba(16,185,129,0.15)] print:bg-white print:border print:border-gray-300">
+                                <div className="text-sm text-emerald-300 mb-2 print:text-gray-600">Total Citations</div>
+                                <div className="text-4xl font-bold text-emerald-100 print:text-black print:text-2xl">{totalCitations.toLocaleString()}</div>
+                                <div className="text-xs text-emerald-400 mt-1 print:text-gray-600">Lifetime research impact</div>
                             </div>
                         )}
 
@@ -1437,20 +1437,20 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                         )}
 
                         {visibleMetrics.publicationSpread && (
-                            <div className="bg-gradient-to-br from-orange-900/40 to-orange-800/40 backdrop-blur-xl rounded-lg border border-orange-500/30 p-6 shadow-[0_0_15px_rgba(249,115,22,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-orange-300 mb-2 print:text-gray-600">Publication Spread</div>
-                                <div className="text-4xl font-bold text-orange-100 print:text-black print:text-2xl">{publicationSpread}</div>
-                                <div className="text-xs text-orange-400 mt-1 print:text-gray-600">Std dev of lifetime pubs</div>
+                            <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/40 backdrop-blur-xl rounded-lg border border-cyan-500/30 p-6 shadow-[0_0_15px_rgba(6,182,212,0.15)] print:bg-white print:border print:border-gray-300">
+                                <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Publication Spread</div>
+                                <div className="text-4xl font-bold text-cyan-100 print:text-black print:text-2xl">{publicationSpread}</div>
+                                <div className="text-xs text-cyan-400 mt-1 print:text-gray-600">Std dev of lifetime pubs</div>
                             </div>
                         )}
 
                         {visibleMetrics.topPublicationPerformer && (
-                            <div className="bg-gradient-to-br from-amber-900/40 to-amber-800/40 backdrop-blur-xl rounded-lg border border-amber-500/30 p-6 shadow-[0_0_15px_rgba(251,191,36,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-amber-300 mb-2 print:text-gray-600">Top Performer (Publications)</div>
-                                <div className="text-3xl font-bold text-amber-100 print:text-black print:text-xl">
+                            <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/40 backdrop-blur-xl rounded-lg border border-cyan-500/30 p-6 shadow-[0_0_15px_rgba(6,182,212,0.15)] print:bg-white print:border print:border-gray-300">
+                                <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Top Performer (Publications)</div>
+                                <div className="text-3xl font-bold text-cyan-100 print:text-black print:text-xl">
                                     {topPublicationPerformer ? topPublicationPerformer.lifetimePublications : '-'}
                                 </div>
-                                <div className="text-sm text-amber-200 mt-1 truncate print:text-gray-700 font-medium">
+                                <div className="text-sm text-cyan-200 mt-1 truncate print:text-gray-700 font-medium">
                                     {topPublicationPerformer ? topPublicationPerformer.name : 'N/A'}
                                 </div>
                             </div>
@@ -1465,40 +1465,40 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                         )}
 
                         {visibleMetrics.citationSpread && (
-                            <div className="bg-gradient-to-br from-teal-900/40 to-teal-800/40 backdrop-blur-xl rounded-lg border border-teal-500/30 p-6 shadow-[0_0_15px_rgba(20,184,166,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-teal-300 mb-2 print:text-gray-600">Citation Spread</div>
-                                <div className="text-4xl font-bold text-teal-100 print:text-black print:text-2xl">{citationSpread}</div>
-                                <div className="text-xs text-teal-400 mt-1 print:text-gray-600">Std dev of citations</div>
+                            <div className="bg-gradient-to-br from-emerald-900/40 to-emerald-800/40 backdrop-blur-xl rounded-lg border border-emerald-500/30 p-6 shadow-[0_0_15px_rgba(16,185,129,0.15)] print:bg-white print:border print:border-gray-300">
+                                <div className="text-sm text-emerald-300 mb-2 print:text-gray-600">Citation Spread</div>
+                                <div className="text-4xl font-bold text-emerald-100 print:text-black print:text-2xl">{citationSpread}</div>
+                                <div className="text-xs text-emerald-400 mt-1 print:text-gray-600">Std dev of citations</div>
                             </div>
                         )}
 
                         {visibleMetrics.topCitationPerformer && (
-                            <div className="bg-gradient-to-br from-lime-900/40 to-lime-800/40 backdrop-blur-xl rounded-lg border border-lime-500/30 p-6 shadow-[0_0_15px_rgba(132,204,22,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-lime-300 mb-2 print:text-gray-600">Top Performer (Citations)</div>
-                                <div className="text-3xl font-bold text-lime-100 print:text-black print:text-xl">
+                            <div className="bg-gradient-to-br from-emerald-900/40 to-emerald-800/40 backdrop-blur-xl rounded-lg border border-emerald-500/30 p-6 shadow-[0_0_15px_rgba(16,185,129,0.15)] print:bg-white print:border print:border-gray-300">
+                                <div className="text-sm text-emerald-300 mb-2 print:text-gray-600">Top Performer (Citations)</div>
+                                <div className="text-3xl font-bold text-emerald-100 print:text-black print:text-xl">
                                     {topCitationPerformer ? topCitationPerformer.citationCount?.toLocaleString() : '-'}
                                 </div>
-                                <div className="text-sm text-lime-200 mt-1 truncate print:text-gray-700 font-medium">
+                                <div className="text-sm text-emerald-200 mt-1 truncate print:text-gray-700 font-medium">
                                     {topCitationPerformer ? topCitationPerformer.name : 'N/A'}
                                 </div>
                             </div>
                         )}
 
                         {visibleMetrics.hIndexSpread && (
-                            <div className="bg-gradient-to-br from-violet-900/40 to-violet-800/40 backdrop-blur-xl rounded-lg border border-violet-500/30 p-6 shadow-[0_0_15px_rgba(139,92,246,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-violet-300 mb-2 print:text-gray-600">H-Index Spread</div>
-                                <div className="text-4xl font-bold text-violet-100 print:text-black print:text-2xl">{hIndexSpread}</div>
-                                <div className="text-xs text-violet-400 mt-1 print:text-gray-600">Std dev of H-Index</div>
+                            <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-xl rounded-lg border border-purple-500/30 p-6 shadow-[0_0_15px_rgba(168,85,247,0.15)] print:bg-white print:border print:border-gray-300">
+                                <div className="text-sm text-purple-300 mb-2 print:text-gray-600">H-Index Spread</div>
+                                <div className="text-4xl font-bold text-purple-100 print:text-black print:text-2xl">{hIndexSpread}</div>
+                                <div className="text-xs text-purple-400 mt-1 print:text-gray-600">Std dev of H-Index</div>
                             </div>
                         )}
 
                         {visibleMetrics.topHIndexPerformer && (
-                            <div className="bg-gradient-to-br from-fuchsia-900/40 to-fuchsia-800/40 backdrop-blur-xl rounded-lg border border-fuchsia-500/30 p-6 shadow-[0_0_15px_rgba(217,70,239,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-fuchsia-300 mb-2 print:text-gray-600">Top Performer (H-Index)</div>
-                                <div className="text-3xl font-bold text-fuchsia-100 print:text-black print:text-xl">
+                            <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-xl rounded-lg border border-purple-500/30 p-6 shadow-[0_0_15px_rgba(168,85,247,0.15)] print:bg-white print:border print:border-gray-300">
+                                <div className="text-sm text-purple-300 mb-2 print:text-gray-600">Top Performer (H-Index)</div>
+                                <div className="text-3xl font-bold text-purple-100 print:text-black print:text-xl">
                                     {topHIndexPerformer ? topHIndexPerformer.hIndex : '-'}
                                 </div>
-                                <div className="text-sm text-fuchsia-200 mt-1 truncate print:text-gray-700 font-medium">
+                                <div className="text-sm text-purple-200 mt-1 truncate print:text-gray-700 font-medium">
                                     {topHIndexPerformer ? topHIndexPerformer.name : 'N/A'}
                                 </div>
                             </div>
@@ -2130,18 +2130,18 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                         )}
 
                         {visibleMetrics.avgLifetimePerStaff && (
-                            <div className="bg-gradient-to-br from-indigo-900/40 to-indigo-800/40 backdrop-blur-xl rounded-lg border border-indigo-500/30 p-6 shadow-[0_0_15px_rgba(99,102,241,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-indigo-300 mb-2 print:text-gray-600">Avg Publications (Lifetime) per Staff</div>
-                                <div className="text-4xl font-bold text-indigo-100 print:text-black print:text-2xl">{averageLifetimePerStaff}</div>
-                                <div className="text-xs text-indigo-400 mt-1 print:text-gray-600">Per researcher with Scopus</div>
+                            <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/40 backdrop-blur-xl rounded-lg border border-cyan-500/30 p-6 shadow-[0_0_15px_rgba(6,182,212,0.15)] print:bg-white print:border print:border-gray-300">
+                                <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Avg Publications (Lifetime) per Staff</div>
+                                <div className="text-4xl font-bold text-cyan-100 print:text-black print:text-2xl">{averageLifetimePerStaff}</div>
+                                <div className="text-xs text-cyan-400 mt-1 print:text-gray-600">Per researcher with Scopus</div>
                             </div>
                         )}
 
                         {visibleMetrics.citations && (
-                            <div className="bg-gradient-to-br from-green-900/40 to-green-800/40 backdrop-blur-xl rounded-lg border border-green-500/30 p-6 shadow-[0_0_15px_rgba(34,197,94,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-green-300 mb-2 print:text-gray-600">Total Citations</div>
-                                <div className="text-4xl font-bold text-green-100 print:text-black print:text-2xl">{facultyMetrics.totalCitations.toLocaleString()}</div>
-                                <div className="text-xs text-green-400 mt-1 print:text-gray-600">Lifetime research impact</div>
+                            <div className="bg-gradient-to-br from-emerald-900/40 to-emerald-800/40 backdrop-blur-xl rounded-lg border border-emerald-500/30 p-6 shadow-[0_0_15px_rgba(16,185,129,0.15)] print:bg-white print:border print:border-gray-300">
+                                <div className="text-sm text-emerald-300 mb-2 print:text-gray-600">Total Citations</div>
+                                <div className="text-4xl font-bold text-emerald-100 print:text-black print:text-2xl">{facultyMetrics.totalCitations.toLocaleString()}</div>
+                                <div className="text-xs text-emerald-400 mt-1 print:text-gray-600">Lifetime research impact</div>
                             </div>
                         )}
 
@@ -2154,20 +2154,20 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                         )}
 
                         {visibleMetrics.publicationSpread && (
-                            <div className="bg-gradient-to-br from-orange-900/40 to-orange-800/40 backdrop-blur-xl rounded-lg border border-orange-500/30 p-6 shadow-[0_0_15px_rgba(249,115,22,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-orange-300 mb-2 print:text-gray-600">Publication Spread</div>
-                                <div className="text-4xl font-bold text-orange-100 print:text-black print:text-2xl">{facultyMetrics.publicationSpread}</div>
-                                <div className="text-xs text-orange-400 mt-1 print:text-gray-600">Std dev of lifetime pubs</div>
+                            <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/40 backdrop-blur-xl rounded-lg border border-cyan-500/30 p-6 shadow-[0_0_15px_rgba(6,182,212,0.15)] print:bg-white print:border print:border-gray-300">
+                                <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Publication Spread</div>
+                                <div className="text-4xl font-bold text-cyan-100 print:text-black print:text-2xl">{facultyMetrics.publicationSpread}</div>
+                                <div className="text-xs text-cyan-400 mt-1 print:text-gray-600">Std dev of lifetime pubs</div>
                             </div>
                         )}
 
                         {visibleMetrics.topPublicationPerformer && (
-                            <div className="bg-gradient-to-br from-amber-900/40 to-amber-800/40 backdrop-blur-xl rounded-lg border border-amber-500/30 p-6 shadow-[0_0_15px_rgba(251,191,36,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-amber-300 mb-2 print:text-gray-600">Top Performer (Publications)</div>
-                                <div className="text-3xl font-bold text-amber-100 print:text-black print:text-xl">
+                            <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/40 backdrop-blur-xl rounded-lg border border-cyan-500/30 p-6 shadow-[0_0_15px_rgba(6,182,212,0.15)] print:bg-white print:border print:border-gray-300">
+                                <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Top Performer (Publications)</div>
+                                <div className="text-3xl font-bold text-cyan-100 print:text-black print:text-xl">
                                     {facultyMetrics.topPublicationPerformer ? facultyMetrics.topPublicationPerformer.lifetimePublications : '-'}
                                 </div>
-                                <div className="text-sm text-amber-200 mt-1 truncate print:text-gray-700 font-medium">
+                                <div className="text-sm text-cyan-200 mt-1 truncate print:text-gray-700 font-medium">
                                     {facultyMetrics.topPublicationPerformer ? facultyMetrics.topPublicationPerformer.name : 'N/A'}
                                 </div>
                             </div>
@@ -2182,40 +2182,40 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                         )}
 
                         {visibleMetrics.citationSpread && (
-                            <div className="bg-gradient-to-br from-teal-900/40 to-teal-800/40 backdrop-blur-xl rounded-lg border border-teal-500/30 p-6 shadow-[0_0_15px_rgba(20,184,166,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-teal-300 mb-2 print:text-gray-600">Citation Spread</div>
-                                <div className="text-4xl font-bold text-teal-100 print:text-black print:text-2xl">{facultyMetrics.citationSpread}</div>
-                                <div className="text-xs text-teal-400 mt-1 print:text-gray-600">Std dev of citations</div>
+                            <div className="bg-gradient-to-br from-emerald-900/40 to-emerald-800/40 backdrop-blur-xl rounded-lg border border-emerald-500/30 p-6 shadow-[0_0_15px_rgba(16,185,129,0.15)] print:bg-white print:border print:border-gray-300">
+                                <div className="text-sm text-emerald-300 mb-2 print:text-gray-600">Citation Spread</div>
+                                <div className="text-4xl font-bold text-emerald-100 print:text-black print:text-2xl">{facultyMetrics.citationSpread}</div>
+                                <div className="text-xs text-emerald-400 mt-1 print:text-gray-600">Std dev of citations</div>
                             </div>
                         )}
 
                         {visibleMetrics.topCitationPerformer && (
-                            <div className="bg-gradient-to-br from-lime-900/40 to-lime-800/40 backdrop-blur-xl rounded-lg border border-lime-500/30 p-6 shadow-[0_0_15px_rgba(132,204,22,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-lime-300 mb-2 print:text-gray-600">Top Performer (Citations)</div>
-                                <div className="text-3xl font-bold text-lime-100 print:text-black print:text-xl">
+                            <div className="bg-gradient-to-br from-emerald-900/40 to-emerald-800/40 backdrop-blur-xl rounded-lg border border-emerald-500/30 p-6 shadow-[0_0_15px_rgba(16,185,129,0.15)] print:bg-white print:border print:border-gray-300">
+                                <div className="text-sm text-emerald-300 mb-2 print:text-gray-600">Top Performer (Citations)</div>
+                                <div className="text-3xl font-bold text-emerald-100 print:text-black print:text-xl">
                                     {facultyMetrics.topCitationPerformer ? facultyMetrics.topCitationPerformer.citationCount?.toLocaleString() : '-'}
                                 </div>
-                                <div className="text-sm text-lime-200 mt-1 truncate print:text-gray-700 font-medium">
+                                <div className="text-sm text-emerald-200 mt-1 truncate print:text-gray-700 font-medium">
                                     {facultyMetrics.topCitationPerformer ? facultyMetrics.topCitationPerformer.name : 'N/A'}
                                 </div>
                             </div>
                         )}
 
                         {visibleMetrics.hIndexSpread && (
-                            <div className="bg-gradient-to-br from-violet-900/40 to-violet-800/40 backdrop-blur-xl rounded-lg border border-violet-500/30 p-6 shadow-[0_0_15px_rgba(139,92,246,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-violet-300 mb-2 print:text-gray-600">H-Index Spread</div>
-                                <div className="text-4xl font-bold text-violet-100 print:text-black print:text-2xl">{facultyMetrics.hIndexSpread}</div>
-                                <div className="text-xs text-violet-400 mt-1 print:text-gray-600">Std dev of H-Index</div>
+                            <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-xl rounded-lg border border-purple-500/30 p-6 shadow-[0_0_15px_rgba(168,85,247,0.15)] print:bg-white print:border print:border-gray-300">
+                                <div className="text-sm text-purple-300 mb-2 print:text-gray-600">H-Index Spread</div>
+                                <div className="text-4xl font-bold text-purple-100 print:text-black print:text-2xl">{facultyMetrics.hIndexSpread}</div>
+                                <div className="text-xs text-purple-400 mt-1 print:text-gray-600">Std dev of H-Index</div>
                             </div>
                         )}
 
                         {visibleMetrics.topHIndexPerformer && (
-                            <div className="bg-gradient-to-br from-fuchsia-900/40 to-fuchsia-800/40 backdrop-blur-xl rounded-lg border border-fuchsia-500/30 p-6 shadow-[0_0_15px_rgba(217,70,239,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-fuchsia-300 mb-2 print:text-gray-600">Top Performer (H-Index)</div>
-                                <div className="text-3xl font-bold text-fuchsia-100 print:text-black print:text-xl">
+                            <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-xl rounded-lg border border-purple-500/30 p-6 shadow-[0_0_15px_rgba(168,85,247,0.15)] print:bg-white print:border print:border-gray-300">
+                                <div className="text-sm text-purple-300 mb-2 print:text-gray-600">Top Performer (H-Index)</div>
+                                <div className="text-3xl font-bold text-purple-100 print:text-black print:text-xl">
                                     {facultyMetrics.topHIndexPerformer ? facultyMetrics.topHIndexPerformer.hIndex : '-'}
                                 </div>
-                                <div className="text-sm text-fuchsia-200 mt-1 truncate print:text-gray-700 font-medium">
+                                <div className="text-sm text-purple-200 mt-1 truncate print:text-gray-700 font-medium">
                                     {facultyMetrics.topHIndexPerformer ? facultyMetrics.topHIndexPerformer.name : 'N/A'}
                                 </div>
                             </div>
