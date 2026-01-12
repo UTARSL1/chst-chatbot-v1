@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect, useMemo } from 'react';
-import { ArrowLeft, Building2, Users, BarChart3, ChevronDown, Lock, Shield, Trash2, Plus, X, Download, Printer } from 'lucide-react';
+import { ArrowLeft, Building2, Users, BarChart3, ChevronDown, ChevronUp, Lock, Shield, Trash2, Plus, X, Download, Printer, Check } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { ResponsiveContainer, ScatterChart, Scatter, XAxis, YAxis, ZAxis, Tooltip as RechartsTooltip, Cell, ReferenceLine } from 'recharts';
@@ -737,6 +737,18 @@ function IndividualStaffTab({
         );
     }
 
+    const [sortColumn, setSortColumn] = useState<'name' | 'hIndex' | 'citations' | 'lifetimePublications' | 'publications'>('publications');
+    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+
+    const handleSort = (column: typeof sortColumn) => {
+        if (sortColumn === column) {
+            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortColumn(column);
+            setSortDirection('desc');
+        }
+    };
+
     const staffWithPublications = staffMembers.map(staff => {
         const yearPublications = staff.publications
             .filter(p => selectedYears.includes(p.year))
@@ -746,7 +758,37 @@ function IndividualStaffTab({
             ...staff,
             yearPublications
         };
-    }).sort((a, b) => b.yearPublications - a.yearPublications);
+    }).sort((a, b) => {
+        let aVal: any, bVal: any;
+
+        switch (sortColumn) {
+            case 'name':
+                aVal = a.name.toLowerCase();
+                bVal = b.name.toLowerCase();
+                return sortDirection === 'asc'
+                    ? aVal.localeCompare(bVal)
+                    : bVal.localeCompare(aVal);
+            case 'hIndex':
+                aVal = a.hIndex || 0;
+                bVal = b.hIndex || 0;
+                break;
+            case 'citations':
+                aVal = a.citationCount || 0;
+                bVal = b.citationCount || 0;
+                break;
+            case 'lifetimePublications':
+                aVal = a.lifetimePublications || 0;
+                bVal = b.lifetimePublications || 0;
+                break;
+            case 'publications':
+            default:
+                aVal = a.yearPublications;
+                bVal = b.yearPublications;
+                break;
+        }
+
+        return sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
+    });
 
     // Selection handlers
     const toggleSelection = (email: string) => {
@@ -864,27 +906,48 @@ function IndividualStaffTab({
                             <tr className="border-b border-white/10">
                                 {onSelectStaff && (
                                     <th className="py-3 px-4 text-left w-10">
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedStaffIds.length > 0 && selectedStaffIds.length === staffWithPublications.length}
-                                            ref={input => {
-                                                if (input) {
-                                                    input.indeterminate = selectedStaffIds.length > 0 && selectedStaffIds.length < staffWithPublications.length;
-                                                }
-                                            }}
-                                            onChange={toggleSelectAll}
-                                            className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600 focus:ring-blue-500"
-                                        />
+                                        <div
+                                            onClick={toggleSelectAll}
+                                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center cursor-pointer transition-all ${selectedStaffIds.length > 0 && selectedStaffIds.length === staffWithPublications.length
+                                                ? 'bg-blue-500 border-blue-500'
+                                                : selectedStaffIds.length > 0
+                                                    ? 'bg-blue-500 border-blue-500'
+                                                    : 'border-slate-600 hover:border-slate-400'
+                                                }`}
+                                        >
+                                            {selectedStaffIds.length > 0 && selectedStaffIds.length === staffWithPublications.length && (
+                                                <Check className="w-3 h-3 text-white" />
+                                            )}
+                                            {selectedStaffIds.length > 0 && selectedStaffIds.length < staffWithPublications.length && (
+                                                <div className="w-2 h-0.5 bg-white rounded-full" />
+                                            )}
+                                        </div>
                                     </th>
                                 )}
-                                <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300">Name</th>
+                                <th
+                                    className="text-left py-3 px-4 text-sm font-semibold text-gray-300 cursor-pointer hover:text-white transition-colors select-none"
+                                    onClick={() => handleSort('name')}
+                                >
+                                    <div className="flex items-center gap-1">
+                                        Name
+                                        {sortColumn === 'name' && (
+                                            sortDirection === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
+                                        )}
+                                    </div>
+                                </th>
                                 {visibleColumns.includes('scopusId') && (
                                     <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300">Scopus ID</th>
                                 )}
                                 {visibleColumns.includes('hIndex') && (
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300 bg-slate-800/30">
-                                        <span className="inline-flex items-center gap-1">
+                                    <th
+                                        className="text-right py-3 px-4 text-sm font-semibold text-gray-300 bg-slate-800/30 cursor-pointer hover:text-white transition-colors select-none"
+                                        onClick={() => handleSort('hIndex')}
+                                    >
+                                        <span className="inline-flex items-center gap-1 justify-end">
                                             H-Index (Lifetime)
+                                            {sortColumn === 'hIndex' && (
+                                                sortDirection === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
+                                            )}
                                             <span className="relative group/tooltip">
                                                 <span className="text-xs text-gray-500 cursor-help">ⓘ</span>
                                                 <span className="invisible group-hover/tooltip:visible absolute left-0 top-6 w-48 bg-slate-800 text-xs text-gray-300 p-2 rounded border border-slate-600 shadow-lg z-10">
@@ -895,9 +958,15 @@ function IndividualStaffTab({
                                     </th>
                                 )}
                                 {visibleColumns.includes('citations') && (
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300 bg-slate-800/30">
-                                        <span className="inline-flex items-center gap-1">
+                                    <th
+                                        className="text-right py-3 px-4 text-sm font-semibold text-gray-300 bg-slate-800/30 cursor-pointer hover:text-white transition-colors select-none"
+                                        onClick={() => handleSort('citations')}
+                                    >
+                                        <span className="inline-flex items-center gap-1 justify-end">
                                             Citations (Lifetime)
+                                            {sortColumn === 'citations' && (
+                                                sortDirection === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
+                                            )}
                                             <span className="relative group/tooltip">
                                                 <span className="text-xs text-gray-500 cursor-help">ⓘ</span>
                                                 <span className="invisible group-hover/tooltip:visible absolute left-0 top-6 w-48 bg-slate-800 text-xs text-gray-300 p-2 rounded border border-slate-600 shadow-lg z-10">
@@ -908,9 +977,15 @@ function IndividualStaffTab({
                                     </th>
                                 )}
                                 {visibleColumns.includes('lifetimePublications') && (
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300 bg-slate-800/30">
-                                        <span className="inline-flex items-center gap-1">
+                                    <th
+                                        className="text-right py-3 px-4 text-sm font-semibold text-gray-300 bg-slate-800/30 cursor-pointer hover:text-white transition-colors select-none"
+                                        onClick={() => handleSort('lifetimePublications')}
+                                    >
+                                        <span className="inline-flex items-center gap-1 justify-end">
                                             Total Publications (Lifetime)
+                                            {sortColumn === 'lifetimePublications' && (
+                                                sortDirection === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
+                                            )}
                                             <span className="relative group/tooltip">
                                                 <span className="text-xs text-gray-500 cursor-help">ⓘ</span>
                                                 <span className="invisible group-hover/tooltip:visible absolute left-0 top-6 w-48 bg-slate-800 text-xs text-gray-300 p-2 rounded border border-slate-600 shadow-lg z-10">
@@ -921,53 +996,84 @@ function IndividualStaffTab({
                                     </th>
                                 )}
                                 {visibleColumns.includes('publications') && (
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300">Publications ({selectedYears.join(', ')})</th>
+                                    <th
+                                        className="text-right py-3 px-4 text-sm font-semibold text-gray-300 cursor-pointer hover:text-white transition-colors select-none"
+                                        onClick={() => handleSort('publications')}
+                                    >
+                                        <div className="flex items-center gap-1 justify-end">
+                                            Publications ({selectedYears.join(', ')})
+                                            {sortColumn === 'publications' && (
+                                                sortDirection === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
+                                            )}
+                                        </div>
+                                    </th>
                                 )}
                             </tr>
                         </thead>
                         <tbody>
-                            {staffWithPublications.map((staff, idx) => (
-                                <tr key={idx} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                                    {onSelectStaff && (
-                                        <td className="py-3 px-4">
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedStaffIds.includes(staff.email)}
-                                                onChange={() => toggleSelection(staff.email)}
-                                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600 focus:ring-blue-500"
-                                            />
+                            {staffWithPublications.map((staff, idx) => {
+                                const isSelected = selectedStaffIds.includes(staff.email);
+                                return (
+                                    <tr key={idx}
+                                        onClick={() => onSelectStaff && toggleSelection(staff.email)}
+                                        className={`border-b transition-all cursor-pointer group ${isSelected
+                                            ? 'bg-blue-500/10 border-blue-500/30'
+                                            : 'border-white/5 hover:bg-white/5'
+                                            }`}
+                                    >
+                                        {onSelectStaff && (
+                                            <td className="py-3 px-4">
+                                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${isSelected
+                                                    ? 'bg-blue-500 border-blue-500'
+                                                    : 'border-slate-600 group-hover:border-slate-400'
+                                                    }`}>
+                                                    {isSelected && <Check className="w-3 h-3 text-white" />}
+                                                </div>
+                                            </td>
+                                        )}
+                                        <td className="py-3 px-4 text-sm text-white">
+                                            <div className="flex items-center gap-3">
+                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border ${isSelected
+                                                    ? 'bg-blue-500 text-white border-blue-400'
+                                                    : 'bg-slate-800 text-gray-400 border-slate-700'
+                                                    }`}>
+                                                    {staff.name.replace(/^(Ir|Dr|Prof|Ts|Ar|Ms|Mr|Mrs|Mdm)\.?\s+/gi, '').substring(0, 2).toUpperCase()}
+                                                </div>
+                                                <span className={`font-medium transition-colors ${isSelected ? 'text-blue-200' : 'text-gray-200'}`}>
+                                                    {staff.name}
+                                                </span>
+                                            </div>
                                         </td>
-                                    )}
-                                    <td className="py-3 px-4 text-sm text-white">{staff.name}</td>
-                                    {visibleColumns.includes('scopusId') && (
-                                        <td className="py-3 px-4 text-sm text-gray-400 font-mono">
-                                            {staff.scopusAuthorId !== 'NA' ? staff.scopusAuthorId : '-'}
-                                        </td>
-                                    )}
-                                    {visibleColumns.includes('hIndex') && (
-                                        <td className="py-3 px-4 text-sm text-gray-300 text-right font-mono bg-slate-800/20">
-                                            {staff.hIndex ?? '-'}
-                                        </td>
-                                    )}
-                                    {visibleColumns.includes('citations') && (
-                                        <td className="py-3 px-4 text-sm text-gray-300 text-right font-mono bg-slate-800/20">
-                                            {staff.citationCount !== undefined ? staff.citationCount.toLocaleString() : '-'}
-                                        </td>
-                                    )}
-                                    {visibleColumns.includes('lifetimePublications') && (
-                                        <td className="py-3 px-4 text-sm text-gray-300 text-right font-mono bg-slate-800/20">
-                                            {staff.lifetimePublications !== undefined ? staff.lifetimePublications.toLocaleString() : '-'}
-                                        </td>
-                                    )}
-                                    {visibleColumns.includes('publications') && (
-                                        <td className="py-3 px-4 text-right">
-                                            <span className="inline-block px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold">
-                                                {staff.yearPublications}
-                                            </span>
-                                        </td>
-                                    )}
-                                </tr>
-                            ))}
+                                        {visibleColumns.includes('scopusId') && (
+                                            <td className="py-3 px-4 text-sm text-gray-400 font-mono">
+                                                {staff.scopusAuthorId !== 'NA' ? staff.scopusAuthorId : '-'}
+                                            </td>
+                                        )}
+                                        {visibleColumns.includes('hIndex') && (
+                                            <td className="py-3 px-4 text-sm text-gray-300 text-right font-mono bg-slate-800/20">
+                                                {staff.hIndex ?? '-'}
+                                            </td>
+                                        )}
+                                        {visibleColumns.includes('citations') && (
+                                            <td className="py-3 px-4 text-sm text-gray-300 text-right font-mono bg-slate-800/20">
+                                                {staff.citationCount !== undefined ? staff.citationCount.toLocaleString() : '-'}
+                                            </td>
+                                        )}
+                                        {visibleColumns.includes('lifetimePublications') && (
+                                            <td className="py-3 px-4 text-sm text-gray-300 text-right font-mono bg-slate-800/20">
+                                                {staff.lifetimePublications !== undefined ? staff.lifetimePublications.toLocaleString() : '-'}
+                                            </td>
+                                        )}
+                                        {visibleColumns.includes('publications') && (
+                                            <td className="py-3 px-4 text-right">
+                                                <span className="inline-block px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold">
+                                                    {staff.yearPublications}
+                                                </span>
+                                            </td>
+                                        )}
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>
@@ -1060,7 +1166,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
     // State for visible metrics
     const [visibleMetrics, setVisibleMetrics] = useState({
         lifetimePublications: false,
-        avgLifetimePerStaff: false,
+        avgLifetimePerStaff: true,
         citations: false,
         hIndex: false,
         variability: false,
