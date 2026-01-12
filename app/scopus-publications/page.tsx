@@ -1267,7 +1267,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                                     onChange={(e) => setVisibleMetrics({ ...visibleMetrics, lifetimePublications: e.target.checked })}
                                     className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
                                 />
-                                Lifetime Publications
+                                Total Lifetime Publications
                             </label>
                             <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
                                 <input
@@ -1276,7 +1276,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                                     onChange={(e) => setVisibleMetrics({ ...visibleMetrics, avgLifetimePerStaff: e.target.checked })}
                                     className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
                                 />
-                                Avg Lifetime Pubs per Staff
+                                Avg Lifetime Publications
                             </label>
                             <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
                                 <input
@@ -1294,7 +1294,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                                     onChange={(e) => setVisibleMetrics({ ...visibleMetrics, topPublicationPerformer: e.target.checked })}
                                     className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
                                 />
-                                Top Performer (Publications)
+                                Top Publication Performer
                             </label>
                         </div>
                     </div>
@@ -1319,7 +1319,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                                     onChange={(e) => setVisibleMetrics({ ...visibleMetrics, avgCitationsPerStaff: e.target.checked })}
                                     className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
                                 />
-                                Avg Citations per Staff
+                                Avg Citations
                             </label>
                             <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
                                 <input
@@ -1337,7 +1337,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                                     onChange={(e) => setVisibleMetrics({ ...visibleMetrics, topCitationPerformer: e.target.checked })}
                                     className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
                                 />
-                                Top Performer (Citations)
+                                Top Citation Performer
                             </label>
                         </div>
                     </div>
@@ -1353,7 +1353,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                                     onChange={(e) => setVisibleMetrics({ ...visibleMetrics, hIndex: e.target.checked })}
                                     className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
                                 />
-                                Average H-Index
+                                Avg H-Index
                             </label>
                             <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
                                 <input
@@ -1371,7 +1371,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                                     onChange={(e) => setVisibleMetrics({ ...visibleMetrics, topHIndexPerformer: e.target.checked })}
                                     className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
                                 />
-                                Top Performer (H-Index)
+                                Top H-Index Performer
                             </label>
                         </div>
                     </div>
@@ -1406,7 +1406,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {visibleMetrics.lifetimePublications && (
                             <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/40 backdrop-blur-xl rounded-lg border border-cyan-500/30 p-6 shadow-[0_0_15px_rgba(6,182,212,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Total Publications (Lifetime)</div>
+                                <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Total Lifetime Publications</div>
                                 <div className="text-4xl font-bold text-cyan-100 print:text-black print:text-2xl">{totalLifetimePublications.toLocaleString()}</div>
                                 <div className="text-xs text-cyan-400 mt-1 print:text-gray-600">All staff combined</div>
                             </div>
@@ -1414,25 +1414,9 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
 
                         {visibleMetrics.avgLifetimePerStaff && (
                             <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/40 backdrop-blur-xl rounded-lg border border-cyan-500/30 p-6 shadow-[0_0_15px_rgba(6,182,212,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Avg Publications (Lifetime) per Staff</div>
+                                <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Avg Lifetime Publications</div>
                                 <div className="text-4xl font-bold text-cyan-100 print:text-black print:text-2xl">{averageLifetimePerStaff}</div>
                                 <div className="text-xs text-cyan-400 mt-1 print:text-gray-600">Per researcher with Scopus</div>
-                            </div>
-                        )}
-
-                        {visibleMetrics.citations && (
-                            <div className="bg-gradient-to-br from-emerald-900/40 to-emerald-800/40 backdrop-blur-xl rounded-lg border border-emerald-500/30 p-6 shadow-[0_0_15px_rgba(16,185,129,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-emerald-300 mb-2 print:text-gray-600">Total Citations</div>
-                                <div className="text-4xl font-bold text-emerald-100 print:text-black print:text-2xl">{totalCitations.toLocaleString()}</div>
-                                <div className="text-xs text-emerald-400 mt-1 print:text-gray-600">Lifetime research impact</div>
-                            </div>
-                        )}
-
-                        {visibleMetrics.hIndex && (
-                            <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-xl rounded-lg border border-purple-500/30 p-6 shadow-[0_0_15px_rgba(168,85,247,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-purple-300 mb-2 print:text-gray-600">Average H-Index</div>
-                                <div className="text-4xl font-bold text-purple-100 print:text-black print:text-2xl">{averageHIndex}</div>
-                                <div className="text-xs text-purple-400 mt-1 print:text-gray-600">Research quality indicator</div>
                             </div>
                         )}
 
@@ -1446,7 +1430,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
 
                         {visibleMetrics.topPublicationPerformer && (
                             <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/40 backdrop-blur-xl rounded-lg border border-cyan-500/30 p-6 shadow-[0_0_15px_rgba(6,182,212,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Top Performer (Publications)</div>
+                                <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Top Publication Performer</div>
                                 <div className="text-3xl font-bold text-cyan-100 print:text-black print:text-xl">
                                     {topPublicationPerformer ? topPublicationPerformer.lifetimePublications : '-'}
                                 </div>
@@ -1456,9 +1440,17 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
                             </div>
                         )}
 
+                        {visibleMetrics.citations && (
+                            <div className="bg-gradient-to-br from-emerald-900/40 to-emerald-800/40 backdrop-blur-xl rounded-lg border border-emerald-500/30 p-6 shadow-[0_0_15px_rgba(16,185,129,0.15)] print:bg-white print:border print:border-gray-300">
+                                <div className="text-sm text-emerald-300 mb-2 print:text-gray-600">Total Citations</div>
+                                <div className="text-4xl font-bold text-emerald-100 print:text-black print:text-2xl">{totalCitations.toLocaleString()}</div>
+                                <div className="text-xs text-emerald-400 mt-1 print:text-gray-600">Lifetime research impact</div>
+                            </div>
+                        )}
+
                         {visibleMetrics.avgCitationsPerStaff && (
                             <div className="bg-gradient-to-br from-emerald-900/40 to-emerald-800/40 backdrop-blur-xl rounded-lg border border-emerald-500/30 p-6 shadow-[0_0_15px_rgba(16,185,129,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-emerald-300 mb-2 print:text-gray-600">Avg Citations per Staff</div>
+                                <div className="text-sm text-emerald-300 mb-2 print:text-gray-600">Avg Citations</div>
                                 <div className="text-4xl font-bold text-emerald-100 print:text-black print:text-2xl">{averageCitationsPerStaff}</div>
                                 <div className="text-xs text-emerald-400 mt-1 print:text-gray-600">Per researcher with Scopus</div>
                             </div>
@@ -1474,13 +1466,21 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
 
                         {visibleMetrics.topCitationPerformer && (
                             <div className="bg-gradient-to-br from-emerald-900/40 to-emerald-800/40 backdrop-blur-xl rounded-lg border border-emerald-500/30 p-6 shadow-[0_0_15px_rgba(16,185,129,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-emerald-300 mb-2 print:text-gray-600">Top Performer (Citations)</div>
+                                <div className="text-sm text-emerald-300 mb-2 print:text-gray-600">Top Citation Performer</div>
                                 <div className="text-3xl font-bold text-emerald-100 print:text-black print:text-xl">
                                     {topCitationPerformer ? topCitationPerformer.citationCount?.toLocaleString() : '-'}
                                 </div>
                                 <div className="text-sm text-emerald-200 mt-1 truncate print:text-gray-700 font-medium">
                                     {topCitationPerformer ? topCitationPerformer.name : 'N/A'}
                                 </div>
+                            </div>
+                        )}
+
+                        {visibleMetrics.hIndex && (
+                            <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-xl rounded-lg border border-purple-500/30 p-6 shadow-[0_0_15px_rgba(168,85,247,0.15)] print:bg-white print:border print:border-gray-300">
+                                <div className="text-sm text-purple-300 mb-2 print:text-gray-600">Avg H-Index</div>
+                                <div className="text-4xl font-bold text-purple-100 print:text-black print:text-2xl">{averageHIndex}</div>
+                                <div className="text-xs text-purple-400 mt-1 print:text-gray-600">Research quality indicator</div>
                             </div>
                         )}
 
@@ -1494,7 +1494,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
 
                         {visibleMetrics.topHIndexPerformer && (
                             <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-xl rounded-lg border border-purple-500/30 p-6 shadow-[0_0_15px_rgba(168,85,247,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-purple-300 mb-2 print:text-gray-600">Top Performer (H-Index)</div>
+                                <div className="text-sm text-purple-300 mb-2 print:text-gray-600">Top H-Index Performer</div>
                                 <div className="text-3xl font-bold text-purple-100 print:text-black print:text-xl">
                                     {topHIndexPerformer ? topHIndexPerformer.hIndex : '-'}
                                 </div>
@@ -1984,7 +1984,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                                     onChange={(e) => setVisibleMetrics({ ...visibleMetrics, lifetimePublications: e.target.checked })}
                                     className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
                                 />
-                                Lifetime Publications
+                                Total Lifetime Publications
                             </label>
                             <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
                                 <input
@@ -1993,7 +1993,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                                     onChange={(e) => setVisibleMetrics({ ...visibleMetrics, avgLifetimePerStaff: e.target.checked })}
                                     className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
                                 />
-                                Avg Lifetime Pubs per Staff
+                                Avg Lifetime Publications
                             </label>
                             <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
                                 <input
@@ -2011,7 +2011,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                                     onChange={(e) => setVisibleMetrics({ ...visibleMetrics, topPublicationPerformer: e.target.checked })}
                                     className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
                                 />
-                                Top Performer (Publications)
+                                Top Publication Performer
                             </label>
                         </div>
                     </div>
@@ -2036,7 +2036,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                                     onChange={(e) => setVisibleMetrics({ ...visibleMetrics, avgCitationsPerStaff: e.target.checked })}
                                     className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
                                 />
-                                Avg Citations per Staff
+                                Avg Citations
                             </label>
                             <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
                                 <input
@@ -2054,7 +2054,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                                     onChange={(e) => setVisibleMetrics({ ...visibleMetrics, topCitationPerformer: e.target.checked })}
                                     className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
                                 />
-                                Top Performer (Citations)
+                                Top Citation Performer
                             </label>
                         </div>
                     </div>
@@ -2070,7 +2070,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                                     onChange={(e) => setVisibleMetrics({ ...visibleMetrics, hIndex: e.target.checked })}
                                     className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
                                 />
-                                Average H-Index
+                                Avg H-Index
                             </label>
                             <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300 hover:text-white transition-colors">
                                 <input
@@ -2088,7 +2088,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                                     onChange={(e) => setVisibleMetrics({ ...visibleMetrics, topHIndexPerformer: e.target.checked })}
                                     className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600"
                                 />
-                                Top Performer (H-Index)
+                                Top H-Index Performer
                             </label>
                         </div>
                     </div>
@@ -2123,7 +2123,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {visibleMetrics.lifetimePublications && (
                             <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/40 backdrop-blur-xl rounded-lg border border-cyan-500/30 p-6 shadow-[0_0_15px_rgba(6,182,212,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Total Publications (Lifetime)</div>
+                                <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Total Lifetime Publications</div>
                                 <div className="text-4xl font-bold text-cyan-100 print:text-black print:text-2xl">{facultyMetrics.totalLifetimePublications.toLocaleString()}</div>
                                 <div className="text-xs text-cyan-400 mt-1 print:text-gray-600">All staff combined</div>
                             </div>
@@ -2131,25 +2131,9 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
 
                         {visibleMetrics.avgLifetimePerStaff && (
                             <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/40 backdrop-blur-xl rounded-lg border border-cyan-500/30 p-6 shadow-[0_0_15px_rgba(6,182,212,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Avg Publications (Lifetime) per Staff</div>
+                                <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Avg Lifetime Publications</div>
                                 <div className="text-4xl font-bold text-cyan-100 print:text-black print:text-2xl">{averageLifetimePerStaff}</div>
                                 <div className="text-xs text-cyan-400 mt-1 print:text-gray-600">Per researcher with Scopus</div>
-                            </div>
-                        )}
-
-                        {visibleMetrics.citations && (
-                            <div className="bg-gradient-to-br from-emerald-900/40 to-emerald-800/40 backdrop-blur-xl rounded-lg border border-emerald-500/30 p-6 shadow-[0_0_15px_rgba(16,185,129,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-emerald-300 mb-2 print:text-gray-600">Total Citations</div>
-                                <div className="text-4xl font-bold text-emerald-100 print:text-black print:text-2xl">{facultyMetrics.totalCitations.toLocaleString()}</div>
-                                <div className="text-xs text-emerald-400 mt-1 print:text-gray-600">Lifetime research impact</div>
-                            </div>
-                        )}
-
-                        {visibleMetrics.hIndex && (
-                            <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-xl rounded-lg border border-purple-500/30 p-6 shadow-[0_0_15px_rgba(168,85,247,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-purple-300 mb-2 print:text-gray-600">Average H-Index</div>
-                                <div className="text-4xl font-bold text-purple-100 print:text-black print:text-2xl">{facultyMetrics.averageHIndex}</div>
-                                <div className="text-xs text-purple-400 mt-1 print:text-gray-600">Research quality indicator</div>
                             </div>
                         )}
 
@@ -2163,7 +2147,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
 
                         {visibleMetrics.topPublicationPerformer && (
                             <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/40 backdrop-blur-xl rounded-lg border border-cyan-500/30 p-6 shadow-[0_0_15px_rgba(6,182,212,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Top Performer (Publications)</div>
+                                <div className="text-sm text-cyan-300 mb-2 print:text-gray-600">Top Publication Performer</div>
                                 <div className="text-3xl font-bold text-cyan-100 print:text-black print:text-xl">
                                     {facultyMetrics.topPublicationPerformer ? facultyMetrics.topPublicationPerformer.lifetimePublications : '-'}
                                 </div>
@@ -2173,9 +2157,17 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                             </div>
                         )}
 
+                        {visibleMetrics.citations && (
+                            <div className="bg-gradient-to-br from-emerald-900/40 to-emerald-800/40 backdrop-blur-xl rounded-lg border border-emerald-500/30 p-6 shadow-[0_0_15px_rgba(16,185,129,0.15)] print:bg-white print:border print:border-gray-300">
+                                <div className="text-sm text-emerald-300 mb-2 print:text-gray-600">Total Citations</div>
+                                <div className="text-4xl font-bold text-emerald-100 print:text-black print:text-2xl">{facultyMetrics.totalCitations.toLocaleString()}</div>
+                                <div className="text-xs text-emerald-400 mt-1 print:text-gray-600">Lifetime research impact</div>
+                            </div>
+                        )}
+
                         {visibleMetrics.avgCitationsPerStaff && (
                             <div className="bg-gradient-to-br from-emerald-900/40 to-emerald-800/40 backdrop-blur-xl rounded-lg border border-emerald-500/30 p-6 shadow-[0_0_15px_rgba(16,185,129,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-emerald-300 mb-2 print:text-gray-600">Avg Citations per Staff</div>
+                                <div className="text-sm text-emerald-300 mb-2 print:text-gray-600">Avg Citations</div>
                                 <div className="text-4xl font-bold text-emerald-100 print:text-black print:text-2xl">{facultyMetrics.averageCitationsPerStaff}</div>
                                 <div className="text-xs text-emerald-400 mt-1 print:text-gray-600">Per researcher with Scopus</div>
                             </div>
@@ -2191,13 +2183,21 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
 
                         {visibleMetrics.topCitationPerformer && (
                             <div className="bg-gradient-to-br from-emerald-900/40 to-emerald-800/40 backdrop-blur-xl rounded-lg border border-emerald-500/30 p-6 shadow-[0_0_15px_rgba(16,185,129,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-emerald-300 mb-2 print:text-gray-600">Top Performer (Citations)</div>
+                                <div className="text-sm text-emerald-300 mb-2 print:text-gray-600">Top Citation Performer</div>
                                 <div className="text-3xl font-bold text-emerald-100 print:text-black print:text-xl">
                                     {facultyMetrics.topCitationPerformer ? facultyMetrics.topCitationPerformer.citationCount?.toLocaleString() : '-'}
                                 </div>
                                 <div className="text-sm text-emerald-200 mt-1 truncate print:text-gray-700 font-medium">
                                     {facultyMetrics.topCitationPerformer ? facultyMetrics.topCitationPerformer.name : 'N/A'}
                                 </div>
+                            </div>
+                        )}
+
+                        {visibleMetrics.hIndex && (
+                            <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-xl rounded-lg border border-purple-500/30 p-6 shadow-[0_0_15px_rgba(168,85,247,0.15)] print:bg-white print:border print:border-gray-300">
+                                <div className="text-sm text-purple-300 mb-2 print:text-gray-600">Avg H-Index</div>
+                                <div className="text-4xl font-bold text-purple-100 print:text-black print:text-2xl">{facultyMetrics.averageHIndex}</div>
+                                <div className="text-xs text-purple-400 mt-1 print:text-gray-600">Research quality indicator</div>
                             </div>
                         )}
 
@@ -2211,7 +2211,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
 
                         {visibleMetrics.topHIndexPerformer && (
                             <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-xl rounded-lg border border-purple-500/30 p-6 shadow-[0_0_15px_rgba(168,85,247,0.15)] print:bg-white print:border print:border-gray-300">
-                                <div className="text-sm text-purple-300 mb-2 print:text-gray-600">Top Performer (H-Index)</div>
+                                <div className="text-sm text-purple-300 mb-2 print:text-gray-600">Top H-Index Performer</div>
                                 <div className="text-3xl font-bold text-purple-100 print:text-black print:text-xl">
                                     {facultyMetrics.topHIndexPerformer ? facultyMetrics.topHIndexPerformer.hIndex : '-'}
                                 </div>
