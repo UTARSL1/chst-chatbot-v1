@@ -726,6 +726,10 @@ function IndividualStaffTab({
     onSelectStaff?: (ids: string[]) => void;
     onAnalyzeSubGroup?: () => void;
 }) {
+    // Hooks must be called before any conditional returns
+    const [sortColumn, setSortColumn] = useState<'name' | 'hIndex' | 'citations' | 'lifetimePublications' | 'publications'>('publications');
+    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+
     if (loading) {
         return (
             <div className="bg-slate-900/80 rounded-lg border border-white/20 p-12 flex items-center justify-center">
@@ -736,9 +740,6 @@ function IndividualStaffTab({
             </div>
         );
     }
-
-    const [sortColumn, setSortColumn] = useState<'name' | 'hIndex' | 'citations' | 'lifetimePublications' | 'publications'>('publications');
-    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
     const handleSort = (column: typeof sortColumn) => {
         if (sortColumn === column) {
@@ -1016,9 +1017,10 @@ function IndividualStaffTab({
                                 return (
                                     <tr key={idx}
                                         onClick={() => onSelectStaff && toggleSelection(staff.email)}
-                                        className={`border-b transition-all cursor-pointer group ${isSelected
-                                            ? 'bg-blue-500/10 border-blue-500/30'
-                                            : 'border-white/5 hover:bg-white/5'
+                                        className={`border-b transition-all group ${onSelectStaff ? 'cursor-pointer' : ''
+                                            } ${isSelected
+                                                ? 'bg-blue-500/10 border-blue-500/30'
+                                                : 'border-white/5 hover:bg-white/5'
                                             }`}
                                     >
                                         {onSelectStaff && (
@@ -1031,18 +1033,10 @@ function IndividualStaffTab({
                                                 </div>
                                             </td>
                                         )}
-                                        <td className="py-3 px-4 text-sm text-white">
-                                            <div className="flex items-center gap-3">
-                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border ${isSelected
-                                                    ? 'bg-blue-500 text-white border-blue-400'
-                                                    : 'bg-slate-800 text-gray-400 border-slate-700'
-                                                    }`}>
-                                                    {staff.name.replace(/^(Ir|Dr|Prof|Ts|Ar|Ms|Mr|Mrs|Mdm)\.?\s+/gi, '').substring(0, 2).toUpperCase()}
-                                                </div>
-                                                <span className={`font-medium transition-colors ${isSelected ? 'text-blue-200' : 'text-gray-200'}`}>
-                                                    {staff.name}
-                                                </span>
-                                            </div>
+                                        <td className="py-3 px-4 text-sm">
+                                            <span className={`font-medium transition-colors ${isSelected ? 'text-blue-300' : 'text-white'}`}>
+                                                {staff.name}
+                                            </span>
                                         </td>
                                         {visibleColumns.includes('scopusId') && (
                                             <td className="py-3 px-4 text-sm text-gray-400 font-mono">
@@ -1552,7 +1546,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
     // State for visible metrics
     const [visibleMetrics, setVisibleMetrics] = useState({
         lifetimePublications: false,
-        avgLifetimePerStaff: false,
+        avgLifetimePerStaff: true,
         citations: false,
         hIndex: false,
         variability: false,
