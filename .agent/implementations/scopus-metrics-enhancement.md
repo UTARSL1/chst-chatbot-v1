@@ -25,46 +25,32 @@ Enhance both Department and Faculty tabs with comprehensive metrics organized in
 ## Implementation Steps
 
 ### 1. Update State (both tabs)
-```typescript
-const [visibleMetrics, setVisibleMetrics] = useState({
-    // Publications
-    lifetimePublications: false,
-    avgLifetimePerStaff: false,
-    publicationSpread: false,
-    topPublicationPerformer: false,
-    // Citations
-    citations: false,
-    avgCitationsPerStaff: false,
-    citationSpread: false,
-    topCitationPerformer: false,
-    // H-Index
-    hIndex: false,
-    hIndexSpread: false,
-    topHIndexPerformer: false
-});
-```
+- [x] Department Tab
+- [x] Faculty Tab
 
 ### 2. Calculate New Metrics (Faculty Tab)
-- Average Citations per Staff
-- Citation Std Dev
-- Top Publication Performer
-- Top Citation Performer
-- Rename topHIndexStaff to topHIndexPerformer
+- [x] Average Citations per Staff
+- [x] Citation Std Dev
+- [x] Top Publication Performer
+- [x] Top Citation Performer
+- [x] Rename topHIndexStaff to topHIndexPerformer
 
 ### 3. Calculate New Metrics (Department Tab)
-- Same as Faculty tab
+- [x] Same as Faculty tab
 
 ### 4. Update UI - Checkboxes
-Organize into 3 sections with headers and icons:
-- 📊 Publications
-- 📚 Citations  
-- 🎯 H-Index
+- [x] Organize into 3 sections with headers and icons
+- [x] Department Tab
+- [x] Faculty Tab
 
 ### 5. Update UI - Metric Cards
-Add conditional rendering for all new metrics
+- [x] Add conditional rendering for all new metrics
+- [x] Department Tab
+- [x] Faculty Tab
 
 ### 6. Update Conditional Checks
-Include all new metrics in the visibility conditional
+- [x] Include all new metrics in the visibility conditional
+
 
 ## Key Requirements
 - **Only count staff with Scopus IDs** (scopusAuthorId && scopusAuthorId !== 'NA')
