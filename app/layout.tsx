@@ -22,8 +22,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
     title: {
-        default: "CHST AI Assistant - UTAR Centre for Healthcare Science and Technology",
-        template: "%s | CHST AI Assistant"
+        default: "CHST AI Portal",
+        template: "%s | CHST AI Portal"
     },
     description: "Centre for Healthcare Science and Technology AI assistant. Get instant answers about courses, research, healthcare science programs, and academic policies at Universiti Tunku Abdul Rahman.",
     keywords: [
