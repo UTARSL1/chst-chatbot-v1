@@ -8,7 +8,7 @@ import { useCurrentVersion } from '@/hooks/useCurrentVersion';
 
 export default function SignUpPage() {
     const router = useRouter();
-    const [step, setStep] = useState(1); // 1 = basic info, 2 = recovery email (for UTAR)
+    const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -46,37 +46,34 @@ export default function SignUpPage() {
     const handleNext = () => {
         setError('');
 
-        // Validation for step 1
         if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
-            setError('[ERROR] All fields are required');
+            setError('All fields are required');
             return;
         }
 
         if (formData.password !== formData.confirmPassword) {
-            setError('[ERROR] Passwords do not match');
+            setError('Passwords do not match');
             return;
         }
 
         if (formData.password.length < 8) {
-            setError('[ERROR] Password must be at least 8 characters');
+            setError('Password must be at least 8 characters');
             return;
         }
 
         if (emailType === 'invalid') {
-            setError('[ERROR] Please use a personal email (Gmail, Outlook, etc.) or UTAR email');
+            setError('Please use a personal email (Gmail, Outlook, etc.) or UTAR email');
             return;
         }
 
         if (emailType === 'utar' && !formData.invitationCode) {
-            setError('[ERROR] Invitation code is required for UTAR emails');
+            setError('Invitation code is required for UTAR emails');
             return;
         }
 
-        // If UTAR email, go to step 2 for recovery email
         if (emailType === 'utar') {
             setStep(2);
         } else {
-            // Public user, submit directly
             handleSubmit();
         }
     };
@@ -85,10 +82,9 @@ export default function SignUpPage() {
         setError('');
         setLoading(true);
 
-        // Validate recovery email for UTAR users
         if (emailType === 'utar') {
             if (!formData.recoveryEmail) {
-                setError('[ERROR] Recovery email is required');
+                setError('Recovery email is required');
                 setLoading(false);
                 return;
             }
@@ -97,7 +93,7 @@ export default function SignUpPage() {
             const generalProviders = ['gmail.com', 'googlemail.com', 'outlook.com', 'hotmail.com', 'live.com', 'yahoo.com', 'ymail.com', 'icloud.com', 'me.com', 'protonmail.com', 'pm.me', 'aol.com', 'zoho.com', 'mail.com'];
 
             if (!generalProviders.includes(recoveryDomain)) {
-                setError('[ERROR] Recovery email must be a personal email (Gmail, Outlook, etc.)');
+                setError('Recovery email must be a personal email (Gmail, Outlook, etc.)');
                 setLoading(false);
                 return;
             }
@@ -119,14 +115,14 @@ export default function SignUpPage() {
             const data = await response.json();
 
             if (!response.ok) {
-                setError(data.error || '[ERROR] Signup failed');
+                setError(data.error || 'Signup failed');
                 return;
             }
 
-            setSuccess('[SUCCESS] ' + data.message);
+            setSuccess(data.message);
             setTimeout(() => router.push('/auth/signin'), 2000);
         } catch (err) {
-            setError('[SYSTEM_ERROR] Unexpected error occurred');
+            setError('An unexpected error occurred');
         } finally {
             setLoading(false);
         }
@@ -134,53 +130,44 @@ export default function SignUpPage() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-[#0B0B10] p-4">
-            <div className="w-full max-w-2xl">
-                {/* Terminal Header */}
-                <div className="bg-[#1A1A1F] border border-[#1E293B] mb-0">
-                    <div className="flex items-center justify-between px-4 py-2 border-b border-[#1E293B] font-['JetBrains_Mono',monospace] text-[10px] text-[#94A3B8]">
-                        <div className="flex items-center gap-4">
-                            <span>SYSTEM: CHST_ACCOUNT_REGISTRATION</span>
-                            <span className="text-[#10B981]">STATUS: ONLINE</span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <span>DEVELOPER: Dr. Hum</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Main Terminal Window */}
-                <div className="bg-[#0B0B10] border-x border-b border-[#1E293B]">
-                    {/* Terminal Title Bar */}
-                    <div className="bg-[#1A1A1F] px-6 py-4 border-b border-[#1E293B]">
-                        <div className="flex items-center gap-3">
-                            <ChstLogo className="w-12 h-12 text-white" />
+            <div className="w-full max-w-md">
+                {/* Card Container */}
+                <div className="bg-[#1A1A1F] border border-[#1E293B] rounded-lg shadow-[0_0_30px_rgba(59,130,246,0.1)]">
+                    {/* Header */}
+                    <div className="px-6 py-5 border-b border-[#1E293B]">
+                        <div className="flex items-center gap-3 mb-3">
+                            <ChstLogo className="w-10 h-10 text-[#3B82F6]" />
                             <div>
-                                <h1 className="text-[#3B82F6] font-['Orbitron',sans-serif] text-xl font-bold tracking-[0.1em] uppercase">
-                                    CREATE ACCOUNT <sub className="text-xs text-[#94A3B8] font-normal" suppressHydrationWarning>{currentVersion}</sub>
+                                <h1 className="text-[#3B82F6] font-['Orbitron',sans-serif] text-lg font-bold tracking-wide uppercase">
+                                    Create Account
                                 </h1>
-                                <p className="text-[#94A3B8] text-xs font-['JetBrains_Mono',monospace] mt-1">
-                                    {step === 1 ? '// STEP_1_BASIC_INFORMATION' : '// STEP_2_RECOVERY_EMAIL'}
+                                <p className="text-[#94A3B8] text-xs font-['JetBrains_Mono',monospace]" suppressHydrationWarning>
+                                    Join CHST AI Portal {currentVersion}
                                 </p>
                             </div>
                         </div>
+
+                        {/* Step Indicator */}
+                        <div className="flex items-center gap-2 mt-4">
+                            <div className={`flex-1 h-1 rounded ${step >= 1 ? 'bg-[#3B82F6]' : 'bg-[#334155]'}`}></div>
+                            <div className={`flex-1 h-1 rounded ${step >= 2 ? 'bg-[#3B82F6]' : 'bg-[#334155]'}`}></div>
+                        </div>
+                        <p className="text-[#94A3B8] text-xs mt-2 font-['JetBrains_Mono',monospace]">
+                            {step === 1 ? 'Step 1: Basic Information' : 'Step 2: Recovery Email'}
+                        </p>
                     </div>
 
+                    {/* Form Content */}
                     <div className="p-6 space-y-4">
                         {/* Status Messages */}
                         {error && (
-                            <div className="bg-[#1A1A1F] border border-[#EF4444] p-3">
-                                <div className="flex items-start gap-2 font-['JetBrains_Mono',monospace] text-xs text-[#EF4444]">
-                                    <span className="mt-0.5">⚠</span>
-                                    <span>{error}</span>
-                                </div>
+                            <div className="bg-[#EF4444]/10 border border-[#EF4444]/30 text-[#EF4444] px-4 py-3 rounded text-sm">
+                                {error}
                             </div>
                         )}
                         {success && (
-                            <div className="bg-[#1A1A1F] border border-[#10B981] p-3">
-                                <div className="flex items-start gap-2 font-['JetBrains_Mono',monospace] text-xs text-[#10B981]">
-                                    <span className="mt-0.5">✓</span>
-                                    <span>{success}</span>
-                                </div>
+                            <div className="bg-[#10B981]/10 border border-[#10B981]/30 text-[#10B981] px-4 py-3 rounded text-sm">
+                                {success}
                             </div>
                         )}
 
@@ -188,53 +175,46 @@ export default function SignUpPage() {
                             <>
                                 {/* Full Name */}
                                 <div className="space-y-2">
-                                    <label className="block text-[#F8FAFC] font-['Orbitron',sans-serif] text-xs uppercase tracking-[0.1em] font-semibold">
-                                        // FULL_NAME
+                                    <label className="block text-white text-sm font-medium">
+                                        Full Name
                                     </label>
                                     <input
                                         type="text"
                                         value={formData.name}
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                         required
-                                        placeholder="••••••••••••••"
-                                        className="w-full bg-[#1A1A1F] border border-[#334155] text-white px-4 py-2.5 font-['JetBrains_Mono',monospace] text-sm focus:outline-none focus:border-white transition-colors placeholder:text-[#475569]"
+                                        className="w-full bg-[#0B0B10] border border-[#334155] text-white px-4 py-2.5 rounded text-sm focus:outline-none focus:border-[#3B82F6] transition-colors"
                                     />
                                 </div>
 
                                 {/* Email */}
                                 <div className="space-y-2">
-                                    <label className="block text-[#F8FAFC] font-['Orbitron',sans-serif] text-xs uppercase tracking-[0.1em] font-semibold">
-                                        // USER_EMAIL
+                                    <label className="block text-white text-sm font-medium">
+                                        Email
                                     </label>
-                                    <div className="relative">
-                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">
-                                            @
-                                        </span>
-                                        <input
-                                            type="email"
-                                            value={formData.email}
-                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                            required
-                                            placeholder="••••••••••••••"
-                                            className="w-full bg-[#1A1A1F] border border-[#334155] text-white pl-8 pr-4 py-2.5 font-['JetBrains_Mono',monospace] text-sm focus:outline-none focus:border-white transition-colors placeholder:text-[#475569]"
-                                        />
-                                    </div>
+                                    <input
+                                        type="email"
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                        required
+                                        className="w-full bg-[#0B0B10] border border-[#334155] text-white px-4 py-2.5 rounded text-sm focus:outline-none focus:border-[#3B82F6] transition-colors"
+                                    />
                                     {emailType === 'utar' && (
-                                        <p className="text-xs text-[#3B82F6] font-['JetBrains_Mono',monospace]">✓ UTAR_EMAIL_DETECTED</p>
+                                        <p className="text-xs text-[#3B82F6] font-['JetBrains_Mono',monospace]">✓ UTAR email detected</p>
                                     )}
                                     {emailType === 'public' && (
-                                        <p className="text-xs text-[#10B981] font-['JetBrains_Mono',monospace]">✓ PUBLIC_EMAIL_ACCEPTED</p>
+                                        <p className="text-xs text-[#10B981] font-['JetBrains_Mono',monospace]">✓ Public email accepted</p>
                                     )}
                                     {emailType === 'invalid' && (
-                                        <p className="text-xs text-[#EF4444] font-['JetBrains_Mono',monospace]">✗ INVALID_EMAIL_DOMAIN</p>
+                                        <p className="text-xs text-[#EF4444] font-['JetBrains_Mono',monospace]">✗ Please use Gmail, Outlook, or UTAR email</p>
                                     )}
                                 </div>
 
                                 {/* Invitation Code (UTAR only) */}
                                 {emailType === 'utar' && (
                                     <div className="space-y-2">
-                                        <label className="block text-[#F8FAFC] font-['Orbitron',sans-serif] text-xs uppercase tracking-[0.1em] font-semibold">
-                                            // INVITATION_CODE
+                                        <label className="block text-white text-sm font-medium">
+                                            Invitation Code
                                         </label>
                                         <input
                                             type="text"
@@ -242,28 +222,24 @@ export default function SignUpPage() {
                                             onChange={(e) => setFormData({ ...formData, invitationCode: e.target.value.toUpperCase() })}
                                             required
                                             placeholder="INV-XXXXXXXX"
-                                            className="w-full bg-[#1A1A1F] border border-[#334155] text-white px-4 py-2.5 font-['JetBrains_Mono',monospace] text-sm focus:outline-none focus:border-white transition-colors placeholder:text-[#475569]"
+                                            className="w-full bg-[#0B0B10] border border-[#334155] text-white px-4 py-2.5 rounded text-sm focus:outline-none focus:border-[#3B82F6] transition-colors placeholder:text-[#475569]"
                                         />
-                                        <p className="text-xs text-[#94A3B8] font-['JetBrains_Mono',monospace]">// REQUIRED_FOR_UTAR_SIGNUPS</p>
+                                        <p className="text-xs text-[#94A3B8]">Required for UTAR signups</p>
                                     </div>
                                 )}
 
                                 {/* Password */}
                                 <div className="space-y-2">
-                                    <label className="block text-[#F8FAFC] font-['Orbitron',sans-serif] text-xs uppercase tracking-[0.1em] font-semibold">
-                                        // USER_PASSWORD
+                                    <label className="block text-white text-sm font-medium">
+                                        Password
                                     </label>
                                     <div className="relative">
-                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">
-                                            #
-                                        </span>
                                         <input
                                             type={showPassword ? 'text' : 'password'}
                                             value={formData.password}
                                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                             required
-                                            placeholder="••••••••••••••"
-                                            className="w-full bg-[#1A1A1F] border border-[#334155] text-white pl-8 pr-12 py-2.5 font-['JetBrains_Mono',monospace] text-sm focus:outline-none focus:border-white transition-colors placeholder:text-[#475569]"
+                                            className="w-full bg-[#0B0B10] border border-[#334155] text-white px-4 py-2.5 pr-10 rounded text-sm focus:outline-none focus:border-[#3B82F6] transition-colors"
                                         />
                                         <button
                                             type="button"
@@ -286,53 +262,42 @@ export default function SignUpPage() {
 
                                 {/* Confirm Password */}
                                 <div className="space-y-2">
-                                    <label className="block text-[#F8FAFC] font-['Orbitron',sans-serif] text-xs uppercase tracking-[0.1em] font-semibold">
-                                        // CONFIRM_PASSWORD
+                                    <label className="block text-white text-sm font-medium">
+                                        Confirm Password
                                     </label>
-                                    <div className="relative">
-                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">
-                                            #
-                                        </span>
-                                        <input
-                                            type="password"
-                                            value={formData.confirmPassword}
-                                            onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                            required
-                                            placeholder="••••••••••••••"
-                                            className="w-full bg-[#1A1A1F] border border-[#334155] text-white pl-8 pr-4 py-2.5 font-['JetBrains_Mono',monospace] text-sm focus:outline-none focus:border-white transition-colors placeholder:text-[#475569]"
-                                        />
-                                    </div>
+                                    <input
+                                        type="password"
+                                        value={formData.confirmPassword}
+                                        onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                                        required
+                                        className="w-full bg-[#0B0B10] border border-[#334155] text-white px-4 py-2.5 rounded text-sm focus:outline-none focus:border-[#3B82F6] transition-colors"
+                                    />
                                 </div>
                             </>
                         ) : (
                             <>
                                 {/* Recovery Email Info */}
-                                <div className="bg-[#1A1A1F] border border-[#3B82F6]/30 p-3">
-                                    <div className="font-['JetBrains_Mono',monospace] text-xs text-[#3B82F6]">
-                                        <p className="font-semibold mb-1">// RECOVERY_EMAIL_REQUIRED</p>
-                                        <p className="text-[#94A3B8]">For password recovery, please provide a personal email (Gmail, Outlook, etc.)</p>
-                                    </div>
+                                <div className="bg-[#3B82F6]/10 border border-[#3B82F6]/30 p-4 rounded">
+                                    <p className="text-sm text-white font-medium mb-1">Recovery Email Required</p>
+                                    <p className="text-xs text-[#94A3B8]">
+                                        For password recovery, please provide a personal email (Gmail, Outlook, etc.)
+                                    </p>
                                 </div>
 
                                 {/* Recovery Email */}
                                 <div className="space-y-2">
-                                    <label className="block text-[#F8FAFC] font-['Orbitron',sans-serif] text-xs uppercase tracking-[0.1em] font-semibold">
-                                        // RECOVERY_EMAIL
+                                    <label className="block text-white text-sm font-medium">
+                                        Recovery Email
                                     </label>
-                                    <div className="relative">
-                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">
-                                            @
-                                        </span>
-                                        <input
-                                            type="email"
-                                            value={formData.recoveryEmail}
-                                            onChange={(e) => setFormData({ ...formData, recoveryEmail: e.target.value })}
-                                            required
-                                            placeholder="your.email@gmail.com"
-                                            className="w-full bg-[#1A1A1F] border border-[#334155] text-white pl-8 pr-4 py-2.5 font-['JetBrains_Mono',monospace] text-sm focus:outline-none focus:border-white transition-colors placeholder:text-[#475569]"
-                                        />
-                                    </div>
-                                    <p className="text-xs text-[#94A3B8] font-['JetBrains_Mono',monospace]">// PASSWORD_RESET_LINKS_SENT_HERE</p>
+                                    <input
+                                        type="email"
+                                        value={formData.recoveryEmail}
+                                        onChange={(e) => setFormData({ ...formData, recoveryEmail: e.target.value })}
+                                        required
+                                        placeholder="your.email@gmail.com"
+                                        className="w-full bg-[#0B0B10] border border-[#334155] text-white px-4 py-2.5 rounded text-sm focus:outline-none focus:border-[#3B82F6] transition-colors placeholder:text-[#475569]"
+                                    />
+                                    <p className="text-xs text-[#94A3B8]">Password reset links will be sent to this email</p>
                                 </div>
                             </>
                         )}
@@ -343,48 +308,47 @@ export default function SignUpPage() {
                                 <button
                                     onClick={handleNext}
                                     disabled={loading || !emailType || emailType === 'invalid'}
-                                    className="w-full bg-white text-black px-6 py-3 font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-[0.15em] hover:bg-white hover:shadow-[0_0_20px_rgba(255,255,255,0.6)] hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:scale-100"
+                                    className="w-full bg-[#3B82F6] text-white px-6 py-3 rounded font-semibold text-sm hover:bg-[#2563EB] hover:shadow-[0_0_20px_rgba(59,130,246,0.4)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
                                 >
-                                    {emailType === 'utar' ? '> NEXT STEP' : '> CREATE ACCOUNT'}
+                                    {emailType === 'utar' ? 'Next →' : 'Create Account'}
                                 </button>
                             ) : (
                                 <div className="flex gap-3">
                                     <button
                                         onClick={() => setStep(1)}
                                         disabled={loading}
-                                        className="flex-1 bg-transparent border border-white/20 text-white px-4 py-3 font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-wide hover:bg-white/10 hover:border-white/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="flex-1 bg-transparent border border-[#334155] text-white px-4 py-3 rounded font-semibold text-sm hover:bg-white/5 hover:border-[#3B82F6] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
-                                        ← BACK
+                                        ← Back
                                     </button>
                                     <button
                                         onClick={handleSubmit}
                                         disabled={loading}
-                                        className="flex-1 bg-white text-black px-6 py-3 font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-[0.15em] hover:bg-white hover:shadow-[0_0_20px_rgba(255,255,255,0.6)] hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:scale-100"
+                                        className="flex-1 bg-[#3B82F6] text-white px-6 py-3 rounded font-semibold text-sm hover:bg-[#2563EB] hover:shadow-[0_0_20px_rgba(59,130,246,0.4)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
                                     >
-                                        {loading ? '> CREATING...' : '> CREATE ACCOUNT'}
+                                        {loading ? 'Creating...' : 'Create Account'}
                                     </button>
                                 </div>
                             )}
 
                             {/* Sign In Link */}
                             <div className="text-center">
-                                <span className="text-[#94A3B8] font-['JetBrains_Mono',monospace] text-xs">
+                                <span className="text-[#94A3B8] text-sm">
                                     Already have an account?{' '}
-                                    <Link href="/auth/signin" className="text-[#3B82F6] hover:text-[#60A5FA] transition-colors">
-                                        [SIGN_IN]
+                                    <Link href="/auth/signin" className="text-[#3B82F6] hover:text-[#60A5FA] font-medium transition-colors">
+                                        Sign in
                                     </Link>
                                 </span>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    {/* Footer */}
-                    <div className="px-6 py-3 border-t border-[#1E293B] bg-[#1A1A1F]">
-                        <div className="flex items-center justify-between font-['JetBrains_Mono',monospace] text-[10px] text-[#64748B]">
-                            <span>SECURE CONNECTION: TLS 1.3 | ENCRYPTED</span>
-                            <span>© 2026 CHST RESEARCH CENTRE</span>
-                        </div>
-                    </div>
+                {/* Footer */}
+                <div className="mt-4 text-center">
+                    <p className="text-[#64748B] text-xs font-['JetBrains_Mono',monospace]">
+                        © 2026 CHST Research Centre
+                    </p>
                 </div>
             </div>
         </div>

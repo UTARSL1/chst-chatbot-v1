@@ -44,7 +44,7 @@ export async function sendEmail({ to, subject, html }: SendEmailParams) {
         console.log('  - Sending via Gmail SMTP...');
 
         const info = await transporter.sendMail({
-            from: `"CHST Chatbot" <${process.env.GMAIL_USER}>`,
+            from: `"CHST AI Portal" <${process.env.GMAIL_USER}>`,
             to: to,
             subject: subject,
             html: html,
@@ -73,7 +73,7 @@ export async function sendVerificationEmail(email: string, token: string) {
 
     const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #2563eb;">Welcome to CHST Chatbot!</h2>
+            <h2 style="color: #2563eb;">Welcome to CHST AI Portal!</h2>
             <p>Thank you for signing up. Please verify your email address to activate your account.</p>
             <p>Click the button below to verify:</p>
             <a href="${verificationUrl}" style="display: inline-block; background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 20px 0;">Verify Email</a>
@@ -84,7 +84,7 @@ export async function sendVerificationEmail(email: string, token: string) {
 
     return sendEmail({
         to: email,
-        subject: 'Verify your CHST Chatbot Account',
+        subject: 'Verify your CHST AI Portal Account',
         html,
     });
 }
@@ -97,7 +97,7 @@ export async function sendApprovalEmail(email: string, name: string) {
             <h2 style="color: #2563eb;">Account Approved!</h2>
             <p>Dear ${name},</p>
             <p>Great news! Your account has been approved by the administrator.</p>
-            <p>You can now log in to CHST Chatbot and start using the system.</p>
+            <p>You can now log in to CHST AI Portal and start using the system.</p>
             <p>Click the button below to log in:</p>
             <a href="${loginUrl}" style="display: inline-block; background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 20px 0;">Log In</a>
             <p>Or copy and paste this link into your browser:</p>
@@ -108,7 +108,7 @@ export async function sendApprovalEmail(email: string, name: string) {
 
     return sendEmail({
         to: email,
-        subject: 'Your CHST Chatbot Account has been Approved',
+        subject: 'Your CHST AI Portal Account has been Approved',
         html,
     });
 }
@@ -130,7 +130,7 @@ export async function sendExpiredTokenEmail(email: string, name: string) {
 
     return sendEmail({
         to: email,
-        subject: 'CHST Chatbot - Verification Link Expired',
+        subject: 'CHST AI Portal - Verification Link Expired',
         html,
     });
 }
@@ -154,7 +154,7 @@ export async function sendAdminNotification(userName: string, userEmail: string,
 
     return sendEmail({
         to: 'ychum2@gmail.com',
-        subject: 'CHST Chatbot - New User Registration Pending Approval',
+        subject: 'CHST AI Portal - New User Registration Pending Approval',
         html,
     });
 }
