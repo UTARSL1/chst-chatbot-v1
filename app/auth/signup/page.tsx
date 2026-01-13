@@ -3,10 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { ChstLogo } from '@/components/ChstLogo';
 import { useCurrentVersion } from '@/hooks/useCurrentVersion';
 
 export default function SignUpPage() {
@@ -51,27 +48,27 @@ export default function SignUpPage() {
 
         // Validation for step 1
         if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
-            setError('All fields are required');
+            setError('[ERROR] All fields are required');
             return;
         }
 
         if (formData.password !== formData.confirmPassword) {
-            setError('Passwords do not match');
+            setError('[ERROR] Passwords do not match');
             return;
         }
 
         if (formData.password.length < 8) {
-            setError('Password must be at least 8 characters');
+            setError('[ERROR] Password must be at least 8 characters');
             return;
         }
 
         if (emailType === 'invalid') {
-            setError('Please use a personal email (Gmail, Outlook, etc.) or UTAR email');
+            setError('[ERROR] Please use a personal email (Gmail, Outlook, etc.) or UTAR email');
             return;
         }
 
         if (emailType === 'utar' && !formData.invitationCode) {
-            setError('Invitation code is required for UTAR emails');
+            setError('[ERROR] Invitation code is required for UTAR emails');
             return;
         }
 
@@ -91,7 +88,7 @@ export default function SignUpPage() {
         // Validate recovery email for UTAR users
         if (emailType === 'utar') {
             if (!formData.recoveryEmail) {
-                setError('Recovery email is required');
+                setError('[ERROR] Recovery email is required');
                 setLoading(false);
                 return;
             }
@@ -100,7 +97,7 @@ export default function SignUpPage() {
             const generalProviders = ['gmail.com', 'googlemail.com', 'outlook.com', 'hotmail.com', 'live.com', 'yahoo.com', 'ymail.com', 'icloud.com', 'me.com', 'protonmail.com', 'pm.me', 'aol.com', 'zoho.com', 'mail.com'];
 
             if (!generalProviders.includes(recoveryDomain)) {
-                setError('Recovery email must be a personal email (Gmail, Outlook, etc.)');
+                setError('[ERROR] Recovery email must be a personal email (Gmail, Outlook, etc.)');
                 setLoading(false);
                 return;
             }
@@ -122,197 +119,274 @@ export default function SignUpPage() {
             const data = await response.json();
 
             if (!response.ok) {
-                setError(data.error || 'Signup failed');
+                setError(data.error || '[ERROR] Signup failed');
                 return;
             }
 
-            setSuccess(data.message);
+            setSuccess('[SUCCESS] ' + data.message);
             setTimeout(() => router.push('/auth/signin'), 2000);
         } catch (err) {
-            setError('An unexpected error occurred');
+            setError('[SYSTEM_ERROR] Unexpected error occurred');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4">
-            <Card className="w-full max-w-md glassmorphism">
-                <CardHeader className="space-y-1 text-center">
-                    <div className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center gap-1 mb-4">
-                        <span className="text-sm font-bold text-white tracking-tight">CHST</span>
-                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                        </svg>
+        <div className="min-h-screen flex items-center justify-center bg-[#0B0B10] p-4">
+            <div className="w-full max-w-2xl">
+                {/* Terminal Header */}
+                <div className="bg-[#1A1A1F] border border-[#1E293B] mb-0">
+                    <div className="flex items-center justify-between px-4 py-2 border-b border-[#1E293B] font-['JetBrains_Mono',monospace] text-[10px] text-[#94A3B8]">
+                        <div className="flex items-center gap-4">
+                            <span>SYSTEM: CHST_ACCOUNT_REGISTRATION</span>
+                            <span className="text-[#10B981]">STATUS: ONLINE</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <span>DEVELOPER: Dr. Hum</span>
+                        </div>
                     </div>
-                    <CardTitle className="text-2xl font-bold">Create an Account</CardTitle>
-                    <CardDescription>Join CHST-Chatbot {currentVersion}</CardDescription>
-                </CardHeader>
+                </div>
 
-                <CardContent className="space-y-4">
-                    {error && (
-                        <div className="bg-red-500/10 border border-red-500/50 text-red-400 px-4 py-3 rounded-md text-sm">
-                            {error}
-                        </div>
-                    )}
-
-                    {success && (
-                        <div className="bg-green-500/10 border border-green-500/50 text-green-400 px-4 py-3 rounded-md text-sm">
-                            {success}
-                        </div>
-                    )}
-
-                    {step === 1 ? (
-                        <>
-                            <div className="space-y-2">
-                                <Label htmlFor="name">Full Name</Label>
-                                <Input
-                                    id="name"
-                                    type="text"
-                                    placeholder=""
-                                    value={formData.name}
-                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    required
-                                />
+                {/* Main Terminal Window */}
+                <div className="bg-[#0B0B10] border-x border-b border-[#1E293B]">
+                    {/* Terminal Title Bar */}
+                    <div className="bg-[#1A1A1F] px-6 py-4 border-b border-[#1E293B]">
+                        <div className="flex items-center gap-3">
+                            <ChstLogo className="w-12 h-12 text-white" />
+                            <div>
+                                <h1 className="text-[#3B82F6] font-['Orbitron',sans-serif] text-xl font-bold tracking-[0.1em] uppercase">
+                                    CREATE ACCOUNT <sub className="text-xs text-[#94A3B8] font-normal" suppressHydrationWarning>{currentVersion}</sub>
+                                </h1>
+                                <p className="text-[#94A3B8] text-xs font-['JetBrains_Mono',monospace] mt-1">
+                                    {step === 1 ? '// STEP_1_BASIC_INFORMATION' : '// STEP_2_RECOVERY_EMAIL'}
+                                </p>
                             </div>
+                        </div>
+                    </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="email">Email</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    placeholder=""
-                                    value={formData.email}
-                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    required
-                                />
-                                {emailType === 'utar' && (
-                                    <p className="text-xs text-blue-400">✓ UTAR email detected</p>
-                                )}
-                                {emailType === 'public' && (
-                                    <p className="text-xs text-green-400">✓ Public email accepted</p>
-                                )}
-                                {emailType === 'invalid' && (
-                                    <p className="text-xs text-red-400">✗ Please use Gmail, Outlook, or UTAR email</p>
-                                )}
+                    <div className="p-6 space-y-4">
+                        {/* Status Messages */}
+                        {error && (
+                            <div className="bg-[#1A1A1F] border border-[#EF4444] p-3">
+                                <div className="flex items-start gap-2 font-['JetBrains_Mono',monospace] text-xs text-[#EF4444]">
+                                    <span className="mt-0.5">⚠</span>
+                                    <span>{error}</span>
+                                </div>
                             </div>
+                        )}
+                        {success && (
+                            <div className="bg-[#1A1A1F] border border-[#10B981] p-3">
+                                <div className="flex items-start gap-2 font-['JetBrains_Mono',monospace] text-xs text-[#10B981]">
+                                    <span className="mt-0.5">✓</span>
+                                    <span>{success}</span>
+                                </div>
+                            </div>
+                        )}
 
-                            {emailType === 'utar' && (
+                        {step === 1 ? (
+                            <>
+                                {/* Full Name */}
                                 <div className="space-y-2">
-                                    <Label htmlFor="invitationCode">Invitation Code</Label>
-                                    <Input
-                                        id="invitationCode"
+                                    <label className="block text-[#F8FAFC] font-['Orbitron',sans-serif] text-xs uppercase tracking-[0.1em] font-semibold">
+                                        // FULL_NAME
+                                    </label>
+                                    <input
                                         type="text"
-                                        placeholder="INV-XXXXXXXX"
-                                        value={formData.invitationCode}
-                                        onChange={(e) => setFormData({ ...formData, invitationCode: e.target.value.toUpperCase() })}
+                                        value={formData.name}
+                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                         required
+                                        placeholder="••••••••••••••"
+                                        className="w-full bg-[#1A1A1F] border border-[#334155] text-white px-4 py-2.5 font-['JetBrains_Mono',monospace] text-sm focus:outline-none focus:border-white transition-colors placeholder:text-[#475569]"
                                     />
-                                    <p className="text-xs text-muted-foreground">Required for UTAR signups</p>
+                                </div>
+
+                                {/* Email */}
+                                <div className="space-y-2">
+                                    <label className="block text-[#F8FAFC] font-['Orbitron',sans-serif] text-xs uppercase tracking-[0.1em] font-semibold">
+                                        // USER_EMAIL
+                                    </label>
+                                    <div className="relative">
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">
+                                            @
+                                        </span>
+                                        <input
+                                            type="email"
+                                            value={formData.email}
+                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                            required
+                                            placeholder="••••••••••••••"
+                                            className="w-full bg-[#1A1A1F] border border-[#334155] text-white pl-8 pr-4 py-2.5 font-['JetBrains_Mono',monospace] text-sm focus:outline-none focus:border-white transition-colors placeholder:text-[#475569]"
+                                        />
+                                    </div>
+                                    {emailType === 'utar' && (
+                                        <p className="text-xs text-[#3B82F6] font-['JetBrains_Mono',monospace]">✓ UTAR_EMAIL_DETECTED</p>
+                                    )}
+                                    {emailType === 'public' && (
+                                        <p className="text-xs text-[#10B981] font-['JetBrains_Mono',monospace]">✓ PUBLIC_EMAIL_ACCEPTED</p>
+                                    )}
+                                    {emailType === 'invalid' && (
+                                        <p className="text-xs text-[#EF4444] font-['JetBrains_Mono',monospace]">✗ INVALID_EMAIL_DOMAIN</p>
+                                    )}
+                                </div>
+
+                                {/* Invitation Code (UTAR only) */}
+                                {emailType === 'utar' && (
+                                    <div className="space-y-2">
+                                        <label className="block text-[#F8FAFC] font-['Orbitron',sans-serif] text-xs uppercase tracking-[0.1em] font-semibold">
+                                            // INVITATION_CODE
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.invitationCode}
+                                            onChange={(e) => setFormData({ ...formData, invitationCode: e.target.value.toUpperCase() })}
+                                            required
+                                            placeholder="INV-XXXXXXXX"
+                                            className="w-full bg-[#1A1A1F] border border-[#334155] text-white px-4 py-2.5 font-['JetBrains_Mono',monospace] text-sm focus:outline-none focus:border-white transition-colors placeholder:text-[#475569]"
+                                        />
+                                        <p className="text-xs text-[#94A3B8] font-['JetBrains_Mono',monospace]">// REQUIRED_FOR_UTAR_SIGNUPS</p>
+                                    </div>
+                                )}
+
+                                {/* Password */}
+                                <div className="space-y-2">
+                                    <label className="block text-[#F8FAFC] font-['Orbitron',sans-serif] text-xs uppercase tracking-[0.1em] font-semibold">
+                                        // USER_PASSWORD
+                                    </label>
+                                    <div className="relative">
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">
+                                            #
+                                        </span>
+                                        <input
+                                            type={showPassword ? 'text' : 'password'}
+                                            value={formData.password}
+                                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                            required
+                                            placeholder="••••••••••••••"
+                                            className="w-full bg-[#1A1A1F] border border-[#334155] text-white pl-8 pr-12 py-2.5 font-['JetBrains_Mono',monospace] text-sm focus:outline-none focus:border-white transition-colors placeholder:text-[#475569]"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-white transition-colors"
+                                        >
+                                            {showPassword ? (
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                                                </svg>
+                                            ) : (
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                </svg>
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Confirm Password */}
+                                <div className="space-y-2">
+                                    <label className="block text-[#F8FAFC] font-['Orbitron',sans-serif] text-xs uppercase tracking-[0.1em] font-semibold">
+                                        // CONFIRM_PASSWORD
+                                    </label>
+                                    <div className="relative">
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">
+                                            #
+                                        </span>
+                                        <input
+                                            type="password"
+                                            value={formData.confirmPassword}
+                                            onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                                            required
+                                            placeholder="••••••••••••••"
+                                            className="w-full bg-[#1A1A1F] border border-[#334155] text-white pl-8 pr-4 py-2.5 font-['JetBrains_Mono',monospace] text-sm focus:outline-none focus:border-white transition-colors placeholder:text-[#475569]"
+                                        />
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                {/* Recovery Email Info */}
+                                <div className="bg-[#1A1A1F] border border-[#3B82F6]/30 p-3">
+                                    <div className="font-['JetBrains_Mono',monospace] text-xs text-[#3B82F6]">
+                                        <p className="font-semibold mb-1">// RECOVERY_EMAIL_REQUIRED</p>
+                                        <p className="text-[#94A3B8]">For password recovery, please provide a personal email (Gmail, Outlook, etc.)</p>
+                                    </div>
+                                </div>
+
+                                {/* Recovery Email */}
+                                <div className="space-y-2">
+                                    <label className="block text-[#F8FAFC] font-['Orbitron',sans-serif] text-xs uppercase tracking-[0.1em] font-semibold">
+                                        // RECOVERY_EMAIL
+                                    </label>
+                                    <div className="relative">
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">
+                                            @
+                                        </span>
+                                        <input
+                                            type="email"
+                                            value={formData.recoveryEmail}
+                                            onChange={(e) => setFormData({ ...formData, recoveryEmail: e.target.value })}
+                                            required
+                                            placeholder="your.email@gmail.com"
+                                            className="w-full bg-[#1A1A1F] border border-[#334155] text-white pl-8 pr-4 py-2.5 font-['JetBrains_Mono',monospace] text-sm focus:outline-none focus:border-white transition-colors placeholder:text-[#475569]"
+                                        />
+                                    </div>
+                                    <p className="text-xs text-[#94A3B8] font-['JetBrains_Mono',monospace]">// PASSWORD_RESET_LINKS_SENT_HERE</p>
+                                </div>
+                            </>
+                        )}
+
+                        {/* Action Buttons */}
+                        <div className="pt-2 space-y-3">
+                            {step === 1 ? (
+                                <button
+                                    onClick={handleNext}
+                                    disabled={loading || !emailType || emailType === 'invalid'}
+                                    className="w-full bg-white text-black px-6 py-3 font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-[0.15em] hover:bg-white hover:shadow-[0_0_20px_rgba(255,255,255,0.6)] hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:scale-100"
+                                >
+                                    {emailType === 'utar' ? '> NEXT STEP' : '> CREATE ACCOUNT'}
+                                </button>
+                            ) : (
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={() => setStep(1)}
+                                        disabled={loading}
+                                        className="flex-1 bg-transparent border border-white/20 text-white px-4 py-3 font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-wide hover:bg-white/10 hover:border-white/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        ← BACK
+                                    </button>
+                                    <button
+                                        onClick={handleSubmit}
+                                        disabled={loading}
+                                        className="flex-1 bg-white text-black px-6 py-3 font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-[0.15em] hover:bg-white hover:shadow-[0_0_20px_rgba(255,255,255,0.6)] hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:scale-100"
+                                    >
+                                        {loading ? '> CREATING...' : '> CREATE ACCOUNT'}
+                                    </button>
                                 </div>
                             )}
 
-                            <div className="space-y-2">
-                                <Label htmlFor="password">Password</Label>
-                                <div className="relative">
-                                    <Input
-                                        id="password"
-                                        type={showPassword ? 'text' : 'password'}
-                                        placeholder=""
-                                        value={formData.password}
-                                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                        required
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                                    >
-                                        {showPassword ? (
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7c.44 0 .87-.03 1.28-.09" /><line x1="2" x2="22" y1="2" y2="22" /></svg>
-                                        ) : (
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
-                                        )}
-                                    </button>
-                                </div>
+                            {/* Sign In Link */}
+                            <div className="text-center">
+                                <span className="text-[#94A3B8] font-['JetBrains_Mono',monospace] text-xs">
+                                    Already have an account?{' '}
+                                    <Link href="/auth/signin" className="text-[#3B82F6] hover:text-[#60A5FA] transition-colors">
+                                        [SIGN_IN]
+                                    </Link>
+                                </span>
                             </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="confirmPassword">Confirm Password</Label>
-                                <Input
-                                    id="confirmPassword"
-                                    type="password"
-                                    placeholder=""
-                                    value={formData.confirmPassword}
-                                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                    required
-                                />
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <div className="bg-blue-500/10 border border-blue-500/50 text-blue-400 px-4 py-3 rounded-md text-sm">
-                                <p className="font-semibold mb-1">Recovery Email Required</p>
-                                <p className="text-xs">For password recovery, please provide a personal email (Gmail, Outlook, etc.)</p>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="recoveryEmail">Recovery Email</Label>
-                                <Input
-                                    id="recoveryEmail"
-                                    type="email"
-                                    placeholder="your.email@gmail.com"
-                                    value={formData.recoveryEmail}
-                                    onChange={(e) => setFormData({ ...formData, recoveryEmail: e.target.value })}
-                                    required
-                                />
-                                <p className="text-xs text-muted-foreground">
-                                    Password reset links will be sent to this email
-                                </p>
-                            </div>
-                        </>
-                    )}
-                </CardContent>
-
-                <CardFooter className="flex flex-col space-y-4">
-                    {step === 1 ? (
-                        <Button
-                            onClick={handleNext}
-                            variant="gradient"
-                            className="w-full"
-                            disabled={loading || !emailType || emailType === 'invalid'}
-                        >
-                            {emailType === 'utar' ? 'Next →' : 'Sign Up'}
-                        </Button>
-                    ) : (
-                        <div className="flex gap-2 w-full">
-                            <Button
-                                onClick={() => setStep(1)}
-                                variant="outline"
-                                className="flex-1"
-                                disabled={loading}
-                            >
-                                ← Back
-                            </Button>
-                            <Button
-                                onClick={handleSubmit}
-                                variant="gradient"
-                                className="flex-1"
-                                disabled={loading}
-                            >
-                                {loading ? 'Creating...' : 'Sign Up'}
-                            </Button>
                         </div>
-                    )}
+                    </div>
 
-                    <p className="text-center text-sm text-muted-foreground">
-                        Already have an account?{' '}
-                        <Link href="/auth/signin" className="text-primary hover:underline font-medium">
-                            Sign in
-                        </Link>
-                    </p>
-                </CardFooter>
-            </Card>
+                    {/* Footer */}
+                    <div className="px-6 py-3 border-t border-[#1E293B] bg-[#1A1A1F]">
+                        <div className="flex items-center justify-between font-['JetBrains_Mono',monospace] text-[10px] text-[#64748B]">
+                            <span>SECURE CONNECTION: TLS 1.3 | ENCRYPTED</span>
+                            <span>© 2026 CHST RESEARCH CENTRE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
