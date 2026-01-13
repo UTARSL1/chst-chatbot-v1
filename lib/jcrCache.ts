@@ -62,11 +62,34 @@ export async function ensureJcrCacheLoaded(): Promise<void> {
     cacheLoadingPromise = (async () => {
         console.log('Loading JCR cache...');
         try {
+            // Load all records, prioritizing JCR_complete over JCR_incomplete
             const all = await prisma.jcrJournalMetric.findMany({
                 orderBy: { jifYear: 'asc' }
             });
 
+            // Sort in memory to prioritize JCR_complete
+            all.sort((a, b) => {
+                // First sort by source (complete before incomplete)
+                if (a.source !== b.source) {
+                    if (a.source === 'JCR_complete') return -1;
+                    if (b.source === 'JCR_complete') return 1;
+                }
+                // Then by year
+                return a.jifYear - b.jifYear;
+            });
+
+            // Track which journals we've already added from complete dataset
+            const processedJournals = new Set<string>();
+
+
             for (const row of all) {
+                const journalKey = `${row.normalizedTitle}_${row.jifYear}`;
+
+                // Skip incomplete records if we already have complete data for this journal+year
+                if (row.source === 'JCR_incomplete' && processedJournals.has(journalKey)) {
+                    continue;
+                }
+
                 const record: JcrMetricRecord = {
                     fullTitle: row.fullTitle,
                     normalizedTitle: row.normalizedTitle,
@@ -78,6 +101,11 @@ export async function ensureJcrCacheLoaded(): Promise<void> {
                     jifValue: row.jifValue ? Number(row.jifValue) : null,
                     jifQuartile: row.jifQuartile
                 };
+
+                // Mark this journal+year as processed
+                if (row.source === 'JCR_complete') {
+                    processedJournals.add(journalKey);
+                }
 
                 // By Title
                 const tKey = record.normalizedTitle;
@@ -104,7 +132,7 @@ export async function ensureJcrCacheLoaded(): Promise<void> {
                 }
             }
             isCacheLoaded = true;
-            console.log(`JCR cache loaded: ${all.length} records.`);
+            console.log(`JCR cache loaded: ${all.length} total records (prioritizing JCR_complete).`);
         } catch (e) {
             console.error("Failed to load JCR cache:", e);
             // Reset promise so we can retry?
