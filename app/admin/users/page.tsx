@@ -340,17 +340,26 @@ export default function AdminUsersPage() {
                                                         <span className="font-mono text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded cursor-help">
                                                             {user.quickAccessLinks.length} link{user.quickAccessLinks.length !== 1 ? 's' : ''}
                                                         </span>
-                                                        <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block z-50 w-64 bg-slate-800 text-white text-xs rounded-lg shadow-xl p-3 border border-white/10">
-                                                            <div className="font-semibold mb-2">Quick Access Links:</div>
-                                                            <div className="space-y-1 max-h-48 overflow-y-auto">
+                                                        <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block z-50 w-80 bg-[#1A1A1F] text-white rounded-lg shadow-[0_0_30px_rgba(59,130,246,0.3)] p-4 border-2 border-[#3B82F6]">
+                                                            <div className="font-['Orbitron',sans-serif] font-bold text-sm text-[#3B82F6] mb-3 uppercase tracking-wider">
+                                                                Quick Access Links
+                                                            </div>
+                                                            <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar">
                                                                 {user.quickAccessLinks.map((link) => (
-                                                                    <div key={link.id} className="flex items-start gap-2 py-1">
-                                                                        <span className={`text-[10px] px-1.5 py-0.5 rounded ${link.section === 'rc' ? 'bg-purple-500/20 text-purple-300' : 'bg-blue-500/20 text-blue-300'}`}>
-                                                                            {link.section.toUpperCase()}
-                                                                        </span>
-                                                                        <div className="flex-1 min-w-0">
-                                                                            <div className="truncate">{link.name}</div>
-                                                                            <div className="text-[10px] text-gray-400 truncate">{link.url}</div>
+                                                                    <div key={link.id} className="bg-[#0B0B10] border border-[#334155] rounded p-3 hover:border-[#3B82F6] transition-colors">
+                                                                        <div className="flex items-center gap-2 mb-2">
+                                                                            <span className={`text-xs px-2 py-1 rounded font-['JetBrains_Mono',monospace] font-bold ${link.section === 'rc'
+                                                                                    ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                                                                                    : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                                                                                }`}>
+                                                                                {link.section.toUpperCase()}
+                                                                            </span>
+                                                                        </div>
+                                                                        <div className="font-['JetBrains_Mono',monospace] text-sm text-white mb-1 break-words">
+                                                                            {link.name}
+                                                                        </div>
+                                                                        <div className="font-['JetBrains_Mono',monospace] text-xs text-[#94A3B8] break-all">
+                                                                            {link.url}
                                                                         </div>
                                                                     </div>
                                                                 ))}
