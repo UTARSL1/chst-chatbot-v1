@@ -23,6 +23,13 @@ interface User {
         code: string;
         createdAt: Date;
     };
+    quickAccessLinks?: Array<{
+        id: string;
+        name: string;
+        url: string;
+        section: string;
+        isSystem: boolean;
+    }>;
 }
 
 export default function AdminUsersPage() {
@@ -225,8 +232,8 @@ export default function AdminUsersPage() {
                                                     onClick={() => handleApprove(user.id)}
                                                     disabled={!user.isVerified}
                                                     className={`px-4 py-2 font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-wide transition-all ${user.isVerified
-                                                            ? 'bg-white text-black hover:shadow-[0_0_20px_rgba(255,255,255,0.6)] hover:scale-[1.02]'
-                                                            : 'bg-[#334155] text-[#64748B] cursor-not-allowed opacity-50'
+                                                        ? 'bg-white text-black hover:shadow-[0_0_20px_rgba(255,255,255,0.6)] hover:scale-[1.02]'
+                                                        : 'bg-[#334155] text-[#64748B] cursor-not-allowed opacity-50'
                                                         }`}
                                                 >
                                                     ✓ Approve
@@ -264,6 +271,7 @@ export default function AdminUsersPage() {
                                         <th className="px-6 py-3">Registration Date</th>
                                         <th className="px-6 py-3">Last Login</th>
                                         <th className="px-6 py-3">Invitation Code</th>
+                                        <th className="px-6 py-3">Quick Links</th>
                                         <th className="px-6 py-3 text-right">Actions</th>
                                     </tr>
                                 </thead>
@@ -326,6 +334,33 @@ export default function AdminUsersPage() {
                                                     <span className="text-muted-foreground">-</span>
                                                 )}
                                             </td>
+                                            <td className="px-6 py-4">
+                                                {user.quickAccessLinks && user.quickAccessLinks.length > 0 ? (
+                                                    <div className="relative group">
+                                                        <span className="font-mono text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded cursor-help">
+                                                            {user.quickAccessLinks.length} link{user.quickAccessLinks.length !== 1 ? 's' : ''}
+                                                        </span>
+                                                        <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block z-50 w-64 bg-slate-800 text-white text-xs rounded-lg shadow-xl p-3 border border-white/10">
+                                                            <div className="font-semibold mb-2">Quick Access Links:</div>
+                                                            <div className="space-y-1 max-h-48 overflow-y-auto">
+                                                                {user.quickAccessLinks.map((link) => (
+                                                                    <div key={link.id} className="flex items-start gap-2 py-1">
+                                                                        <span className={`text-[10px] px-1.5 py-0.5 rounded ${link.section === 'rc' ? 'bg-purple-500/20 text-purple-300' : 'bg-blue-500/20 text-blue-300'}`}>
+                                                                            {link.section.toUpperCase()}
+                                                                        </span>
+                                                                        <div className="flex-1 min-w-0">
+                                                                            <div className="truncate">{link.name}</div>
+                                                                            <div className="text-[10px] text-gray-400 truncate">{link.url}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-muted-foreground text-xs">None</span>
+                                                )}
+                                            </td>
                                             <td className="px-6 py-4 text-right">
                                                 <div className="flex gap-2 justify-end">
                                                     <Button
@@ -353,7 +388,7 @@ export default function AdminUsersPage() {
                                     ))}
                                     {users.length === 0 && (
                                         <tr>
-                                            <td colSpan={6} className="px-6 py-8 text-center text-muted-foreground">
+                                            <td colSpan={7} className="px-6 py-8 text-center text-muted-foreground">
                                                 No users found
                                             </td>
                                         </tr>

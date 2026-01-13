@@ -36,6 +36,21 @@ export async function GET(req: NextRequest) {
                         createdAt: true,
                     },
                 },
+                quickAccessLinks: {
+                    where: {
+                        isSystem: false, // Only show personal links, not system links
+                    },
+                    select: {
+                        id: true,
+                        name: true,
+                        url: true,
+                        section: true,
+                        isSystem: true,
+                    },
+                    orderBy: {
+                        createdAt: 'desc',
+                    },
+                },
             },
             orderBy: { createdAt: 'desc' },
         });

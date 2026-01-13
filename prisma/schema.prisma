@@ -30,6 +30,7 @@ model User {
   feedback                Feedback[]
   knowledgeNotes          KnowledgeNote[]
   messages                Message[]
+  quickAccessLinks        QuickAccessLink[] @relation("QuickAccessLinks")
   invitationCode          InvitationCode? @relation(fields: [invitationCodeId], references: [id])
 
   @@index([email])
@@ -212,10 +213,12 @@ model QuickAccessLink {
   createdBy String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  user      User     @relation("QuickAccessLinks", fields: [createdBy], references: [id], onDelete: Cascade)
 
   @@index([section])
   @@index([isActive])
   @@index([order])
+  @@index([createdBy])
   @@map("quick_access_links")
 }
 

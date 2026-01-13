@@ -15,6 +15,14 @@ interface QuickAccessLink {
     roles: string[];
     order: number;
     isSystem: boolean;
+    createdBy: string;
+    createdAt: string;
+    user?: {
+        id: string;
+        name: string | null;
+        email: string;
+        role: string;
+    };
 }
 
 export default function AdminQuickAccessPage() {
@@ -36,11 +44,10 @@ export default function AdminQuickAccessPage() {
 
     const loadLinks = async () => {
         try {
-            const response = await fetch('/api/quick-access');
+            const response = await fetch('/api/admin/quick-access');
             if (response.ok) {
                 const data = await response.json();
-                // Filter only system links for admin view
-                setLinks(data.links.filter((l: QuickAccessLink) => l.isSystem));
+                setLinks(data.links);
             }
         } catch (error) {
             console.error('Error loading links:', error);
@@ -199,6 +206,12 @@ export default function AdminQuickAccessPage() {
                                                     </span>
                                                 ))}
                                             </div>
+                                            {link.user && (
+                                                <div className="mt-2 text-xs text-gray-500">
+                                                    Created by: <span className="text-gray-400">{link.user.name || link.user.email}</span>
+                                                    {!link.isSystem && <span className="ml-2 px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300">Personal</span>}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                     <div className="flex gap-2">
