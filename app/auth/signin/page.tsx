@@ -87,7 +87,7 @@ function SignInContent() {
                         <ChstLogo className="w-12 h-12 text-white" />
                         <div>
                             <h1 className="text-[#3B82F6] font-['Orbitron',sans-serif] text-xl font-bold tracking-[0.1em] uppercase">
-                                CHST AI PORTAL <sub className="text-xs text-[#94A3B8] font-normal" suppressHydrationWarning>v{currentVersion}</sub>
+                                CHST AI PORTAL <sub className="text-xs text-[#94A3B8] font-normal" suppressHydrationWarning>{currentVersion}</sub>
                             </h1>
                             <p className="text-[#94A3B8] text-xs font-['JetBrains_Mono',monospace] mt-1">
                                 INTELLIGENT ASSISTANT // AUTHENTICATION REQUIRED
