@@ -74,8 +74,7 @@ function SignInContent() {
                         <span className="text-[#10B981]">STATUS: ONLINE</span>
                     </div>
                     <div className="flex items-center gap-3">
-                        <span suppressHydrationWarning>VERSION: {currentVersion}</span>
-                        <span>SESSION: GUEST</span>
+                        <span>DEVELOPER: Dr. Hum</span>
                     </div>
                 </div>
             </div>
@@ -88,7 +87,7 @@ function SignInContent() {
                         <ChstLogo className="w-12 h-12 text-white" />
                         <div>
                             <h1 className="text-[#3B82F6] font-['Orbitron',sans-serif] text-xl font-bold tracking-[0.1em] uppercase">
-                                CHST AI PORTAL
+                                CHST AI PORTAL <sub className="text-xs text-[#94A3B8] font-normal" suppressHydrationWarning>v{currentVersion}</sub>
                             </h1>
                             <p className="text-[#94A3B8] text-xs font-['JetBrains_Mono',monospace] mt-1">
                                 INTELLIGENT ASSISTANT // AUTHENTICATION REQUIRED
@@ -134,7 +133,7 @@ function SignInContent() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
-                                placeholder="user@university.edu"
+                                placeholder="••••••••••••••"
                                 className="w-full bg-[#1A1A1F] border border-[#334155] text-white pl-8 pr-4 py-2.5 font-['JetBrains_Mono',monospace] text-sm focus:outline-none focus:border-white transition-colors placeholder:text-[#475569]"
                             />
                         </div>
