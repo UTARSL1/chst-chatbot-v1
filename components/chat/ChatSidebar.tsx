@@ -110,14 +110,13 @@ export function ChatSidebar({
     return (
         <div className="w-80 border-r border-border bg-card flex flex-col h-full shadow-xl z-20">
             {/* Header / Tabs */}
-            <div className="p-4 border-b border-border bg-gradient-to-b from-card to-background/50">
-                <Button
+            <div className="p-4 border-b border-[#1E293B] bg-[#1A1A1F]">
+                <button
                     onClick={onNewChat}
-                    variant="gradient"
-                    className="w-full mb-4 shadow-lg shadow-violet-500/20"
+                    className="w-full mb-4 bg-white text-black py-2 font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-[0.15em] hover:bg-white hover:shadow-[0_0_20px_rgba(255,255,255,0.6)] hover:scale-[1.02] transition-all duration-200 flex items-center justify-center gap-2"
                 >
-                    <Plus className="w-4 h-4 mr-2" /> New Chat
-                </Button>
+                    <Plus className="w-4 h-4" /> NEW CHAT
+                </button>
 
                 <div className="relative grid grid-cols-2 p-1 bg-muted/50 rounded-xl border border-border/50">
                     {/* Sliding Background */}
@@ -137,7 +136,7 @@ export function ChatSidebar({
                                 : "text-muted-foreground hover:text-foreground/80"
                         )}
                     >
-                        <MessageCircle className={cn("w-4 h-4 transition-transform duration-300", activeTab === 'chats' ? "text-violet-400 scale-110" : "scale-100")} />
+                        <MessageCircle className={cn("w-4 h-4 transition-transform duration-300", activeTab === 'chats' ? "text-white scale-110" : "scale-100")} />
                         Chats
                     </button>
                     <button
@@ -149,7 +148,7 @@ export function ChatSidebar({
                                 : "text-muted-foreground hover:text-foreground/80"
                         )}
                     >
-                        <LayoutGrid className={cn("w-4 h-4 transition-transform duration-300", activeTab === 'tools' ? "text-violet-400 scale-110" : "scale-100")} />
+                        <LayoutGrid className={cn("w-4 h-4 transition-transform duration-300", activeTab === 'tools' ? "text-white scale-110" : "scale-100")} />
                         Workspace
                     </button>
                 </div>
@@ -284,35 +283,35 @@ export function ChatSidebar({
                                 {rcManagementOpen && (
                                     <div className="grid gap-2 pl-2 animate-in slide-in-from-top-2 duration-200">
                                         <a href="/rc-management/publications" className="group">
-                                            <Card className="p-3 flex items-center gap-3 bg-gradient-to-br from-emerald-600/10 to-emerald-900/10 border-emerald-500/20 hover:border-emerald-500/40 transition-all hover:shadow-md hover:shadow-emerald-500/5 cursor-pointer">
-                                                <div className="p-2 bg-emerald-500/20 rounded-lg text-emerald-400 group-hover:scale-110 transition-transform">
+                                            <Card className="p-3 flex items-center gap-3 bg-[#1A1A1F] border border-[#334155] hover:border-white transition-all cursor-pointer">
+                                                <div className="p-2 bg-[#2A2A2F] text-white group-hover:scale-110 transition-transform">
                                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
                                                 </div>
                                                 <div>
-                                                    <h4 className="text-sm font-medium text-emerald-100">Publications</h4>
-                                                    <p className="text-[10px] text-emerald-200/60">Manage research outputs</p>
+                                                    <h4 className="text-sm font-medium text-white font-['Orbitron',sans-serif]">PUBLICATIONS</h4>
+                                                    <p className="text-[10px] text-[#94A3B8] font-['JetBrains_Mono',monospace]">Manage research outputs</p>
                                                 </div>
                                             </Card>
                                         </a>
                                         <a href="/rc-management/postgraduate" className="group">
-                                            <Card className="p-3 flex items-center gap-3 bg-gradient-to-br from-purple-600/10 to-purple-900/10 border-purple-500/20 hover:border-purple-500/40 transition-all hover:shadow-md hover:shadow-purple-500/5 cursor-pointer">
-                                                <div className="p-2 bg-purple-500/20 rounded-lg text-purple-400 group-hover:scale-110 transition-transform">
+                                            <Card className="p-3 flex items-center gap-3 bg-[#1A1A1F] border border-[#334155] hover:border-white transition-all cursor-pointer">
+                                                <div className="p-2 bg-[#2A2A2F] text-white group-hover:scale-110 transition-transform">
                                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" /></svg>
                                                 </div>
                                                 <div>
-                                                    <h4 className="text-sm font-medium text-purple-100">Postgraduate</h4>
-                                                    <p className="text-[10px] text-purple-200/60">Student resources</p>
+                                                    <h4 className="text-sm font-medium text-white font-['Orbitron',sans-serif]">POSTGRADUATE</h4>
+                                                    <p className="text-[10px] text-[#94A3B8] font-['JetBrains_Mono',monospace]">Student resources</p>
                                                 </div>
                                             </Card>
                                         </a>
                                         <a href="/rc-management/grants" className="group">
-                                            <Card className="p-3 flex items-center gap-3 bg-gradient-to-br from-amber-600/10 to-amber-900/10 border-amber-500/20 hover:border-amber-500/40 transition-all hover:shadow-md hover:shadow-amber-500/5 cursor-pointer">
-                                                <div className="p-2 bg-amber-500/20 rounded-lg text-amber-400 group-hover:scale-110 transition-transform">
+                                            <Card className="p-3 flex items-center gap-3 bg-[#1A1A1F] border border-[#334155] hover:border-white transition-all cursor-pointer">
+                                                <div className="p-2 bg-[#2A2A2F] text-white group-hover:scale-110 transition-transform">
                                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                                 </div>
                                                 <div>
-                                                    <h4 className="text-sm font-medium text-amber-100">Grant Management</h4>
-                                                    <p className="text-[10px] text-amber-200/60">Funding & applications</p>
+                                                    <h4 className="text-sm font-medium text-white font-['Orbitron',sans-serif]">GRANT MANAGEMENT</h4>
+                                                    <p className="text-[10px] text-[#94A3B8] font-['JetBrains_Mono',monospace]">Funding & applications</p>
                                                 </div>
                                             </Card>
                                         </a>
@@ -338,13 +337,13 @@ export function ChatSidebar({
                             {facultyDashboardOpen && (
                                 <div className="grid gap-2 pl-2 animate-in slide-in-from-top-2 duration-200">
                                     <a href="/scopus-publications" className="group">
-                                        <Card className="p-3 flex items-center gap-3 bg-gradient-to-br from-blue-600/10 to-blue-900/10 border-blue-500/20 hover:border-blue-500/40 transition-all hover:shadow-md hover:shadow-blue-500/5 cursor-pointer">
-                                            <div className="p-2 bg-blue-500/20 rounded-lg text-blue-400 group-hover:scale-110 transition-transform">
+                                        <Card className="p-3 flex items-center gap-3 bg-[#1A1A1F] border border-[#334155] hover:border-white transition-all cursor-pointer">
+                                            <div className="p-2 bg-[#2A2A2F] text-white group-hover:scale-110 transition-transform">
                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" /></svg>
                                             </div>
                                             <div>
-                                                <h4 className="text-sm font-medium text-blue-100">Faculty Publications</h4>
-                                                <p className="text-[10px] text-blue-200/60">Scopus data analysis</p>
+                                                <h4 className="text-sm font-medium text-white font-['Orbitron',sans-serif]">FACULTY PUBLICATIONS</h4>
+                                                <p className="text-[10px] text-[#94A3B8] font-['JetBrains_Mono',monospace]">Scopus data analysis</p>
                                             </div>
                                         </Card>
                                     </a>
@@ -357,7 +356,7 @@ export function ChatSidebar({
                             <div className="space-y-1">
                                 <button
                                     onClick={() => setQuickAccessRcOpen(!quickAccessRcOpen)}
-                                    className="flex items-center gap-2 w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors group p-1"
+                                    className="flex items-center gap-2 w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors group p-1 font-['Orbitron',sans-serif]"
                                 >
                                     <div className={cn("transition-transform duration-200", quickAccessRcOpen ? "rotate-90" : "")}>
                                         <ChevronRight className="w-3.5 h-3.5" />
@@ -386,7 +385,7 @@ export function ChatSidebar({
                                                             {isWebsite && <Globe className="w-4 h-4 text-teal-400" />}
                                                             {isResourceHub && <FolderOpen className="w-4 h-4 text-purple-400" />}
                                                             {!isTeams && !isLinkedIn && !isWebsite && !isResourceHub && <ExternalLink className="w-4 h-4 text-muted-foreground" />}
-                                                            <span className="text-sm font-medium text-foreground/80 group-hover:text-foreground">{link.name}</span>
+                                                            <span className="text-sm font-medium text-foreground/80 group-hover:text-foreground font-['JetBrains_Mono',monospace]">{link.name}</span>
                                                         </div>
                                                     </a>
                                                 );
@@ -401,7 +400,7 @@ export function ChatSidebar({
                             <div className="flex items-center justify-between p-1">
                                 <button
                                     onClick={() => setQuickAccessOthersOpen(!quickAccessOthersOpen)}
-                                    className="flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors group"
+                                    className="flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors group font-['Orbitron',sans-serif]"
                                 >
                                     <div className={cn("transition-transform duration-200", quickAccessOthersOpen ? "rotate-90" : "")}>
                                         <ChevronRight className="w-3.5 h-3.5" />
@@ -426,11 +425,11 @@ export function ChatSidebar({
                                         .filter((link) => link.section === 'others' && (!link.isSystem || link.roles.includes(session.user.role)))
                                         .map(link => (
                                             <div key={link.id} className="group relative flex items-center gap-3 p-2 rounded-lg bg-card border border-border/50 hover:bg-accent hover:border-border transition-all">
-                                                <div className="p-1.5 bg-blue-500/10 rounded text-blue-400">
+                                                <div className="p-1.5 bg-[#2A2A2F] text-white">
                                                     <ExternalLink className="w-3.5 h-3.5" />
                                                 </div>
                                                 <a href={link.url} target="_blank" rel="noopener noreferrer" className="flex-1 min-w-0">
-                                                    <p className="text-sm font-medium text-foreground/80 group-hover:text-foreground truncate">{link.name}</p>
+                                                    <p className="text-sm font-medium text-foreground/80 group-hover:text-foreground truncate font-['JetBrains_Mono',monospace]">{link.name}</p>
                                                 </a>
 
                                                 {!link.isSystem && (
@@ -471,14 +470,13 @@ export function ChatSidebar({
             </div>
 
             {/* Footer / User Profile */}
-            <div className="p-4 border-t border-border bg-card mt-auto">
-                <Button
+            <div className="p-4 border-t border-[#1E293B] bg-[#1A1A1F] mt-auto">
+                <button
                     onClick={onOpenFeedback}
-                    variant="outline"
-                    className="w-full justify-start gap-2 border-violet-500/20 text-violet-400 hover:text-violet-300 hover:bg-violet-500/10"
+                    className="w-full justify-start gap-2 bg-white text-black py-2 px-4 font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-[0.1em] hover:bg-[#E5E5E5] transition-colors flex items-center"
                 >
-                    <MessageSquare className="w-4 h-4" /> Message to Admin
-                </Button>
+                    <MessageSquare className="w-4 h-4" /> MESSAGE ADMIN
+                </button>
             </div>
         </div>
     );

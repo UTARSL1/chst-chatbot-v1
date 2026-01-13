@@ -145,8 +145,8 @@ export default function AdminUsersPage() {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold">User Management</h1>
-                    <p className="text-muted-foreground mt-1">Manage user approvals and accounts</p>
+                    <h1 className="text-2xl font-bold text-[#3B82F6] font-['Orbitron',sans-serif] uppercase tracking-[0.1em]">USER MANAGEMENT</h1>
+                    <p className="text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm mt-1">// MANAGE_USER_APPROVALS_AND_ACCOUNTS</p>
                 </div>
             </div>
 
@@ -154,21 +154,21 @@ export default function AdminUsersPage() {
             <div className="flex space-x-1 bg-muted p-1 rounded-lg w-fit">
                 <button
                     onClick={() => setActiveTab('pending')}
-                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === 'pending'
+                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors font-['Orbitron',sans-serif] uppercase tracking-wide ${activeTab === 'pending'
                         ? 'bg-background text-foreground shadow-sm'
                         : 'text-muted-foreground hover:text-foreground'
                         }`}
                 >
-                    Pending Approvals
+                    PENDING
                 </button>
                 <button
                     onClick={() => setActiveTab('all')}
-                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === 'all'
+                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors font-['Orbitron',sans-serif] uppercase tracking-wide ${activeTab === 'all'
                         ? 'bg-background text-foreground shadow-sm'
                         : 'text-muted-foreground hover:text-foreground'
                         }`}
                 >
-                    All Users
+                    ALL USERS
                 </button>
             </div>
 
@@ -189,7 +189,7 @@ export default function AdminUsersPage() {
                                     <div className="flex items-center justify-between">
                                         <div className="flex-1">
                                             <div className="flex items-center gap-3 mb-2">
-                                                <h3 className="text-lg font-semibold">{user.name}</h3>
+                                                <h3 className="text-lg font-semibold font-['Orbitron',sans-serif]">{user.name}</h3>
                                                 <span className={`text-xs px-2 py-1 rounded ${getRoleBadge(user.role)}`}>
                                                     {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                                                 </span>
@@ -248,7 +248,7 @@ export default function AdminUsersPage() {
                     <CardContent className="p-0">
                         <div className="overflow-x-auto">
                             <table className="w-full text-sm text-left">
-                                <thead className="text-xs text-muted-foreground uppercase bg-muted/50 border-b">
+                                <thead className="text-xs text-muted-foreground uppercase bg-muted/50 border-b font-['Orbitron',sans-serif]">
                                     <tr>
                                         <th className="px-6 py-3">User Name / Role</th>
                                         <th className="px-6 py-3">Recovery Email</th>

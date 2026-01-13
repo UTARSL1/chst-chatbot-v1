@@ -161,8 +161,8 @@ export default function VersionManagementPage() {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold text-white mb-2">Version Management</h1>
-                    <p className="text-gray-400">Manage application versions and commit history</p>
+                    <h1 className="text-2xl font-bold text-[#3B82F6] mb-2 font-['Orbitron',sans-serif] uppercase tracking-[0.1em]">VERSION MANAGEMENT</h1>
+                    <p className="text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">// MANAGE_APPLICATION_VERSIONS_AND_COMMIT_HISTORY</p>
                 </div>
             </div>
 
@@ -170,19 +170,18 @@ export default function VersionManagementPage() {
             {!showAddForm && (
                 <Button
                     onClick={() => setShowAddForm(true)}
-                    variant="gradient"
-                    className="mb-6"
+                    className="mb-6 bg-[#3B82F6] hover:bg-[#2563EB] font-['Orbitron',sans-serif] uppercase tracking-wide text-sm"
                 >
                     <Plus className="w-4 h-4 mr-2" />
-                    Add New Version
+                    ADD VERSION
                 </Button>
             )}
 
             {/* Add/Edit Form */}
             {showAddForm && (
                 <Card className="mb-6 p-6 bg-gray-900/50 border-white/10 backdrop-blur-xl">
-                    <h3 className="text-xl font-semibold text-white mb-4">
-                        {editingId ? 'Edit Version' : 'Add New Version'}
+                    <h3 className="text-xl font-semibold text-[#3B82F6] mb-4 font-['Orbitron',sans-serif] uppercase tracking-wide">
+                        {editingId ? 'EDIT VERSION' : 'ADD NEW VERSION'}
                     </h3>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
@@ -238,9 +237,9 @@ export default function VersionManagementPage() {
                         <div className="flex gap-3">
                             <Button
                                 type="submit"
-                                variant="gradient"
+                                className="bg-[#3B82F6] hover:bg-[#2563EB] font-['Orbitron',sans-serif] uppercase tracking-wide text-sm"
                             >
-                                {editingId ? 'Update Version' : 'Create Version'}
+                                {editingId ? 'UPDATE' : 'CREATE'}
                             </Button>
                             <Button
                                 type="button"
@@ -261,22 +260,22 @@ export default function VersionManagementPage() {
                     <table className="w-full">
                         <thead className="bg-white/5">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider font-['Orbitron',sans-serif]">
                                     Version
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider font-['Orbitron',sans-serif]">
                                     Commit
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider font-['Orbitron',sans-serif]">
                                     Description
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider font-['Orbitron',sans-serif]">
                                     Status
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider font-['Orbitron',sans-serif]">
                                     Created
                                 </th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-white/90 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-right text-xs font-medium text-white/90 uppercase tracking-wider font-['Orbitron',sans-serif]">
                                     Actions
                                 </th>
                             </tr>

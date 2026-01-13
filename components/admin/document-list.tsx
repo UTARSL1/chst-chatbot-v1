@@ -129,17 +129,17 @@ export function DocumentList() {
     return (
         <Card className="bg-gray-900/50 border-white/10 backdrop-blur-xl">
             <CardHeader>
-                <CardTitle className="text-white">Uploaded Documents</CardTitle>
+                <CardTitle className="text-white font-['Orbitron',sans-serif] uppercase tracking-wide">Uploaded Documents</CardTitle>
             </CardHeader>
             <CardContent>
                 {documents.length === 0 ? (
-                    <div className="text-center py-8 text-gray-400">
-                        No documents uploaded yet.
+                    <div className="text-center py-8 text-gray-400 font-['JetBrains_Mono',monospace]">
+                        // NO_DOCUMENTS_UPLOADED_YET
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-sm text-gray-400">
-                            <thead className="text-xs uppercase bg-gray-800/50 text-gray-300">
+                            <thead className="text-xs uppercase bg-gray-800/50 text-gray-300 font-['Orbitron',sans-serif]">
                                 <tr>
                                     <th className="px-6 py-3 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('originalName')}>
                                         Name <SortIcon columnKey="originalName" />

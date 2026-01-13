@@ -16,6 +16,7 @@ import { FileText, MessageSquare } from 'lucide-react';
 import { useCurrentVersion } from '@/hooks/useCurrentVersion';
 import { hasRCAccess } from '@/lib/utils/rc-member-check';
 import { ChatSidebar } from '@/components/chat/ChatSidebar';
+import { ChstLogo } from '@/components/ChstLogo';
 
 interface QuickAccessLink {
     id: string;
@@ -629,62 +630,79 @@ export default function ChatPage() {
             )}
 
             <div className="flex-1 flex flex-col">
-                <div className="border-b border-border bg-card px-6 py-4 flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        <button
-                            onClick={() => setSidebarOpen(!sidebarOpen)}
-                            className="text-muted-foreground hover:text-foreground"
-                        >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
-                        </button>
-                        <h1 className="text-xl font-bold">{currentVersion}</h1>
+                {/* Terminal Header */}
+                <div className="bg-[#1A1A1F] border-b border-[#1E293B]">
+                    {/* Top Status Bar */}
+                    <div className="flex items-center justify-between px-6 py-2 border-b border-[#1E293B] font-['JetBrains_Mono',monospace] text-[10px] text-[#94A3B8]">
+                        <div className="flex items-center gap-4">
+                            <span>SYSTEM: CHST_AI_PORTAL</span>
+                            <span className="text-[#10B981]">STATUS: ONLINE</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <span suppressHydrationWarning>VERSION: {currentVersion}</span>
+                            <span>USER: {session.user.name}</span>
+                        </div>
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <span className={`text-xs px-3 py-1 rounded-full ${getRoleBadgeClass(session.user.role)}`}>
-                            {session.user.role === 'member' ? 'Member' : session.user.role.charAt(0).toUpperCase() + session.user.role.slice(1)}
-                        </span>
-                        {session.user.role === 'chairperson' && (
-                            <div className="relative">
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => router.push('/admin')}
-                                    className="border-violet-500 text-violet-400 hover:bg-violet-500/10"
-                                >
-                                    Admin Dashboard
-                                </Button>
-                                {pendingUsersCount > 0 && (
-                                    <div className="absolute -bottom-2 -right-2 flex items-center justify-center">
-                                        <div className="relative w-5 h-5">
-                                            {/* Triangle */}
-                                            <svg
-                                                viewBox="0 0 24 24"
-                                                className="w-full h-full text-amber-500"
-                                                fill="currentColor"
-                                            >
-                                                <path d="M12 2L1 21h22L12 2zm0 3.5l8.5 15.5H3.5L12 5.5z" fillOpacity="0.2" />
-                                                <path d="M12 2L1 21h22L12 2z" />
-                                            </svg>
-                                            {/* Count Number on top of triangle */}
-                                            <span className="absolute inset-0 flex items-center justify-center text-[8px] font-bold text-black pt-1">
-                                                {pendingUsersCount}
-                                            </span>
+                    {/* Main Header Bar */}
+                    <div className="px-6 py-3 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={() => setSidebarOpen(!sidebarOpen)}
+                                className="text-[#94A3B8] hover:text-white transition-colors"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                            </button>
+                            <ChstLogo className="w-7 h-7 text-white" />
+                            <h1 className="text-[#3B82F6] font-['Orbitron',sans-serif] text-sm font-bold tracking-[0.1em] uppercase">
+                                CHST AI PORTAL
+                            </h1>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            <span className={`text-[10px] px-2.5 py-1 font-['JetBrains_Mono',monospace] uppercase tracking-wide border ${session.user.role === 'chairperson' ? 'border-white text-white' :
+                                session.user.role === 'member' ? 'border-[#94A3B8] text-[#94A3B8]' :
+                                    session.user.role === 'student' ? 'border-[#64748B] text-[#64748B]' :
+                                        'border-[#64748B] text-[#64748B]'
+                                }`}>
+                                {session.user.role === 'member' ? 'MEMBER' : session.user.role.toUpperCase()}
+                            </span>
+                            {session.user.role === 'chairperson' && (
+                                <div className="relative">
+                                    <button
+                                        onClick={() => router.push('/admin')}
+                                        className="bg-white text-black px-3 py-1 text-[10px] font-['Orbitron',sans-serif] font-bold uppercase tracking-wider hover:bg-white hover:shadow-[0_0_20px_rgba(255,255,255,0.6)] hover:scale-[1.05] transition-all duration-200"
+                                    >
+                                        [ADMIN]
+                                    </button>
+                                    {pendingUsersCount > 0 && (
+                                        <div className="absolute -bottom-2 -right-2 flex items-center justify-center">
+                                            <div className="relative w-5 h-5">
+                                                <svg
+                                                    viewBox="0 0 24 24"
+                                                    className="w-full h-full text-amber-500"
+                                                    fill="currentColor"
+                                                >
+                                                    <path d="M12 2L1 21h22L12 2zm0 3.5l8.5 15.5H3.5L12 5.5z" fillOpacity="0.2" />
+                                                    <path d="M12 2L1 21h22L12 2z" />
+                                                </svg>
+                                                <span className="absolute inset-0 flex items-center justify-center text-[8px] font-bold text-black pt-1">
+                                                    {pendingUsersCount}
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                        <span className="text-sm text-muted-foreground">{session.user.name}</span>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => router.push('/auth/signout')}
-                        >
-                            Logout
-                        </Button>
+                                    )}
+                                </div>
+                            )}
+                            <button
+                                onClick={() => router.push('/auth/signout')}
+                                className="text-[#94A3B8] hover:text-white text-xs font-['JetBrains_Mono',monospace] transition-colors"
+                            >
+                                [LOGOUT]
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -694,33 +712,35 @@ export default function ChatPage() {
                 >
                     {messages.length === 0 ? (
                         <div className="max-w-3xl mx-auto text-center space-y-6 mt-12">
-                            <div className="w-24 h-24 mx-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center gap-1">
-                                <span className="text-base font-bold text-white tracking-tight">CHST</span>
-                                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                </svg>
+                            {/* Terminal Icon */}
+                            <div className="mx-auto flex items-center justify-center">
+                                <ChstLogo className="w-20 h-20 text-white" />
                             </div>
-                            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">Welcome to CHST AI Assistant</h2>
-                            <p className="text-gray-300 text-lg font-light tracking-wide">
-                                Your intelligent assistant for CHST research, administration, and knowledge discovery
+                            <h2 className="text-white font-['Orbitron',sans-serif] text-2xl font-bold tracking-[0.1em] uppercase">
+                                CHST AI PORTAL
+                            </h2>
+                            <p className="text-[#94A3B8] text-sm font-['JetBrains_Mono',monospace] tracking-wide">
+                                INTELLIGENT ASSISTANT // RESEARCH // ADMINISTRATION // KNOWLEDGE DISCOVERY
                             </p>
 
                             <div className="mt-8">
-                                <h3 className="text-sm font-semibold text-muted-foreground mb-4">Quick Start Questions</h3>
+                                <h3 className="text-[#F8FAFC] font-['Orbitron',sans-serif] text-xs uppercase tracking-[0.1em] font-semibold mb-4">
+                                    // QUICK START QUERIES
+                                </h3>
                                 <div className="grid grid-cols-2 gap-3">
                                     {popularQuestions.length > 0 ? (
                                         popularQuestions.map((question, index) => (
                                             <button
                                                 key={index}
                                                 onClick={() => setInput(question)}
-                                                className="p-4 text-left border border-border rounded-lg hover:bg-accent transition-colors"
+                                                className="p-4 text-left bg-[#1A1A1F] border border-[#334155] hover:border-white transition-colors"
                                             >
-                                                <p className="text-sm text-muted-foreground">{question}</p>
+                                                <p className="text-xs text-[#94A3B8] font-['JetBrains_Mono',monospace] leading-relaxed">{question}</p>
                                             </button>
                                         ))
                                     ) : !isLoadingQuestions ? (
-                                        <div className="col-span-2 text-center text-sm text-muted-foreground italic">
-                                            No popular questions available for your role.
+                                        <div className="col-span-2 text-center text-xs text-[#64748B] font-['JetBrains_Mono',monospace]">
+                                            [NO_QUERIES_AVAILABLE]
                                         </div>
                                     ) : null}
                                 </div>
@@ -734,8 +754,8 @@ export default function ChatPage() {
                             >
                                 <Card
                                     className={`max-w-[70%] p-4 ${message.role === 'user'
-                                        ? 'bg-blue-600 text-white'
-                                        : 'bg-card'
+                                        ? 'bg-white text-black border-2 border-white'
+                                        : 'bg-[#1A1A1F] border border-[#334155]'
                                         }`}
                                 >
                                     <div className="markdown-content">
@@ -1111,46 +1131,37 @@ export default function ChatPage() {
                             <Button
                                 onClick={handleStop}
                                 variant="outline"
-                                className="flex items-center gap-2 bg-background/80 backdrop-blur border-red-500/20 text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all shadow-sm"
+                                className="flex items-center gap-2 bg-background/80 backdrop-blur border-[#3B82F6]/30 text-[#3B82F6] hover:text-[#60A5FA] hover:bg-[#3B82F6]/10 hover:border-[#3B82F6]/50 transition-all shadow-sm font-['JetBrains_Mono',monospace] text-xs"
                             >
                                 <svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24">
                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                <span>Generating...</span>
-                                <span className="text-xs opacity-70 border-l border-red-500/30 pl-2 ml-1">Stop</span>
+                                <span className="uppercase tracking-wide">// GENERATING_RESPONSE</span>
+                                <span className="text-xs opacity-70 border-l border-[#3B82F6]/30 pl-2 ml-1 uppercase">STOP</span>
                             </Button>
                         </div>
                     )}
                 </div>
 
-                <div className="border-t border-border bg-card p-6">
+                <div className="border-t border-[#1E293B] bg-[#1A1A1F] p-6">
                     <form onSubmit={handleSubmit} className="max-w-4xl mx-auto flex gap-4">
                         <div className="relative flex-1">
-                            <Input
+                            <input
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
-                                className="w-full"
+                                className="w-full bg-[#0B0B10] border border-[#334155] text-white px-4 py-3 font-['JetBrains_Mono',monospace] text-sm focus:outline-none focus:border-white transition-colors placeholder:text-[#64748B]"
                                 disabled={loading}
+                                placeholder="// ENTER_QUERY"
                             />
-                            {!input && (
-                                <div className="absolute inset-0 flex items-center px-3 pointer-events-none gap-2">
-                                    <div className="flex gap-1">
-                                        <span className="w-1.5 h-1.5 bg-violet-500 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                                        <span className="w-1.5 h-1.5 bg-violet-500 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-                                        <span className="w-1.5 h-1.5 bg-violet-500 rounded-full animate-bounce"></span>
-                                    </div>
-                                    <span className="text-muted-foreground text-sm">Ask me a question...</span>
-                                </div>
-                            )}
                         </div>
-                        <Button
+                        <button
                             type="submit"
-                            variant="gradient"
                             disabled={loading || !input.trim()}
+                            className="bg-white text-black px-6 py-3 font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-[0.15em] hover:bg-white hover:shadow-[0_0_20px_rgba(255,255,255,0.6)] hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:scale-100"
                         >
-                            Send
-                        </Button>
+                            &gt; SEND
+                        </button>
                     </form>
                 </div>
             </div >

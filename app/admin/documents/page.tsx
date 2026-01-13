@@ -15,8 +15,8 @@ export default function DocumentsPage() {
     return (
         <div className="space-y-8">
             <div>
-                <h1 className="text-3xl font-bold text-white mb-2">Document Management</h1>
-                <p className="text-gray-400">Upload and manage knowledge base documents.</p>
+                <h1 className="text-2xl font-bold text-[#3B82F6] mb-2 font-['Orbitron',sans-serif] uppercase tracking-[0.1em]">DOCUMENT MANAGEMENT</h1>
+                <p className="text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">// UPLOAD_AND_MANAGE_KNOWLEDGE_BASE_DOCUMENTS</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

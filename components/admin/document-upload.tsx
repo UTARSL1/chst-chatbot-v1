@@ -174,15 +174,15 @@ export function DocumentUpload({ onUploadSuccess }: { onUploadSuccess?: () => vo
     return (
         <Card className="bg-gray-900/50 border-white/10 backdrop-blur-xl">
             <CardHeader>
-                <CardTitle className="text-white">Upload Document</CardTitle>
-                <CardDescription className="text-gray-400">
-                    Upload PDF documents to the knowledge base.
+                <CardTitle className="text-white font-['Orbitron',sans-serif] uppercase tracking-wide">Upload Document</CardTitle>
+                <CardDescription className="text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">
+                    // UPLOAD_PDF_DOCUMENTS_TO_KNOWLEDGE_BASE
                 </CardDescription>
             </CardHeader>
             <CardContent>
                 <form onSubmit={handleUpload} className="space-y-6">
                     <div className="space-y-2">
-                        <Label htmlFor="file" className="text-gray-200">PDF File</Label>
+                        <Label htmlFor="file" className="text-gray-200 font-['Orbitron',sans-serif] uppercase tracking-wide text-sm">PDF File</Label>
                         <div className="flex items-center justify-center w-full">
                             <label
                                 htmlFor="file-upload"
@@ -220,7 +220,7 @@ export function DocumentUpload({ onUploadSuccess }: { onUploadSuccess?: () => vo
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label htmlFor="department" className="text-gray-200">Department</Label>
+                            <Label htmlFor="department" className="text-gray-200 font-['Orbitron',sans-serif] uppercase tracking-wide text-sm">Department</Label>
                             <select
                                 id="department"
                                 value={isCustomDepartment ? 'custom' : department}
@@ -269,7 +269,7 @@ export function DocumentUpload({ onUploadSuccess }: { onUploadSuccess?: () => vo
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="category" className="text-gray-200">Category</Label>
+                            <Label htmlFor="category" className="text-gray-200 font-['Orbitron',sans-serif] uppercase tracking-wide text-sm">Category</Label>
                             <select
                                 id="category"
                                 value={category}
@@ -284,7 +284,7 @@ export function DocumentUpload({ onUploadSuccess }: { onUploadSuccess?: () => vo
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="accessLevel" className="text-gray-200">Access Level</Label>
+                        <Label htmlFor="accessLevel" className="text-gray-200 font-['Orbitron',sans-serif] uppercase tracking-wide text-sm">Access Level</Label>
                         <select
                             id="accessLevel"
                             value={accessLevel}
@@ -315,9 +315,9 @@ export function DocumentUpload({ onUploadSuccess }: { onUploadSuccess?: () => vo
                     <Button
                         type="submit"
                         disabled={!file || uploading || (isCustomDepartment && !customDepartment.trim())}
-                        className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white"
+                        className="w-full bg-[#3B82F6] hover:bg-[#2563EB] text-white font-['Orbitron',sans-serif] uppercase tracking-wide"
                     >
-                        {uploading ? 'Uploading & Processing...' : 'Upload Document'}
+                        {uploading ? 'UPLOADING...' : 'UPLOAD DOCUMENT'}
                     </Button>
                 </form>
             </CardContent>

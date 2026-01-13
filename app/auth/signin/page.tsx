@@ -4,18 +4,14 @@ import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useCurrentVersion } from '@/hooks/useCurrentVersion';
 import { Suspense } from 'react';
+import { ChstLogo } from '@/components/ChstLogo';
 
 function SignInContent() {
     const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [rememberMe, setRememberMe] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
@@ -28,14 +24,14 @@ function SignInContent() {
 
     useEffect(() => {
         if (verified) {
-            setSuccess('Email verified! Your account is pending admin approval. You will be notified when active.');
+            setSuccess('[SUCCESS] Email verified. Account pending admin approval.');
         }
         if (errorParam === 'InvalidToken') {
-            setError('Invalid or expired verification link. Please try signing up again or contact support.');
+            setError('[ERROR] Invalid or expired verification link.');
         } else if (errorParam === 'ExpiredToken') {
-            setError('Verification link expired. Your account has been removed. Please check your email and sign up again.');
+            setError('[ERROR] Verification link expired. Account removed.');
         } else if (errorParam === 'VerificationFailed') {
-            setError('Verification failed. Please try again later.');
+            setError('[ERROR] Verification failed. Try again later.');
         }
     }, [verified, errorParam]);
 
@@ -53,95 +49,122 @@ function SignInContent() {
             });
 
             if (result?.error) {
-                setError(result.error);
+                setError(`[AUTH_ERROR] ${result.error}`);
             } else {
-                router.push('/chat');
-                router.refresh();
+                setSuccess('[AUTH_SUCCESS] Redirecting to system...');
+                setTimeout(() => {
+                    router.push('/chat');
+                    router.refresh();
+                }, 500);
             }
         } catch (err) {
-            setError('An unexpected error occurred');
+            setError('[SYSTEM_ERROR] Unexpected error occurred');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <Card className="w-full max-w-md glassmorphism">
-            <CardHeader className="space-y-1 text-center">
-                <div className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center gap-1 mb-4">
-                    <span className="text-sm font-bold text-white tracking-tight">CHST</span>
-                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
+        <div className="w-full max-w-2xl">
+            {/* Terminal Header */}
+            <div className="bg-[#1A1A1F] border border-[#1E293B] mb-0">
+                <div className="flex items-center justify-between px-4 py-2 border-b border-[#1E293B] font-['JetBrains_Mono',monospace] text-[10px] text-[#94A3B8]">
+                    <div className="flex items-center gap-4">
+                        <span>SYSTEM: CHST_AUTH_TERMINAL</span>
+                        <span className="text-[#10B981]">STATUS: ONLINE</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <span suppressHydrationWarning>VERSION: {currentVersion}</span>
+                        <span>SESSION: GUEST</span>
+                    </div>
                 </div>
-                <CardTitle className="text-2xl font-bold text-white">
-                    Welcome to CHST AI Assistant{' '}
-                    <span className="inline-block ml-2 px-2 py-0.5 text-xs bg-blue-500/20 border border-blue-500/50 rounded text-blue-300">
-                        {currentVersion}
-                    </span>
-                </CardTitle>
-                <CardDescription>Your intelligent assistant for research and administration</CardDescription>
-            </CardHeader>
-            <form onSubmit={handleSubmit}>
-                <CardContent className="space-y-4">
+            </div>
+
+            {/* Main Terminal Window */}
+            <div className="bg-[#0B0B10] border-x border-b border-[#1E293B]">
+                {/* Terminal Title Bar */}
+                <div className="bg-[#1A1A1F] px-6 py-4 border-b border-[#1E293B]">
+                    <div className="flex items-center gap-3">
+                        <ChstLogo className="w-12 h-12 text-white" />
+                        <div>
+                            <h1 className="text-[#3B82F6] font-['Orbitron',sans-serif] text-xl font-bold tracking-[0.1em] uppercase">
+                                CHST AI PORTAL
+                            </h1>
+                            <p className="text-[#94A3B8] text-xs font-['JetBrains_Mono',monospace] mt-1">
+                                INTELLIGENT ASSISTANT // AUTHENTICATION REQUIRED
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <form onSubmit={handleSubmit} className="p-6 space-y-4">
+                    {/* Status Messages */}
                     {error && (
-                        <div className="bg-red-500/10 border border-red-500/50 text-red-400 px-4 py-3 rounded-md text-sm">
-                            {error}
+                        <div className="bg-[#1A1A1F] border border-[#EF4444] p-3">
+                            <div className="flex items-start gap-2 font-['JetBrains_Mono',monospace] text-xs text-[#EF4444]">
+                                <span className="mt-0.5">⚠</span>
+                                <span>{error}</span>
+                            </div>
                         </div>
                     )}
                     {success && (
-                        <div className="bg-green-500/10 border border-green-500/50 text-green-400 px-4 py-3 rounded-md text-sm">
-                            {success}
+                        <div className="bg-[#1A1A1F] border border-[#10B981] p-3">
+                            <div className="flex items-start gap-2 font-['JetBrains_Mono',monospace] text-xs text-[#10B981]">
+                                <span className="mt-0.5">✓</span>
+                                <span>{success}</span>
+                            </div>
                         </div>
                     )}
 
+                    {/* Email Input */}
                     <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
+                        <label
+                            htmlFor="email"
+                            className="block text-[#F8FAFC] font-['Orbitron',sans-serif] text-xs uppercase tracking-[0.1em] font-semibold"
+                        >
+                            // USER_EMAIL
+                        </label>
                         <div className="relative">
-                            <Input
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">
+                                @
+                            </span>
+                            <input
                                 id="email"
                                 type="email"
-                                placeholder=""
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
-                                className="pl-10"
+                                placeholder="user@university.edu"
+                                className="w-full bg-[#1A1A1F] border border-[#334155] text-white pl-8 pr-4 py-2.5 font-['JetBrains_Mono',monospace] text-sm focus:outline-none focus:border-white transition-colors placeholder:text-[#475569]"
                             />
-                            <svg
-                                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-                            </svg>
                         </div>
                     </div>
 
+                    {/* Password Input */}
                     <div className="space-y-2">
-                        <Label htmlFor="password">Password</Label>
+                        <label
+                            htmlFor="password"
+                            className="block text-[#F8FAFC] font-['Orbitron',sans-serif] text-xs uppercase tracking-[0.1em] font-semibold"
+                        >
+                            // USER_PASSWORD
+                        </label>
                         <div className="relative">
-                            <Input
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">
+                                #
+                            </span>
+                            <input
                                 id="password"
                                 type={showPassword ? 'text' : 'password'}
-                                placeholder=""
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
-                                className="pl-10 pr-10"
+                                placeholder="••••••••••••"
+                                className="w-full bg-[#1A1A1F] border border-[#334155] text-white pl-8 pr-12 py-2.5 font-['JetBrains_Mono',monospace] text-sm focus:outline-none focus:border-white transition-colors placeholder:text-[#475569]"
                             />
-                            <svg
-                                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                            </svg>
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-white transition-colors"
                             >
                                 {showPassword ? (
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -157,60 +180,73 @@ function SignInContent() {
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                            <input
-                                id="remember"
-                                type="checkbox"
-                                checked={rememberMe}
-                                onChange={(e) => setRememberMe(e.target.checked)}
-                                className="w-4 h-4 rounded border-gray-300"
-                            />
-                            <Label htmlFor="remember" className="text-sm font-normal cursor-pointer">
-                                Remember me
-                            </Label>
-                        </div>
-                        <Link href="/auth/forgot-password" className="text-sm text-primary hover:underline">
-                            Forgot password?
+                    {/* Options */}
+                    <div className="flex items-center justify-between pt-2">
+                        <Link
+                            href="/auth/forgot-password"
+                            className="text-[#94A3B8] hover:text-white text-xs font-['JetBrains_Mono',monospace] transition-colors"
+                        >
+                            [RESET_PASSWORD]
                         </Link>
                     </div>
-                </CardContent>
 
-                <CardFooter className="flex flex-col space-y-4">
-                    <Button
-                        type="submit"
-                        variant="gradient"
-                        className="w-full"
-                        disabled={loading}
-                    >
-                        {loading ? 'Signing in...' : 'Sign In'}
-                    </Button>
+                    {/* Submit Button */}
+                    <div className="pt-4">
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full bg-white text-black py-3 font-['Orbitron',sans-serif] font-bold text-sm uppercase tracking-[0.15em] hover:bg-[#E5E5E5] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {loading ? '> AUTHENTICATING...' : '> EXECUTE LOGIN'}
+                        </button>
+                    </div>
 
-                    <div className="relative">
+                    {/* Divider */}
+                    <div className="relative py-4">
                         <div className="absolute inset-0 flex items-center">
-                            <span className="w-full border-t border-muted" />
+                            <div className="w-full border-t border-[#1E293B]"></div>
                         </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-card px-2 text-muted-foreground">or</span>
+                        <div className="relative flex justify-center">
+                            <span className="bg-[#0B0B10] px-4 text-[#475569] text-xs font-['JetBrains_Mono',monospace]">
+                                OR
+                            </span>
                         </div>
                     </div>
 
-                    <p className="text-center text-sm text-muted-foreground">
-                        Don&apos;t have an account?{' '}
-                        <Link href="/auth/signup" className="text-primary hover:underline font-medium">
-                            Sign up
-                        </Link>
-                    </p>
-                </CardFooter>
-            </form>
-        </Card>
+                    {/* Sign Up Link */}
+                    <div className="text-center">
+                        <p className="text-[#94A3B8] text-xs font-['JetBrains_Mono',monospace]">
+                            NEW USER?{' '}
+                            <Link
+                                href="/auth/signup"
+                                className="text-white hover:underline font-semibold"
+                            >
+                                [CREATE_ACCOUNT]
+                            </Link>
+                        </p>
+                    </div>
+                </form>
+
+                {/* Terminal Footer */}
+                <div className="bg-[#1A1A1F] border-t border-[#1E293B] px-6 py-3">
+                    <div className="flex items-center justify-between font-['JetBrains_Mono',monospace] text-[10px] text-[#64748B]">
+                        <span>SECURE CONNECTION: TLS 1.3 | ENCRYPTED</span>
+                        <span>© 2026 CHST RESEARCH CENTRE</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 }
 
 export default function SignInPage() {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4">
-            <Suspense fallback={<div>Loading...</div>}>
+        <div className="min-h-screen flex items-center justify-center bg-[#0B0B10] p-4">
+            <Suspense fallback={
+                <div className="text-white font-['JetBrains_Mono',monospace] text-sm">
+                    [LOADING_SYSTEM...]
+                </div>
+            }>
                 <SignInContent />
             </Suspense>
         </div>

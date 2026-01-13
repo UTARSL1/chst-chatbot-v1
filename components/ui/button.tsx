@@ -17,7 +17,8 @@ const buttonVariants = cva(
                     "bg-secondary text-secondary-foreground hover:bg-secondary/80",
                 ghost: "hover:bg-accent hover:text-accent-foreground",
                 link: "text-primary underline-offset-4 hover:underline",
-                gradient: "gradient-primary text-white hover:opacity-90",
+                gradient: "bg-white text-black hover:bg-[#E5E5E5] font-['Orbitron',sans-serif] font-bold uppercase tracking-[0.15em]",
+                terminal: "bg-white text-black hover:bg-[#E5E5E5] font-['Orbitron',sans-serif] font-bold uppercase tracking-[0.15em] rounded-none",
             },
             size: {
                 default: "h-10 px-4 py-2",

@@ -140,17 +140,17 @@ export default function PopularQuestionsAdmin() {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-white mb-2">Quick Start Questions</h1>
-                    <p className="text-gray-400">Manage common questions displayed to users based on their role.</p>
+                    <h1 className="text-2xl font-bold text-[#3B82F6] mb-2 font-['Orbitron',sans-serif] uppercase tracking-[0.1em]">QUICK START QUERIES</h1>
+                    <p className="text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">// MANAGE_COMMON_QUERIES_BY_USER_ROLE</p>
                 </div>
-                <Button onClick={() => setShowAddModal(true)} variant="gradient">
-                    + Add Question
+                <Button onClick={() => setShowAddModal(true)} className="bg-[#3B82F6] hover:bg-[#2563EB] font-['Orbitron',sans-serif] uppercase tracking-wide text-sm">
+                    + ADD QUERY
                 </Button>
             </div>
 
             <Card className="bg-gray-900/50 border-white/10 backdrop-blur-xl">
                 <CardHeader>
-                    <CardTitle className="text-white">Questions List</CardTitle>
+                    <CardTitle className="text-white font-['Orbitron',sans-serif] uppercase tracking-wide">Queries List</CardTitle>
                 </CardHeader>
                 <CardContent>
                     {loading ? (
@@ -164,11 +164,11 @@ export default function PopularQuestionsAdmin() {
                             {questions.map((q) => (
                                 <div key={q.id} className="flex items-center justify-between p-4 rounded-lg bg-white/5 border border-white/10">
                                     <div className="flex items-center gap-4">
-                                        <div className="p-2 rounded-full bg-violet-500/20 text-violet-400">
+                                        <div className="p-2 rounded-full bg-[#3B82F6]/20 text-[#3B82F6]">
                                             <HelpCircle className="w-5 h-5" />
                                         </div>
                                         <div>
-                                            <h3 className="font-medium text-white">{q.question}</h3>
+                                            <h3 className="font-medium text-white font-['Orbitron',sans-serif]">{q.question}</h3>
                                             <div className="flex gap-2 mt-2">
                                                 {q.roles.map(role => (
                                                     <span key={role} className="text-xs px-2 py-0.5 rounded-full bg-gray-800 text-gray-300 capitalize">
@@ -202,11 +202,11 @@ export default function PopularQuestionsAdmin() {
             {showAddModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                     <div className="bg-gray-900 border border-white/10 p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
-                        <h2 className="text-xl font-bold text-white mb-4">New Question</h2>
+                        <h2 className="text-xl font-bold text-[#3B82F6] mb-4 font-['Orbitron',sans-serif] uppercase tracking-wide">NEW QUERY</h2>
 
                         <div className="space-y-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-300">Question Text</label>
+                                <label className="text-sm font-medium text-gray-300 font-['Orbitron',sans-serif] uppercase tracking-wide">Query Text</label>
                                 <Input
                                     value={newQuestion.question}
                                     onChange={(e) => setNewQuestion({ ...newQuestion, question: e.target.value })}
@@ -245,8 +245,8 @@ export default function PopularQuestionsAdmin() {
                             </div>
 
                             <div className="flex gap-2 mt-6">
-                                <Button onClick={handleAddQuestion} className="flex-1 bg-violet-600 hover:bg-violet-700 text-white">
-                                    Save Question
+                                <Button onClick={handleAddQuestion} className="flex-1 bg-[#3B82F6] hover:bg-[#2563EB] text-white font-['Orbitron',sans-serif] uppercase tracking-wide text-sm">
+                                    SAVE
                                 </Button>
                                 <Button onClick={() => setShowAddModal(false)} variant="outline" className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800">
                                     Cancel
@@ -261,11 +261,11 @@ export default function PopularQuestionsAdmin() {
             {editingQuestion && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                     <div className="bg-gray-900 border border-white/10 p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
-                        <h2 className="text-xl font-bold text-white mb-4">Edit Question</h2>
+                        <h2 className="text-xl font-bold text-[#3B82F6] mb-4 font-['Orbitron',sans-serif] uppercase tracking-wide">EDIT QUERY</h2>
 
                         <div className="space-y-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-300">Question Text</label>
+                                <label className="text-sm font-medium text-gray-300 font-['Orbitron',sans-serif] uppercase tracking-wide">Query Text</label>
                                 <Input
                                     value={editingQuestion.question}
                                     onChange={(e) => setEditingQuestion({ ...editingQuestion, question: e.target.value })}
@@ -303,8 +303,8 @@ export default function PopularQuestionsAdmin() {
                             </div>
 
                             <div className="flex gap-2 mt-6">
-                                <Button onClick={handleEditQuestion} className="flex-1 bg-violet-600 hover:bg-violet-700 text-white">
-                                    Save Changes
+                                <Button onClick={handleEditQuestion} className="flex-1 bg-[#3B82F6] hover:bg-[#2563EB] text-white font-['Orbitron',sans-serif] uppercase tracking-wide text-sm">
+                                    SAVE
                                 </Button>
                                 <Button onClick={() => setEditingQuestion(null)} variant="outline" className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800">
                                     Cancel

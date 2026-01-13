@@ -290,53 +290,53 @@ export default function RCGrantPage() {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-gray-900">
-                <div className="text-lg text-gray-300">Loading...</div>
+            <div className="flex items-center justify-center min-h-screen bg-[#0B0B10]">
+                <div className="text-lg text-[#94A3B8] font-['JetBrains_Mono',monospace]">LOADING...</div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-slate-950 p-6">
+        <div className="min-h-screen bg-[#0B0B10] p-6">
             <div className="max-w-7xl mx-auto">
                 {/* Back Link */}
                 <div className="mb-6">
-                    <Link href="/chat" className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
+                    <Link href="/chat" className="inline-flex items-center gap-2 text-[#94A3B8] hover:text-white transition-colors font-['JetBrains_Mono',monospace] text-sm uppercase tracking-wide">
                         <ArrowLeft size={20} />
-                        <span>Back to Chat</span>
+                        <span>// BACK_TO_CHAT</span>
                     </Link>
                 </div>
 
                 {/* Header */}
                 <div className="mb-6">
-                    <h1 className="text-3xl font-bold text-[#818cf8] mb-2">
-                        RC Members Grant Analysis
+                    <h1 className="text-2xl font-bold text-[#3B82F6] font-['Orbitron',sans-serif] uppercase tracking-[0.1em] mb-2">
+                        RC GRANTS DASHBOARD
                     </h1>
-                    <p className="text-gray-300">
-                        Track research grants, funding amounts, and project roles for research centre members
+                    <p className="text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">
+                        // TRACK_RESEARCH_GRANTS_AND_FUNDING
                     </p>
                 </div>
 
                 {/* Tabs */}
-                <div className="mb-8 border-b border-white/10">
+                <div className="mb-8 border-b border-[#334155]">
                     <div className="flex gap-1">
                         <button
                             onClick={() => setActiveTab('members')}
-                            className={`px-6 py-3 font-medium transition-all ${activeTab === 'members'
-                                ? 'text-blue-400 border-b-2 border-blue-400'
-                                : 'text-gray-400 hover:text-gray-300'
+                            className={`px-6 py-3 font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-[0.1em] transition-all ${activeTab === 'members'
+                                    ? 'text-white border-b-2 border-white'
+                                    : 'text-[#64748B] hover:text-[#94A3B8]'
                                 }`}
                         >
-                            Members
+                            MEMBERS
                         </button>
                         <button
                             onClick={() => setActiveTab('overview')}
-                            className={`px-6 py-3 font-medium transition-all ${activeTab === 'overview'
-                                ? 'text-blue-400 border-b-2 border-blue-400'
-                                : 'text-gray-400 hover:text-gray-300'
+                            className={`px-6 py-3 font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-[0.1em] transition-all ${activeTab === 'overview'
+                                    ? 'text-white border-b-2 border-white'
+                                    : 'text-[#64748B] hover:text-[#94A3B8]'
                                 }`}
                         >
-                            RC Overview
+                            RC_OVERVIEW
                         </button>
                     </div>
                 </div>

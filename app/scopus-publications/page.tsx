@@ -256,7 +256,10 @@ export default function ScopusPublicationsPage() {
             staffWithPublications,
             totalPublications,
             publicationsByYear,
-            averagePerStaff: filteredStaff.length > 0 ? (totalPublications / filteredStaff.length).toFixed(2) : '0.00'
+            // Fixed: Divide by number of years to get average per staff per year
+            averagePerStaff: filteredStaff.length > 0 && selectedYears.length > 0
+                ? (totalPublications / filteredStaff.length / selectedYears.length).toFixed(2)
+                : '0.00'
         };
     }, [staffMembers, selectedYears, hasAccess]);
 
@@ -269,24 +272,24 @@ export default function ScopusPublicationsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-950 p-6 print:p-2 print:bg-white">
+        <div className="min-h-screen bg-[#0B0B10] p-6 print:p-2 print:bg-white">
             <div className="max-w-7xl mx-auto">
                 {/* Back Link */}
                 <div className="mb-6 print:hidden">
-                    <Link href="/chat" className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
+                    <Link href="/chat" className="inline-flex items-center gap-2 text-[#94A3B8] hover:text-white transition-colors font-['JetBrains_Mono',monospace] text-sm uppercase tracking-wide">
                         <ArrowLeft size={20} />
-                        <span>Back to Chat</span>
+                        <span>// BACK_TO_CHAT</span>
                     </Link>
                 </div>
 
                 {/* Header */}
                 <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-[#818cf8] mb-2">
-                            Scopus Publications Dashboard
+                        <h1 className="text-2xl font-bold text-[#3B82F6] font-['Orbitron',sans-serif] uppercase tracking-[0.1em] mb-2">
+                            SCOPUS PUBLICATIONS DASHBOARD
                         </h1>
-                        <p className="text-gray-300">
-                            View and analyze Scopus publication data by faculty and department
+                        <p className="text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">
+                            // VIEW_AND_ANALYZE_SCOPUS_DATA
                         </p>
                     </div>
 
@@ -302,14 +305,14 @@ export default function ScopusPublicationsPage() {
                             {isChairperson ? (
                                 <button
                                     onClick={() => setShowAccessModal(true)}
-                                    className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-blue-300 transition-colors"
+                                    className="flex items-center gap-2 px-4 py-2 bg-white text-black hover:bg-[#E5E5E5] font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-[0.15em] transition-colors"
                                 >
                                     <Shield className="w-4 h-4" />
-                                    Manage Access
+                                    [MANAGE_ACCESS]
                                 </button>
                             ) : (
-                                <span className="flex items-center gap-2 px-3 py-1 bg-green-900/30 text-green-400 border border-green-800 rounded-full text-xs">
-                                    <Lock className="w-3 h-3" /> Access Granted
+                                <span className="flex items-center gap-2 px-3 py-1 bg-[#10B981] text-black font-['JetBrains_Mono',monospace] text-xs uppercase tracking-wide">
+                                    <Lock className="w-3 h-3" /> [ACCESS_GRANTED]
                                 </span>
                             )}
                         </div>
@@ -319,34 +322,34 @@ export default function ScopusPublicationsPage() {
                 {/* Faculty and Department Selection */}
                 <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4 print:hidden">
                     {/* Faculty Dropdown */}
-                    <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-4 shadow-[0_0_15px_rgba(255,255,255,0.07)]">
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                    <div className="bg-[#1A1A1F] border border-[#334155] p-4">
+                        <label className="block text-xs font-bold text-white font-['Orbitron',sans-serif] uppercase tracking-[0.1em] mb-2">
                             <Building2 className="inline w-4 h-4 mr-2" />
-                            Faculty
+                            // FACULTY
                         </label>
                         <div className="relative">
                             <select
                                 value={selectedFaculty}
                                 onChange={(e) => setSelectedFaculty(e.target.value)}
-                                className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer"
+                                className="w-full px-4 py-3 bg-[#0B0B10] border border-[#334155] text-white font-['JetBrains_Mono',monospace] text-sm focus:outline-none focus:border-white appearance-none cursor-pointer"
                             >
                                 <option value="LKC FES">LKC FES - Lee Kong Chian Faculty of Engineering and Science</option>
                             </select>
-                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#94A3B8] pointer-events-none" />
                         </div>
                     </div>
 
                     {/* Department Dropdown */}
-                    <div className="bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-4 shadow-[0_0_15px_rgba(255,255,255,0.07)]">
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                    <div className="bg-[#1A1A1F] border border-[#334155] p-4">
+                        <label className="block text-xs font-bold text-white font-['Orbitron',sans-serif] uppercase tracking-[0.1em] mb-2">
                             <Users className="inline w-4 h-4 mr-2" />
-                            Department ({departments.length} available)
+                            // DEPARTMENT ({departments.length})
                         </label>
                         <div className="relative">
                             <select
                                 value={selectedDepartment}
                                 onChange={(e) => setSelectedDepartment(e.target.value)}
-                                className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer"
+                                className="w-full px-4 py-3 bg-[#0B0B10] border border-[#334155] text-white font-['JetBrains_Mono',monospace] text-sm focus:outline-none focus:border-white appearance-none cursor-pointer"
                                 disabled={departments.length === 0}
                             >
                                 {departments.map(dept => (
@@ -355,7 +358,7 @@ export default function ScopusPublicationsPage() {
                                     </option>
                                 ))}
                             </select>
-                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#94A3B8] pointer-events-none" />
                         </div>
                     </div>
                 </div>
@@ -382,10 +385,10 @@ export default function ScopusPublicationsPage() {
                         ) : (
                             <>
                                 {/* Year Selection */}
-                                <div className="mb-6 bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-4 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:hidden">
-                                    <label className="block text-sm font-medium text-gray-300 mb-3">
+                                <div className="mb-6 bg-[#1A1A1F] border border-[#334155] p-4 print:hidden">
+                                    <label className="block text-xs font-bold text-white font-['Orbitron',sans-serif] uppercase tracking-[0.1em] mb-3">
                                         <BarChart3 className="inline w-4 h-4 mr-2" />
-                                        Select Years to Analyze
+                                        // SELECT_YEARS
                                     </label>
                                     <div className="flex gap-3">
                                         {[2023, 2024, 2025].map(year => (
@@ -394,60 +397,60 @@ export default function ScopusPublicationsPage() {
                                                     type="checkbox"
                                                     checked={selectedYears.includes(year)}
                                                     onChange={() => toggleYear(year)}
-                                                    className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
+                                                    className="w-4 h-4 bg-[#0B0B10] border-[#334155] text-white focus:ring-0"
                                                 />
-                                                <span className="text-white font-medium">{year}</span>
+                                                <span className="text-white font-['JetBrains_Mono',monospace] font-medium text-sm">{year}</span>
                                             </label>
                                         ))}
                                     </div>
                                     {selectedYears.length === 0 && (
-                                        <p className="mt-2 text-sm text-amber-400">Please select at least one year</p>
+                                        <p className="mt-2 text-xs text-[#F59E0B] font-['JetBrains_Mono',monospace]">[ERROR] SELECT_AT_LEAST_ONE_YEAR</p>
                                     )}
                                 </div>
 
                                 {/* Tabs */}
                                 {selectedYears.length > 0 && (
                                     <>
-                                        <div className="mb-8 border-b border-white/10 print:hidden">
+                                        <div className="mb-8 border-b border-[#334155] print:hidden">
                                             <div className="flex gap-1">
                                                 <button
                                                     onClick={() => { setActiveTab('individual'); setShowingSubGroup(false); }}
-                                                    className={`px-6 py-3 font-medium transition-all ${activeTab === 'individual' && !showingSubGroup
-                                                        ? 'text-blue-400 border-b-2 border-blue-400'
-                                                        : 'text-gray-400 hover:text-gray-300'
+                                                    className={`px-6 py-3 font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-[0.1em] transition-all ${activeTab === 'individual' && !showingSubGroup
+                                                        ? 'text-white border-b-2 border-white'
+                                                        : 'text-[#64748B] hover:text-[#94A3B8]'
                                                         }`}
                                                 >
-                                                    Individual Staff
+                                                    INDIVIDUAL_STAFF
                                                 </button>
                                                 {showingSubGroup && (
                                                     <button
                                                         onClick={() => setActiveTab('individual')}
-                                                        className={`px-6 py-3 font-medium transition-all ${showingSubGroup
-                                                            ? 'text-emerald-400 border-b-2 border-emerald-400'
-                                                            : 'text-gray-400 hover:text-gray-300'
+                                                        className={`px-6 py-3 font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-[0.1em] transition-all ${showingSubGroup
+                                                            ? 'text-white border-b-2 border-white'
+                                                            : 'text-[#64748B] hover:text-[#94A3B8]'
                                                             }`}
                                                     >
                                                         <Users className="inline w-4 h-4 mr-2" />
-                                                        Sub-group Analysis ({selectedStaffIds.length})
+                                                        SUB-GROUP ({selectedStaffIds.length})
                                                     </button>
                                                 )}
                                                 <button
                                                     onClick={() => setActiveTab('department')}
-                                                    className={`px-6 py-3 font-medium transition-all ${activeTab === 'department'
-                                                        ? 'text-blue-400 border-b-2 border-blue-400'
-                                                        : 'text-gray-400 hover:text-gray-300'
+                                                    className={`px-6 py-3 font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-[0.1em] transition-all ${activeTab === 'department'
+                                                        ? 'text-white border-b-2 border-white'
+                                                        : 'text-[#64748B] hover:text-[#94A3B8]'
                                                         }`}
                                                 >
-                                                    Department Overview
+                                                    DEPARTMENT_OVERVIEW
                                                 </button>
                                                 <button
                                                     onClick={() => setActiveTab('faculty')}
-                                                    className={`px-6 py-3 font-medium transition-all ${activeTab === 'faculty'
-                                                        ? 'text-blue-400 border-b-2 border-blue-400'
-                                                        : 'text-gray-400 hover:text-gray-300'
+                                                    className={`px-6 py-3 font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-[0.1em] transition-all ${activeTab === 'faculty'
+                                                        ? 'text-white border-b-2 border-white'
+                                                        : 'text-[#64748B] hover:text-[#94A3B8]'
                                                         }`}
                                                 >
-                                                    Faculty Overview
+                                                    FACULTY_OVERVIEW
                                                 </button>
                                             </div>
                                         </div>
@@ -456,10 +459,10 @@ export default function ScopusPublicationsPage() {
                                         {activeTab === 'individual' && (
                                             <>
                                                 {/* Column Selection for Individual Staff */}
-                                                <div className="mb-6 bg-slate-900/80 backdrop-blur-xl rounded-lg border border-white/20 p-4 shadow-[0_0_15px_rgba(255,255,255,0.07)] print:hidden">
-                                                    <label className="block text-sm font-medium text-gray-300 mb-3">
+                                                <div className="mb-6 bg-[#1A1A1F] border border-[#334155] p-4 print:hidden">
+                                                    <label className="block text-xs font-bold text-white font-['Orbitron',sans-serif] uppercase tracking-[0.1em] mb-3">
                                                         <Users className="inline w-4 h-4 mr-2" />
-                                                        Select Columns to Display
+                                                        // SELECT_COLUMNS
                                                     </label>
                                                     <div className="flex flex-wrap gap-3">
                                                         <label className="flex items-center gap-2 cursor-pointer">
@@ -473,9 +476,9 @@ export default function ScopusPublicationsPage() {
                                                                         setVisibleColumns(visibleColumns.filter(c => c !== 'scopusId'));
                                                                     }
                                                                 }}
-                                                                className="w-4 h-4 rounded border-gray-600 bg-slate-800 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900"
+                                                                className="w-4 h-4 bg-[#0B0B10] border-[#334155] text-white focus:ring-0"
                                                             />
-                                                            <span className="text-sm text-gray-300">Scopus ID</span>
+                                                            <span className="text-sm text-[#94A3B8] font-['JetBrains_Mono',monospace]">Scopus ID</span>
                                                         </label>
                                                         <label className="flex items-center gap-2 cursor-pointer group">
                                                             <input
@@ -1112,8 +1115,8 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
         staff.scopusAuthorId && staff.scopusAuthorId !== 'NA'
     ).length;
 
-    const averagePerStaff = staffWithScopusCount > 0
-        ? (totalPublications / staffWithScopusCount).toFixed(2)
+    const averagePerStaff = staffWithScopusCount > 0 && selectedYears.length > 0
+        ? (totalPublications / staffWithScopusCount / selectedYears.length).toFixed(2)
         : '0.00';
 
     // Calculate standard deviation of publications across staff with valid Scopus IDs
@@ -1807,7 +1810,10 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                             totalStaff: data.staff.length,
                             staffWithScopus: staffWithScopus.length,
                             totalPublications: totalPubs, // Selected Years
-                            averagePerStaff: staffWithScopus.length > 0 ? (totalPubs / staffWithScopus.length).toFixed(2) : '0.00',
+                            // Fixed: Divide by number of years to get average per staff per year
+                            averagePerStaff: staffWithScopus.length > 0 && selectedYears.length > 0
+                                ? (totalPubs / staffWithScopus.length / selectedYears.length).toFixed(2)
+                                : '0.00',
                             // Lifetime/Total Metrics for Comparison
                             totalLifetimePublications: deptTotalLifePubs,
                             averageLifetimePerStaff: staffWithScopus.length > 0 ? (deptTotalLifePubs / staffWithScopus.length).toFixed(2) : '0.00',
@@ -1918,8 +1924,8 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
     const totalPublications = departmentStats.reduce((acc, curr) => acc + curr.totalPublications, 0);
     const totalFacultyStaff = departmentStats.reduce((acc, curr) => acc + curr.totalStaff, 0);
     const staffWithScopusCount = departmentStats.reduce((acc, curr) => acc + curr.staffWithScopus, 0);
-    const averagePerStaff = staffWithScopusCount > 0
-        ? (totalPublications / staffWithScopusCount).toFixed(2)
+    const averagePerStaff = staffWithScopusCount > 0 && selectedYears.length > 0
+        ? (totalPublications / staffWithScopusCount / selectedYears.length).toFixed(2)
         : '0.00';
 
     const averageLifetimePerStaff = staffWithScopusCount > 0

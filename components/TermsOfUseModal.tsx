@@ -16,69 +16,69 @@ interface TermsOfUseModalProps {
 export function TermsOfUseModal({ open, onOpenChange }: TermsOfUseModalProps) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-[#0B0B10] border-[#334155]">
                 <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">Terms of Use for CHST AI Assistant</DialogTitle>
-                    <DialogDescription>
-                        Universiti Tunku Abdul Rahman – Centre for Healthcare Sciences and Technology (CHST)
+                    <DialogTitle className="text-2xl font-bold text-[#3B82F6] font-['Orbitron',sans-serif] uppercase tracking-[0.1em]">TERMS OF USE</DialogTitle>
+                    <DialogDescription className="text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">
+                        // UTAR_CENTRE_FOR_HEALTHCARE_SCIENCES_AND_TECHNOLOGY
                     </DialogDescription>
                 </DialogHeader>
 
                 <div className="space-y-6 text-sm">
                     <section>
-                        <h3 className="font-bold text-lg mb-2 text-purple-300">ACCEPTANCE OF TERMS</h3>
-                        <p className="text-muted-foreground leading-relaxed">
+                        <h3 className="font-bold text-lg mb-2 text-white font-['Orbitron',sans-serif] uppercase tracking-wide">ACCEPTANCE OF TERMS</h3>
+                        <p className="text-[#94A3B8] leading-relaxed font-['JetBrains_Mono',monospace] text-xs">
                             The use of and access to the CHST R&D Center AI Agent (hereinafter referred to as "this AI Agent") is strictly subject to all the terms and conditions described below. By using, accessing, or continuing to use this AI Agent, you acknowledge that you have read, understood, and agreed to comply fully with all terms and conditions herein contained.
                         </p>
-                        <p className="text-muted-foreground leading-relaxed mt-2">
+                        <p className="text-[#94A3B8] leading-relaxed mt-2 font-['JetBrains_Mono',monospace] text-xs">
                             If you do not accept any of these terms, you must immediately discontinue use of this AI Agent.
                         </p>
                     </section>
 
                     <section>
-                        <h2 className="text-2xl font-bold mb-4">Terms of Use for CHST AI Assistant</h2>
-                        <p className="text-muted-foreground leading-relaxed">
+                        <h2 className="text-xl font-bold mb-4 text-white font-['Orbitron',sans-serif] uppercase tracking-wide">DISCLAIMER</h2>
+                        <p className="text-[#94A3B8] leading-relaxed font-['JetBrains_Mono',monospace] text-xs">
                             This AI Agent is provided on an "as is" and "as available" basis. Universiti Tunku Abdul Rahman (UTAR) and the Centre for Healthcare Sciences and Technology (CHST) make no representation or warranty, whether express or implied, regarding:
                         </p>
-                        <ul className="list-disc pl-6 mt-2 space-y-1 text-muted-foreground">
+                        <ul className="list-disc pl-6 mt-2 space-y-1 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-xs">
                             <li>the accuracy, completeness, reliability, or timeliness of any information generated,</li>
                             <li>the suitability of responses for academic, administrative, research, clinical, or decision-making purposes,</li>
                             <li>or the uninterrupted or error-free availability of this AI Agent.</li>
                         </ul>
-                        <p className="text-muted-foreground leading-relaxed mt-3">
+                        <p className="text-[#94A3B8] leading-relaxed mt-3 font-['JetBrains_Mono',monospace] text-xs">
                             All responses produced by this AI Agent are machine-generated and are intended solely for general guidance, administrative convenience, and internal use. They must not be treated as professional, legal, medical, academic, or research-certified advice.
                         </p>
-                        <p className="text-muted-foreground leading-relaxed mt-3">
+                        <p className="text-[#94A3B8] leading-relaxed mt-3 font-['JetBrains_Mono',monospace] text-xs">
                             UTAR and CHST shall not be liable for any loss, damage, inconvenience, or expense arising directly or indirectly from:
                         </p>
-                        <ul className="list-disc pl-6 mt-2 space-y-1 text-muted-foreground">
+                        <ul className="list-disc pl-6 mt-2 space-y-1 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-xs">
                             <li>reliance on any response or output generated by this AI Agent,</li>
                             <li>technical issues, interruptions, delays, or failures in system access,</li>
                             <li>or damage to hardware, software, or data resulting from the use of this AI Agent.</li>
                         </ul>
-                        <p className="text-muted-foreground leading-relaxed mt-3">
+                        <p className="text-[#94A3B8] leading-relaxed mt-3 font-['JetBrains_Mono',monospace] text-xs">
                             All information produced by this AI Agent is subject to change or modification without prior notice.
                         </p>
                     </section>
 
                     <section>
-                        <h3 className="font-bold text-lg mb-2 text-purple-300">WARRANTIES AND INDEMNITY</h3>
-                        <p className="text-muted-foreground leading-relaxed">
+                        <h3 className="font-bold text-lg mb-2 text-white font-['Orbitron',sans-serif] uppercase tracking-wide">WARRANTIES AND INDEMNITY</h3>
+                        <p className="text-[#94A3B8] leading-relaxed font-['JetBrains_Mono',monospace] text-xs">
                             By using this AI Agent, you unconditionally warrant and undertake that you will not:
                         </p>
-                        <ul className="list-disc pl-6 mt-2 space-y-1 text-muted-foreground">
+                        <ul className="list-disc pl-6 mt-2 space-y-1 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-xs">
                             <li>misuse the AI Agent for any unlawful, unethical, or prohibited purpose;</li>
                             <li>input false, misleading, offensive, defamatory, or harmful content;</li>
                             <li>attempt to reverse engineer, extract, or manipulate the underlying data, system, or model;</li>
                             <li>use the AI Agent to generate content that violates UTAR policies, Malaysian law, or intellectual property rights.</li>
                         </ul>
-                        <p className="text-muted-foreground leading-relaxed mt-3">
+                        <p className="text-[#94A3B8] leading-relaxed mt-3 font-['JetBrains_Mono',monospace] text-xs">
                             If you violate any of these terms, your permission to use this AI Agent shall automatically terminate.
                         </p>
-                        <p className="text-muted-foreground leading-relaxed mt-3">
+                        <p className="text-[#94A3B8] leading-relaxed mt-3 font-['JetBrains_Mono',monospace] text-xs">
                             You agree to indemnify, defend, and hold harmless UTAR, CHST, and its personnel from all claims, losses, damages, costs, and liabilities (including legal fees) arising from:
                         </p>
-                        <ul className="list-disc pl-6 mt-2 space-y-1 text-muted-foreground">
+                        <ul className="list-disc pl-6 mt-2 space-y-1 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-xs">
                             <li>your use or misuse of this AI Agent,</li>
                             <li>your reliance on any AI Agent-generated content,</li>
                             <li>or your breach of any term or condition herein.</li>
@@ -86,11 +86,11 @@ export function TermsOfUseModal({ open, onOpenChange }: TermsOfUseModalProps) {
                     </section>
 
                     <section>
-                        <h3 className="font-bold text-lg mb-2 text-purple-300">PRIVACY AND DATA USAGE</h3>
-                        <p className="text-muted-foreground leading-relaxed">
+                        <h3 className="font-bold text-lg mb-2 text-white font-['Orbitron',sans-serif] uppercase tracking-wide">PRIVACY AND DATA USAGE</h3>
+                        <p className="text-[#94A3B8] leading-relaxed font-['JetBrains_Mono',monospace] text-xs">
                             By interacting with this AI Agent, you consent to the following:
                         </p>
-                        <ul className="list-disc pl-6 mt-2 space-y-1 text-muted-foreground">
+                        <ul className="list-disc pl-6 mt-2 space-y-1 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-xs">
                             <li>Your inputs may be processed, stored, or logged for the purposes of improving system performance, security, research, or administrative recordkeeping.</li>
                             <li>You must not submit confidential, sensitive, personal, or classified information unless explicitly authorised by applicable university policy.</li>
                             <li>CHST and UTAR are not responsible for unintentional disclosure caused by improper user input.</li>
@@ -99,48 +99,48 @@ export function TermsOfUseModal({ open, onOpenChange }: TermsOfUseModalProps) {
                     </section>
 
                     <section>
-                        <h3 className="font-bold text-lg mb-2 text-purple-300">LIMITATION OF USE</h3>
-                        <p className="text-muted-foreground leading-relaxed">
+                        <h3 className="font-bold text-lg mb-2 text-white font-['Orbitron',sans-serif] uppercase tracking-wide">LIMITATION OF USE</h3>
+                        <p className="text-[#94A3B8] leading-relaxed font-['JetBrains_Mono',monospace] text-xs">
                             This AI Agent is intended only for internal academic, research, administrative, and educational use within CHST and UTAR. It shall not be used for:
                         </p>
-                        <ul className="list-disc pl-6 mt-2 space-y-1 text-muted-foreground">
+                        <ul className="list-disc pl-6 mt-2 space-y-1 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-xs">
                             <li>medical diagnosis or treatment decisions,</li>
                             <li>legal or contractual commitments,</li>
                             <li>high-risk or safety-critical applications,</li>
                             <li>or any form of autonomous decision-making without human review.</li>
                         </ul>
-                        <p className="text-muted-foreground leading-relaxed mt-3">
+                        <p className="text-[#94A3B8] leading-relaxed mt-3 font-['JetBrains_Mono',monospace] text-xs">
                             All outputs must be independently reviewed and verified.
                         </p>
                     </section>
 
                     <section>
-                        <h3 className="font-bold text-lg mb-2 text-purple-300">LINKS AND EXTERNAL CONTENT</h3>
-                        <p className="text-muted-foreground leading-relaxed">
+                        <h3 className="font-bold text-lg mb-2 text-white font-['Orbitron',sans-serif] uppercase tracking-wide">LINKS AND EXTERNAL CONTENT</h3>
+                        <p className="text-[#94A3B8] leading-relaxed font-['JetBrains_Mono',monospace] text-xs">
                             Responses generated by this AI Agent may contain references or links to external content, websites, or resources. As UTAR has no control over third-party sites:
                         </p>
-                        <ul className="list-disc pl-6 mt-2 space-y-1 text-muted-foreground">
+                        <ul className="list-disc pl-6 mt-2 space-y-1 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-xs">
                             <li>UTAR does not endorse such sites or guarantee their accuracy, safety, or availability.</li>
                             <li>UTAR shall not be liable for any loss or damage arising from the use of or reliance on such external content.</li>
                         </ul>
                     </section>
 
                     <section>
-                        <h3 className="font-bold text-lg mb-2 text-purple-300">INTELLECTUAL PROPERTY RIGHTS</h3>
-                        <p className="text-muted-foreground leading-relaxed">
+                        <h3 className="font-bold text-lg mb-2 text-white font-['Orbitron',sans-serif] uppercase tracking-wide">INTELLECTUAL PROPERTY RIGHTS</h3>
+                        <p className="text-[#94A3B8] leading-relaxed font-['JetBrains_Mono',monospace] text-xs">
                             All content, prompts, system instructions, and materials within this AI Agent are protected by the Copyright Act 1987 and other applicable laws.
                         </p>
-                        <p className="text-muted-foreground leading-relaxed mt-2">
+                        <p className="text-[#94A3B8] leading-relaxed mt-2 font-['JetBrains_Mono',monospace] text-xs">
                             Users shall not reproduce, distribute, adapt, or transmit any part of this AI Agent or its responses for commercial purposes without prior written permission from UTAR.
                         </p>
-                        <p className="text-muted-foreground leading-relaxed mt-2">
+                        <p className="text-[#94A3B8] leading-relaxed mt-2 font-['JetBrains_Mono',monospace] text-xs">
                             Personal or non-commercial use is permitted, provided that proper acknowledgement is given and no modification is made to the original content.
                         </p>
                     </section>
 
                     <section>
-                        <h3 className="font-bold text-lg mb-2 text-purple-300">MODIFICATION OF TERMS</h3>
-                        <p className="text-muted-foreground leading-relaxed">
+                        <h3 className="font-bold text-lg mb-2 text-white font-['Orbitron',sans-serif] uppercase tracking-wide">MODIFICATION OF TERMS</h3>
+                        <p className="text-[#94A3B8] leading-relaxed font-['JetBrains_Mono',monospace] text-xs">
                             UTAR reserves the right to amend, update, or revise these Terms of Use at any time without prior notice. Your continued use of this AI Agent following such modifications constitutes acceptance of the updated terms.
                         </p>
                     </section>

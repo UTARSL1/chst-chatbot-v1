@@ -57,38 +57,37 @@ export default function UserManualButton() {
 
     const RoleSelector = () => (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-            <div className="bg-gray-900 rounded-lg shadow-xl w-full max-w-md p-6 border border-gray-700">
+            <div className="bg-[#0B0B10] rounded-lg shadow-xl w-full max-w-md p-6 border border-[#334155]">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-2xl font-bold text-white">Select Your Role</h2>
+                    <h2 className="text-xl font-bold text-[#3B82F6] font-['Orbitron',sans-serif] uppercase tracking-[0.1em]">SELECT ROLE</h2>
                     <button
                         onClick={() => setIsOpen(false)}
-                        className="p-2 text-gray-400 hover:text-gray-200 rounded-lg hover:bg-gray-800 transition-colors"
-                    >
+                        className="p-2 text-[#94A3B8] hover:text-white rounded-lg hover:bg-[#1A1A1F] transition-colors">
                         <X className="w-5 h-5" />
                     </button>
                 </div>
-                <p className="text-sm text-gray-300 mb-6">
-                    Choose which user manual you'd like to view:
+                <p className="text-sm text-[#94A3B8] mb-6 font-['JetBrains_Mono',monospace]">
+                    // SELECT_USER_MANUAL_TO_VIEW
                 </p>
                 <div className="space-y-3">
                     {['public', 'student', 'member', 'chairperson'].map((role) => (
                         <button
                             key={role}
                             onClick={() => handleOpenManual(role)}
-                            className="w-full flex items-center justify-between p-4 text-left border-2 border-gray-700 rounded-lg hover:border-blue-500 hover:bg-gray-800 transition-all group"
+                            className="w-full flex items-center justify-between p-4 text-left border-2 border-[#334155] rounded-lg hover:border-white hover:bg-[#1A1A1F] transition-all group"
                         >
                             <div>
-                                <div className="font-semibold text-white group-hover:text-blue-400">
+                                <div className="font-semibold text-white group-hover:text-[#3B82F6] font-['Orbitron',sans-serif] uppercase tracking-wide text-sm">
                                     {getRoleDisplayName(role)}
                                 </div>
-                                <div className="text-sm text-gray-400">
-                                    {role === 'public' && 'Basic features and getting started'}
-                                    {role === 'student' && 'All tools and academic support'}
-                                    {role === 'member' && 'Research tools and JCR metrics'}
-                                    {role === 'chairperson' && 'Admin dashboard and technical docs'}
+                                <div className="text-xs text-[#94A3B8] font-['JetBrains_Mono',monospace] mt-1">
+                                    {role === 'public' && '// BASIC_FEATURES_AND_GETTING_STARTED'}
+                                    {role === 'student' && '// ALL_TOOLS_AND_ACADEMIC_SUPPORT'}
+                                    {role === 'member' && '// RESEARCH_TOOLS_AND_JCR_METRICS'}
+                                    {role === 'chairperson' && '// ADMIN_DASHBOARD_AND_TECHNICAL_DOCS'}
                                 </div>
                             </div>
-                            <BookOpen className="w-5 h-5 text-gray-500 group-hover:text-blue-400" />
+                            <BookOpen className="w-5 h-5 text-[#64748B] group-hover:text-[#3B82F6]" />
                         </button>
                     ))}
                 </div>
@@ -117,60 +116,60 @@ export default function UserManualButton() {
 
             {isOpen && (isAuthenticated || selectedRole) && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-                    <div className="bg-gray-900 rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col border border-gray-700">
-                        <div className="flex items-center justify-between p-6 border-b border-gray-700">
+                    <div className="bg-[#0B0B10] rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col border border-[#334155]">
+                        <div className="flex items-center justify-between p-6 border-b border-[#334155]">
                             <div>
-                                <h2 className="text-2xl font-bold text-white">User Manual</h2>
-                                <p className="text-sm text-gray-400 mt-1">
-                                    {getRoleDisplayName(selectedRole || userRole || 'public')} Guide
+                                <h2 className="text-xl font-bold text-[#3B82F6] font-['Orbitron',sans-serif] uppercase tracking-[0.1em]">USER MANUAL</h2>
+                                <p className="text-sm text-[#94A3B8] mt-1 font-['JetBrains_Mono',monospace]">
+                                    // {getRoleDisplayName(selectedRole || userRole || 'public').toUpperCase().replace(/ /g, '_')}_GUIDE
                                 </p>
                             </div>
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={handleDownload}
-                                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all shadow-md"
+                                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[#3B82F6] hover:bg-[#2563EB] rounded-lg transition-all shadow-md font-['Orbitron',sans-serif] uppercase tracking-wide"
                                 >
                                     <Download className="w-4 h-4" />
-                                    Download
+                                    DOWNLOAD
                                 </button>
                                 <button
                                     onClick={() => {
                                         setIsOpen(false);
                                         setSelectedRole(null);
                                     }}
-                                    className="p-2 text-gray-400 hover:text-gray-200 rounded-lg hover:bg-gray-800 transition-colors"
+                                    className="p-2 text-[#94A3B8] hover:text-white rounded-lg hover:bg-[#1A1A1F] transition-colors"
                                 >
                                     <X className="w-5 h-5" />
                                 </button>
                             </div>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto p-6 bg-gray-900">
+                        <div className="flex-1 overflow-y-auto p-6 bg-[#0B0B10]">
                             {isLoading && (
                                 <div className="flex items-center justify-center py-12">
-                                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#3B82F6]"></div>
                                 </div>
                             )}
 
                             {error && (
-                                <div className="bg-red-900/30 border border-red-700 rounded-lg p-4 text-red-300">
+                                <div className="bg-red-900/30 border border-red-700 rounded-lg p-4 text-red-300 font-['JetBrains_Mono',monospace]">
                                     {error}
                                 </div>
                             )}
 
                             {!isLoading && !error && manualContent && (
-                                <div className="prose prose-invert max-w-none text-gray-300">
+                                <div className="prose prose-invert max-w-none text-[#94A3B8]">
                                     <ReactMarkdown
                                         components={{
                                             h1: ({ children }) => {
                                                 const text = String(children);
                                                 const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-                                                return <h1 id={id} className="text-3xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 bg-clip-text text-transparent border-b-2 border-purple-600 pb-2 mt-8 mb-4">{children}</h1>;
+                                                return <h1 id={id} className="text-2xl font-bold text-[#3B82F6] font-['Orbitron',sans-serif] uppercase tracking-[0.1em] border-b-2 border-[#334155] pb-2 mt-8 mb-4">{children}</h1>;
                                             },
                                             h2: ({ children }) => {
                                                 const text = String(children);
                                                 const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-                                                return <h2 id={id} className="text-2xl font-bold text-purple-300 border-b border-purple-700 pb-2 mt-6 mb-3">{children}</h2>;
+                                                return <h2 id={id} className="text-xl font-bold text-white font-['Orbitron',sans-serif] uppercase tracking-wide border-b border-[#334155] pb-2 mt-6 mb-3">{children}</h2>;
                                             },
                                             h3: ({ children }) => {
                                                 const text = String(children);
@@ -243,18 +242,18 @@ export default function UserManualButton() {
                             )}
                         </div>
 
-                        <div className="flex items-center justify-between p-6 border-t border-gray-700 bg-gray-800">
-                            <p className="text-sm text-gray-400">
-                                Last updated: December 2025
+                        <div className="flex items-center justify-between p-6 border-t border-[#334155] bg-[#1A1A1F]">
+                            <p className="text-sm text-[#94A3B8] font-['JetBrains_Mono',monospace]">
+                                // LAST_UPDATED: DECEMBER_2025
                             </p>
                             <button
                                 onClick={() => {
                                     setIsOpen(false);
                                     setSelectedRole(null);
                                 }}
-                                className="px-4 py-2 text-sm font-medium text-gray-300 bg-gray-700 border border-gray-600 rounded-lg hover:bg-gray-600 transition-colors"
+                                className="px-4 py-2 text-sm font-medium text-white bg-[#1A1A1F] border border-[#334155] rounded-lg hover:bg-[#0B0B10] transition-colors font-['Orbitron',sans-serif] uppercase tracking-wide"
                             >
-                                Close
+                                CLOSE
                             </button>
                         </div>
                     </div>

@@ -124,11 +124,11 @@ export default function KnowledgeBasePage() {
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">
-                        Knowledge Base
+                    <h1 className="text-2xl font-bold text-[#3B82F6] mb-2 font-['Orbitron',sans-serif] uppercase tracking-[0.1em]">
+                        KNOWLEDGE BASE
                     </h1>
-                    <p className="text-slate-400">
-                        Curate authoritative answers with direct document links
+                    <p className="text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">
+                        // CURATE_AUTHORITATIVE_ANSWERS_WITH_DOCUMENT_LINKS
                     </p>
                 </div>
 
@@ -179,34 +179,34 @@ export default function KnowledgeBasePage() {
                     {/* Create Button */}
                     <button
                         onClick={() => setShowCreateModal(true)}
-                        className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-lg font-medium flex items-center gap-2 transition-all"
+                        className="px-6 py-3 bg-[#3B82F6] hover:bg-[#2563EB] text-white rounded-lg font-medium flex items-center gap-2 transition-all font-['Orbitron',sans-serif] uppercase tracking-wide text-sm"
                     >
                         <Plus className="w-5 h-5" />
-                        Create New Note
+                        CREATE NOTE
                     </button>
                 </div>
 
                 {/* Stats */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                     <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
-                        <div className="text-slate-400 text-sm mb-1">Total Notes</div>
-                        <div className="text-2xl font-bold text-white">{notes.length}</div>
+                        <div className="text-slate-400 text-sm mb-1 font-['Orbitron',sans-serif] uppercase tracking-wide">Total Notes</div>
+                        <div className="text-2xl font-bold text-white font-['JetBrains_Mono',monospace]">{notes.length}</div>
                     </div>
                     <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
-                        <div className="text-slate-400 text-sm mb-1">Active</div>
-                        <div className="text-2xl font-bold text-green-400">
+                        <div className="text-slate-400 text-sm mb-1 font-['Orbitron',sans-serif] uppercase tracking-wide">Active</div>
+                        <div className="text-2xl font-bold text-green-400 font-['JetBrains_Mono',monospace]">
                             {notes.filter(n => n.isActive).length}
                         </div>
                     </div>
                     <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
-                        <div className="text-slate-400 text-sm mb-1">Departments</div>
-                        <div className="text-2xl font-bold text-blue-400">
+                        <div className="text-slate-400 text-sm mb-1 font-['Orbitron',sans-serif] uppercase tracking-wide">Departments</div>
+                        <div className="text-2xl font-bold text-blue-400 font-['JetBrains_Mono',monospace]">
                             {new Set(notes.map(n => parseMetadata(n.category).department).filter(Boolean)).size}
                         </div>
                     </div>
                     <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
-                        <div className="text-slate-400 text-sm mb-1">Document Types</div>
-                        <div className="text-2xl font-bold text-purple-400">
+                        <div className="text-slate-400 text-sm mb-1 font-['Orbitron',sans-serif] uppercase tracking-wide">Document Types</div>
+                        <div className="text-2xl font-bold text-purple-400 font-['JetBrains_Mono',monospace]">
                             {new Set(notes.map(n => parseMetadata(n.category).documentType).filter(Boolean)).size}
                         </div>
                     </div>
@@ -223,7 +223,7 @@ export default function KnowledgeBasePage() {
                             >
                                 {/* Header */}
                                 <div className="flex items-start justify-between mb-3">
-                                    <h3 className="text-lg font-semibold text-white flex-1 line-clamp-2">
+                                    <h3 className="text-lg font-semibold text-white flex-1 line-clamp-2 font-['Orbitron',sans-serif]">
                                         {note.title}
                                     </h3>
                                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">

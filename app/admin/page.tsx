@@ -106,8 +106,8 @@ export default async function AdminDashboard() {
     return (
         <div className="space-y-8">
             <div>
-                <h1 className="text-3xl font-bold text-white mb-2">Dashboard Overview</h1>
-                <p className="text-gray-400">Welcome back, Chairperson.</p>
+                <h1 className="text-2xl font-bold text-[#3B82F6] mb-2 font-['Orbitron',sans-serif] uppercase tracking-[0.1em]">ADMIN DASHBOARD</h1>
+                <p className="text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">// SYSTEM_OVERVIEW_AND_STATISTICS</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -117,18 +117,18 @@ export default async function AdminDashboard() {
                             className={`backdrop-blur-xl border ${stat.color} bg-gray-900/50 ${stat.clickable ? 'cursor-pointer hover:scale-105 transition-transform' : ''} h-full`}
                         >
                             <CardHeader className="flex flex-row items-center justify-between pb-2">
-                                <CardTitle className="text-sm font-medium text-gray-400">
+                                <CardTitle className="text-sm font-medium text-gray-400 font-['Orbitron',sans-serif] uppercase tracking-wide">
                                     {stat.name}
                                 </CardTitle>
                                 {stat.icon}
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold text-white">{stat.value}</div>
+                                <div className="text-2xl font-bold text-white font-['JetBrains_Mono',monospace]">{stat.value}</div>
                                 {stat.subtitle && (
-                                    <p className="text-xs text-gray-400 mt-1">{stat.subtitle}</p>
+                                    <p className="text-xs text-gray-400 mt-1 font-['JetBrains_Mono',monospace]">{stat.subtitle}</p>
                                 )}
                                 {stat.clickable && stat.value > 0 && (
-                                    <p className="text-xs text-yellow-400 mt-1">Click to review →</p>
+                                    <p className="text-xs text-yellow-400 mt-1 font-['JetBrains_Mono',monospace]">Click to review →</p>
                                 )}
                             </CardContent>
                         </Card>
@@ -151,7 +151,7 @@ export default async function AdminDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <Card className="bg-gray-900/50 border-white/10 backdrop-blur-xl">
                     <CardHeader>
-                        <CardTitle className="text-white">Latest User Messages</CardTitle>
+                        <CardTitle className="text-white font-['Orbitron',sans-serif] uppercase tracking-wide">Latest User Messages</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <LatestMessagesList initialMessages={latestFeedback as any} />
@@ -160,7 +160,7 @@ export default async function AdminDashboard() {
 
                 <Card className="bg-gray-900/50 border-white/10 backdrop-blur-xl">
                     <CardHeader>
-                        <CardTitle className="text-white">System Status</CardTitle>
+                        <CardTitle className="text-white font-['Orbitron',sans-serif] uppercase tracking-wide">System Status</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-4">

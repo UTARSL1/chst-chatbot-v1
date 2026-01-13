@@ -142,9 +142,9 @@ export default function AdminQuickAccessPage() {
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold text-white">Quick Access Management</h1>
-                <Button onClick={() => setShowAddModal(true)} variant="gradient">
-                    + Add Link
+                <h1 className="text-2xl font-bold text-[#3B82F6] font-['Orbitron',sans-serif] uppercase tracking-[0.1em]">QUICK ACCESS MANAGEMENT</h1>
+                <Button onClick={() => setShowAddModal(true)} className="bg-[#3B82F6] hover:bg-[#2563EB] font-['Orbitron',sans-serif] uppercase tracking-wide text-sm">
+                    + ADD LINK
                 </Button>
             </div>
 
@@ -152,28 +152,28 @@ export default function AdminQuickAccessPage() {
             <div className="flex gap-2 border-b border-white/10">
                 <button
                     onClick={() => setActiveTab('others')}
-                    className={`px-4 py-2 text-sm font-medium transition-colors ${activeTab === 'others'
-                            ? 'text-violet-400 border-b-2 border-violet-400'
-                            : 'text-gray-400 hover:text-gray-300'
+                    className={`px-4 py-2 text-sm font-medium transition-colors font-['Orbitron',sans-serif] uppercase tracking-wide ${activeTab === 'others'
+                        ? 'text-[#3B82F6] border-b-2 border-[#3B82F6]'
+                        : 'text-gray-400 hover:text-gray-300'
                         }`}
                 >
-                    Quick Access (Others)
+                    OTHERS
                 </button>
                 <button
                     onClick={() => setActiveTab('rc')}
-                    className={`px-4 py-2 text-sm font-medium transition-colors ${activeTab === 'rc'
-                            ? 'text-violet-400 border-b-2 border-violet-400'
-                            : 'text-gray-400 hover:text-gray-300'
+                    className={`px-4 py-2 text-sm font-medium transition-colors font-['Orbitron',sans-serif] uppercase tracking-wide ${activeTab === 'rc'
+                        ? 'text-[#3B82F6] border-b-2 border-[#3B82F6]'
+                        : 'text-gray-400 hover:text-gray-300'
                         }`}
                 >
-                    Quick Access (RC)
+                    RC
                 </button>
             </div>
 
             <Card className="bg-gray-900/50 border-white/10 backdrop-blur-xl">
                 <CardHeader>
-                    <CardTitle className="text-white">
-                        {activeTab === 'others' ? 'Other Links' : 'RC Links'}
+                    <CardTitle className="text-white font-['Orbitron',sans-serif] uppercase tracking-wide">
+                        {activeTab === 'others' ? 'OTHER LINKS' : 'RC LINKS'}
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -184,11 +184,11 @@ export default function AdminQuickAccessPage() {
                             filteredLinks.map((link) => (
                                 <div key={link.id} className="flex items-center justify-between p-4 rounded-lg bg-white/5 border border-white/10">
                                     <div className="flex items-center gap-4">
-                                        <div className="p-2 rounded-full bg-violet-500/20 text-violet-400">
+                                        <div className="p-2 rounded-full bg-[#3B82F6]/20 text-[#3B82F6]">
                                             <ExternalLink className="w-5 h-5" />
                                         </div>
                                         <div>
-                                            <h3 className="font-medium text-white">{link.name}</h3>
+                                            <h3 className="font-medium text-white font-['Orbitron',sans-serif]">{link.name}</h3>
                                             <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-sm text-gray-400 hover:text-violet-400">
                                                 {link.url}
                                             </a>
@@ -220,8 +220,8 @@ export default function AdminQuickAccessPage() {
             {showAddModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                     <div className="bg-gray-900 border border-white/10 p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
-                        <h2 className="text-xl font-bold text-white mb-4">
-                            Add Link to {activeTab === 'others' ? 'Others' : 'RC'}
+                        <h2 className="text-xl font-bold text-[#3B82F6] mb-4 font-['Orbitron',sans-serif] uppercase tracking-wide">
+                            ADD LINK - {activeTab === 'others' ? 'OTHERS' : 'RC'}
                         </h2>
                         <div className="space-y-4">
                             <div>
@@ -259,8 +259,8 @@ export default function AdminQuickAccessPage() {
                                 </div>
                             </div>
                             <div className="flex gap-2 mt-6">
-                                <Button onClick={handleAddLink} className="flex-1 bg-violet-600 hover:bg-violet-700">
-                                    Add Link
+                                <Button onClick={handleAddLink} className="flex-1 bg-[#3B82F6] hover:bg-[#2563EB] font-['Orbitron',sans-serif] uppercase tracking-wide text-sm">
+                                    SAVE
                                 </Button>
                                 <Button onClick={() => setShowAddModal(false)} variant="outline" className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800">
                                     Cancel
@@ -275,7 +275,7 @@ export default function AdminQuickAccessPage() {
             {editingLink && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                     <div className="bg-gray-900 border border-white/10 p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
-                        <h2 className="text-xl font-bold text-white mb-4">Edit Link</h2>
+                        <h2 className="text-xl font-bold text-[#3B82F6] mb-4 font-['Orbitron',sans-serif] uppercase tracking-wide">EDIT LINK</h2>
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-300 mb-1">Link Name</label>
@@ -310,8 +310,8 @@ export default function AdminQuickAccessPage() {
                                 </div>
                             </div>
                             <div className="flex gap-2 mt-6">
-                                <Button onClick={handleEditLink} className="flex-1 bg-violet-600 hover:bg-violet-700">
-                                    Save Changes
+                                <Button onClick={handleEditLink} className="flex-1 bg-[#3B82F6] hover:bg-[#2563EB] font-['Orbitron',sans-serif] uppercase tracking-wide text-sm">
+                                    SAVE
                                 </Button>
                                 <Button onClick={() => setEditingLink(null)} variant="outline" className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800">
                                     Cancel

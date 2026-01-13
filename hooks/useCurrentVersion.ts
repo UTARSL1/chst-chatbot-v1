@@ -8,9 +8,9 @@ export function useCurrentVersion(updateTitle = false) {
     // Initialize with cached version or fallback
     const [version, setVersion] = useState(() => {
         if (typeof window !== 'undefined') {
-            return localStorage.getItem(VERSION_CACHE_KEY) || 'v2.0';
+            return localStorage.getItem(VERSION_CACHE_KEY) || 'V1.5';
         }
-        return 'v2.0';
+        return 'V1.5';
     });
 
     useEffect(() => {

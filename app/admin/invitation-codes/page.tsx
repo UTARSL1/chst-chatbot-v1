@@ -124,17 +124,17 @@ export default function InvitationCodesPage() {
     return (
         <div className="max-w-6xl mx-auto space-y-6">
             <div>
-                <h1 className="text-3xl font-bold">Invitation Codes</h1>
-                <p className="text-muted-foreground mt-1">
-                    Manage invitation codes for UTAR staff and student signups
+                <h1 className="text-2xl font-bold text-[#3B82F6] font-['Orbitron',sans-serif] uppercase tracking-[0.1em]">INVITATION CODES</h1>
+                <p className="text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm mt-1">
+                    // MANAGE_INVITATION_CODES_FOR_STAFF_AND_STUDENTS
                 </p>
             </div>
 
             {/* Generate Code Section */}
             <Card>
                 <CardHeader>
-                    <CardTitle>Generate New Code</CardTitle>
-                    <CardDescription>Create a new invitation code with an optional remark</CardDescription>
+                    <CardTitle className="font-['Orbitron',sans-serif] uppercase tracking-wide">Generate New Code</CardTitle>
+                    <CardDescription className="font-['JetBrains_Mono',monospace] text-xs">// CREATE_NEW_INVITATION_CODE_WITH_OPTIONAL_REMARK</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div>
@@ -152,8 +152,8 @@ export default function InvitationCodesPage() {
                             Add a note to identify which group or cohort this code is for
                         </p>
                     </div>
-                    <Button onClick={generateCode} disabled={generating} variant="gradient" className="w-full">
-                        {generating ? 'Generating...' : '+ Generate Code'}
+                    <Button onClick={generateCode} disabled={generating} className="w-full bg-[#3B82F6] hover:bg-[#2563EB] font-['Orbitron',sans-serif] uppercase tracking-wide text-sm">
+                        {generating ? 'GENERATING...' : '+ GENERATE CODE'}
                     </Button>
                 </CardContent>
             </Card>
@@ -171,7 +171,7 @@ export default function InvitationCodesPage() {
                             <CardHeader>
                                 <div className="flex justify-between items-start">
                                     <div>
-                                        <CardTitle className="text-2xl font-mono">{code.code}</CardTitle>
+                                        <CardTitle className="text-2xl font-mono font-['JetBrains_Mono',monospace]">{code.code}</CardTitle>
                                         <CardDescription>
                                             Created {new Date(code.createdAt).toLocaleDateString()}
                                             {code.expiresAt && ` • Expires ${new Date(code.expiresAt).toLocaleDateString()}`}

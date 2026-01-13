@@ -48,7 +48,7 @@ export function AdminSidebar() {
             ),
         },
         {
-            name: 'Quick Start Questions',
+            name: 'Quick Start Queries',
             href: '/admin/popular-questions',
             icon: (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -127,8 +127,8 @@ export function AdminSidebar() {
     return (
         <div className="w-64 bg-gray-950 border-r border-gray-800 flex flex-col h-full">
             <div className="p-6">
-                <h1 className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
-                    Admin Panel
+                <h1 className="text-xl font-bold text-[#3B82F6] font-['Orbitron',sans-serif] uppercase tracking-[0.1em]">
+                    ADMIN PANEL
                 </h1>
             </div>
 
@@ -140,9 +140,9 @@ export function AdminSidebar() {
                             key={link.href}
                             href={link.href}
                             className={cn(
-                                'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors',
+                                'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-[\'JetBrains_Mono\',monospace]',
                                 isActive
-                                    ? 'bg-violet-600/10 text-violet-400 border border-violet-600/20'
+                                    ? 'bg-[#3B82F6]/10 text-[#3B82F6] border border-[#3B82F6]/20'
                                     : 'text-gray-400 hover:bg-gray-900 hover:text-gray-200'
                             )}
                         >
@@ -156,7 +156,7 @@ export function AdminSidebar() {
             </nav>
 
             <div className="p-4 border-t border-gray-800">
-                <div className="text-xs text-gray-500 text-center">
+                <div className="text-xs text-gray-500 text-center font-['JetBrains_Mono',monospace]">
                     CHST Chatbot {currentVersion}
                 </div>
             </div>

@@ -117,23 +117,23 @@ export default function SystemPromptPage() {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight">System Prompt Management</h1>
-                    <p className="text-muted-foreground">
-                        Customize the chatbot's instructions and behavior.
+                    <h1 className="text-2xl font-bold tracking-tight text-[#3B82F6] font-['Orbitron',sans-serif] uppercase tracking-[0.1em]">SYSTEM PROMPT</h1>
+                    <p className="text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">
+                        // CUSTOMIZE_CHATBOT_INSTRUCTIONS_AND_BEHAVIOR
                     </p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline" onClick={handleReset}>
+                    <Button variant="outline" onClick={handleReset} className="font-['Orbitron',sans-serif] uppercase tracking-wide text-sm">
                         <RotateCcw className="w-4 h-4 mr-2" />
-                        Reset to Default
+                        RESET
                     </Button>
-                    <Button onClick={handleSave} disabled={saving} variant="gradient">
+                    <Button onClick={handleSave} disabled={saving} className="bg-[#3B82F6] hover:bg-[#2563EB] font-['Orbitron',sans-serif] uppercase tracking-wide text-sm">
                         {saving ? (
                             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                         ) : (
                             <Save className="w-4 h-4 mr-2" />
                         )}
-                        Save Changes
+                        SAVE
                     </Button>
                 </div>
             </div>

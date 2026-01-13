@@ -102,18 +102,18 @@ export default function ModelConfigPage() {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight">AI Model Configuration</h1>
-                    <p className="text-muted-foreground">
-                        Select which OpenAI model to use for chatbot responses.
+                    <h1 className="text-2xl font-bold tracking-tight text-[#3B82F6] font-['Orbitron',sans-serif] uppercase tracking-[0.1em]">MODEL CONFIGURATION</h1>
+                    <p className="text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">
+                        // SELECT_OPENAI_MODEL_FOR_CHATBOT_RESPONSES
                     </p>
                 </div>
-                <Button onClick={handleSave} disabled={saving || selectedModel === activeModel?.modelName} variant="gradient">
+                <Button onClick={handleSave} disabled={saving || selectedModel === activeModel?.modelName} className="bg-[#3B82F6] hover:bg-[#2563EB] font-['Orbitron',sans-serif] uppercase tracking-wide text-sm">
                     {saving ? (
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     ) : (
                         <Save className="w-4 h-4 mr-2" />
                     )}
-                    Save Changes
+                    SAVE
                 </Button>
             </div>
 
@@ -122,8 +122,8 @@ export default function ModelConfigPage() {
                     {/* Current Active Model */}
                     <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
                         <div className="flex items-center gap-2 mb-2">
-                            <Cpu className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                            <h3 className="font-semibold text-blue-800 dark:text-blue-300">Current Active Model</h3>
+                            <Cpu className="w-5 h-5 text-[#3B82F6]" />
+                            <h3 className="font-semibold text-[#3B82F6] font-['Orbitron',sans-serif] uppercase tracking-wide">Current Active Model</h3>
                         </div>
                         <p className="text-lg font-bold text-blue-900 dark:text-blue-200">
                             {activeModel?.displayName || 'None'}
@@ -135,7 +135,7 @@ export default function ModelConfigPage() {
 
                     {/* Model Selection */}
                     <div className="space-y-4">
-                        <label className="text-sm font-medium">Select AI Model</label>
+                        <label className="text-sm font-medium font-['Orbitron',sans-serif] uppercase tracking-wide">Select AI Model</label>
 
                         <div className="space-y-3">
                             {models.map((model) => (
@@ -143,14 +143,14 @@ export default function ModelConfigPage() {
                                     key={model.id}
                                     onClick={() => setSelectedModel(model.modelName)}
                                     className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${selectedModel === model.modelName
-                                            ? 'border-violet-500 bg-violet-500/10'
-                                            : 'border-gray-700 hover:border-gray-600 bg-gray-900/50'
+                                        ? 'border-[#3B82F6] bg-[#3B82F6]/10'
+                                        : 'border-gray-700 hover:border-gray-600 bg-gray-900/50'
                                         }`}
                                 >
                                     <div className="flex items-start justify-between">
                                         <div className="flex-1">
                                             <div className="flex items-center gap-2">
-                                                <h4 className="font-semibold text-lg">{model.displayName}</h4>
+                                                <h4 className="font-semibold text-lg font-['Orbitron',sans-serif]">{model.displayName}</h4>
                                                 {model.isActive && (
                                                     <span className="px-2 py-1 text-xs font-medium bg-green-500/20 text-green-400 rounded">
                                                         Active
@@ -166,11 +166,11 @@ export default function ModelConfigPage() {
                                         </div>
                                         <div className="ml-4">
                                             <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedModel === model.modelName
-                                                    ? 'border-violet-500'
-                                                    : 'border-gray-600'
+                                                ? 'border-[#3B82F6]'
+                                                : 'border-gray-600'
                                                 }`}>
                                                 {selectedModel === model.modelName && (
-                                                    <div className="w-3 h-3 rounded-full bg-violet-500" />
+                                                    <div className="w-3 h-3 rounded-full bg-[#3B82F6]" />
                                                 )}
                                             </div>
                                         </div>

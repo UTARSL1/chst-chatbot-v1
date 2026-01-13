@@ -149,11 +149,11 @@ export default function ToolManagementPage() {
                     <ArrowLeft className="w-5 h-5" />
                 </Button>
                 <div>
-                    <h1 className="text-2xl font-bold flex items-center gap-2">
-                        <Wrench className="w-6 h-6 text-primary" />
-                        Tool Management
+                    <h1 className="text-2xl font-bold flex items-center gap-2 text-[#3B82F6] font-['Orbitron',sans-serif] uppercase tracking-[0.1em]">
+                        <Wrench className="w-6 h-6" />
+                        TOOLS MANAGEMENT
                     </h1>
-                    <p className="text-muted-foreground">Control which user roles can access specific AI capabilities.</p>
+                    <p className="text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">// CONTROL_AI_CAPABILITIES_BY_USER_ROLE</p>
                 </div>
             </div>
 
@@ -161,9 +161,9 @@ export default function ToolManagementPage() {
             <Card className="p-6 bg-gradient-to-br from-blue-500/10 to-purple-500/10 border-blue-500/20">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                     <div>
-                        <h2 className="text-xl font-bold flex items-center gap-2">
+                        <h2 className="text-xl font-bold flex items-center gap-2 font-['Orbitron',sans-serif] uppercase tracking-wide">
                             <Database className="w-5 h-5 text-blue-400" />
-                            Staff Directory Sync
+                            STAFF DIRECTORY SYNC
                         </h2>
                         <p className="text-sm text-muted-foreground mt-1">
                             Run <code className="bg-muted px-1 py-0.5 rounded text-xs">npm run sync:local</code> to sync staff data locally, then click button to refresh dashboard
