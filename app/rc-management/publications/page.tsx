@@ -423,8 +423,8 @@ export default function RCPublicationsPage() {
                         <button
                             onClick={() => setActiveTab('members')}
                             className={`px-6 py-3 font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-[0.1em] transition-all ${activeTab === 'members'
-                                    ? 'text-white border-b-2 border-white'
-                                    : 'text-[#64748B] hover:text-[#94A3B8]'
+                                ? 'text-white border-b-2 border-white'
+                                : 'text-[#64748B] hover:text-[#94A3B8]'
                                 }`}
                         >
                             MEMBERS
@@ -432,8 +432,8 @@ export default function RCPublicationsPage() {
                         <button
                             onClick={() => setActiveTab('overview')}
                             className={`px-6 py-3 font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-[0.1em] transition-all ${activeTab === 'overview'
-                                    ? 'text-white border-b-2 border-white'
-                                    : 'text-[#64748B] hover:text-[#94A3B8]'
+                                ? 'text-white border-b-2 border-white'
+                                : 'text-[#64748B] hover:text-[#94A3B8]'
                                 }`}
                         >
                             RC_OVERVIEW
@@ -753,8 +753,8 @@ export default function RCPublicationsPage() {
                                                 className="hidden"
                                                 disabled={uploading}
                                             />
-                                            <div className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition font-medium text-sm shadow-lg">
-                                                {uploading ? 'Uploading...' : 'Upload'}
+                                            <div className="px-6 py-2 bg-[#1E293B] border-2 border-[#3B82F6] text-[#3B82F6] hover:bg-[#3B82F6] hover:text-white transition-all font-['JetBrains_Mono',monospace] text-sm uppercase tracking-wider font-bold shadow-[0_0_10px_rgba(59,130,246,0.3)] hover:shadow-[0_0_20px_rgba(59,130,246,0.6)]">
+                                                {uploading ? '[UPLOADING...]' : '[ UPLOAD ]'}
                                             </div>
                                         </label>
                                     </div>
