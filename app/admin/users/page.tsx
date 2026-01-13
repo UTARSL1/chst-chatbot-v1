@@ -220,14 +220,24 @@ export default function AdminUsersPage() {
                                             </p>
                                         </div>
                                         <div className="flex gap-3">
-                                            <Button
-                                                onClick={() => handleApprove(user.id)}
-                                                disabled={!user.isVerified}
-                                                className={`bg-green-600 hover:bg-green-700 ${!user.isVerified ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                                title={!user.isVerified ? "User must verify email before approval" : "Approve User"}
-                                            >
-                                                ✓ Approve
-                                            </Button>
+                                            <div className="relative group">
+                                                <Button
+                                                    onClick={() => handleApprove(user.id)}
+                                                    disabled={!user.isVerified}
+                                                    className={`${user.isVerified
+                                                            ? 'bg-green-600 hover:bg-green-700'
+                                                            : 'bg-gray-400 cursor-not-allowed opacity-50'
+                                                        }`}
+                                                >
+                                                    ✓ Approve
+                                                </Button>
+                                                {!user.isVerified && (
+                                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-black text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                                                        Waiting for user to verify their email
+                                                        <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-black"></div>
+                                                    </div>
+                                                )}
+                                            </div>
                                             <Button
                                                 onClick={() => handleDelete(user.id, user.name)}
                                                 variant="outline"
