@@ -221,30 +221,29 @@ export default function AdminUsersPage() {
                                         </div>
                                         <div className="flex gap-3">
                                             <div className="relative group">
-                                                <Button
+                                                <button
                                                     onClick={() => handleApprove(user.id)}
                                                     disabled={!user.isVerified}
-                                                    className={`${user.isVerified
-                                                            ? 'bg-green-600 hover:bg-green-700'
-                                                            : 'bg-gray-400 cursor-not-allowed opacity-50'
+                                                    className={`px-4 py-2 font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-wide transition-all ${user.isVerified
+                                                            ? 'bg-white text-black hover:shadow-[0_0_20px_rgba(255,255,255,0.6)] hover:scale-[1.02]'
+                                                            : 'bg-[#334155] text-[#64748B] cursor-not-allowed opacity-50'
                                                         }`}
                                                 >
                                                     ✓ Approve
-                                                </Button>
+                                                </button>
                                                 {!user.isVerified && (
-                                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-black text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-[#3B82F6] text-white text-xs font-['JetBrains_Mono',monospace] rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                                                         Waiting for user to verify their email
-                                                        <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-black"></div>
+                                                        <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-[#3B82F6]"></div>
                                                     </div>
                                                 )}
                                             </div>
-                                            <Button
+                                            <button
                                                 onClick={() => handleDelete(user.id, user.name)}
-                                                variant="outline"
-                                                className="border-red-500 text-red-500 hover:bg-red-50"
+                                                className="px-4 py-2 border border-white/20 text-white font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-wide hover:bg-white/10 hover:border-[#EF4444] hover:text-[#EF4444] transition-all"
                                             >
                                                 ✕ Reject
-                                            </Button>
+                                            </button>
                                         </div>
                                     </div>
                                 </CardContent>
