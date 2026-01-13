@@ -2237,39 +2237,21 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                     <div className="flex items-end justify-between gap-4 h-64 print:h-48 w-full px-4">
                         {publicationsByYear.map((yearData: any) => {
                             const maxCount = Math.max(...publicationsByYear.map(y => y.count));
-                            const maxAvg = Math.max(...publicationsByYear.map(y => y.avg));
 
-                            // Height percentages
-                            const countHeight = maxCount > 0 ? (yearData.count / maxCount) * 70 : 0;
-                            const avgHeight = maxAvg > 0 ? (yearData.avg / maxAvg) * 70 : 0;
+                            // Height percentage
+                            const countHeight = maxCount > 0 ? (yearData.count / maxCount) * 80 : 0;
 
                             return (
                                 <div key={yearData.year} className="flex-1 flex flex-col items-center justify-end gap-2 h-full">
-                                    <div className="w-full flex gap-2 items-end justify-center h-full max-w-[200px]">
+                                    <div className="w-full flex items-end justify-center h-full max-w-[120px]">
                                         {/* Total Publications Bar */}
-                                        <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full group relative">
+                                        <div className="w-full flex flex-col items-center justify-end gap-1 h-full group relative">
                                             <div className="opacity-0 group-hover:opacity-100 absolute -top-8 text-xs bg-black text-white px-2 py-1 rounded transition-opacity whitespace-nowrap z-10">Total: {yearData.count}</div>
                                             <div className="text-xs font-bold text-blue-300 print:text-blue-700">{yearData.count}</div>
                                             <div
                                                 className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t transition-all duration-500 print:bg-blue-600 hover:from-blue-500 hover:to-blue-300"
                                                 style={{
                                                     height: `${countHeight}%`,
-                                                    minHeight: '4px',
-                                                    // @ts-ignore
-                                                    printColorAdjust: 'exact',
-                                                    WebkitPrintColorAdjust: 'exact'
-                                                }}
-                                            />
-                                        </div>
-
-                                        {/* Average Bar */}
-                                        <div className="flex-1 flex flex-col items-center justify-end gap-1 h-full group relative">
-                                            <div className="opacity-0 group-hover:opacity-100 absolute -top-8 text-xs bg-black text-white px-2 py-1 rounded transition-opacity whitespace-nowrap z-10">Avg: {yearData.avg.toFixed(2)}</div>
-                                            <div className="text-xs font-bold text-purple-300 print:text-purple-700">{yearData.avg.toFixed(2)}</div>
-                                            <div
-                                                className="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-t transition-all duration-500 print:bg-purple-600 hover:from-purple-500 hover:to-purple-300"
-                                                style={{
-                                                    height: `${avgHeight}%`,
                                                     minHeight: '4px',
                                                     // @ts-ignore
                                                     printColorAdjust: 'exact',
@@ -2289,10 +2271,6 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                         <div className="flex items-center gap-2">
                             <div className="w-4 h-4 bg-gradient-to-t from-blue-600 to-blue-400 rounded print:bg-blue-600"></div>
                             <span className="text-sm text-gray-300 print:text-gray-700">Total Publications</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 bg-gradient-to-t from-purple-600 to-purple-400 rounded print:bg-purple-600"></div>
-                            <span className="text-sm text-gray-300 print:text-gray-700">Average per Staff</span>
                         </div>
                     </div>
                 </div>
