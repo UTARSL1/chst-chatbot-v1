@@ -120,7 +120,6 @@ export default function SignUpPage() {
             }
 
             setSuccess(data.message);
-            setTimeout(() => router.push('/auth/signin'), 2000);
         } catch (err) {
             setError('An unexpected error occurred');
         } finally {
@@ -171,7 +170,7 @@ export default function SignUpPage() {
                             </div>
                         )}
 
-                        {step === 1 ? (
+                        {!success && step === 1 ? (
                             <>
                                 {/* Full Name */}
                                 <div className="space-y-2">
@@ -274,7 +273,7 @@ export default function SignUpPage() {
                                     />
                                 </div>
                             </>
-                        ) : (
+                        ) : !success && (
                             <>
                                 {/* Recovery Email Info */}
                                 <div className="bg-[#3B82F6]/10 border border-[#3B82F6]/30 p-4 rounded">
@@ -304,7 +303,14 @@ export default function SignUpPage() {
 
                         {/* Action Buttons */}
                         <div className="pt-2 space-y-3">
-                            {step === 1 ? (
+                            {success ? (
+                                <button
+                                    onClick={() => router.push('/auth/signin')}
+                                    className="w-full bg-[#3B82F6] text-white px-6 py-3 rounded font-semibold text-sm hover:bg-[#2563EB] hover:shadow-[0_0_20px_rgba(59,130,246,0.4)] transition-all duration-200"
+                                >
+                                    Go to Sign In →
+                                </button>
+                            ) : step === 1 ? (
                                 <button
                                     onClick={handleNext}
                                     disabled={loading || !emailType || emailType === 'invalid'}
@@ -332,14 +338,16 @@ export default function SignUpPage() {
                             )}
 
                             {/* Sign In Link */}
-                            <div className="text-center">
-                                <span className="text-[#94A3B8] text-sm">
-                                    Already have an account?{' '}
-                                    <Link href="/auth/signin" className="text-[#3B82F6] hover:text-[#60A5FA] font-medium transition-colors">
-                                        Sign in
-                                    </Link>
-                                </span>
-                            </div>
+                            {!success && (
+                                <div className="text-center">
+                                    <span className="text-[#94A3B8] text-sm">
+                                        Already have an account?{' '}
+                                        <Link href="/auth/signin" className="text-[#3B82F6] hover:text-[#60A5FA] font-medium transition-colors">
+                                            Sign in
+                                        </Link>
+                                    </span>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
