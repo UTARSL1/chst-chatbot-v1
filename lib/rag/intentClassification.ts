@@ -121,7 +121,7 @@ export function classifyQueryIntent(query: string): IntentClassificationResult {
 
     const explanationPatterns = [
         /\bwhat\s+is\s+(the\s+)?(definition|meaning)\b/i,  // "what is the definition"
-        /\bwhat\s+(is|are)\s+(?!.*\s+(ranking|position))/i, // "what is X" (but not "what is X's ranking")
+        /\bwhat\s+(is|are)\s+(?!.*\s+(ranking|position|jif|impact\s+factor|quartile|q1|q2|q3|q4|journal))/i, // "what is X" (but exclude data queries)
         /\bhow\s+does\b/i,                                   // "how does"
         /\bwhy\s+(is|are|does|do)\b/i,                      // "why is", "why does"
         /\bexplain\b/i,                                      // "explain"
