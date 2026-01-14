@@ -331,12 +331,19 @@ export function getJournalMetricsByTitle(title: string, years?: number[]): Journ
             const union = new Set([...tWords, ...kWords]);
 
             if (intersection.size > 0 && union.size > 0) {
-                // Base word overlap score
+                // Base word overlap score (Jaccard Index)
                 let wordScore = intersection.size / union.size;
 
+                // Calculate simple character coverage ratio to ensure "most alphabets" match
+                // This prevents "Neuroscience" (12 chars) from matching "Neuroscience Informatics" (24 chars)
+                const shorterLen = Math.min(tNormalized.length, kNormalized.length);
+                const longerLen = Math.max(tNormalized.length, kNormalized.length);
+                const lengthRatio = shorterLen / longerLen;
+
                 // Boost 1: If one is a substring of the other
+                // Only boost if the length difference is small (e.g. typos, "The" prefix)
                 const isSubstring = kNormalized.includes(tNormalized) || tNormalized.includes(kNormalized);
-                if (isSubstring) {
+                if (isSubstring && lengthRatio > 0.8) {
                     wordScore = Math.max(wordScore, 0.85);
                 }
 
@@ -346,8 +353,8 @@ export function getJournalMetricsByTitle(title: string, years?: number[]): Journ
                 const longerWords = tWords.size > kWords.size ? tWords : kWords;
                 const allShorterInLonger = [...shorterWords].every(w => longerWords.has(w));
 
-                if (allShorterInLonger) {
-                    // High confidence if all words match
+                if (allShorterInLonger && lengthRatio > 0.9) {
+                    // High confidence if all words match AND lengths are extremely close (almost exact)
                     wordScore = Math.max(wordScore, 0.90);
                 }
 

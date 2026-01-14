@@ -522,6 +522,12 @@ You have access to a tool named \`jcr_journal_metric\` which retrieves Journal I
     *   **Rows**: List JIF and Quartiles for each year as separate rows.
     *   **Format**: Merge JIF and Quartile into one cell (e.g., "5.2 (Q1)") or use adjacent rows.
 
+9.  **VERIFY JOURNAL IDENTITY (CRITICAL)**:
+    *   The user's query may not match the database exactly (e.g. user asks for "Neuroscience Informatics", tool returns "Neuroscience").
+    *   **YOU MUST explicitly state the journal name found by the tool** at the beginning of your response.
+    *   Example: "Here are the results for **[Full Title from Tool]**:"
+    *   This ensures the user is aware if a partial match occurred.
+
 ### 🧩 MCP Tool Call Format
 {
   "issn": "optional string",
