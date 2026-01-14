@@ -1728,11 +1728,11 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
             </div>
 
             {/* NEW: VISUALIZATIONS */}
-            <StaffPerformanceBubbleChart staffMembers={staffMembers} selectedYears={selectedYears} />
+            <StaffPerformanceBubbleChart staffMembers={filteredStaffMembers} selectedYears={selectedYears} />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <StaffDistributionChart staffMembers={staffMembers} metric="hIndex" title="H-Index Distribution" />
-                <StaffDistributionChart staffMembers={staffMembers} metric="citations" title="Citations Distribution" />
+                <StaffDistributionChart staffMembers={filteredStaffMembers} metric="hIndex" title="H-Index Distribution" />
+                <StaffDistributionChart staffMembers={filteredStaffMembers} metric="citations" title="Citations Distribution" />
             </div>
         </div>
     );
