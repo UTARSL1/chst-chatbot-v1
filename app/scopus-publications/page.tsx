@@ -22,6 +22,7 @@ interface StaffMember {
     hIndex?: number;
     citationCount?: number;
     lifetimePublications?: number;
+    designation?: string;
 }
 
 interface DepartmentData {
@@ -49,6 +50,7 @@ export default function ScopusPublicationsPage() {
     // Data State
     const [selectedFaculty, setSelectedFaculty] = useState<string>('LKC FES');
     const [selectedDepartment, setSelectedDepartment] = useState<string>('');
+    const [excludeAdjuncts, setExcludeAdjuncts] = useState<boolean>(false);
     const [departments, setDepartments] = useState<DepartmentData[]>([]);
     const [staffMembers, setStaffMembers] = useState<StaffMember[]>([]);
     const [loading, setLoading] = useState(true);
@@ -223,7 +225,11 @@ export default function ScopusPublicationsPage() {
         if (!hasAccess) return null;
 
         // Filter staff who have a valid Scopus ID (ignoring the unreliable scopusStatus field)
-        const filteredStaff = staffMembers.filter(s => s.scopusAuthorId && s.scopusAuthorId !== 'NA');
+        const filteredStaff = staffMembers.filter(s => {
+            if (!s.scopusAuthorId || s.scopusAuthorId === 'NA') return false;
+            if (excludeAdjuncts && s.designation && s.designation.toLowerCase().includes('adjunct')) return false;
+            return true;
+        });
 
         const totalPublications = filteredStaff.reduce((sum, staff) => {
             if (!staff.publications) return sum;
@@ -261,7 +267,7 @@ export default function ScopusPublicationsPage() {
                 ? (totalPublications / filteredStaff.length / selectedYears.length).toFixed(2)
                 : '0.00'
         };
-    }, [staffMembers, selectedYears, hasAccess]);
+    }, [staffMembers, selectedYears, hasAccess, excludeAdjuncts]);
 
     if (status === 'loading') {
         return (
@@ -406,6 +412,22 @@ export default function ScopusPublicationsPage() {
                                     {selectedYears.length === 0 && (
                                         <p className="mt-2 text-xs text-[#F59E0B] font-['JetBrains_Mono',monospace]">[ERROR] SELECT_AT_LEAST_ONE_YEAR</p>
                                     )}
+
+                                    {/* Exclude Adjunct Toggle */}
+                                    <div className="mt-4 pt-4 border-t border-[#334155] flex items-center gap-3">
+                                        <div
+                                            onClick={() => setExcludeAdjuncts(!excludeAdjuncts)}
+                                            className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${excludeAdjuncts ? 'bg-blue-600' : 'bg-slate-700'}`}
+                                        >
+                                            <div className={`w-3 h-3 bg-white rounded-full absolute top-1 transition-all ${excludeAdjuncts ? 'left-6' : 'left-1'}`} />
+                                        </div>
+                                        <label
+                                            onClick={() => setExcludeAdjuncts(!excludeAdjuncts)}
+                                            className="text-white font-['JetBrains_Mono',monospace] font-medium text-xs cursor-pointer select-none"
+                                        >
+                                            EXCLUDE_ADJUNCT_PROFESSOR (DEFAULT: OFF)
+                                        </label>
+                                    </div>
                                 </div>
 
                                 {/* Tabs */}
@@ -585,6 +607,7 @@ export default function ScopusPublicationsPage() {
                                                             staffMembers={staffMembers.filter(s => selectedStaffIds.includes(s.email))}
                                                             departments={[]}
                                                             selectedYears={selectedYears}
+                                                            excludeAdjuncts={excludeAdjuncts}
                                                             departmentName={`Custom Sub-group (${selectedStaffIds.length} staff)`}
                                                             departmentAcronym="SUB-GROUP"
                                                         />
@@ -599,6 +622,7 @@ export default function ScopusPublicationsPage() {
                                                         selectedStaffIds={selectedStaffIds}
                                                         onSelectStaff={setSelectedStaffIds}
                                                         onAnalyzeSubGroup={() => setShowingSubGroup(true)}
+                                                        excludeAdjuncts={excludeAdjuncts}
                                                     />
                                                 )}
                                             </>
@@ -611,6 +635,7 @@ export default function ScopusPublicationsPage() {
                                                 selectedYears={selectedYears}
                                                 departmentName={departments.find(d => d.acronym === selectedDepartment)?.name || ''}
                                                 departmentAcronym={selectedDepartment}
+                                                excludeAdjuncts={excludeAdjuncts}
                                             />
                                         )}
 
@@ -620,6 +645,7 @@ export default function ScopusPublicationsPage() {
                                                 facultyAcronym={selectedFaculty}
                                                 departments={departments}
                                                 selectedYears={selectedYears}
+                                                excludeAdjuncts={excludeAdjuncts}
                                             />
                                         )}
                                     </>
@@ -718,7 +744,8 @@ function IndividualStaffTab({
     visibleColumns,
     selectedStaffIds = [],
     onSelectStaff,
-    onAnalyzeSubGroup
+    onAnalyzeSubGroup,
+    excludeAdjuncts
 }: {
     staffMembers: StaffMember[];
     selectedYears: number[];
@@ -728,7 +755,14 @@ function IndividualStaffTab({
     selectedStaffIds?: string[];
     onSelectStaff?: (ids: string[]) => void;
     onAnalyzeSubGroup?: () => void;
+    excludeAdjuncts?: boolean;
 }) {
+    // Filter staff based on excludeAdjuncts prop
+    const filteredStaffMembers = useMemo(() => {
+        if (!excludeAdjuncts) return staffMembers;
+        return staffMembers.filter(s => !(s.designation && s.designation.toLowerCase().includes('adjunct')));
+    }, [staffMembers, excludeAdjuncts]);
+
     // Hooks must be called before any conditional returns
     const [sortColumn, setSortColumn] = useState<'name' | 'hIndex' | 'citations' | 'lifetimePublications' | 'publications'>('publications');
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
@@ -753,7 +787,7 @@ function IndividualStaffTab({
         }
     };
 
-    const staffWithPublications = staffMembers.map(staff => {
+    const staffWithPublications = filteredStaffMembers.map(staff => {
         const yearPublications = staff.publications
             .filter(p => selectedYears.includes(p.year))
             .reduce((sum, p) => sum + p.count, 0);
@@ -1080,17 +1114,24 @@ function IndividualStaffTab({
 }
 
 // Department Overview Tab Component
-function DepartmentOverviewTab({ staffMembers, departments, selectedYears, departmentName, departmentAcronym }: {
+function DepartmentOverviewTab({ staffMembers, departments, selectedYears, departmentName, departmentAcronym, excludeAdjuncts }: {
     staffMembers: StaffMember[];
     departments: DepartmentData[];
     selectedYears: number[];
     departmentName: string;
     departmentAcronym: string;
+    excludeAdjuncts?: boolean;
 }) {
+    // Filter staff based on excludeAdjuncts prop (local filter for this tab)
+    const filteredStaffMembers = useMemo(() => {
+        if (!excludeAdjuncts) return staffMembers;
+        return staffMembers.filter(s => !(s.designation && s.designation.toLowerCase().includes('adjunct')));
+    }, [staffMembers, excludeAdjuncts]);
+
     // Calculate stats
     const publicationsByYear = selectedYears.map(year => {
         // Filter valid staff first
-        const validStaff = staffMembers.filter(s => s.scopusAuthorId && s.scopusAuthorId !== 'NA');
+        const validStaff = filteredStaffMembers.filter(s => s.scopusAuthorId && s.scopusAuthorId !== 'NA');
         const n = validStaff.length || 1;
 
         // Get counts for this year
@@ -1105,13 +1146,13 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
         return { year, count, avg };
     }).sort((a, b) => a.year - b.year);
 
-    const totalPublications = staffMembers.reduce((sum, staff) => {
+    const totalPublications = filteredStaffMembers.reduce((sum, staff) => {
         return sum + (staff.publications
             ?.filter(p => selectedYears.includes(p.year))
             .reduce((s, p) => s + p.count, 0) || 0);
     }, 0);
 
-    const staffWithScopusCount = staffMembers.filter(staff =>
+    const staffWithScopusCount = filteredStaffMembers.filter(staff =>
         staff.scopusAuthorId && staff.scopusAuthorId !== 'NA'
     ).length;
 
@@ -1120,7 +1161,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
         : '0.00';
 
     // Calculate standard deviation of publications across staff with valid Scopus IDs
-    const staffPublications = staffMembers
+    const staffPublications = filteredStaffMembers
         .filter(staff => staff.scopusAuthorId && staff.scopusAuthorId !== 'NA')
         .map(staff => {
             return staff.publications
@@ -1132,23 +1173,23 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
 
     // NEW METRICS for Phase 1
     // Average H-Index
-    const staffWithHIndex = staffMembers.filter(s => s.hIndex !== undefined && s.hIndex > 0);
+    const staffWithHIndex = filteredStaffMembers.filter(s => s.hIndex !== undefined && s.hIndex > 0);
     const averageHIndex = staffWithHIndex.length > 0
         ? (staffWithHIndex.reduce((sum, s) => sum + (s.hIndex || 0), 0) / staffWithHIndex.length).toFixed(2)
         : '0.00';
 
     // Total Citations (for selected years - using lifetime as proxy since we don't have year-specific citations)
-    const totalCitations = staffMembers.reduce((sum, s) => sum + (s.citationCount || 0), 0);
+    const totalCitations = filteredStaffMembers.reduce((sum, s) => sum + (s.citationCount || 0), 0);
 
     // Top H-Index staff
-    const topHIndexStaff = staffMembers.reduce((top, staff) => {
+    const topHIndexStaff = filteredStaffMembers.reduce((top, staff) => {
         if (!staff.hIndex) return top;
         if (!top || (staff.hIndex > (top.hIndex || 0))) return staff;
         return top;
     }, null as StaffMember | null);
 
     // Total Lifetime Publications
-    const totalLifetimePublications = staffMembers.reduce((sum, s) => sum + (s.lifetimePublications || 0), 0);
+    const totalLifetimePublications = filteredStaffMembers.reduce((sum, s) => sum + (s.lifetimePublications || 0), 0);
 
     // Average Lifetime Publications per Staff
     const averageLifetimePerStaff = staffWithScopusCount > 0
@@ -1156,7 +1197,7 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
         : '0.00';
 
     // Publication Spread (std dev of lifetime publications)
-    const staffWithScopus = staffMembers.filter(s => s.scopusAuthorId && s.scopusAuthorId !== 'NA');
+    const staffWithScopus = filteredStaffMembers.filter(s => s.scopusAuthorId && s.scopusAuthorId !== 'NA');
     const lifetimePubCounts = staffWithScopus.map(s => s.lifetimePublications || 0);
     const publicationSpread = staffWithScopus.length > 1 ? (() => {
         const mean = lifetimePubCounts.reduce((sum, val) => sum + val, 0) / staffWithScopus.length;
@@ -1698,11 +1739,12 @@ function DepartmentOverviewTab({ staffMembers, departments, selectedYears, depar
 }
 
 // Faculty Overview Tab Component
-function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selectedYears }: {
+function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selectedYears, excludeAdjuncts }: {
     facultyName: string;
     facultyAcronym: string;
     departments: DepartmentData[];
     selectedYears: number[];
+    excludeAdjuncts?: boolean;
 }) {
     const [departmentStats, setDepartmentStats] = useState<any[]>([]);
     const [publicationsByYear, setPublicationsByYear] = useState<{ year: number, count: number, avg: number }[]>([]);
@@ -1767,13 +1809,19 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                     const data = await res.json();
 
                     if (data.success && data.staff) {
+                        // Filter staff if excludeAdjuncts is active
+                        let departmentStaff = data.staff;
+                        if (excludeAdjuncts) {
+                            departmentStaff = departmentStaff.filter((s: StaffMember) => !(s.designation && s.designation.toLowerCase().includes('adjunct')));
+                        }
+
                         // Count total staff for faculty average
-                        totalFacultyStaff += data.staff.length;
+                        totalFacultyStaff += departmentStaff.length;
 
                         // NEW: Collect all staff for faculty metrics
-                        allStaffMembers = allStaffMembers.concat(data.staff);
+                        allStaffMembers = allStaffMembers.concat(departmentStaff);
 
-                        const staffWithScopus = data.staff.filter((s: StaffMember) => s.scopusAuthorId && s.scopusAuthorId !== 'NA');
+                        const staffWithScopus = departmentStaff.filter((s: StaffMember) => s.scopusAuthorId && s.scopusAuthorId !== 'NA');
                         totalFacultyStaffWithScopus += staffWithScopus.length;
 
                         const totalPubs = staffWithScopus.reduce((sum: number, staff: StaffMember) => {
@@ -1798,8 +1846,8 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                         }, 0);
 
                         // Calculate per-department metrics
-                        const deptTotalLifePubs = data.staff.reduce((sum: number, s: any) => sum + (s.lifetimePublications || 0), 0);
-                        const deptTotalCitations = data.staff.reduce((sum: number, s: any) => sum + (s.citationCount || 0), 0);
+                        const deptTotalLifePubs = departmentStaff.reduce((sum: number, s: any) => sum + (s.lifetimePublications || 0), 0);
+                        const deptTotalCitations = departmentStaff.reduce((sum: number, s: any) => sum + (s.citationCount || 0), 0);
                         const deptAvgHIndex = staffWithScopus.length > 0
                             ? (staffWithScopus.reduce((sum: number, s: any) => sum + (s.hIndex || 0), 0) / staffWithScopus.length).toFixed(2)
                             : '0.00';
@@ -1807,7 +1855,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
                         stats.push({
                             name: dept.name,
                             acronym: dept.acronym,
-                            totalStaff: data.staff.length,
+                            totalStaff: departmentStaff.length,
                             staffWithScopus: staffWithScopus.length,
                             totalPublications: totalPubs, // Selected Years
                             // Fixed: Divide by number of years to get average per staff per year
@@ -1919,7 +1967,7 @@ function FacultyOverviewTab({ facultyName, facultyAcronym, departments, selected
         if (departments.length > 0) {
             loadFacultyData();
         }
-    }, [departments, selectedYears]);
+    }, [departments, selectedYears, excludeAdjuncts]);
 
     const totalPublications = departmentStats.reduce((acc, curr) => acc + curr.totalPublications, 0);
     const totalFacultyStaff = departmentStats.reduce((acc, curr) => acc + curr.totalStaff, 0);
