@@ -75,13 +75,14 @@ async function bulkImportKnowledge(userId, batchName = null) {
                 // Create document library entry
                 await prisma.documentLibraryEntry.create({
                     data: {
-                        title: section.title,
+                        documentTitle: section.documentTitle,  // Parent document title
+                        title: section.title,  // Section title
                         content: section.content,
                         department: section.metadata.department,
                         documentType: section.metadata.documentType,
                         tags: section.metadata.tags,
                         priority: section.metadata.priority || 'standard',
-                        accessLevel: ['public', 'student', 'member', 'chairperson'],
+                        accessLevel: section.metadata.accessLevel || ['student', 'member', 'chairperson'],
                         status: 'active',
                         isActive: true,
                         sourceFile: section.metadata.sourceFile,

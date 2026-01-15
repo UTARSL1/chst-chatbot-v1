@@ -30,8 +30,18 @@ def convert_all_pdfs(input_dir, output_dir):
         try:
             print(f"  Converting {pdf_file.name}...")
             
-            # Convert to markdown
-            md_text = pymupdf4llm.to_markdown(str(pdf_file))
+            # Convert to markdown with better layout analysis
+            md_result = pymupdf4llm.to_markdown(
+                str(pdf_file),
+                page_chunks=True,  # Better layout analysis
+                write_images=False  # Don't extract images
+            )
+            
+            # page_chunks=True returns a list of dicts, join them
+            if isinstance(md_result, list):
+                md_text = '\n\n'.join([chunk['text'] for chunk in md_result])
+            else:
+                md_text = md_result
             
             # Save markdown
             md_file = output_path / f"{pdf_file.stem}.md"
@@ -49,6 +59,7 @@ def convert_all_pdfs(input_dir, output_dir):
     print(f"   Success: {success_count}")
     print(f"   Errors: {error_count}")
     print(f"   Output: {output_path}")
+
 
 def main():
     if len(sys.argv) < 3:

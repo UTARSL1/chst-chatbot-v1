@@ -15,7 +15,7 @@ async function parseMarkdownDocument(filePath) {
     // Split into logical sections
     const sections = splitIntoSections(content);
 
-    // Get document title once
+    // Get document title once (parent/mother title)
     const documentTitle = extractTitle(content);
     const baseFilename = path.basename(filePath, ext);
 
@@ -24,29 +24,30 @@ async function parseMarkdownDocument(filePath) {
 
     // Convert to knowledge base format
     return sections.map((section, index) => {
+        // Extract section title (child title)
         let sectionTitle = section.title;
 
         if (!sectionTitle) {
             sectionTitle = extractTitle(section.content);
         }
 
-        // Build final title
-        let finalTitle;
-        if (sectionTitle && sectionTitle !== documentTitle) {
-            finalTitle = `${documentTitle} - ${sectionTitle}`;
-        } else if (sectionTitle) {
-            finalTitle = sectionTitle;
-        } else {
-            finalTitle = `${baseFilename} - Section ${index + 1}`;
+        // Clean up section title (remove bold markers, etc.)
+        if (sectionTitle) {
+            sectionTitle = sectionTitle.replace(/^\*\*|\*\*$/g, '').trim();
         }
 
         return {
-            title: finalTitle,
-            content: section.content.trim(),  // Keep markdown as-is
-            metadata: documentMetadata
+            documentTitle: documentTitle,  // Column 1: Parent document title
+            title: sectionTitle || `Section ${index + 1}`,  // Column 2: Section title
+            content: section.content.trim(),
+            metadata: {
+                ...documentMetadata,
+                accessLevel: ['student', 'member', 'chairperson']  // Student and above only
+            }
         };
     });
 }
+
 
 /**
  * Split markdown content into logical sections

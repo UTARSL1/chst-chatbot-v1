@@ -529,23 +529,24 @@ enum AccessLevel {
 }
 
 model DocumentLibraryEntry {
-  id           String   @id @default(uuid())
-  title        String
-  content      String
-  department   String?
-  documentType String?  @map("document_type")
-  tags         String[] @default([])
-  priority     String   @default("standard")
-  accessLevel  String[] @default(["public", "student", "member", "chairperson"]) @map("access_level")
-  status       String   @default("active")
-  isActive     Boolean  @default(true) @map("is_active")
-  sourceFile   String?  @map("source_file")
-  sectionIndex Int?     @map("section_index")
-  metadata     Json?
-  createdBy    String   @map("created_by")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  creator      User     @relation("DocumentLibraryEntries", fields: [createdBy], references: [id], onDelete: Cascade)
+  id            String   @id @default(uuid())
+  documentTitle String?  @map("document_title")  // Parent document title
+  title         String                            // Section title
+  content       String
+  department    String?
+  documentType  String?  @map("document_type")
+  tags          String[] @default([])
+  priority      String   @default("standard")
+  accessLevel   String[] @default(["student", "member", "chairperson"]) @map("access_level")
+  status        String   @default("active")
+  isActive      Boolean  @default(true) @map("is_active")
+  sourceFile    String?  @map("source_file")
+  sectionIndex  Int?     @map("section_index")
+  metadata      Json?
+  createdBy     String   @map("created_by")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  creator       User     @relation("DocumentLibraryEntries", fields: [createdBy], references: [id], onDelete: Cascade)
 
   @@index([isActive])
   @@index([createdBy])
@@ -553,6 +554,7 @@ model DocumentLibraryEntry {
   @@index([department])
   @@index([documentType])
   @@index([sourceFile])
+  @@index([documentTitle])
   @@map("document_library_entries")
 }
 
