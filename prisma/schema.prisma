@@ -30,8 +30,10 @@ model User {
   feedback                Feedback[]
   knowledgeNotes          KnowledgeNote[]
   messages                Message[]
-  quickAccessLinks        QuickAccessLink[] @relation("QuickAccessLinks")
-  invitationCode          InvitationCode? @relation(fields: [invitationCodeId], references: [id])
+  quickAccessLinks        QuickAccessLink[]         @relation("QuickAccessLinks")
+  documentLibraryEntries  DocumentLibraryEntry[]    @relation("DocumentLibraryEntries")
+  documentLibraryBatches  DocumentLibraryBatch[]    @relation("DocumentLibraryBatches")
+  invitationCode          InvitationCode?           @relation(fields: [invitationCodeId], references: [id])
 
   @@index([email])
   @@index([role])
@@ -524,4 +526,53 @@ enum AccessLevel {
   member
   chairperson
   public
+}
+
+model DocumentLibraryEntry {
+  id           String   @id @default(uuid())
+  title        String
+  content      String
+  department   String?
+  documentType String?  @map("document_type")
+  tags         String[] @default([])
+  priority     String   @default("standard")
+  accessLevel  String[] @default(["public", "student", "member", "chairperson"]) @map("access_level")
+  status       String   @default("active")
+  isActive     Boolean  @default(true) @map("is_active")
+  sourceFile   String?  @map("source_file")
+  sectionIndex Int?     @map("section_index")
+  metadata     Json?
+  createdBy    String   @map("created_by")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  creator      User     @relation("DocumentLibraryEntries", fields: [createdBy], references: [id], onDelete: Cascade)
+
+  @@index([isActive])
+  @@index([createdBy])
+  @@index([priority])
+  @@index([department])
+  @@index([documentType])
+  @@index([sourceFile])
+  @@map("document_library_entries")
+}
+
+model DocumentLibraryBatch {
+  id             String    @id @default(uuid())
+  batchName      String    @map("batch_name")
+  totalDocuments Int       @default(0) @map("total_documents")
+  totalSections  Int       @default(0) @map("total_sections")
+  importedCount  Int       @default(0) @map("imported_count")
+  skippedCount   Int       @default(0) @map("skipped_count")
+  errorCount     Int       @default(0) @map("error_count")
+  status         String    @default("processing")
+  importLog      Json?     @map("import_log")
+  createdBy      String    @map("created_by")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  completedAt    DateTime? @map("completed_at")
+  creator        User      @relation("DocumentLibraryBatches", fields: [createdBy], references: [id], onDelete: Cascade)
+
+  @@index([createdBy])
+  @@index([status])
+  @@index([createdAt])
+  @@map("document_library_batches")
 }
