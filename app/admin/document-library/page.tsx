@@ -141,8 +141,8 @@ export default function DocumentLibraryPage() {
     });
 
     // Get unique departments and types
-    const departments = Array.from(new Set(entries.map(e => e.department).filter(Boolean)));
-    const documentTypes = Array.from(new Set(entries.map(e => e.documentType).filter(Boolean)));
+    const departments = Array.from(new Set(entries.map(e => e.department).filter(Boolean))) as string[];
+    const documentTypes = Array.from(new Set(entries.map(e => e.documentType).filter(Boolean))) as string[];
 
     if (status === 'loading' || loading) {
         return (
@@ -171,8 +171,8 @@ export default function DocumentLibraryPage() {
                     <button
                         onClick={() => setActiveTab('entries')}
                         className={`px-6 py-3 font-['Orbitron',sans-serif] uppercase tracking-wide text-sm transition-all ${activeTab === 'entries'
-                                ? 'text-[#3B82F6] border-b-2 border-[#3B82F6]'
-                                : 'text-slate-400 hover:text-slate-300'
+                            ? 'text-[#3B82F6] border-b-2 border-[#3B82F6]'
+                            : 'text-slate-400 hover:text-slate-300'
                             }`}
                     >
                         <FileText className="w-4 h-4 inline mr-2" />
@@ -181,8 +181,8 @@ export default function DocumentLibraryPage() {
                     <button
                         onClick={() => setActiveTab('batches')}
                         className={`px-6 py-3 font-['Orbitron',sans-serif] uppercase tracking-wide text-sm transition-all ${activeTab === 'batches'
-                                ? 'text-[#3B82F6] border-b-2 border-[#3B82F6]'
-                                : 'text-slate-400 hover:text-slate-300'
+                            ? 'text-[#3B82F6] border-b-2 border-[#3B82F6]'
+                            : 'text-slate-400 hover:text-slate-300'
                             }`}
                     >
                         <Package className="w-4 h-4 inline mr-2" />
@@ -284,8 +284,8 @@ export default function DocumentLibraryPage() {
                                             </span>
                                         )}
                                         <span className={`px-2 py-1 rounded text-xs font-medium ${entry.priority === 'critical' ? 'bg-red-500/20 text-red-400' :
-                                                entry.priority === 'high' ? 'bg-orange-500/20 text-orange-400' :
-                                                    'bg-slate-500/20 text-slate-400'
+                                            entry.priority === 'high' ? 'bg-orange-500/20 text-orange-400' :
+                                                'bg-slate-500/20 text-slate-400'
                                             }`}>
                                             {entry.priority}
                                         </span>
@@ -347,8 +347,8 @@ export default function DocumentLibraryPage() {
                                     </div>
                                     <div className="flex items-center gap-3">
                                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${batch.status === 'completed' ? 'bg-green-500/20 text-green-400' :
-                                                batch.status === 'processing' ? 'bg-yellow-500/20 text-yellow-400' :
-                                                    'bg-red-500/20 text-red-400'
+                                            batch.status === 'processing' ? 'bg-yellow-500/20 text-yellow-400' :
+                                                'bg-red-500/20 text-red-400'
                                             }`}>
                                             {batch.status}
                                         </span>
