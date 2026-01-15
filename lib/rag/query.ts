@@ -6,6 +6,7 @@ import { RAGQuery, RAGResponse, DocumentSource } from '@/types';
 import { prisma } from '@/lib/db';
 import { getRelatedDocuments } from './suggestions';
 import { searchKnowledgeNotes } from './knowledgeSearch';
+import { searchDocumentLibrary } from './documentLibrarySearch';
 import { resolveUnit, searchStaff, listDepartments } from '@/lib/tools';
 import { getJournalMetricsByTitle, getJournalMetricsByIssn, ensureJcrCacheLoaded } from '@/lib/jcrCache';
 import { getInstitutionByName, getInstitutionsByCountry, ensureNatureIndexCacheLoaded } from '@/lib/natureIndexCache';
@@ -1164,6 +1165,7 @@ export async function processRAGQuery(query: RAGQuery, onChunk?: (token: string)
         let embedding: number[] = [];
         let knowledgeNotes: any[] = [];
         let relevantChunks: any[] = [];
+        let documentLibraryEntries: any[] = []; // Document Library entries
         const accessLevels = getAccessibleLevels(query.userRole);
 
         if (isStaffQuery) {
@@ -1197,20 +1199,23 @@ export async function processRAGQuery(query: RAGQuery, onChunk?: (token: string)
             // 3-4. PARALLELIZED: Generate embedding + Search knowledge notes + Vector search
             const t3 = Date.now();
 
-            [embedding, knowledgeNotes, relevantChunks] = await Promise.all([
+            [embedding, knowledgeNotes, relevantChunks, documentLibraryEntries] = await Promise.all([
                 generateEmbedding(effectiveQuery),
                 // Conditionally skip knowledge note search for data queries with tools
                 suppressionDecision.suppress
                     ? Promise.resolve([])  // Skip knowledge notes
                     : searchKnowledgeNotes(effectiveQuery, accessLevels, 3),
                 // Vector search needs embedding, so we do it in a nested promise
-                generateEmbedding(effectiveQuery).then(emb => searchSimilarDocuments(emb, accessLevels, 5))
+                generateEmbedding(effectiveQuery).then(emb => searchSimilarDocuments(emb, accessLevels, 5)),
+                // Search Document Library (new structured docs with tables)
+                searchDocumentLibrary(effectiveQuery, accessLevels, 3)
             ]);
 
             log(`⏱️ Step 2(Intent Classification): ${((t3 - t2) / 1000).toFixed(2)} s`);
             log(`⏱️ Steps 3 - 4(Parallel: Embedding + Knowledge + Vector): ${((Date.now() - t3) / 1000).toFixed(2)} s`);
             log(`  - Found ${knowledgeNotes.length} knowledge notes${suppressionDecision.suppress ? ' (suppressed)' : ''} `);
             log(`  - Found ${relevantChunks.length} document chunks`);
+            log(`  - Found ${documentLibraryEntries.length} Document Library entries`);
         }
 
         // 6. Prepare context
@@ -1282,55 +1287,28 @@ export async function processRAGQuery(query: RAGQuery, onChunk?: (token: string)
                 return `[Priority Knowledge: ${note.title}]${linkedDocsInfo}\n${formattedContent}`;
             });
 
-            // Helper function to convert content to markdown table
-            function convertToTable(content: string): string {
-                const lines = content.split('\n');
-                const tierLines: string[] = [];
+            baseContextStrings.push(...formattedNotes);
+        }
 
-                lines.forEach((line: string) => {
-                    const trimmed = line.trim();
-                    if (!trimmed) return;
+        // Add Document Library entries to context
+        if (documentLibraryEntries.length > 0) {
+            log(`📝 Document Library entries being sent to LLM: `);
+            documentLibraryEntries.forEach((entry, idx) => {
+                log(`  ${idx + 1}."${entry.documentTitle} - ${entry.title}"`);
+                log(`     FULL CONTENT: \n${entry.content} `);
+            });
 
-                    // Detect tier patterns (including -> arrows)
-                    if (trimmed.match(/^(\d+\.|Below|RM\s*\d+)/i) || trimmed.includes('→') || trimmed.includes('–') || trimmed.includes('->')) {
-                        tierLines.push(trimmed);
-                    } else if (trimmed.length > 0 && !trimmed.match(/^(Training|Subject|Summary|Multiple|Annual|further|Service bond)/i)) {
-                        // Continuation of previous tier
-                        if (tierLines.length > 0) {
-                            tierLines[tierLines.length - 1] += ' ' + trimmed;
-                        }
-                    }
-                });
+            const formattedDocEntries = documentLibraryEntries.map(entry => {
+                // Return formatted entry with metadata
+                // Tables are already in markdown format in the content
+                return `[Document: ${entry.documentTitle || ''} - ${entry.title}]\n(Department: ${entry.department || 'N/A'}, Type: ${entry.documentType || 'N/A'})\n\n${entry.content}`;
+            });
 
-                // Build markdown table if we found tiers
-                if (tierLines.length >= 2) {
-                    let tableContent = '\n\n**COMPLETE TIER STRUCTURE (use all rows):**\n\n';
-                    tableContent += '| Tier | Requirement |\n';
-                    tableContent += '|------|-------------|\n';
+            baseContextStrings.push(...formattedDocEntries);
+        }
 
-                    tierLines.forEach((tier: string) => {
-                        // Parse tier into parts (handle both → and ->)
-                        const parts = tier.split(/→|–|->|:/);
-                        if (parts.length >= 2) {
-                            const left = parts[0].replace(/^\d+\.\s*/, '').trim();
-                            const right = parts[1].trim();
-                            tableContent += `| ${left} | ${right} |\n`;
-                        } else {
-                            tableContent += `| ${tier} | - |\n`;
-                        }
-                    });
-
-                    // Return ONLY the table, not the original content (to avoid duplication)
-                    return tableContent;
-                }
-
-                return content;
-            }
-
-            // CRITICAL: Mark knowledge notes as PRIORITY to ensure LLM uses them first
-            baseContextStrings.push(
-                `🔴 PRIORITY KNOWLEDGE (USE THIS FIRST):\n\n` + formattedNotes.join('\n\n---\n\n')
-            );
+        if (relevantChunks.length > 0) {
+            // Helper function was moved to module scope
         }
 
         // SYSTEMIC SOLUTION: Filter out document chunks that overlap with knowledge notes
@@ -2108,5 +2086,50 @@ async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<Doc
         console.error('Error enriching sources with metadata:', error);
         return sources;
     }
+}
+
+// Helper function to convert content to markdown table
+function convertToTable(content: string): string {
+    const lines = content.split('\n');
+    const tierLines: string[] = [];
+
+    lines.forEach((line: string) => {
+        const trimmed = line.trim();
+        if (!trimmed) return;
+
+        // Detect tier patterns (including -> arrows)
+        if (trimmed.match(/^(\d+\.|Below|RM\s*\d+)/i) || trimmed.includes('→') || trimmed.includes('–') || trimmed.includes('->')) {
+            tierLines.push(trimmed);
+        } else if (trimmed.length > 0 && !trimmed.match(/^(Training|Subject|Summary|Multiple|Annual|further|Service bond)/i)) {
+            // Continuation of previous tier
+            if (tierLines.length > 0) {
+                tierLines[tierLines.length - 1] += ' ' + trimmed;
+            }
+        }
+    });
+
+    // Build markdown table if we found tiers
+    if (tierLines.length >= 2) {
+        let tableContent = '\n\n**COMPLETE TIER STRUCTURE (use all rows):**\n\n';
+        tableContent += '| Tier | Requirement |\n';
+        tableContent += '|------|-------------|\n';
+
+        tierLines.forEach((tier: string) => {
+            // Parse tier into parts (handle both → and ->)
+            const parts = tier.split(/→|–|->|:/);
+            if (parts.length >= 2) {
+                const left = parts[0].replace(/^\d+\.\s*/, '').trim();
+                const right = parts[1].trim();
+                tableContent += `| ${left} | ${right} |\n`;
+            } else {
+                tableContent += `| ${tier} | - |\n`;
+            }
+        });
+
+        // Return ONLY the table, not the original content (to avoid duplication)
+        return tableContent;
+    }
+
+    return content;
 }
 
