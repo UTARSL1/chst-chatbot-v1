@@ -1,32 +1,16 @@
 const fs = require('fs');
 const path = require('path');
-const pdf = require('pdf-parse');
-const mammoth = require('mammoth');
 
 /**
- * Parse a document into structured sections
- * @param {string} filePath - Path to the document
- * @returns {Promise<Array>} Array of parsed sections
+ * Parse markdown documents into structured sections
+ * Markdown files should already have proper table formatting from pymupdf4llm
  */
-async function parseDocument(filePath) {
+
+async function parseMarkdownDocument(filePath) {
     const ext = path.extname(filePath).toLowerCase();
+    const content = fs.readFileSync(filePath, 'utf8');
 
     console.log(`  Parsing ${path.basename(filePath)}...`);
-
-    // Parse based on file type
-    let content = '';
-    if (ext === '.pdf') {
-        const dataBuffer = fs.readFileSync(filePath);
-        const data = await pdf(dataBuffer);
-        content = data.text;
-    } else if (ext === '.docx') {
-        const result = await mammoth.extractRawText({ path: filePath });
-        content = result.value;
-    } else if (ext === '.txt' || ext === '.md') {
-        content = fs.readFileSync(filePath, 'utf8');
-    } else {
-        throw new Error(`Unsupported file type: ${ext}`);
-    }
 
     // Split into logical sections
     const sections = splitIntoSections(content);
@@ -35,15 +19,13 @@ async function parseDocument(filePath) {
     const documentTitle = extractTitle(content);
     const baseFilename = path.basename(filePath, ext);
 
-    // Extract metadata once at document level (not per section)
+    // Extract metadata once at document level
     const documentMetadata = extractMetadata(content, filePath);
 
     // Convert to knowledge base format
     return sections.map((section, index) => {
-        // Use section title if available, otherwise extract from section content
         let sectionTitle = section.title;
 
-        // If no section title, try to extract from section content
         if (!sectionTitle) {
             sectionTitle = extractTitle(section.content);
         }
@@ -51,26 +33,23 @@ async function parseDocument(filePath) {
         // Build final title
         let finalTitle;
         if (sectionTitle && sectionTitle !== documentTitle) {
-            // Use: "Document Title - Section Title"
             finalTitle = `${documentTitle} - ${sectionTitle}`;
         } else if (sectionTitle) {
-            // Just use section title if it's the same as document title
             finalTitle = sectionTitle;
         } else {
-            // Fallback to filename with section number
             finalTitle = `${baseFilename} - Section ${index + 1}`;
         }
 
         return {
             title: finalTitle,
-            content: convertToMarkdown(section.content),
-            metadata: documentMetadata  // Use document-level metadata for consistency
+            content: section.content.trim(),  // Keep markdown as-is
+            metadata: documentMetadata
         };
     });
 }
 
 /**
- * Split content into logical sections based on headers
+ * Split markdown content into logical sections
  */
 function splitIntoSections(content) {
     const sections = [];
@@ -81,16 +60,16 @@ function splitIntoSections(content) {
 
     // IPSR-specific section markers
     const iprsrSectionMarkers = [
-        /^OBJECTIVE\s*$/i,
-        /^SCOPE\s*$/i,
-        /^DEFINITION\s*$/i,
-        /^PROCESS\s*$/i,
+        /^\*\*OBJECTIVE\*\*/i,
+        /^\*\*SCOPE\*\*/i,
+        /^\*\*DEFINITION\*\*/i,
+        /^\|PROCESS/i,  // Table header
         /^Appendix\s+[A-Z]/i,
-        /^CODES\s*$/i,
-        /^DEPT\s+PROCESS\s*$/i,
+        /^\|DEPT\|PROCESS\|/i,
         /^Panel of Examiner.*Requirements/i,
         /^Role of the Panel of Examiners/i,
-        /^Additional Standard Operating Procedure/i
+        /^Additional Standard Operating Procedure/i,
+        /^\*\*PROCEDURE MANUAL\*\*/i
     ];
 
     for (let i = 0; i < lines.length; i++) {
@@ -100,21 +79,15 @@ function splitIntoSections(content) {
         // Check if this line is a section marker
         const isIPSRSection = iprsrSectionMarkers.some(pattern => pattern.test(trimmedLine));
 
-        // Also detect other common section headers
+        // Also detect markdown headers
         const isMarkdownHeader = line.match(/^#{1,3}\s+/);
-        const isBoldHeader = line.match(/^\*\*[^*]+\*\*$/);
-        const isColonHeader = line.match(/^[A-Z][A-Za-z\s]{3,}:\s*$/);
 
-        const isHeader = isIPSRSection || isMarkdownHeader || isBoldHeader || isColonHeader;
+        const isHeader = isIPSRSection || isMarkdownHeader;
 
-        // Only create new section if:
-        // 1. It's a header
-        // 2. We have content in current section
-        // 3. The title is DIFFERENT from the previous section (avoid duplicates from page breaks)
+        // Only create new section if it's a different header
         if (isHeader && currentSection.length > 0 && trimmedLine !== previousSectionTitle) {
-            // Save previous section
             const sectionText = currentSection.join('\n').trim();
-            if (sectionText.length > 100) { // Minimum section length
+            if (sectionText.length > 100) {
                 sections.push({
                     title: currentSectionTitle,
                     content: sectionText
@@ -122,14 +95,13 @@ function splitIntoSections(content) {
                 previousSectionTitle = currentSectionTitle;
             }
             currentSection = [];
-            currentSectionTitle = trimmedLine;
+            currentSectionTitle = trimmedLine.replace(/^\*\*|\*\*$/g, '').replace(/^#+\s+/, '');
         }
 
         currentSection.push(line);
 
-        // Set title for first section if not set
         if (!currentSectionTitle && trimmedLine.length > 5) {
-            currentSectionTitle = trimmedLine;
+            currentSectionTitle = trimmedLine.replace(/^\*\*|\*\*$/g, '');
         }
     }
 
@@ -144,7 +116,6 @@ function splitIntoSections(content) {
         }
     }
 
-    // If no sections found, treat entire document as one section
     if (sections.length === 0) {
         sections.push({
             title: null,
@@ -152,103 +123,57 @@ function splitIntoSections(content) {
         });
     }
 
-    // Return sections with titles
     return sections;
 }
 
 /**
- * Extract title from section
+ * Extract title from markdown content
  */
-function extractTitle(section) {
-    const lines = section.split('\n');
+function extractTitle(content) {
+    const lines = content.split('\n');
 
-    // IPSR-specific: Look for "Manual Title :" pattern
+    // Look for "Manual Title :" in table
     for (const line of lines) {
-        const manualTitleMatch = line.match(/Manual Title\s*:\s*(.+)/i);
-        if (manualTitleMatch) {
-            return manualTitleMatch[1].trim();
+        const match = line.match(/Manual Title\s*:\s*([^|]+)/i);
+        if (match) {
+            return match[1].trim();
         }
     }
 
     // Try markdown header
     for (const line of lines) {
-        let match = line.match(/^#{1,3}\s+(.+)/);
+        const match = line.match(/^#{1,3}\s+(.+)/);
         if (match) return match[1].trim();
     }
 
     // Try bold text
     for (const line of lines) {
-        let match = line.match(/^\*\*([^*]+)\*\*$/);
+        const match = line.match(/^\*\*([^*]+)\*\*$/);
         if (match) return match[1].trim();
-    }
-
-    // Try "Title:" format
-    for (const line of lines) {
-        let match = line.match(/^([A-Z][A-Za-z\s]{3,}):\s*$/);
-        if (match) return match[1].trim();
-    }
-
-    // Skip common header lines and find the first meaningful title
-    const skipPatterns = [
-        /^universiti tunku abdul rahman$/i,
-        /^utar$/i,
-        /^page\s+\d+\s+of\s+\d+/i,
-        /^procedure number/i,
-        /^rev no/i,
-        /^effective date/i,
-        /^\s*$/  // Empty lines
-    ];
-
-    for (const line of lines) {
-        const trimmed = line.trim();
-
-        // Skip if matches any skip pattern
-        if (skipPatterns.some(pattern => pattern.test(trimmed))) {
-            continue;
-        }
-
-        // Good title candidate: not too short, not too long
-        if (trimmed.length > 10 && trimmed.length < 150) {
-            return trimmed;
-        }
     }
 
     return null;
 }
 
 /**
- * Convert section to clean markdown
+ * Extract metadata from content
  */
-function convertToMarkdown(section) {
-    return section
-        .replace(/\r\n/g, '\n')           // Normalize line endings
-        .replace(/\n{3,}/g, '\n\n')       // Remove excessive blank lines
-        .replace(/\t/g, '  ')             // Convert tabs to spaces
-        .trim();
-}
-
-/**
- * Extract metadata from section
- */
-function extractMetadata(section, filePath) {
+function extractMetadata(content, filePath) {
     const filename = path.basename(filePath, path.extname(filePath));
 
     return {
-        department: detectDepartment(section, filename),
-        documentType: detectDocumentType(section, filename),
-        tags: extractTags(section, filename),
+        department: detectDepartment(content, filename),
+        documentType: detectDocumentType(content, filename),
+        tags: extractTags(content, filename),
         sourceFile: filename,
-        priority: detectPriority(section)
+        priority: detectPriority(content)
     };
 }
 
-/**
- * Detect department from content
- */
-function detectDepartment(section, filename) {
+function detectDepartment(content, filename) {
     const departments = [
         { name: 'Human Resources', keywords: ['hr', 'human resources', 'personnel', 'staff', 'employee'] },
-        { name: 'IPSR', keywords: ['ipsr', 'research', 'innovation', 'r&d'] },
+        { name: 'IPSR', keywords: ['ipsr', 'research', 'innovation', 'postgraduate', 'phd', 'masters'] },
         { name: 'Consultancy', keywords: ['consultancy', 'consulting', 'advisory'] },
         { name: 'CHST', keywords: ['chst', 'health sciences', 'medical'] },
         { name: 'Finance', keywords: ['finance', 'accounting', 'budget', 'funding'] },
@@ -256,7 +181,7 @@ function detectDepartment(section, filename) {
         { name: 'Student Affairs', keywords: ['student', 'admission', 'enrollment'] }
     ];
 
-    const text = (section + ' ' + filename).toLowerCase();
+    const text = (content + ' ' + filename).toLowerCase();
 
     for (const dept of departments) {
         if (dept.keywords.some(kw => text.includes(kw))) {
@@ -267,12 +192,9 @@ function detectDepartment(section, filename) {
     return 'General';
 }
 
-/**
- * Detect document type from content
- */
-function detectDocumentType(section, filename) {
+function detectDocumentType(content, filename) {
     const types = {
-        'Policy': ['policy', 'guideline', 'regulation', 'rule'],
+        'Policy': ['policy', 'guideline', 'regulation', 'rule', 'procedure manual'],
         'Form': ['form', 'application', 'template', 'request'],
         'Procedure': ['procedure', 'process', 'workflow', 'step'],
         'FAQ': ['faq', 'question', 'answer', 'q&a'],
@@ -280,7 +202,7 @@ function detectDocumentType(section, filename) {
         'Meeting Minute': ['meeting', 'minute', 'agenda', 'discussion']
     };
 
-    const text = (section + ' ' + filename).toLowerCase();
+    const text = (content + ' ' + filename).toLowerCase();
 
     for (const [type, keywords] of Object.entries(types)) {
         if (keywords.some(kw => text.includes(kw))) {
@@ -291,14 +213,10 @@ function detectDocumentType(section, filename) {
     return 'Policy';
 }
 
-/**
- * Extract relevant tags from content
- */
-function extractTags(section, filename) {
-    const text = (section + ' ' + filename).toLowerCase();
+function extractTags(content, filename) {
+    const text = (content + ' ' + filename).toLowerCase();
     const tags = [];
 
-    // Common keywords to extract as tags
     const keywords = [
         'sabbatical', 'leave', 'training', 'grant', 'publication',
         'research', 'teaching', 'student', 'faculty', 'staff',
@@ -317,11 +235,8 @@ function extractTags(section, filename) {
     return tags;
 }
 
-/**
- * Detect priority level
- */
-function detectPriority(section) {
-    const text = section.toLowerCase();
+function detectPriority(content) {
+    const text = content.toLowerCase();
 
     if (text.includes('urgent') || text.includes('critical') || text.includes('immediate')) {
         return 'critical';
@@ -336,14 +251,12 @@ function detectPriority(section) {
  * Main execution
  */
 async function main() {
-    const inputDir = path.join(__dirname, '../documents/to-process');
+    const inputDir = path.join(__dirname, '../documents/markdown');
     const outputDir = path.join(__dirname, '../documents/parsed');
 
-    // Create directories if they don't exist
     if (!fs.existsSync(inputDir)) {
-        fs.mkdirSync(inputDir, { recursive: true });
-        console.log(`Created input directory: ${inputDir}`);
-        console.log('Please place your documents in this directory and run again.');
+        console.log(`Error: Markdown directory not found: ${inputDir}`);
+        console.log('Please run: python scripts/batch-convert-pdfs.py documents/to-process/ documents/markdown/');
         return;
     }
 
@@ -351,19 +264,18 @@ async function main() {
         fs.mkdirSync(outputDir, { recursive: true });
     }
 
-    // Get all files
+    // Get all markdown files
     const files = fs.readdirSync(inputDir).filter(file => {
         const ext = path.extname(file).toLowerCase();
-        return ['.pdf', '.docx', '.txt', '.md'].includes(ext);
+        return ext === '.md';
     });
 
     if (files.length === 0) {
-        console.log('No documents found in:', inputDir);
-        console.log('Supported formats: PDF, DOCX, TXT, MD');
+        console.log('No markdown files found in:', inputDir);
         return;
     }
 
-    console.log(`\n📄 Found ${files.length} documents to process\n`);
+    console.log(`\n📄 Found ${files.length} markdown files to process\n`);
 
     const results = [];
     let totalSections = 0;
@@ -372,7 +284,7 @@ async function main() {
         const filePath = path.join(inputDir, file);
 
         try {
-            const sections = await parseDocument(filePath);
+            const sections = await parseMarkdownDocument(filePath);
             results.push({
                 sourceFile: file,
                 sectionsCount: sections.length,
@@ -392,13 +304,16 @@ async function main() {
     // Generate summary
     const summaryFile = path.join(outputDir, 'parsing-summary.txt');
     const summary = `
-Knowledge Base Parsing Summary
-==============================
+Knowledge Base Parsing Summary (Markdown)
+==========================================
 Date: ${new Date().toISOString()}
 
 Documents Processed: ${results.length}
 Total Sections: ${totalSections}
 Average Sections per Document: ${(totalSections / results.length).toFixed(1)}
+
+✅ Tables preserved in markdown format
+✅ LLM can render tables in responses
 
 Output Files:
 - ${outputFile}
@@ -406,8 +321,7 @@ Output Files:
 
 Next Steps:
 1. Review the parsed data in: ${outputFile}
-2. Make any manual adjustments if needed
-3. Run bulk import: node scripts/bulk-import-knowledge.js <admin-user-id>
+2. Run bulk import: node scripts/bulk-import-knowledge.js import <admin-user-id> "IPSR Policies"
 `;
 
     fs.writeFileSync(summaryFile, summary);
@@ -416,7 +330,8 @@ Next Steps:
     console.log(`   Documents: ${results.length}`);
     console.log(`   Sections: ${totalSections}`);
     console.log(`   Output: ${outputFile}`);
-    console.log(`\nNext: Review the output and run bulk import.`);
+    console.log(`\n✨ Tables are preserved in markdown format!`);
+    console.log(`   LLM can now render tables in responses.`);
 }
 
 // Run if called directly
@@ -427,4 +342,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = { parseDocument, splitIntoSections, extractMetadata };
+module.exports = { parseMarkdownDocument, splitIntoSections, extractMetadata };
