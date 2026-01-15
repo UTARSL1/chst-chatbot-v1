@@ -31,12 +31,39 @@ async function parseDocument(filePath) {
     // Split into logical sections
     const sections = splitIntoSections(content);
 
+    // Get document title once
+    const documentTitle = extractTitle(content);
+    const baseFilename = path.basename(filePath, ext);
+
     // Convert to knowledge base format
-    return sections.map((section, index) => ({
-        title: extractTitle(section) || `${path.basename(filePath, ext)} - Section ${index + 1}`,
-        content: convertToMarkdown(section),
-        metadata: extractMetadata(section, filePath)
-    }));
+    return sections.map((section, index) => {
+        // Use section title if available, otherwise extract from section content
+        let sectionTitle = section.title;
+
+        // If no section title, try to extract from section content
+        if (!sectionTitle) {
+            sectionTitle = extractTitle(section.content);
+        }
+
+        // Build final title
+        let finalTitle;
+        if (sectionTitle && sectionTitle !== documentTitle) {
+            // Use: "Document Title - Section Title"
+            finalTitle = `${documentTitle} - ${sectionTitle}`;
+        } else if (sectionTitle) {
+            // Just use section title if it's the same as document title
+            finalTitle = sectionTitle;
+        } else {
+            // Fallback to filename with section number
+            finalTitle = `${baseFilename} - Section ${index + 1}`;
+        }
+
+        return {
+            title: finalTitle,
+            content: convertToMarkdown(section.content),
+            metadata: extractMetadata(section.content, filePath)
+        };
+    });
 }
 
 /**
@@ -46,37 +73,83 @@ function splitIntoSections(content) {
     const sections = [];
     const lines = content.split('\n');
     let currentSection = [];
+    let currentSectionTitle = null;
+    let previousSectionTitle = null;
 
-    for (const line of lines) {
-        // Detect section headers (markdown headers or bold text)
-        const isHeader = line.match(/^#{1,3}\s+/) ||
-            line.match(/^\*\*[^*]+\*\*$/) ||
-            line.match(/^[A-Z][A-Za-z\s]{3,}:$/); // "Section Name:"
+    // IPSR-specific section markers
+    const iprsrSectionMarkers = [
+        /^OBJECTIVE\s*$/i,
+        /^SCOPE\s*$/i,
+        /^DEFINITION\s*$/i,
+        /^PROCESS\s*$/i,
+        /^Appendix\s+[A-Z]/i,
+        /^CODES\s*$/i,
+        /^DEPT\s+PROCESS\s*$/i,
+        /^Panel of Examiner.*Requirements/i,
+        /^Role of the Panel of Examiners/i,
+        /^Additional Standard Operating Procedure/i
+    ];
 
-        if (isHeader && currentSection.length > 0) {
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const trimmedLine = line.trim();
+
+        // Check if this line is a section marker
+        const isIPSRSection = iprsrSectionMarkers.some(pattern => pattern.test(trimmedLine));
+
+        // Also detect other common section headers
+        const isMarkdownHeader = line.match(/^#{1,3}\s+/);
+        const isBoldHeader = line.match(/^\*\*[^*]+\*\*$/);
+        const isColonHeader = line.match(/^[A-Z][A-Za-z\s]{3,}:\s*$/);
+
+        const isHeader = isIPSRSection || isMarkdownHeader || isBoldHeader || isColonHeader;
+
+        // Only create new section if:
+        // 1. It's a header
+        // 2. We have content in current section
+        // 3. The title is DIFFERENT from the previous section (avoid duplicates from page breaks)
+        if (isHeader && currentSection.length > 0 && trimmedLine !== previousSectionTitle) {
             // Save previous section
             const sectionText = currentSection.join('\n').trim();
             if (sectionText.length > 100) { // Minimum section length
-                sections.push(sectionText);
+                sections.push({
+                    title: currentSectionTitle,
+                    content: sectionText
+                });
+                previousSectionTitle = currentSectionTitle;
             }
             currentSection = [];
+            currentSectionTitle = trimmedLine;
         }
+
         currentSection.push(line);
+
+        // Set title for first section if not set
+        if (!currentSectionTitle && trimmedLine.length > 5) {
+            currentSectionTitle = trimmedLine;
+        }
     }
 
     // Add final section
     if (currentSection.length > 0) {
         const sectionText = currentSection.join('\n').trim();
         if (sectionText.length > 100) {
-            sections.push(sectionText);
+            sections.push({
+                title: currentSectionTitle,
+                content: sectionText
+            });
         }
     }
 
     // If no sections found, treat entire document as one section
     if (sections.length === 0) {
-        sections.push(content);
+        sections.push({
+            title: null,
+            content: content
+        });
     }
 
+    // Return sections with titles
     return sections;
 }
 
