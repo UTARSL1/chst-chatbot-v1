@@ -5,7 +5,7 @@ import { prisma } from '@/lib/db';
 
 export async function DELETE(
     request: Request,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
         const session = await getServerSession(authOptions);
@@ -13,6 +13,8 @@ export async function DELETE(
         if (!session || session.user.role !== 'chairperson') {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
+
+        const params = await context.params;
 
         await prisma.documentLibraryEntry.delete({
             where: { id: params.id }
