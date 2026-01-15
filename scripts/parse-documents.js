@@ -85,24 +85,54 @@ function splitIntoSections(content) {
  */
 function extractTitle(section) {
     const lines = section.split('\n');
+
+    // IPSR-specific: Look for "Manual Title :" pattern
     for (const line of lines) {
-        // Try markdown header
+        const manualTitleMatch = line.match(/Manual Title\s*:\s*(.+)/i);
+        if (manualTitleMatch) {
+            return manualTitleMatch[1].trim();
+        }
+    }
+
+    // Try markdown header
+    for (const line of lines) {
         let match = line.match(/^#{1,3}\s+(.+)/);
-        if (match) return match[1].trim();
-
-        // Try bold text
-        match = line.match(/^\*\*([^*]+)\*\*$/);
-        if (match) return match[1].trim();
-
-        // Try "Title:" format
-        match = line.match(/^([A-Z][A-Za-z\s]{3,}):$/);
         if (match) return match[1].trim();
     }
 
-    // Use first non-empty line as title
+    // Try bold text
+    for (const line of lines) {
+        let match = line.match(/^\*\*([^*]+)\*\*$/);
+        if (match) return match[1].trim();
+    }
+
+    // Try "Title:" format
+    for (const line of lines) {
+        let match = line.match(/^([A-Z][A-Za-z\s]{3,}):\s*$/);
+        if (match) return match[1].trim();
+    }
+
+    // Skip common header lines and find the first meaningful title
+    const skipPatterns = [
+        /^universiti tunku abdul rahman$/i,
+        /^utar$/i,
+        /^page\s+\d+\s+of\s+\d+/i,
+        /^procedure number/i,
+        /^rev no/i,
+        /^effective date/i,
+        /^\s*$/  // Empty lines
+    ];
+
     for (const line of lines) {
         const trimmed = line.trim();
-        if (trimmed.length > 5 && trimmed.length < 100) {
+
+        // Skip if matches any skip pattern
+        if (skipPatterns.some(pattern => pattern.test(trimmed))) {
+            continue;
+        }
+
+        // Good title candidate: not too short, not too long
+        if (trimmed.length > 10 && trimmed.length < 150) {
             return trimmed;
         }
     }
