@@ -1,5 +1,5 @@
 import { OpenAI } from 'openai';
-import { generateEmbedding } from './embeddings';
+import { generateEmbedding, generateEmbeddings, cosineSimilarity } from './embeddings';
 import { searchSimilarDocuments } from './vectorStore';
 import { getAccessibleLevels } from '@/lib/utils';
 import { RAGQuery, RAGResponse, DocumentSource } from '@/types';
@@ -1217,6 +1217,28 @@ export async function processRAGQuery(query: RAGQuery, onChunk?: (token: string)
                 searchDocumentLibrary(effectiveQuery, accessLevels, 3),
                 embeddingPromise.then(emb => searchDocumentLibraryVectors(emb, accessLevels, 3))
             ]);
+
+            // ---------------------------------------------------------
+            // 5. SEMANTIC FILTERING (Cleanup Keyword Search Noise)
+            // ---------------------------------------------------------
+            if (knowledgeNotes.length > 0) {
+                try {
+                    const titles = knowledgeNotes.map(n => n.title);
+                    const titleEmbeddings = await generateEmbeddings(titles);
+
+                    const filteredNotes = knowledgeNotes.filter((note, index) => {
+                        const sim = cosineSimilarity(embedding, titleEmbeddings[index]);
+                        return sim > 0.75; // Threshold for relevant topic
+                    });
+
+                    if (filteredNotes.length < knowledgeNotes.length) {
+                        log(`  ✂️ Filtered ${knowledgeNotes.length - filteredNotes.length} irrelevant knowledge notes (Semantic < 0.75)`);
+                        knowledgeNotes = filteredNotes;
+                    }
+                } catch (err) {
+                    console.error("Semantic filtering for Knowledge Notes failed:", err);
+                }
+            }
 
             // Merge Vector results into Document Library Entries (deduplicating by ID)
             // This ensures we get both exact keyword matches and semantic matches
