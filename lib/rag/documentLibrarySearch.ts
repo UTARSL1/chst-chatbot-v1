@@ -13,6 +13,7 @@ interface DocumentLibraryResult {
     priority: string;
     department: string | null;
     documentType: string | null;
+    sourceFile: string | null;
 }
 
 export async function searchDocumentLibrary(
@@ -40,7 +41,8 @@ export async function searchDocumentLibrary(
                 priority: true,
                 department: true,
                 documentType: true,
-                tags: true
+                tags: true,
+                sourceFile: true // CRITICAL: For download links
             }
         });
 
