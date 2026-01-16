@@ -1257,6 +1257,7 @@ export async function processRAGQuery(query: RAGQuery, onChunk?: (token: string)
                             content: vec.metadata.content,
                             department: vec.metadata.department,
                             documentType: vec.metadata.documentType,
+                            sourceFile: vec.metadata.sourceFile, // CRITICAL: For download links
                             // Source: vector
                         });
                         existingIds.add(docId);

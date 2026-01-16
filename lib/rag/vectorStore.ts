@@ -158,7 +158,8 @@ export async function storeDocumentLibraryEntry(
         content: string,
         accessLevel: string[],
         department: string | null,
-        documentType: string | null
+        documentType: string | null,
+        sourceFile: string | null
     },
     embedding: number[]
 ): Promise<string> {
@@ -180,7 +181,8 @@ export async function storeDocumentLibraryEntry(
                 content: entry.content.substring(0, 2000), // Store snippet
                 accessLevel: accessLevels,
                 department: entry.department || '',
-                documentType: entry.documentType || ''
+                documentType: entry.documentType || '',
+                sourceFile: entry.sourceFile || '' // CRITICAL: For download links
             }
         }]);
 
