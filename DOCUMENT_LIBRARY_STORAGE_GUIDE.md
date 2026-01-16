@@ -41,6 +41,32 @@ npm run doc:process
 
 That's it! ✨
 
+### 📦 What Happens to Processed Files?
+
+After successful processing, the script **automatically moves** the PDFs to:
+```
+documents/processed/YYYY-MM-DD/
+```
+
+This means:
+*   ✅ **No re-processing** of old documents
+*   ✅ **Clean `to-process` folder** ready for next batch
+*   ✅ **Organized archive** by date
+*   ✅ You can safely add new PDFs anytime
+
+**Example:**
+```
+documents/
+  ├── to-process/          ← Drop new PDFs here
+  │   └── (empty after processing)
+  └── processed/           ← Archived automatically
+      ├── 2026-01-15/
+      │   ├── QP-001.pdf
+      │   └── QP-002.pdf
+      └── 2026-01-16/
+          └── QP-003.pdf
+```
+
 ---
 
 ## 🔧 What Happens Automatically

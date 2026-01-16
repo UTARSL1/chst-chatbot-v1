@@ -133,6 +133,37 @@ async function main() {
 
     console.log('\n✅ Supabase upload complete\n');
 
+    // Step 6: Archive processed files
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('STEP 6: Archiving Processed Files');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
+    const archiveDir = path.join(process.cwd(), 'documents', 'processed');
+
+    // Create archive directory if it doesn't exist
+    if (!fs.existsSync(archiveDir)) {
+        fs.mkdirSync(archiveDir, { recursive: true });
+    }
+
+    // Create timestamped subfolder for this batch
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').split('T')[0];
+    const batchArchiveDir = path.join(archiveDir, timestamp);
+
+    if (!fs.existsSync(batchArchiveDir)) {
+        fs.mkdirSync(batchArchiveDir, { recursive: true });
+    }
+
+    // Move processed PDFs to archive
+    for (const pdfFile of pdfs) {
+        const sourcePath = path.join(toProcessDir, pdfFile);
+        const destPath = path.join(batchArchiveDir, pdfFile);
+
+        fs.renameSync(sourcePath, destPath);
+        console.log(`📦 Archived: ${pdfFile} → processed/${timestamp}/`);
+    }
+
+    console.log('\n✅ Files archived successfully\n');
+
     // Final Summary
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log('🎉 PROCESSING COMPLETE!');
@@ -141,7 +172,9 @@ async function main() {
     console.log('✅ Database updated with sections and metadata');
     console.log('✅ Embeddings generated for semantic search');
     console.log('✅ PDFs uploaded to Supabase Storage');
-    console.log('\n📝 The AI can now retrieve and link these documents in responses.\n');
+    console.log(`✅ Files archived to: documents/processed/${timestamp}/`);
+    console.log('\n📝 The AI can now retrieve and link these documents in responses.');
+    console.log('📂 The to-process folder is now empty and ready for new documents.\n');
 }
 
 main().catch(error => {
