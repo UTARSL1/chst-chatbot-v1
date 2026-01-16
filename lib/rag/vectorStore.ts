@@ -146,3 +146,80 @@ export async function getIndexStats() {
         throw new Error('Failed to get index statistics');
     }
 }
+
+/**
+ * Store Document Library entry in Pinecone
+ */
+export async function storeDocumentLibraryEntry(
+    entry: {
+        id: string,
+        documentTitle: string | null,
+        title: string,
+        content: string,
+        accessLevel: string[],
+        department: string | null,
+        documentType: string | null
+    },
+    embedding: number[]
+): Promise<string> {
+    try {
+        const index = await getIndex();
+        const vectorId = uuidv4();
+
+        // Ensure accessLevel is a flat array of strings for Pinecone
+        const accessLevels = Array.isArray(entry.accessLevel) ? entry.accessLevel : [entry.accessLevel];
+
+        await index.upsert([{
+            id: vectorId,
+            values: embedding,
+            metadata: {
+                type: 'document-library',
+                documentLibraryId: entry.id,
+                documentTitle: entry.documentTitle || '',
+                title: entry.title,
+                content: entry.content.substring(0, 2000), // Store snippet
+                accessLevel: accessLevels,
+                department: entry.department || '',
+                documentType: entry.documentType || ''
+            }
+        }]);
+
+        return vectorId;
+    } catch (error) {
+        console.error('Error storing document library entry:', error);
+        throw new Error('Failed to store document library entry in vector database');
+    }
+}
+
+/**
+ * Search Document Library vectors
+ * Returns matches with score and metadata
+ */
+export async function searchDocumentLibraryVectors(
+    queryEmbedding: number[],
+    accessLevels: string[],
+    topK: number = 5
+): Promise<any[]> {
+    try {
+        const index = await getIndex();
+
+        const queryResponse = await index.query({
+            vector: queryEmbedding,
+            topK,
+            includeMetadata: true,
+            filter: {
+                type: 'document-library',
+                accessLevel: { $in: accessLevels }
+            },
+        });
+
+        return queryResponse.matches.map(match => ({
+            id: match.id,
+            score: match.score,
+            metadata: match.metadata
+        }));
+    } catch (error) {
+        console.error('Error searching document library vectors:', error);
+        return []; // Return empty on error to gracefully failover
+    }
+}

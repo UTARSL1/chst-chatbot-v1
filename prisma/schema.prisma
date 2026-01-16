@@ -543,6 +543,7 @@ model DocumentLibraryEntry {
   sourceFile    String?  @map("source_file")
   sectionIndex  Int?     @map("section_index")
   metadata      Json?
+  vectorId      String?  @map("vector_id")
   createdBy     String   @map("created_by")
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")

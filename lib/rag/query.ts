@@ -8,6 +8,7 @@ import { getRelatedDocuments } from './suggestions';
 import { searchKnowledgeNotes } from './knowledgeSearch';
 import { searchDocumentLibrary } from './documentLibrarySearch';
 import { resolveUnit, searchStaff, listDepartments } from '@/lib/tools';
+import { searchDocumentLibraryVectors } from './vectorStore';
 import { getJournalMetricsByTitle, getJournalMetricsByIssn, ensureJcrCacheLoaded } from '@/lib/jcrCache';
 import { getInstitutionByName, getInstitutionsByCountry, ensureNatureIndexCacheLoaded } from '@/lib/natureIndexCache';
 import { checkJournalInNatureIndex, getAllNatureIndexJournals, ensureNatureIndexJournalCacheLoaded } from '@/lib/natureIndexJournalCache';
@@ -1165,7 +1166,8 @@ export async function processRAGQuery(query: RAGQuery, onChunk?: (token: string)
         let embedding: number[] = [];
         let knowledgeNotes: any[] = [];
         let relevantChunks: any[] = [];
-        let documentLibraryEntries: any[] = []; // Document Library entries
+        let documentLibraryEntries: any[] = []; // Document Library entries (Keyword)
+        let documentLibraryVectors: any[] = []; // Document Library entries (Vector)
         const accessLevels = getAccessibleLevels(query.userRole);
 
         if (isStaffQuery) {
@@ -1197,25 +1199,58 @@ export async function processRAGQuery(query: RAGQuery, onChunk?: (token: string)
             log(`   Available tools: ${toolNames.join(', ')} `);
 
             // 3-4. PARALLELIZED: Generate embedding + Search knowledge notes + Vector search
+            // 3-4. PARALLELIZED: Generate embedding + Search knowledge notes + Vector search
             const t3 = Date.now();
 
-            [embedding, knowledgeNotes, relevantChunks, documentLibraryEntries] = await Promise.all([
-                generateEmbedding(effectiveQuery),
+            // Optimization: Generate embedding once and reuse
+            const embeddingPromise = generateEmbedding(effectiveQuery);
+
+            [embedding, knowledgeNotes, relevantChunks, documentLibraryEntries, documentLibraryVectors] = await Promise.all([
+                embeddingPromise,
                 // Conditionally skip knowledge note search for data queries with tools
                 suppressionDecision.suppress
                     ? Promise.resolve([])  // Skip knowledge notes
                     : searchKnowledgeNotes(effectiveQuery, accessLevels, 3),
-                // Vector search needs embedding, so we do it in a nested promise
-                generateEmbedding(effectiveQuery).then(emb => searchSimilarDocuments(emb, accessLevels, 5)),
-                // Search Document Library (new structured docs with tables)
-                searchDocumentLibrary(effectiveQuery, accessLevels, 3)
+                // Vector search needs embedding
+                embeddingPromise.then(emb => searchSimilarDocuments(emb, accessLevels, 5)),
+                // Document Library: Hybrid Search (Keyword + Vector)
+                searchDocumentLibrary(effectiveQuery, accessLevels, 3),
+                embeddingPromise.then(emb => searchDocumentLibraryVectors(emb, accessLevels, 3))
             ]);
+
+            // Merge Vector results into Document Library Entries (deduplicating by ID)
+            // This ensures we get both exact keyword matches and semantic matches
+            if (documentLibraryVectors && documentLibraryVectors.length > 0) {
+                const existingIds = new Set(documentLibraryEntries.map((e: any) => e.id));
+                let newFromVector = 0;
+
+                documentLibraryVectors.forEach((vec: any) => {
+                    const docId = vec.metadata.documentLibraryId;
+                    if (docId && !existingIds.has(docId)) {
+                        // Map flat metadata back to structural entry format
+                        documentLibraryEntries.push({
+                            id: docId,
+                            documentTitle: vec.metadata.documentTitle,
+                            title: vec.metadata.title,
+                            content: vec.metadata.content,
+                            department: vec.metadata.department,
+                            documentType: vec.metadata.documentType,
+                            // Source: vector
+                        });
+                        existingIds.add(docId);
+                        newFromVector++;
+                    }
+                });
+                if (newFromVector > 0) {
+                    log(`  + Merged ${newFromVector} semantic results from Document Library`);
+                }
+            }
 
             log(`⏱️ Step 2(Intent Classification): ${((t3 - t2) / 1000).toFixed(2)} s`);
             log(`⏱️ Steps 3 - 4(Parallel: Embedding + Knowledge + Vector): ${((Date.now() - t3) / 1000).toFixed(2)} s`);
             log(`  - Found ${knowledgeNotes.length} knowledge notes${suppressionDecision.suppress ? ' (suppressed)' : ''} `);
             log(`  - Found ${relevantChunks.length} document chunks`);
-            log(`  - Found ${documentLibraryEntries.length} Document Library entries`);
+            log(`  - Found ${documentLibraryEntries.length} Document Library entries (Hybrid)`);
         }
 
         // 6. Prepare context
