@@ -68,14 +68,14 @@ export default function DocumentLibraryPage() {
     useEffect(() => {
         if (status === 'unauthenticated') {
             router.push('/auth/signin');
-        } else if (status === 'authenticated' && session?.user?.role !== 'admin') {
+        } else if (status === 'authenticated' && session?.user?.role !== 'chairperson') {
             router.push('/');
         }
     }, [status, session, router]);
 
     // Fetch data
     useEffect(() => {
-        if (status === 'authenticated' && session?.user?.role === 'admin') {
+        if (status === 'authenticated' && session?.user?.role === 'chairperson') {
             fetchData();
         }
     }, [status, session, activeTab]);
