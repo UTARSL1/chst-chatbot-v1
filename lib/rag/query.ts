@@ -1830,10 +1830,11 @@ ${chatHistoryStr}
             relevanceScore: (chunk as any).score
         }));
 
-        // Add linked documents from knowledge notes to sources
-        // ROBUST APPROACH: If a knowledge note was retrieved and sent to LLM,
-        // its linked documents are relevant resources regardless of whether
-        // the LLM explicitly used the note content in the response
+        // DISABLED: Add linked documents from knowledge notes to sources
+        // REASON: This was too aggressive - it added documents even when the Knowledge Note
+        // wasn't actually used in the LLM's response, causing source pollution.
+        // The LLM should cite what it actually uses via the response parsing logic.
+        /*
         if (knowledgeNotes.length > 0) {
             log(`Processing ${knowledgeNotes.length} knowledge notes for linked documents...`);
             knowledgeNotes.forEach((note: any) => {
@@ -1858,12 +1859,21 @@ ${chatHistoryStr}
                 }
             });
         }
+        */
 
         // Add Document Library entries as references (Traceability)
+        // Deduplicate by documentTitle to avoid showing same PDF multiple times
         if (documentLibraryEntries.length > 0) {
             log(`Processing ${documentLibraryEntries.length} Document Library entries for references...`);
+            const seenDocTitles = new Set<string>();
+
             documentLibraryEntries.forEach((entry: any) => {
-                if (entry.sourceFile) {
+                if (entry.sourceFile && entry.documentTitle) {
+                    // Skip if we've already added this document
+                    if (seenDocTitles.has(entry.documentTitle)) {
+                        return;
+                    }
+
                     const alreadyInSources = sourcesToEnrich.some(s => s.documentId === entry.id);
                     if (!alreadyInSources) {
                         // Ensure filename has .pdf extension for download
@@ -1882,6 +1892,7 @@ ${chatHistoryStr}
                             originalName: originalName,
                             relevanceScore: 0.95
                         });
+                        seenDocTitles.add(entry.documentTitle);
                         log(`       ✅ Added Document Library Reference: ${originalName}`);
                     }
                 }
