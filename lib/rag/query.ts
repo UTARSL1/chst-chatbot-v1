@@ -1269,6 +1269,27 @@ export async function processRAGQuery(query: RAGQuery, onChunk?: (token: string)
                 }
             }
 
+            // Semantic Filtering for Document Library (same as Knowledge Notes)
+            // Filter out entries where documentTitle doesn't semantically match the query
+            if (documentLibraryEntries.length > 0) {
+                try {
+                    const titles = documentLibraryEntries.map((e: any) => e.documentTitle || e.title);
+                    const titleEmbeddings = await generateEmbeddings(titles);
+
+                    const filteredEntries = documentLibraryEntries.filter((entry: any, index: number) => {
+                        const sim = cosineSimilarity(embedding, titleEmbeddings[index]);
+                        return sim > 0.70; // Slightly lower threshold than Knowledge Notes (0.75)
+                    });
+
+                    if (filteredEntries.length < documentLibraryEntries.length) {
+                        log(`  ✂️ Filtered ${documentLibraryEntries.length - filteredEntries.length} irrelevant Document Library entries (Semantic < 0.70)`);
+                        documentLibraryEntries = filteredEntries;
+                    }
+                } catch (err) {
+                    console.error("Semantic filtering for Document Library failed:", err);
+                }
+            }
+
             log(`⏱️ Step 2(Intent Classification): ${((t3 - t2) / 1000).toFixed(2)} s`);
             log(`⏱️ Steps 3 - 4(Parallel: Embedding + Knowledge + Vector): ${((Date.now() - t3) / 1000).toFixed(2)} s`);
             log(`  - Found ${knowledgeNotes.length} knowledge notes${suppressionDecision.suppress ? ' (suppressed)' : ''} `);
