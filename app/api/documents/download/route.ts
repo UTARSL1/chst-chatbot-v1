@@ -32,55 +32,82 @@ export async function GET(req: NextRequest) {
             where: { id },
         });
 
-        if (!document) {
-            return NextResponse.json(
-                { error: 'Document not found' },
-                { status: 404 }
-            );
+        if (document) {
+            // --- EXISTING LOGIC FOR KNOWLEDGE BASE DOCUMENTS ---
+
+            // Check access permissions based on user role
+            const userRole = session.user.role;
+            const docAccess = document.accessLevel;
+
+            const hasAccess =
+                userRole === 'chairperson' ||
+                (userRole === 'member' && ['student', 'member'].includes(docAccess)) ||
+                (userRole === 'student' && docAccess === 'student') ||
+                (userRole === 'public' && docAccess === 'student');
+
+            if (!hasAccess) {
+                return NextResponse.json(
+                    { error: 'Access denied. You do not have permission to download this document.' },
+                    { status: 403 }
+                );
+            }
+
+            // Generate a public URL
+            console.log('[Download] Generating public URL for Knowledge Base doc:', document.filePath);
+            const { data } = supabaseAdmin.storage
+                .from('documents')
+                .getPublicUrl(document.filePath);
+
+            if (!data || !data.publicUrl) {
+                return NextResponse.json({ error: 'Failed to generate download link' }, { status: 500 });
+            }
+
+            return NextResponse.json({
+                success: true,
+                downloadUrl: data.publicUrl,
+                filename: document.originalName
+            });
         }
 
-        // Check access permissions based on user role
-        const userRole = session.user.role;
-        const docAccess = document.accessLevel;
-
-        const hasAccess =
-            userRole === 'chairperson' ||
-            (userRole === 'member' && ['student', 'member'].includes(docAccess)) ||
-            (userRole === 'student' && docAccess === 'student') ||
-            (userRole === 'public' && docAccess === 'student');
-
-        if (!hasAccess) {
-            return NextResponse.json(
-                { error: 'Access denied. You do not have permission to download this document.' },
-                { status: 403 }
-            );
-        }
-
-        // Generate a public URL
-        console.log('[Download] Generating public URL for:', document.filePath);
-        const { data } = supabaseAdmin.storage
-            .from('documents')
-            .getPublicUrl(document.filePath);
-
-        if (!data || !data.publicUrl) {
-            console.error('Failed to generate public URL');
-            return NextResponse.json(
-                {
-                    error: 'Failed to generate download link',
-                    filePath: document.filePath
-                },
-                { status: 500 }
-            );
-        }
-
-        console.log('[Download] Public URL generated:', data.publicUrl);
-
-        // Return the public URL in JSON format
-        return NextResponse.json({
-            success: true,
-            downloadUrl: data.publicUrl,
-            filename: document.originalName
+        // --- NEW LOGIC FOR DOCUMENT LIBRARY ENTRIES ---
+        const docLibEntry = await prisma.documentLibraryEntry.findUnique({
+            where: { id: id }
         });
+
+        if (docLibEntry) {
+            // Check access (matches logic in query.ts)
+            // Default access level usually 'member' or 'student'
+            const userRole = session.user.role;
+            // Simplistic check for now - improve if strict restrictions needed
+            // Most policies are viewable by students/members
+
+            // Construct filename for Storage retrieval
+            // We assume files are uploaded to root of 'document-library' bucket
+            let objectName = docLibEntry.sourceFile;
+            if (objectName && !objectName.toLowerCase().endsWith('.pdf')) {
+                objectName += '.pdf';
+            }
+
+            if (!objectName) {
+                return NextResponse.json({ error: 'Document source file not defined' }, { status: 404 });
+            }
+
+            console.log('[Download] Generating public URL for Document Library:', objectName);
+            const { data } = supabaseAdmin.storage
+                .from('document-library')
+                .getPublicUrl(objectName);
+
+            return NextResponse.json({
+                success: true,
+                downloadUrl: data.publicUrl,
+                filename: docLibEntry.documentTitle || objectName
+            });
+        }
+
+        return NextResponse.json(
+            { error: 'Document not found' },
+            { status: 404 }
+        );
     } catch (error) {
         console.error('Document download error:', error);
         return NextResponse.json(

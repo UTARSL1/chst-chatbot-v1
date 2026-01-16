@@ -14,7 +14,8 @@
     "db:studio": "prisma studio",
     "db:generate": "prisma generate",
     "import:jcr": "ts-node scripts/import_jcr_year.ts",
-    "sync:local": "ts-node --project tsconfig.node.json lib/tools/run-sync-local.ts"
+    "sync:local": "ts-node --project tsconfig.node.json lib/tools/run-sync-local.ts",
+    "doc:process": "npx tsx scripts/process-document-library.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

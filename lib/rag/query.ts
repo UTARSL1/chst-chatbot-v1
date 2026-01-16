@@ -1858,6 +1858,35 @@ ${chatHistoryStr}
             });
         }
 
+        // Add Document Library entries as references (Traceability)
+        if (documentLibraryEntries.length > 0) {
+            log(`Processing ${documentLibraryEntries.length} Document Library entries for references...`);
+            documentLibraryEntries.forEach((entry: any) => {
+                if (entry.sourceFile) {
+                    const alreadyInSources = sourcesToEnrich.some(s => s.documentId === entry.id);
+                    if (!alreadyInSources) {
+                        // Ensure filename has .pdf extension for download
+                        const filename = entry.sourceFile.endsWith('.pdf')
+                            ? entry.sourceFile
+                            : `${entry.sourceFile}.pdf`;
+
+                        // Use documentTitle (e.g. "QP-IPSR-PSU-003...") as the display name
+                        const originalName = entry.documentTitle || entry.title;
+
+                        sourcesToEnrich.push({
+                            filename: filename,
+                            // Use entry access level? usually stored as array. Take first or default.
+                            accessLevel: (entry.accessLevel && entry.accessLevel[0]) ? entry.accessLevel[0] : 'member',
+                            documentId: entry.id,
+                            originalName: originalName,
+                            relevanceScore: 0.95
+                        });
+                        log(`       ✅ Added Document Library Reference: ${originalName}`);
+                    }
+                }
+            });
+        }
+
         // If this was a recency query, ensure the latest document is in sources
         if (isRecencyQuery && latestDocumentId) {
             try {
@@ -2131,10 +2160,10 @@ async function enrichSourcesWithMetadata(sources: DocumentSource[]): Promise<Doc
 
             // Fallback: If document not found in DB, use filename as originalName
             // This ensures fuzzy matching has something to work with
-            console.log(`[Enrich] ⚠️  No DB match for: ${source.filename} (documentId: ${source.documentId || 'none'}) - using filename as originalName`);
+            console.log(`[Enrich] ⚠️  No DB match for: ${source.filename} (documentId: ${source.documentId || 'none'}) - using filename or existing name`);
             return {
                 ...source,
-                originalName: source.filename, // Use filename instead of UUID from vector metadata
+                originalName: source.originalName || source.filename, // Use existing name if available, otherwise filename
             };
         });
 
