@@ -202,6 +202,7 @@ export function shouldSuppressKnowledgeNotes(
             tool === 'nature_index_lookup' ||
             tool === 'nature_index_journal_lookup' ||
             tool === 'jcr_journal_metric' ||
+            tool === 'jcr_search_by_category' ||
             tool === 'utar_staff_search'
         );
 

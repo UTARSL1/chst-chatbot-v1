@@ -38,6 +38,22 @@ export type JournalMatchResult = {
     reason?: string;
 }
 
+export type CategorySearchResult = {
+    found: boolean;
+    category?: string;
+    year?: number;
+    totalJournals?: number;
+    journals?: {
+        fullTitle: string;
+        issnPrint: string | null;
+        issnElectronic: string | null;
+        jifValue: number | null;
+        jifQuartile: string;
+        category: string;
+    }[];
+    reason?: string;
+}
+
 let isCacheLoaded = false;
 let cacheLoadingPromise: Promise<void> | null = null;
 
@@ -304,7 +320,7 @@ export function getJournalMetricsByTitle(title: string, years?: number[]): Journ
     const normalizeTitle = (t: string): string => {
         return t
             .replace(/^(the|a|an)\s+/i, '') // Remove leading articles
-            .replace(/[:\-–—]/g, ' ') // Replace punctuation with spaces
+            .replace(/[:–—]/g, ' ') // Replace punctuation with spaces
             .replace(/\s+/g, ' ') // Normalize spaces
             .trim();
     };
@@ -400,4 +416,91 @@ export function getJournalInfo(titleOrIssn: string): { fullTitle: string, issnPr
         return { fullTitle: r.fullTitle, issnPrint: r.issnPrint, issnElectronic: r.issnElectronic };
     }
     return null;
+}
+
+/**
+ * Search for journals by category
+ * Returns journals sorted by JIF (highest first)
+ */
+export async function searchJournalsByCategory(
+    categoryQuery: string,
+    year?: number,
+    limit?: number,
+    minQuartile?: string
+): Promise<CategorySearchResult> {
+    // Ensure cache is loaded
+    await ensureJcrCacheLoaded();
+
+    const targetYear = year || 2025; // Default to latest year
+    const maxResults = limit || 10;
+    const categoryLower = categoryQuery.toLowerCase().trim();
+
+    console.log(`[JCR Cache] Searching for journals in category: "${categoryQuery}", year: ${targetYear}, limit: ${maxResults}`);
+
+    // Query database directly for category search (more efficient than in-memory search)
+    try {
+        const results = await prisma.jcrJournalMetric.findMany({
+            where: {
+                jifYear: targetYear,
+                category: {
+                    contains: categoryQuery,
+                    mode: 'insensitive'
+                }
+            },
+            orderBy: {
+                jifValue: 'desc' // Sort by JIF descending
+            },
+            take: maxResults * 2 // Get more than needed for filtering
+        });
+
+        if (results.length === 0) {
+            return {
+                found: false,
+                reason: `No journals found in category "${categoryQuery}" for year ${targetYear}`
+            };
+        }
+
+        // Filter by quartile if specified
+        let filtered = results;
+        if (minQuartile) {
+            const quartileRank = QUARTILE_RANK[minQuartile as keyof typeof QUARTILE_RANK] || 99;
+            filtered = results.filter(r => {
+                const rank = QUARTILE_RANK[r.jifQuartile as keyof typeof QUARTILE_RANK] || 99;
+                return rank <= quartileRank;
+            });
+        }
+
+        // Deduplicate by journal title (take highest JIF if multiple categories)
+        const seen = new Set<string>();
+        const uniqueJournals = filtered.filter(r => {
+            if (seen.has(r.normalizedTitle)) return false;
+            seen.add(r.normalizedTitle);
+            return true;
+        }).slice(0, maxResults);
+
+        const journals = uniqueJournals.map(r => ({
+            fullTitle: r.fullTitle,
+            issnPrint: r.issnPrint,
+            issnElectronic: r.issnElectronic,
+            jifValue: r.jifValue ? Number(r.jifValue) : null,
+            jifQuartile: r.jifQuartile,
+            category: r.category
+        }));
+
+        console.log(`[JCR Cache] Found ${journals.length} journals in category "${categoryQuery}"`);
+
+        return {
+            found: true,
+            category: categoryQuery,
+            year: targetYear,
+            totalJournals: journals.length,
+            journals
+        };
+    } catch (error: any) {
+        console.error(`[JCR Cache] Error searching by category:`, error);
+        return {
+            found: false,
+            reason: `Database error: ${error.message}`
+        };
+    }
 }

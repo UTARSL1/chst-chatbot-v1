@@ -9,7 +9,7 @@ import { searchKnowledgeNotes } from './knowledgeSearch';
 import { searchDocumentLibrary } from './documentLibrarySearch';
 import { resolveUnit, searchStaff, listDepartments } from '@/lib/tools';
 import { searchDocumentLibraryVectors } from './vectorStore';
-import { getJournalMetricsByTitle, getJournalMetricsByIssn, ensureJcrCacheLoaded } from '@/lib/jcrCache';
+import { getJournalMetricsByTitle, getJournalMetricsByIssn, ensureJcrCacheLoaded, searchJournalsByCategory } from '@/lib/jcrCache';
 import { getInstitutionByName, getInstitutionsByCountry, ensureNatureIndexCacheLoaded } from '@/lib/natureIndexCache';
 import { checkJournalInNatureIndex, getAllNatureIndexJournals, ensureNatureIndexJournalCacheLoaded } from '@/lib/natureIndexJournalCache';
 
@@ -205,6 +205,24 @@ const JCR_TOOL = {
     }
 };
 
+const JCR_CATEGORY_SEARCH_TOOL = {
+    type: 'function' as const,
+    function: {
+        name: 'jcr_search_by_category',
+        description: 'Search for journals by JCR category (e.g., "ARTIFICIAL INTELLIGENCE", "ONCOLOGY"). Returns journals in that category sorted by JIF (highest first). Use this when asked to suggest/recommend journals in a specific field or category.',
+        parameters: {
+            type: 'object',
+            properties: {
+                category: { type: 'string', description: 'JCR category name (e.g., "ARTIFICIAL INTELLIGENCE", "COMPUTER SCIENCE, ARTIFICIAL INTELLIGENCE", "ONCOLOGY"). Partial matches supported.' },
+                year: { type: 'integer', description: 'JCR year to retrieve (e.g. 2024, 2025). Defaults to 2025 (latest).' },
+                limit: { type: 'integer', description: 'Maximum number of journals to return. Defaults to 10.' },
+                minQuartile: { type: 'string', description: 'Minimum quartile filter (e.g., "Q1" for Q1 only, "Q2" for Q1-Q2). Optional.' }
+            },
+            required: ['category']
+        }
+    }
+};
+
 const NATURE_INDEX_TOOL = {
     type: 'function' as const,
     function: {
@@ -252,7 +270,7 @@ const NATURE_INDEX_JOURNAL_LIST_TOOL = {
     }
 };
 
-const AVAILABLE_TOOLS = [...UTAR_STAFF_TOOLS, JCR_TOOL, NATURE_INDEX_TOOL, NATURE_INDEX_JOURNAL_TOOL, NATURE_INDEX_JOURNAL_LIST_TOOL];
+const AVAILABLE_TOOLS = [...UTAR_STAFF_TOOLS, JCR_TOOL, JCR_CATEGORY_SEARCH_TOOL, NATURE_INDEX_TOOL, NATURE_INDEX_JOURNAL_TOOL, NATURE_INDEX_JOURNAL_LIST_TOOL];
 
 const STAFF_SEARCH_SYSTEM_PROMPT = `
 === UTAR STAFF SEARCH TOOLS ===
@@ -964,6 +982,22 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
             }
 
             return { found: false, error: 'No query or ISSN provided' };
+        }
+        if (name === 'jcr_search_by_category') {
+            // Ensure data is loaded
+            await ensureJcrCacheLoaded();
+
+            if (!args.category) {
+                return { found: false, error: 'Category is required' };
+            }
+
+            const year = args.year || 2025;
+            const limit = args.limit || 10;
+            const minQuartile = args.minQuartile;
+
+            if (logger) logger(`[jcr_search_by_category] Searching category: "${args.category}", year: ${year}, limit: ${limit}${minQuartile ? `, min quartile: ${minQuartile}` : ''}`);
+
+            return await searchJournalsByCategory(args.category, year, limit, minQuartile);
         }
         if (name === 'nature_index_lookup') {
             // Ensure data is loaded
