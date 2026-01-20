@@ -1884,6 +1884,8 @@ ${chatHistoryStr}
 
         // Add Document Library entries as references (Traceability)
         // Deduplicate by documentTitle to avoid showing same PDF multiple times
+        // CRITICAL FIX: Use normal relevance score (0.7) to allow content-based filtering
+        // Frontend will only show documents that are mentioned in the LLM's response
         if (documentLibraryEntries.length > 0) {
             log(`Processing ${documentLibraryEntries.length} Document Library entries for references...`);
             const seenDocTitles = new Set<string>();
@@ -1911,7 +1913,7 @@ ${chatHistoryStr}
                             accessLevel: (entry.accessLevel && entry.accessLevel[0]) ? entry.accessLevel[0] : 'member',
                             documentId: entry.id,
                             originalName: originalName,
-                            relevanceScore: 0.95
+                            relevanceScore: 0.7
                         });
                         seenDocTitles.add(entry.documentTitle);
                         log(`       ✅ Added Document Library Reference: ${originalName}`);
