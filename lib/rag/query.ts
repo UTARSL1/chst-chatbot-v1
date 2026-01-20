@@ -189,7 +189,7 @@ const JCR_TOOL = {
     type: 'function' as const,
     function: {
         name: 'jcr_journal_metric',
-        description: 'Look up Journal Citation Report (JCR) metrics, specifically Journal Impact Factor (JIF) and JIF Quartile (Q1-Q4) for journals.',
+        description: 'Look up Journal Citation Report (JCR) metrics for specific journals by name or ISSN. Returns JIF and quartile (Q1-Q4). For suggesting multiple journals in a category, call this tool multiple times with different well-known journal names in that field.',
         parameters: {
             type: 'object',
             properties: {
@@ -240,7 +240,7 @@ const NATURE_INDEX_JOURNAL_LIST_TOOL = {
     type: 'function' as const,
     function: {
         name: 'nature_index_journal_list_with_jif',
-        description: 'Get a list of Nature Index journals with their JIF (Journal Impact Factor) values from JCR. Returns journals sorted by JIF (highest first). Can optionally filter by JCR category (e.g., ONCOLOGY, BIOCHEMISTRY). Use this when asked to rank or list Nature Index journals by impact factor.',
+        description: 'ONLY use when the user explicitly mentions "Nature Index". Gets Nature Index journals with their JIF values from JCR, sorted by JIF (highest first). Can filter by category. DO NOT use for general journal queries - use jcr_journal_metric instead.',
         parameters: {
             type: 'object',
             properties: {
