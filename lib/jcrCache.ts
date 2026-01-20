@@ -67,26 +67,35 @@ export async function ensureJcrCacheLoaded(): Promise<void> {
                 orderBy: { jifYear: 'asc' }
             });
 
-            // Sort in memory to prioritize JCR_complete
+            // Sort in memory to prioritize: JCR_2025 > JCR_complete > JCR_incomplete
             all.sort((a, b) => {
-                // First sort by source (complete before incomplete)
-                if (a.source !== b.source) {
-                    if (a.source === 'JCR_complete') return -1;
-                    if (b.source === 'JCR_complete') return 1;
+                // Priority order: JCR_2025 (1) > JCR_complete (2) > others (3)
+                const getPriority = (source: string | null) => {
+                    if (source === 'JCR_2025') return 1;
+                    if (source === 'JCR_complete') return 2;
+                    return 3;
+                };
+
+                const aPriority = getPriority(a.source);
+                const bPriority = getPriority(b.source);
+
+                // First sort by priority (lower number = higher priority)
+                if (aPriority !== bPriority) {
+                    return aPriority - bPriority;
                 }
                 // Then by year
                 return a.jifYear - b.jifYear;
             });
 
-            // Track which journals we've already added from complete dataset
+            // Track which journals we've already added from higher priority datasets
             const processedJournals = new Set<string>();
 
 
             for (const row of all) {
                 const journalKey = `${row.normalizedTitle}_${row.jifYear}`;
 
-                // Skip incomplete records if we already have complete data for this journal+year
-                if (row.source === 'JCR_incomplete' && processedJournals.has(journalKey)) {
+                // Skip lower priority records if we already have higher priority data for this journal+year
+                if ((row.source === 'JCR_incomplete' || row.source === 'JCR_complete') && processedJournals.has(journalKey)) {
                     continue;
                 }
 
@@ -102,8 +111,8 @@ export async function ensureJcrCacheLoaded(): Promise<void> {
                     jifQuartile: row.jifQuartile
                 };
 
-                // Mark this journal+year as processed
-                if (row.source === 'JCR_complete') {
+                // Mark this journal+year as processed (for higher priority sources)
+                if (row.source === 'JCR_2025' || row.source === 'JCR_complete') {
                     processedJournals.add(journalKey);
                 }
 
@@ -132,7 +141,7 @@ export async function ensureJcrCacheLoaded(): Promise<void> {
                 }
             }
             isCacheLoaded = true;
-            console.log(`JCR cache loaded: ${all.length} total records (prioritizing JCR_complete).`);
+            console.log(`JCR cache loaded: ${all.length} total records (prioritizing JCR_2025 > JCR_complete > JCR_incomplete).`);
         } catch (e) {
             console.error("Failed to load JCR cache:", e);
             // Reset promise so we can retry?
