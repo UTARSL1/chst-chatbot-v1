@@ -240,12 +240,13 @@ const NATURE_INDEX_JOURNAL_LIST_TOOL = {
     type: 'function' as const,
     function: {
         name: 'nature_index_journal_list_with_jif',
-        description: 'Get a list of Nature Index journals with their JIF (Journal Impact Factor) values from JCR. Returns journals sorted by JIF (highest first). Use this when asked to rank or list Nature Index journals by impact factor.',
+        description: 'Get a list of Nature Index journals with their JIF (Journal Impact Factor) values from JCR. Returns journals sorted by JIF (highest first). Can optionally filter by JCR category (e.g., ONCOLOGY, BIOCHEMISTRY). Use this when asked to rank or list Nature Index journals by impact factor.',
         parameters: {
             type: 'object',
             properties: {
                 year: { type: 'integer', description: 'JCR year to retrieve (e.g. 2024). Defaults to 2024.' },
-                limit: { type: 'integer', description: 'Maximum number of journals to return (e.g. 10 for top 10). Defaults to 10.' }
+                limit: { type: 'integer', description: 'Maximum number of journals to return (e.g. 10 for top 10). Defaults to 10.' },
+                category: { type: 'string', description: 'Optional: Filter by JCR category (e.g., "ONCOLOGY", "BIOCHEMISTRY & MOLECULAR BIOLOGY"). Case-insensitive partial match.' }
             }
         }
     }
@@ -812,16 +813,25 @@ const NATURE_INDEX_JOURNAL_RANKING_SYSTEM_PROMPT = `
 You have access to a tool named \`nature_index_journal_list_with_jif\` which retrieves ALL 145 Nature Index journals with their JIF values and ranks them.
 
 ### 🧠 When to Use
+**CRITICAL: ONLY use this tool when the user EXPLICITLY mentions "Nature Index" in their query.**
+
 Call \`nature_index_journal_list_with_jif\` when the user asks to:
 - **Rank** Nature Index journals by JIF/Impact Factor
 - **List top N** Nature Index journals by JIF
 - **Compare** Nature Index journals by impact factor
 - Get the **highest JIF** journals in Nature Index
+- Filter Nature Index journals by category (e.g., "Q1 Nature Index journals in ONCOLOGY")
+
+**DO NOT use this tool for:**
+- General journal queries (e.g., "suggest Q1 journals in ONCOLOGY") → Use \`jcr_journal_metric\` instead
+- Queries that don't mention "Nature Index"
+
 
 ### 🧩 Tool Call Format
 {
-  "year": 2024,  // JCR year (optional, defaults to 2024)
-  "limit": 10    // Number of journals to return (optional, defaults to 10)
+  "year": 2024,      // JCR year (optional, defaults to 2024)
+  "limit": 10,       // Number of journals to return (optional, defaults to 10)
+  "category": "ONCOLOGY"  // Filter by JCR category (optional, case-insensitive)
 }
 
 ### 📊 Response Format
@@ -993,8 +1003,9 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
 
             const year = args.year || 2024;
             const limit = args.limit || 10;
+            const categoryFilter = args.category ? args.category.toLowerCase().trim() : null;
 
-            if (logger) logger(`[nature_index_journal_list_with_jif] Getting Nature Index journals with JIF for year ${year}, limit ${limit}`);
+            if (logger) logger(`[nature_index_journal_list_with_jif] Getting Nature Index journals with JIF for year ${year}, limit ${limit}${categoryFilter ? `, category filter: "${categoryFilter}"` : ''}`);
 
             // Get all Nature Index journals
             const natureIndexJournals = getAllNatureIndexJournals();
@@ -1016,14 +1027,26 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
 
                 if (jcrResult.found && jcrResult.metrics && jcrResult.metrics.length > 0) {
                     const metric = jcrResult.metrics[0];
+                    const categories = metric.categories.map(c => c.category);
+
+                    // Apply category filter if specified
+                    if (categoryFilter) {
+                        const hasMatchingCategory = categories.some(cat =>
+                            cat.toLowerCase().includes(categoryFilter)
+                        );
+                        if (!hasMatchingCategory) {
+                            continue; // Skip this journal if it doesn't match the category filter
+                        }
+                    }
+
                     journalsWithJif.push({
                         journalName: journal.journalName,
                         jifValue: metric.jifValue,
                         jifQuartile: metric.bestQuartile,
-                        categories: metric.categories.map(c => c.category)
+                        categories: categories
                     });
-                } else {
-                    // Journal not found in JCR or no data for this year
+                } else if (!categoryFilter) {
+                    // Only include journals without JCR data if no category filter is specified
                     journalsWithJif.push({
                         journalName: journal.journalName,
                         jifValue: null,
@@ -1044,7 +1067,7 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
             // Limit results
             const topJournals = journalsWithJif.slice(0, limit);
 
-            if (logger) logger(`[nature_index_journal_list_with_jif] Returning top ${topJournals.length} journals`);
+            if (logger) logger(`[nature_index_journal_list_with_jif] Returning top ${topJournals.length} journals${categoryFilter ? ` in category "${categoryFilter}"` : ''}`);
 
             return {
                 found: true,
