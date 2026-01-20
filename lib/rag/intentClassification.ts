@@ -107,6 +107,7 @@ export function classifyQueryIntent(query: string): IntentClassificationResult {
         /\b(check|verify|find)\s+.*\s+(nature\s+index|jcr|journal)\b/i,                           // "check if X is in nature index"
         /\b(journal|journals)\s+.*\s+(tracked|indexed|listed)\b/i,                                  // "journals tracked by nature index"
         /\b(impact\s+factor|jif|quartile|q1|q2|q3|q4)\b/i,                                          // JCR-specific terms
+        /\b(suggest|recommend|find|list)\s+.*\b(journal|journals)\b.*\b(in|for|category|field|area)\b/i,  // "suggest journals in category X"
     ];
 
     for (const pattern of journalLookupPatterns) {
