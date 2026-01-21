@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
         const isChairperson = session.user.role === 'chairperson';
 
         // Get members based on role
-        let members;
+        let members: Awaited<ReturnType<typeof prisma.rCPostgraduateMember.findMany>>;
         if (isChairperson) {
             // Chairperson sees all members
             members = await prisma.rCPostgraduateMember.findMany({
