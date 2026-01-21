@@ -409,6 +409,41 @@ When user asks "How many professors in X?":
 - "Below Professor" = Associate Professor + Assistant Professor + Lecturer (ranks 3-5)
 - "Assistant Professor or lower" = Assistant Professor + Lecturer (ranks 4-5)
 
+**CRITICAL: USING THE DESIGNATION PARAMETER**
+When user asks to "list" or "count" staff by academic rank, you MUST use the `designation` parameter:
+
+✅ **CORRECT USAGE:**
+- "list professors in LKC FES" → `{ faculty: "LKC FES", designation: "Professor" } `
+- "how many senior professors in DMBE?" → `{ acronym: "DMBE", designation: "Senior Professor" } `
+- "count associate professors in D3E" → `{ acronym: "D3E", designation: "Associate Professor" } `
+- "list assistant professors in Department of Chemistry" → `{ acronym: "DC", designation: "Assistant Professor" } `
+
+❌ **WRONG - DO NOT DO THIS:**
+- "list professors in LKC FES" → `{ faculty: "LKC FES" } ` ← Missing designation parameter!
+- "count professors" → `{ faculty: "LKC FES", role: "Professor" } ` ← Wrong! "Professor" is designation, not role!
+
+**DESIGNATION vs ROLE - CRITICAL DISTINCTION:**
+- **designation** = Academic rank (Professor, Associate Professor, Assistant Professor, Lecturer)
+- **role** = Administrative position (Dean, Head of Department, Director, Chairperson)
+- DO NOT confuse these two! They are completely different parameters.
+- Example: A person can be "Professor" (designation) AND "Dean" (role) at the same time.
+
+**When to use designation parameter:**
+- User asks for "professors", "associate professors", "assistant professors", "lecturers"
+- User asks to "list" or "count" by academic rank
+- User asks "how many [rank] in [unit]?"
+
+**When to use role parameter:**
+- User asks for "Dean", "Head of Department", "Director", "Chairperson"
+- User asks for specific administrative positions
+
+**IMPORTANT: The tool returns PRE-CALCULATED data when using designation:**
+- Queries with designation parameter are INSTANT (< 1ms)
+- The tool has pre-calculated counts and lists for all designations
+- You will get both the count AND the full list of names with emails
+- Always show BOTH the count and the names when user asks to "list"
+
+
 **IDENTIFYING NEWEST/OLDEST STAFF:**
 The tool returns searchId and staffType for each staff member:
 - **searchId**: Higher number = newer/more junior staff (e.g., 22083 is newer than 16072)
