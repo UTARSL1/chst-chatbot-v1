@@ -140,14 +140,13 @@ export function searchStaffFromDirectory(
         log(`After expertise filter: ${results.length} staff`);
     }
 
-    // Filter by designation (exact or fuzzy match)
+    // Filter by designation (EXACT match only - critical for distinguishing Professor from Associate/Assistant Professor)
     if (params.designation) {
         const designationQuery = params.designation.toLowerCase().trim();
         results = results.filter(staff => {
             const staffDesignation = staff.designation?.toLowerCase() || '';
-            // Exact match or contains match
-            return staffDesignation === designationQuery ||
-                staffDesignation.includes(designationQuery);
+            // EXACT match ONLY - "Professor" should NOT match "Associate Professor"
+            return staffDesignation === designationQuery;
         });
         log(`After designation filter: ${results.length} staff`);
     }

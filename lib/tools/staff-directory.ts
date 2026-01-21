@@ -18,6 +18,7 @@ import {
     DepartmentType
 } from './staff-directory-types';
 import { getDepartmentAcademicCategory } from './department-categories';
+import staffDirectoryData from './staff_directory.json';
 
 const STAFF_DIRECTORY_PATH = path.join(process.cwd(), 'lib', 'tools', 'staff_directory.json');
 const RATE_LIMIT_MS = 500; // 500ms delay between requests
@@ -39,19 +40,30 @@ function httpsGet(url: string): Promise<string> {
 }
 
 // Load staff directory from JSON file
+// In production (Vercel), use the imported JSON directly
+// In development, try to read from file system for fresh data
 export function loadStaffDirectory(): StaffDirectory | null {
     try {
-        if (!fs.existsSync(STAFF_DIRECTORY_PATH)) {
-            console.log('[StaffDirectory] File not found, returning null');
-            return null;
+        // First, try to use the imported JSON data (works in both dev and production)
+        if (staffDirectoryData) {
+            return staffDirectoryData as StaffDirectory;
         }
-        const data = fs.readFileSync(STAFF_DIRECTORY_PATH, 'utf-8');
-        return JSON.parse(data) as StaffDirectory;
+
+        // Fallback: try to read from file system (development only)
+        if (fs.existsSync(STAFF_DIRECTORY_PATH)) {
+            console.log('[StaffDirectory] Loading from file system');
+            const data = fs.readFileSync(STAFF_DIRECTORY_PATH, 'utf-8');
+            return JSON.parse(data) as StaffDirectory;
+        }
+
+        console.log('[StaffDirectory] File not found, returning null');
+        return null;
     } catch (error) {
         console.error('[StaffDirectory] Error loading directory:', error);
         return null;
     }
 }
+
 
 // Save staff directory to JSON file
 export function saveStaffDirectory(directory: StaffDirectory): void {
