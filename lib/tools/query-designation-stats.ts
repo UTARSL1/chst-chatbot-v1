@@ -235,7 +235,7 @@ export function compareDesignationsAcrossDepartments(
             acronym: dept.acronym,
             count: dept.designationCounts[designationKey] || 0,
             totalStaff: dept.totalStaff
-        })).filter(d => d.count > 0);
+        }));
 
         filtered.sort((a, b) => b.count - a.count);
 

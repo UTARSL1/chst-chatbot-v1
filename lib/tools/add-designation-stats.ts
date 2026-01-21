@@ -47,7 +47,7 @@ const DESIGNATIONS = [
 
 function calculateDesignationCounts(staff: StaffMember[]) {
     const counts: Record<string, number> = {};
-    const lists: Record<string, Array<{ name: string; email: string }>> = {};
+    const lists: Record<string, Array<{ name: string; email: string; department?: string; departmentAcronym?: string }>> = {};
 
     // Initialize
     DESIGNATIONS.forEach(designation => {
@@ -63,7 +63,9 @@ function calculateDesignationCounts(staff: StaffMember[]) {
         counts[key]++;
         lists[key].push({
             name: member.name,
-            email: member.email || ''
+            email: member.email || '',
+            department: member.department || '',
+            departmentAcronym: member.departmentAcronym || ''
         });
     });
 
