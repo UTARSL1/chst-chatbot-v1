@@ -8,7 +8,7 @@ import RCGrantDonutChart from '@/components/rc/RCGrantDonutChart';
 import RCGrantYearlyBarChart from '@/components/rc/RCGrantYearlyBarChart';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { hasRCAccess, getStaffIdByEmail } from '@/lib/utils/rc-member-check';
+import { hasRCAccess, getStaffIdByEmail, getRCMemberByEmail } from '@/lib/utils/rc-member-check';
 
 interface Member {
     id: string;
@@ -227,10 +227,33 @@ export default function RCGrantPage() {
         // Filter for RC Members (non-chairperson)
         if (!isChairperson && userStaffId && status === 'authenticated') {
             result = result.filter(m => {
-                const mId = m.staffId?.trim() || '';
-                const uId = userStaffId.trim();
+                // Strip "? " prefix from both IDs before comparing
+                const mId = (m.staffId?.trim() || '').replace(/^\?\s*/, '');
+                const uId = userStaffId.trim().replace(/^\?\s*/, '');
                 return mId === uId;
             });
+
+            // If no matching member found but user IS an RC member, create placeholder
+            if (result.length === 0 && session?.user?.email) {
+                const rcMember = getRCMemberByEmail(session.user.email);
+                if (rcMember) {
+                    result = [{
+                        id: 'placeholder-' + rcMember.staffId,
+                        name: rcMember.name,
+                        staffId: rcMember.staffId,
+                        faculty: rcMember.faculty,
+                        totalGrants: 0,
+                        totalFunding: 0,
+                        inUtarGrants: 0,
+                        notInUtarGrants: 0,
+                        internalGrants: 0,
+                        externalGrants: 0,
+                        piCount: 0,
+                        coResearcherCount: 0,
+                        grants: []
+                    }];
+                }
+            }
         }
 
         // Apply search filter
@@ -256,7 +279,7 @@ export default function RCGrantPage() {
         });
 
         return result;
-    }, [members, searchQuery, sortField, sortDirection, isChairperson, userStaffId, status]);
+    }, [members, searchQuery, sortField, sortDirection, isChairperson, userStaffId, status, session]);
 
     // Auto-select first member
     useEffect(() => {
