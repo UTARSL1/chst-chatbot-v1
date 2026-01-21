@@ -39,7 +39,8 @@ export function getStaffCountsFromMetadata(
                 adjunctCount: faculty.adjunctCount,
                 partTimeCount: faculty.partTimeCount,
                 expatriateCount: faculty.expatriateCount,
-                emeritusCount: faculty.emeritusCount
+                emeritusCount: faculty.emeritusCount,
+                designationCounts: faculty.designationCounts || {}
             };
         }
 
@@ -73,7 +74,8 @@ export function getStaffCountsFromMetadata(
                         adjunctCount: dept.adjunctCount,
                         partTimeCount: dept.partTimeCount,
                         expatriateCount: dept.expatriateCount,
-                        emeritusCount: dept.emeritusCount
+                        emeritusCount: dept.emeritusCount,
+                        designationCounts: dept.designationCounts || {}
                     };
                 }
             }
@@ -89,7 +91,8 @@ export function getStaffCountsFromMetadata(
                         adjunctCount: dept.adjunctCount,
                         partTimeCount: dept.partTimeCount,
                         expatriateCount: dept.expatriateCount,
-                        emeritusCount: dept.emeritusCount
+                        emeritusCount: dept.emeritusCount,
+                        designationCounts: dept.designationCounts || {}
                     };
                 }
             }

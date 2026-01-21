@@ -260,7 +260,8 @@ export async function searchStaff(
                         fullTimeCount: counts.fullTimeCount,
                         adjunctCount: counts.adjunctCount,
                         partTimeCount: counts.partTimeCount,
-                        expatriateCount: counts.expatriateCount
+                        expatriateCount: counts.expatriateCount,
+                        designationCounts: counts.designationCounts
                     } as any;
                 }
             } catch (error: any) {

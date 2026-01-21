@@ -35,6 +35,7 @@ export interface StaffCounts {
     expatriateCount: number;
     emeritusCount: number;
     unknownCount?: number;
+    designationCounts?: Record<string, number>;
 }
 
 export interface Department extends StaffCounts {
