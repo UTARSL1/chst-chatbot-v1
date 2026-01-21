@@ -23,26 +23,61 @@ export async function GET(request: NextRequest) {
             );
         }
 
-        // Get all members with basic stats
-        const members = await prisma.rCMember.findMany({
-            select: {
-                id: true,
-                name: true,
-                staffId: true,
-                totalPublications: true,
-                journalArticles: true,
-                conferencePapers: true,
-                q1Publications: true,
-                q2Publications: true,
-                q3Publications: true,
-                q4Publications: true,
-                createdAt: true,
-                updatedAt: true
-            },
-            orderBy: {
-                name: 'asc'
+        const isChairperson = session.user.role === 'chairperson';
+
+        // Get members based on role
+        let members;
+        if (isChairperson) {
+            // Chairperson sees all members
+            members = await prisma.rCMember.findMany({
+                select: {
+                    id: true,
+                    name: true,
+                    staffId: true,
+                    totalPublications: true,
+                    journalArticles: true,
+                    conferencePapers: true,
+                    q1Publications: true,
+                    q2Publications: true,
+                    q3Publications: true,
+                    q4Publications: true,
+                    createdAt: true,
+                    updatedAt: true
+                },
+                orderBy: {
+                    name: 'asc'
+                }
+            });
+        } else {
+            // Regular member sees only their own data
+            const { getStaffIdByEmail } = await import('@/lib/utils/rc-member-check');
+            const userStaffId = getStaffIdByEmail(session.user.email);
+
+            if (userStaffId) {
+                const cleanStaffId = userStaffId.trim().replace(/^\?\s*/, '');
+                members = await prisma.rCMember.findMany({
+                    where: {
+                        staffId: cleanStaffId
+                    },
+                    select: {
+                        id: true,
+                        name: true,
+                        staffId: true,
+                        totalPublications: true,
+                        journalArticles: true,
+                        conferencePapers: true,
+                        q1Publications: true,
+                        q2Publications: true,
+                        q3Publications: true,
+                        q4Publications: true,
+                        createdAt: true,
+                        updatedAt: true
+                    }
+                });
+            } else {
+                members = [];
             }
-        });
+        }
 
         return NextResponse.json({
             success: true,

@@ -23,25 +23,61 @@ export async function GET(request: NextRequest) {
             );
         }
 
-        // Get all members with their counts
-        const members = await prisma.rCPostgraduateMember.findMany({
-            orderBy: { name: 'asc' },
-            select: {
-                id: true,
-                name: true,
-                staffId: true,
-                faculty: true,
-                totalStudents: true,
-                inProgressCount: true,
-                completedCount: true,
-                phdCount: true,
-                masterCount: true,
-                mainSupervisorCount: true,
-                coSupervisorCount: true,
-                createdAt: true,
-                updatedAt: true,
+        const isChairperson = session.user.role === 'chairperson';
+
+        // Get members based on role
+        let members;
+        if (isChairperson) {
+            // Chairperson sees all members
+            members = await prisma.rCPostgraduateMember.findMany({
+                orderBy: { name: 'asc' },
+                select: {
+                    id: true,
+                    name: true,
+                    staffId: true,
+                    faculty: true,
+                    totalStudents: true,
+                    inProgressCount: true,
+                    completedCount: true,
+                    phdCount: true,
+                    masterCount: true,
+                    mainSupervisorCount: true,
+                    coSupervisorCount: true,
+                    createdAt: true,
+                    updatedAt: true,
+                }
+            });
+        } else {
+            // Regular member sees only their own data
+            const { getStaffIdByEmail } = await import('@/lib/utils/rc-member-check');
+            const userStaffId = getStaffIdByEmail(session.user.email);
+
+            if (userStaffId) {
+                const cleanStaffId = userStaffId.trim().replace(/^\?\s*/, '');
+                members = await prisma.rCPostgraduateMember.findMany({
+                    where: {
+                        staffId: cleanStaffId
+                    },
+                    select: {
+                        id: true,
+                        name: true,
+                        staffId: true,
+                        faculty: true,
+                        totalStudents: true,
+                        inProgressCount: true,
+                        completedCount: true,
+                        phdCount: true,
+                        masterCount: true,
+                        mainSupervisorCount: true,
+                        coSupervisorCount: true,
+                        createdAt: true,
+                        updatedAt: true,
+                    }
+                });
+            } else {
+                members = [];
             }
-        });
+        }
 
         return NextResponse.json({ success: true, members });
     } catch (error) {
