@@ -5,6 +5,8 @@ import https from 'https';
 import { searchStaffFromDirectory } from './search-from-directory';
 import { StaffMember } from './staff-directory-types';
 import { queryStaffDirectory } from './query-staff-directory';
+import { queryDesignationStats, compareDesignationsAcrossDepartments } from './query-designation-stats';
+
 
 // --- Types ---
 interface UnitMapping {
@@ -122,6 +124,7 @@ export async function searchStaff(
         email?: string;
         expertise?: string;
         role?: string;
+        designation?: string;
         acronym?: string;
     },
     logger?: (msg: string) => void
@@ -135,9 +138,9 @@ export async function searchStaff(
         log(`Searching staff with params: ${JSON.stringify(params)}`);
 
         // **OPTIMIZATION: Use pre-calculated metadata if possible**
-        // If query is just for counts (no name/email/expertise/role filters), use metadata directly
+        // If query is just for counts (no name/email/expertise/role/designation filters), use metadata directly
         // BUT: If department is specified (not just acronym), user likely wants staff list, not just counts
-        const isCountOnlyQuery = !params.name && !params.email && !params.expertise && !params.role && !params.department;
+        const isCountOnlyQuery = !params.name && !params.email && !params.expertise && !params.role && !params.designation && !params.department;
 
         if (isCountOnlyQuery && params.acronym) {
             log('Attempting to use pre-calculated metadata counts...');
@@ -287,8 +290,8 @@ export async function searchStaff(
 
                 const message = `There are ${staffFromDirectory.length} staff members (${breakdown.join(', ')}).`;
 
-                // Check if this is a detail query (role/name/email/expertise) or count-only query
-                const isDetailQuery = params.role || params.name || params.email || params.expertise;
+                // Check if this is a detail query (role/name/email/expertise/designation) or count-only query
+                const isDetailQuery = params.role || params.name || params.email || params.expertise || params.designation;
 
                 if (isDetailQuery) {
                     // Return full staff details for role/name/expertise queries

@@ -14,6 +14,7 @@ export function searchStaffFromDirectory(
         email?: string;
         expertise?: string;
         role?: string;
+        designation?: string;
         acronym?: string;
     },
     logger?: (msg: string) => void
@@ -137,6 +138,18 @@ export function searchStaffFromDirectory(
             ) || false
         );
         log(`After expertise filter: ${results.length} staff`);
+    }
+
+    // Filter by designation (exact or fuzzy match)
+    if (params.designation) {
+        const designationQuery = params.designation.toLowerCase().trim();
+        results = results.filter(staff => {
+            const staffDesignation = staff.designation?.toLowerCase() || '';
+            // Exact match or contains match
+            return staffDesignation === designationQuery ||
+                staffDesignation.includes(designationQuery);
+        });
+        log(`After designation filter: ${results.length} staff`);
     }
 
     // Filter by role/administrative post
