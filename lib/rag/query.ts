@@ -410,17 +410,17 @@ When user asks "How many professors in X?":
 - "Assistant Professor or lower" = Assistant Professor + Lecturer (ranks 4-5)
 
 **CRITICAL: USING THE DESIGNATION PARAMETER**
-When user asks to "list" or "count" staff by academic rank, you MUST use the `designation` parameter:
+When user asks to "list" or "count" staff by academic rank, you MUST use the designation parameter:
 
 ✅ **CORRECT USAGE:**
-- "list professors in LKC FES" → `{ faculty: "LKC FES", designation: "Professor" } `
-- "how many senior professors in DMBE?" → `{ acronym: "DMBE", designation: "Senior Professor" } `
-- "count associate professors in D3E" → `{ acronym: "D3E", designation: "Associate Professor" } `
-- "list assistant professors in Department of Chemistry" → `{ acronym: "DC", designation: "Assistant Professor" } `
+- "list professors in LKC FES" → Call with faculty="LKC FES", designation="Professor"
+- "how many senior professors in DMBE?" → Call with acronym="DMBE", designation="Senior Professor"
+- "count associate professors in D3E" → Call with acronym="D3E", designation="Associate Professor"
+- "list assistant professors in Department of Chemistry" → Call with acronym="DC", designation="Assistant Professor"
 
 ❌ **WRONG - DO NOT DO THIS:**
-- "list professors in LKC FES" → `{ faculty: "LKC FES" } ` ← Missing designation parameter!
-- "count professors" → `{ faculty: "LKC FES", role: "Professor" } ` ← Wrong! "Professor" is designation, not role!
+- "list professors in LKC FES" → Calling with only faculty="LKC FES" (Missing designation parameter!)
+- "count professors" → Calling with faculty="LKC FES", role="Professor" (Wrong! "Professor" is designation, not role!)
 
 **DESIGNATION vs ROLE - CRITICAL DISTINCTION:**
 - **designation** = Academic rank (Professor, Associate Professor, Assistant Professor, Lecturer)
