@@ -154,7 +154,7 @@ const UTAR_STAFF_TOOLS = [
         type: 'function' as const,
         function: {
             name: 'utar_staff_search',
-            description: 'Performs live staff lookups from the UTAR Staff Directory. Search by faculty, department, name, email, or expertise.',
+            description: 'Performs live staff lookups from the UTAR Staff Directory. Search by faculty, department, name, email, expertise, designation, or role.',
             parameters: {
                 type: 'object',
                 properties: {
@@ -163,6 +163,7 @@ const UTAR_STAFF_TOOLS = [
                     name: { type: 'string', description: 'Staff member\'s actual name (e.g., "John Smith"). DO NOT use administrative titles like Dean, Head, Director, Chairperson as names.' },
                     email: { type: 'string', description: 'Staff member\'s email address (e.g., "johndoe@utar.edu.my"). Use for exact email lookups.' },
                     expertise: { type: 'string', description: 'Research area/expertise (optional).' },
+                    designation: { type: 'string', description: 'Academic designation/rank (e.g., "Professor", "Senior Professor", "Associate Professor", "Assistant Professor", "Lecturer"). Use this for queries like "list professors" or "count associate professors". DO NOT confuse with role (administrative posts).' },
                     role: { type: 'string', description: 'Specific administrative role (e.g. "Dean", "Head of Department"). REQUIRED when asking for specific administrative positions, even across multiple departments. Enables fast, targeted search. Do not use for "List all staff" queries.' },
                     acronym: { type: 'string', description: 'Exact acronym found in query (e.g. "D3E"). REQUIRED if user query contains an acronym. This ensures correct department resolution.' }
                 }
