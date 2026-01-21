@@ -11,18 +11,51 @@ export async function GET(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
 
-        if (!session?.user || session.user.role !== 'chairperson') {
+        if (!session?.user) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const members = await prisma.rCGrantMember.findMany({
-            include: {
-                grants: true
-            },
-            orderBy: {
-                name: 'asc'
-            }
-        });
+        // Import RC member check utilities
+        const { hasRCAccess, getStaffIdByEmail } = await import('@/lib/utils/rc-member-check');
+
+        // Check if user has RC access (chairperson or RC member)
+        if (!hasRCAccess(session.user.email, session.user.role)) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const isChairperson = session.user.role === 'chairperson';
+        const userStaffId = getStaffIdByEmail(session.user.email);
+
+        // Fetch members based on role
+        type MemberWithGrants = Awaited<ReturnType<typeof prisma.rCGrantMember.findMany<{
+            include: { grants: true }
+        }>>>;
+        let members: MemberWithGrants;
+        if (isChairperson) {
+            // Chairperson sees all members
+            members = await prisma.rCGrantMember.findMany({
+                include: {
+                    grants: true
+                },
+                orderBy: {
+                    name: 'asc'
+                }
+            });
+        } else if (userStaffId) {
+            // Regular member sees only their own data
+            // Strip "? " prefix for comparison
+            const cleanStaffId = userStaffId.trim().replace(/^\?\s*/, '');
+            members = await prisma.rCGrantMember.findMany({
+                where: {
+                    staffId: cleanStaffId
+                },
+                include: {
+                    grants: true
+                }
+            });
+        } else {
+            members = [];
+        }
 
         const membersWithParsedData = members.map(member => ({
             ...member,
