@@ -164,8 +164,11 @@ export async function parsePostgraduateCSV(csvContent: string): Promise<ParsedPo
         };
 
         const staffName = getValueByColumn('Staff Name');
-        const staffId = getValueByColumn('Staff ID');
+        let staffId = getValueByColumn('Staff ID');
         const faculty = getValueByColumn('Faculty');
+
+        // Strip "? " prefix from Staff ID (common Excel CSV artifact)
+        staffId = staffId.trim().replace(/^\?\s*/, '');
 
         if (!staffId && !staffName) continue;
 
