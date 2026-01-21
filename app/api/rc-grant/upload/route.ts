@@ -39,7 +39,8 @@ export async function POST(request: NextRequest) {
             // Sanitize Staff ID to prevent duplicates
             const rawStaffId = row['Staff ID'];
             if (!rawStaffId) return;
-            const staffId = String(rawStaffId).trim();
+            // Strip "? " prefix if present (common Excel CSV artifact)
+            const staffId = String(rawStaffId).trim().replace(/^\?\s*/, '');
 
             if (!grantsByStaff.has(staffId)) {
                 grantsByStaff.set(staffId, {

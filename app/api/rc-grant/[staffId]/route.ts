@@ -21,8 +21,12 @@ export async function GET(
 
         const { staffId } = params;
 
-        const member = await prisma.rCGrantMember.findFirst({
-            where: { staffId },
+        // Strip "? " prefix if present (legacy data from Excel CSV artifacts)
+        const cleanedStaffId = staffId.trim().replace(/^\?\s*/, '');
+
+        // Find member - try cleaned ID first, then original (for legacy data)
+        let member = await prisma.rCGrantMember.findFirst({
+            where: { staffId: cleanedStaffId },
             include: {
                 grants: {
                     orderBy: {
@@ -31,6 +35,20 @@ export async function GET(
                 }
             }
         });
+
+        // Fallback: try original staffId if cleaned version not found
+        if (!member && cleanedStaffId !== staffId) {
+            member = await prisma.rCGrantMember.findFirst({
+                where: { staffId },
+                include: {
+                    grants: {
+                        orderBy: {
+                            commencementDate: 'desc'
+                        }
+                    }
+                }
+            });
+        }
 
         if (!member) {
             return NextResponse.json({ error: 'Member not found' }, { status: 404 });
@@ -96,10 +114,20 @@ export async function DELETE(
             return NextResponse.json({ error: 'Staff ID is required' }, { status: 400 });
         }
 
-        // Find member first to get ID
-        const member = await prisma.rCGrantMember.findFirst({
-            where: { staffId }
+        // Strip "? " prefix if present (legacy data from Excel CSV artifacts)
+        const cleanedStaffId = staffId.trim().replace(/^\?\s*/, '');
+
+        // Find member - try cleaned ID first, then original (for legacy data)
+        let member = await prisma.rCGrantMember.findFirst({
+            where: { staffId: cleanedStaffId }
         });
+
+        // Fallback: try original staffId if cleaned version not found
+        if (!member && cleanedStaffId !== staffId) {
+            member = await prisma.rCGrantMember.findFirst({
+                where: { staffId }
+            });
+        }
 
         if (!member) {
             return NextResponse.json({ error: 'Member not found' }, { status: 404 });
