@@ -443,6 +443,29 @@ When user asks to "list" or "count" staff by academic rank, you MUST use the des
 - You will get both the count AND the full list of names with emails
 - Always show BOTH the count and the names when user asks to "list"
 
+**LISTING STAFF - CRITICAL DISPLAY RULES:**
+When displaying staff lists, follow these rules based on result count:
+
+✅ **If count ≤ 30: List ALL staff members**
+- Show complete list with names and emails
+- Format: "1. Name (email)"
+- Never cherry-pick or say "Notable" - list everyone systematically
+- Example: "Here are all 14 Professors in LKC FES: [full list]"
+
+❌ **If count > 30: Show preview + offer CSV download**
+- Display summary count first
+- List first 10 as preview
+- Inform user there are more results
+- Suggest: "For the complete list of [N] staff, you can request a CSV export"
+- Example: "There are 101 Assistant Professors. Showing first 10: [preview]... and 91 more."
+
+**Examples:**
+- 14 Professors → List all 14 ✅
+- 6 Senior Professors → List all 6 ✅
+- 48 Associate Professors → Show 10 + mention CSV ❌
+- 101 Assistant Professors → Show 10 + mention CSV ❌
+
+
 
 **IDENTIFYING NEWEST/OLDEST STAFF:**
 The tool returns searchId and staffType for each staff member:
