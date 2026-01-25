@@ -7,7 +7,7 @@ import { prisma } from '@/lib/db';
 import { getRelatedDocuments } from './suggestions';
 import { searchKnowledgeNotes } from './knowledgeSearch';
 import { searchDocumentLibrary } from './documentLibrarySearch';
-import { resolveUnit, searchStaff, listDepartments } from '@/lib/tools';
+import { resolveUnit, searchStaff, listDepartments, queryDesignationStats, compareDesignationsAcrossDepartments } from '@/lib/tools';
 import { searchDocumentLibraryVectors } from './vectorStore';
 import { getJournalMetricsByTitle, getJournalMetricsByIssn, ensureJcrCacheLoaded, searchJournalsByCategory } from '@/lib/jcrCache';
 import { getInstitutionByName, getInstitutionsByCountry, ensureNatureIndexCacheLoaded } from '@/lib/natureIndexCache';
@@ -183,6 +183,36 @@ const UTAR_STAFF_TOOLS = [
                 required: ['faculty']
             }
         }
+    },
+    {
+        type: 'function' as const,
+        function: {
+            name: 'utar_designation_stats',
+            description: 'Get statistics/counts for specific academic designations (e.g. Professor, Associate Professor, Lecturer) in a faculty or department. Use this for "how many professors", "staff breakdown by designation", or "list all professors" queries. It uses cached metadata and is faster/more deterministic than general staff search.',
+            parameters: {
+                type: 'object',
+                properties: {
+                    acronym: { type: 'string', description: 'Faculty or Department acronym (e.g. "LKC FES", "DMBE", "D3E"). REQUIRED.' },
+                    designation: { type: 'string', description: 'Specific designation to count/list (e.g. "Professor", "Associate Professor"). If omitted, returns stats for ALL designations.' }
+                },
+                required: ['acronym']
+            }
+        }
+    },
+    {
+        type: 'function' as const,
+        function: {
+            name: 'utar_compare_designations',
+            description: 'Compare staff counts for a specific designation across ALL departments in a faculty. Use this for queries like "Compare number of professors across departments in LKC FES".',
+            parameters: {
+                type: 'object',
+                properties: {
+                    acronym: { type: 'string', description: 'Faculty acronym (e.g. "LKC FES", "FICT"). REQUIRED.' },
+                    designation: { type: 'string', description: 'Designation to compare (e.g. "Professor", "Associate Professor"). REQUIRED.' }
+                },
+                required: ['acronym', 'designation']
+            }
+        }
     }
 ];
 
@@ -279,9 +309,19 @@ You have access to three MCP tools:
 1. utar_resolve_unit: converts acronyms (CCR, CHST, FSc) into official UTAR names.
 2. utar_list_departments: lists all departments in a faculty.
 3. utar_staff_search: performs live staff lookups.
+4. utar_designation_stats: gets cached statistics/lists for academic designations (Professor, etc.).
+5. utar_compare_designations: compares designation counts across all departments in a faculty.
 
 WHEN TO USE:
 - When the user asks about UTAR staff (names, positions, chairs, heads, deans, emails), ALWAYS use the tools.
+- **FOR DESIGNATION QUERIES (Professor, Lecturer, etc.):** ALWAYS prefer utar_designation_stats or utar_compare_designations over utar_staff_search. These tools use cached data and are deterministic.
+  - "How many professors in LKC FES?" -> utar_designation_stats(acronym="LKC FES", designation="Professor")
+  - "List all associate professors in DMBE" -> utar_designation_stats(acronym="DMBE", designation="Associate Professor")
+  - "Compare number of professors across departments in LKC FES" -> utar_compare_designations(acronym="LKC FES", designation="Professor")
+  - "What is the staff breakdown in LKC FES?" -> utar_designation_stats(acronym="LKC FES")
+
+- **FOR SPECIFIC ROLES (Dean, Head, Chairperson):** Use utar_staff_search.
+
 
 **IMPORTANT WORKFLOW FOR "ALL DEPARTMENTS" QUERIES:**
 When asked for staff counts across ALL departments in a faculty (e.g., "how many staff in each department in LKC FES?" or "how many staff in each department in THP FBF?"):
@@ -1025,6 +1065,14 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
         }
         if (name === 'utar_list_departments') {
             return listDepartments(args.faculty, logger);
+        }
+        if (name === 'utar_designation_stats') {
+            if (logger) logger(`[utar_designation_stats] Getting stats for ${args.acronym}, designation: ${args.designation || 'All'}`);
+            return queryDesignationStats(args, logger);
+        }
+        if (name === 'utar_compare_designations') {
+            if (logger) logger(`[utar_compare_designations] Comparing ${args.designation} in ${args.acronym}`);
+            return compareDesignationsAcrossDepartments(args, logger);
         }
         if (name === 'jcr_journal_metric') {
             // Ensure data is loaded
