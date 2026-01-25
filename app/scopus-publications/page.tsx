@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect, useMemo } from 'react';
-import { ArrowLeft, Building2, Users, BarChart3, ChevronDown, ChevronUp, Lock, Shield, Trash2, Plus, X, Download, Printer, Check } from 'lucide-react';
+import { ArrowLeft, Building2, Users, BarChart3, ChevronDown, ChevronUp, Lock, Shield, Trash2, Plus, X, Download, Printer, Check, Eye } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { ResponsiveContainer, ScatterChart, Scatter, XAxis, YAxis, ZAxis, Tooltip as RechartsTooltip, Cell, ReferenceLine } from 'recharts';
@@ -54,7 +54,7 @@ export default function ScopusPublicationsPage() {
     const [departments, setDepartments] = useState<DepartmentData[]>([]);
     const [staffMembers, setStaffMembers] = useState<StaffMember[]>([]);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<'individual' | 'department' | 'faculty'>('individual');
+    const [activeTab, setActiveTab] = useState<'individual' | 'department' | 'faculty' | 'export'>('individual');
 
     // Permission State
     const [hasAccess, setHasAccess] = useState(false);
@@ -474,6 +474,16 @@ export default function ScopusPublicationsPage() {
                                                 >
                                                     FACULTY_OVERVIEW
                                                 </button>
+                                                <button
+                                                    onClick={() => setActiveTab('export')}
+                                                    className={`px-6 py-3 font-['Orbitron',sans-serif] font-bold text-xs uppercase tracking-[0.1em] transition-all ${activeTab === 'export'
+                                                        ? 'text-white border-b-2 border-white'
+                                                        : 'text-[#64748B] hover:text-[#94A3B8]'
+                                                        }`}
+                                                >
+                                                    <Download className="inline w-4 h-4 mr-2" />
+                                                    EXPORT_PUBLICATIONS
+                                                </button>
                                             </div>
                                         </div>
 
@@ -645,6 +655,16 @@ export default function ScopusPublicationsPage() {
                                                 facultyAcronym={selectedFaculty}
                                                 departments={departments}
                                                 selectedYears={selectedYears}
+                                                excludeAdjuncts={excludeAdjuncts}
+                                            />
+                                        )}
+
+                                        {activeTab === 'export' && (
+                                            <ExportPublicationsTab
+                                                selectedFaculty={selectedFaculty}
+                                                selectedDepartment={selectedDepartment}
+                                                selectedYears={selectedYears}
+                                                staffMembers={staffMembers}
                                                 excludeAdjuncts={excludeAdjuncts}
                                             />
                                         )}
@@ -2682,6 +2702,543 @@ function StaffDistributionChart({ staffMembers, metric, title }: { staffMembers:
                         </Scatter>
                     </ScatterChart>
                 </ResponsiveContainer>
+            </div>
+        </div>
+    );
+}
+
+// Export Publications Tab Component
+function ExportPublicationsTab({
+    selectedFaculty,
+    selectedDepartment,
+    selectedYears,
+    staffMembers,
+    excludeAdjuncts
+}: {
+    selectedFaculty: string;
+    selectedDepartment: string;
+    selectedYears: number[];
+    staffMembers: StaffMember[];
+    excludeAdjuncts: boolean;
+}) {
+    const [exportScope, setExportScope] = useState<'individual' | 'department' | 'faculty'>('department');
+    const [selectedStaff, setSelectedStaff] = useState<string>('');
+    const [includeLifetime, setIncludeLifetime] = useState(false);
+    const [includeDuplicates, setIncludeDuplicates] = useState(true);
+    const [isFetching, setIsFetching] = useState(false);
+    const [exportStatus, setExportStatus] = useState<string>('');
+    const [fetchedPublications, setFetchedPublications] = useState<any[]>([]);
+    const [showPreview, setShowPreview] = useState(false);
+    const [elapsedTime, setElapsedTime] = useState(0); // Live timer in seconds
+    const [totalStaffCount, setTotalStaffCount] = useState(0); // Total staff being processed
+
+    // Clear preview when scope or staff selection changes
+    useEffect(() => {
+        setShowPreview(false);
+        setFetchedPublications([]);
+        setExportStatus('');
+    }, [exportScope, selectedStaff, includeLifetime, includeDuplicates]);
+
+    // Live timer - updates every second while fetching
+    useEffect(() => {
+        let interval: NodeJS.Timeout | null = null;
+
+        if (isFetching) {
+            setElapsedTime(0); // Reset timer when starting
+            interval = setInterval(() => {
+                setElapsedTime(prev => prev + 1);
+            }, 1000);
+        } else {
+            setElapsedTime(0); // Reset when done
+        }
+
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    }, [isFetching]);
+
+    // Filter staff based on excludeAdjuncts
+    const filteredStaffMembers = useMemo(() => {
+        if (!excludeAdjuncts) return staffMembers;
+        return staffMembers.filter(s => !(s.designation && s.designation.toLowerCase().includes('adjunct')));
+    }, [staffMembers, excludeAdjuncts]);
+
+    // Handle Preview - Fetch data from Scopus API and show preview
+    const handlePreview = async () => {
+        setIsFetching(true);
+        const startTime = performance.now(); // Start timer
+
+        // Calculate estimated time based on scope
+        // For faculty scope, we need to get the total count from the API
+        let staffCount = 1;
+
+        if (exportScope === 'individual') {
+            staffCount = 1;
+        } else if (exportScope === 'department') {
+            staffCount = filteredStaffMembers.filter(s => s.departmentAcronym === selectedDepartment).length;
+        } else {
+            // Faculty scope - use cached metadata from lkcfes-scopus-publications.json
+            // Total staff: 234, Staff with Scopus profiles: 196 (as shown in Faculty Overview)
+            staffCount = excludeAdjuncts ? 196 : 234;
+        }
+
+        setTotalStaffCount(staffCount); // Store for progress calculation
+
+        const estimatedSeconds = staffCount * 2; // ~2 seconds per staff member (realistic based on Scopus API response time)
+        const estimatedTime = estimatedSeconds > 60
+            ? `${Math.ceil(estimatedSeconds / 60)} minute${Math.ceil(estimatedSeconds / 60) > 1 ? 's' : ''}`
+            : `${Math.ceil(estimatedSeconds)} seconds`;
+
+        setExportStatus(`Fetching publications for ${staffCount} staff member${staffCount > 1 ? 's' : ''}... This may take ${estimatedTime}.`);
+
+        try {
+            // Build API URL
+            const params = new URLSearchParams({
+                scope: exportScope,
+                faculty: selectedFaculty,
+                years: includeLifetime ? 'lifetime' : selectedYears.join(',')
+            });
+
+            if (exportScope === 'individual') {
+                if (!selectedStaff) {
+                    alert('Please select a staff member');
+                    setIsFetching(false);
+                    return;
+                }
+                params.append('staffEmail', selectedStaff);
+                params.append('department', selectedDepartment);
+            } else if (exportScope === 'department') {
+                params.append('department', selectedDepartment);
+            }
+
+            const apiUrl = `/api/scopus-publications/publication-details?${params.toString()}`;
+            console.log('[Preview] Fetching from:', apiUrl);
+
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+            console.log('[Preview] API Response:', data);
+            console.log('[Preview] Publications count:', data.publications?.length || 0);
+
+            if (!data.success) {
+                throw new Error(data.error || 'Failed to fetch publication details');
+            }
+
+            if (!data.publications || data.publications.length === 0) {
+                setExportStatus(`⚠️ No publications found for the selected criteria`);
+                setIsFetching(false);
+                return;
+            }
+
+            setExportStatus(`Processing ${data.publications.length} publications...`);
+
+            // Import deduplication utility
+            const { removeDuplicatePublications } = await import('@/lib/scopus/csv-exporter');
+
+            let publicationsToShow = data.publications;
+            console.log('[Preview] Publications before dedup:', publicationsToShow.length);
+
+            // Remove duplicates if requested (only for department/faculty scope)
+            if (exportScope !== 'individual' && !includeDuplicates) {
+                publicationsToShow = removeDuplicatePublications(publicationsToShow);
+                console.log('[Preview] Publications after dedup:', publicationsToShow.length);
+            }
+
+            // Calculate elapsed time
+            const endTime = performance.now();
+            const elapsedSeconds = ((endTime - startTime) / 1000).toFixed(1);
+
+            // Store fetched publications for later export
+            setFetchedPublications(publicationsToShow);
+            setShowPreview(true);
+            setExportStatus(`✅ Found ${publicationsToShow.length} publications in ${elapsedSeconds} seconds. Review below and click "EXPORT TO CSV" to download.`);
+            setIsFetching(false);
+
+        } catch (error) {
+            console.error('[Preview] Error:', error);
+            setExportStatus(`❌ Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            setIsFetching(false);
+        }
+    };
+
+    // Handle Export - Download CSV (fetch data if needed)
+    const handleExport = async () => {
+        const startTime = performance.now(); // Start timer
+
+        try {
+            let publicationsToExport = fetchedPublications;
+
+            // If no data fetched yet, fetch it now
+            if (publicationsToExport.length === 0) {
+                // Calculate estimated time
+                const staffCount = exportScope === 'individual' ? 1
+                    : exportScope === 'department'
+                        ? filteredStaffMembers.filter(s => s.departmentAcronym === selectedDepartment).length
+                        : (excludeAdjuncts ? 196 : 234); // Faculty scope - use cached metadata
+
+                setTotalStaffCount(staffCount); // Store for progress calculation
+
+                const estimatedSeconds = staffCount * 2; // ~2 seconds per staff member
+                const estimatedTime = estimatedSeconds > 60
+                    ? `${Math.ceil(estimatedSeconds / 60)} minute${Math.ceil(estimatedSeconds / 60) > 1 ? 's' : ''}`
+                    : `${Math.ceil(estimatedSeconds)} seconds`;
+
+                setExportStatus(`Fetching publications for ${staffCount} staff member${staffCount > 1 ? 's' : ''}... This may take ${estimatedTime}.`);
+
+                // Build API URL
+                const params = new URLSearchParams({
+                    scope: exportScope,
+                    faculty: selectedFaculty,
+                    years: includeLifetime ? 'lifetime' : selectedYears.join(',')
+                });
+
+                if (exportScope === 'individual') {
+                    if (!selectedStaff) {
+                        alert('Please select a staff member');
+                        return;
+                    }
+                    params.append('staffEmail', selectedStaff);
+                    params.append('department', selectedDepartment);
+                } else if (exportScope === 'department') {
+                    params.append('department', selectedDepartment);
+                }
+
+                const apiUrl = `/api/scopus-publications/publication-details?${params.toString()}`;
+                console.log('[Export] Fetching from:', apiUrl);
+
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                console.log('[Export] API Response:', data);
+
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to fetch publication details');
+                }
+
+                if (!data.publications || data.publications.length === 0) {
+                    setExportStatus(`⚠️ No publications found for the selected criteria`);
+                    return;
+                }
+
+                setExportStatus(`Processing ${data.publications.length} publications...`);
+
+                // Import deduplication utility
+                const { removeDuplicatePublications } = await import('@/lib/scopus/csv-exporter');
+
+                publicationsToExport = data.publications;
+
+                // Remove duplicates if requested (only for department/faculty scope)
+                if (exportScope !== 'individual' && !includeDuplicates) {
+                    publicationsToExport = removeDuplicatePublications(publicationsToExport);
+                }
+            }
+
+            setExportStatus('Generating CSV file...');
+
+            // Import CSV utilities
+            const { generatePublicationsCSV, generateCSVFilename, downloadCSV } =
+                await import('@/lib/scopus/csv-exporter');
+
+            // Generate CSV
+            const csvContent = generatePublicationsCSV(publicationsToExport, true);
+            console.log('[Export] CSV length:', csvContent.length);
+
+            // Generate filename
+            const identifier = exportScope === 'individual'
+                ? filteredStaffMembers.find(s => s.email === selectedStaff)?.name || 'staff'
+                : exportScope === 'department'
+                    ? selectedDepartment
+                    : selectedFaculty;
+
+            const filename = generateCSVFilename(
+                exportScope,
+                identifier,
+                includeLifetime ? 'lifetime' : selectedYears,
+                exportScope !== 'individual' ? includeDuplicates : true
+            );
+
+            console.log('[Export] Downloading file:', filename);
+
+            // Download CSV
+            downloadCSV(csvContent, filename);
+
+            // Calculate elapsed time
+            const endTime = performance.now();
+            const elapsedSeconds = ((endTime - startTime) / 1000).toFixed(1);
+
+            setExportStatus(`✅ Successfully exported ${publicationsToExport.length} publications in ${elapsedSeconds} seconds!`);
+
+            setTimeout(() => {
+                setExportStatus('');
+            }, 5000); // Show for 5 seconds so user can see the time
+
+        } catch (error) {
+            console.error('[Export] Error:', error);
+            setExportStatus(`❌ Export error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+    };
+
+    return (
+        <div className="space-y-6">
+            {/* Header */}
+            <div className="bg-[#1A1A1F] border border-[#334155] p-6">
+                <h2 className="text-xl font-bold text-white font-['Orbitron',sans-serif] uppercase tracking-[0.1em] mb-2">
+                    <Download className="inline w-5 h-5 mr-2" />
+                    EXPORT PUBLICATION DETAILS
+                </h2>
+                <p className="text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">
+                    // EXTRACT_COMPLETE_PUBLICATION_METADATA_FROM_SCOPUS_API
+                </p>
+            </div>
+
+            {/* Export Configuration */}
+            <div className="bg-[#1A1A1F] border border-[#334155] p-6 space-y-6">
+                {/* Scope Selection */}
+                <div>
+                    <label className="block text-xs font-bold text-white font-['Orbitron',sans-serif] uppercase tracking-[0.1em] mb-3">
+                        // EXPORT_SCOPE
+                    </label>
+                    <div className="grid grid-cols-3 gap-3">
+                        <button
+                            onClick={() => setExportScope('individual')}
+                            className={`px-4 py-3 font-['JetBrains_Mono',monospace] text-sm transition-all ${exportScope === 'individual'
+                                ? 'bg-[#3B82F6] text-white border-2 border-[#3B82F6]'
+                                : 'bg-[#0B0B10] text-[#94A3B8] border border-[#334155] hover:border-[#3B82F6]'
+                                }`}
+                        >
+                            INDIVIDUAL STAFF
+                        </button>
+                        <button
+                            onClick={() => setExportScope('department')}
+                            className={`px-4 py-3 font-['JetBrains_Mono',monospace] text-sm transition-all ${exportScope === 'department'
+                                ? 'bg-[#3B82F6] text-white border-2 border-[#3B82F6]'
+                                : 'bg-[#0B0B10] text-[#94A3B8] border border-[#334155] hover:border-[#3B82F6]'
+                                }`}
+                        >
+                            DEPARTMENT ({selectedDepartment})
+                        </button>
+                        <button
+                            onClick={() => setExportScope('faculty')}
+                            className={`px-4 py-3 font-['JetBrains_Mono',monospace] text-sm transition-all ${exportScope === 'faculty'
+                                ? 'bg-[#3B82F6] text-white border-2 border-[#3B82F6]'
+                                : 'bg-[#0B0B10] text-[#94A3B8] border border-[#334155] hover:border-[#3B82F6]'
+                                }`}
+                        >
+                            FACULTY ({selectedFaculty})
+                        </button>
+                    </div>
+                </div>
+
+                {/* Individual Staff Selection */}
+                {exportScope === 'individual' && (
+                    <div>
+                        <label className="block text-xs font-bold text-white font-['Orbitron',sans-serif] uppercase tracking-[0.1em] mb-3">
+                            // SELECT_STAFF_MEMBER
+                        </label>
+                        <select
+                            value={selectedStaff}
+                            onChange={(e) => setSelectedStaff(e.target.value)}
+                            className="w-full px-4 py-3 bg-[#0B0B10] border border-[#334155] text-white font-['JetBrains_Mono',monospace] text-sm focus:outline-none focus:border-white"
+                        >
+                            <option value="">-- Select a staff member --</option>
+                            {filteredStaffMembers
+                                .filter(s => s.scopusAuthorId && s.scopusAuthorId !== 'NA')
+                                .map(staff => (
+                                    <option key={staff.email} value={staff.email}>
+                                        {staff.name} ({staff.email})
+                                    </option>
+                                ))}
+                        </select>
+                    </div>
+                )}
+
+                {/* Year Selection */}
+                <div>
+                    <label className="block text-xs font-bold text-white font-['Orbitron',sans-serif] uppercase tracking-[0.1em] mb-3">
+                        // YEAR_RANGE
+                    </label>
+                    <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                            <div
+                                onClick={() => setIncludeLifetime(!includeLifetime)}
+                                className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${includeLifetime ? 'bg-blue-600' : 'bg-slate-700'}`}
+                            >
+                                <div className={`w-3 h-3 bg-white rounded-full absolute top-1 transition-all ${includeLifetime ? 'left-6' : 'left-1'}`} />
+                            </div>
+                            <label
+                                onClick={() => setIncludeLifetime(!includeLifetime)}
+                                className="text-white font-['JetBrains_Mono',monospace] font-medium text-sm cursor-pointer select-none"
+                            >
+                                LIFETIME (ALL YEARS)
+                            </label>
+                        </div>
+                        {!includeLifetime && (
+                            <div className="text-[#94A3B8] font-['JetBrains_Mono',monospace] text-sm">
+                                Selected years: {selectedYears.join(', ')}
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Duplicate Handling - Only show for department/faculty scope */}
+                {exportScope !== 'individual' && (
+                    <div>
+                        <label className="block text-xs font-bold text-white font-['Orbitron',sans-serif] uppercase tracking-[0.1em] mb-3">
+                            // DUPLICATE_HANDLING
+                        </label>
+                        <div className="grid grid-cols-2 gap-3">
+                            <button
+                                onClick={() => setIncludeDuplicates(true)}
+                                className={`px-4 py-3 font-['JetBrains_Mono',monospace] text-sm transition-all ${includeDuplicates
+                                    ? 'bg-[#3B82F6] text-white border-2 border-[#3B82F6]'
+                                    : 'bg-[#0B0B10] text-[#94A3B8] border border-[#334155] hover:border-[#3B82F6]'
+                                    }`}
+                            >
+                                WITH DUPLICATES
+                                <div className="text-xs mt-1 opacity-75">Shared papers appear multiple times</div>
+                            </button>
+                            <button
+                                onClick={() => setIncludeDuplicates(false)}
+                                className={`px-4 py-3 font-['JetBrains_Mono',monospace] text-sm transition-all ${!includeDuplicates
+                                    ? 'bg-[#3B82F6] text-white border-2 border-[#3B82F6]'
+                                    : 'bg-[#0B0B10] text-[#94A3B8] border border-[#334155] hover:border-[#3B82F6]'
+                                    }`}
+                            >
+                                UNIQUE ONLY
+                                <div className="text-xs mt-1 opacity-75">Shared papers appear once</div>
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="pt-4 border-t border-[#334155] space-y-3">
+                    {/* Preview Button */}
+                    <button
+                        onClick={handlePreview}
+                        disabled={isFetching || (exportScope === 'individual' && !selectedStaff)}
+                        className="w-full px-6 py-4 bg-[#1E293B] border-2 border-[#3B82F6] text-[#3B82F6] font-['Orbitron',sans-serif] font-bold text-sm uppercase tracking-[0.15em] hover:bg-[#3B82F6] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-[0_0_10px_rgba(59,130,246,0.3)]"
+                    >
+                        {isFetching ? (
+                            <>
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#3B82F6]"></div>
+                                FETCHING...
+                            </>
+                        ) : (
+                            <>
+                                <Eye className="w-4 h-4" />
+                                PREVIEW PUBLICATIONS
+                            </>
+                        )}
+                    </button>
+
+                    {/* Export Button - Always enabled, fetches data if needed */}
+                    <button
+                        onClick={handleExport}
+                        disabled={isFetching || (exportScope === 'individual' && !selectedStaff)}
+                        className="w-full px-6 py-4 bg-[#3B82F6] text-white font-['Orbitron',sans-serif] font-bold text-sm uppercase tracking-[0.15em] hover:bg-[#2563EB] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                    >
+                        <Download className="w-4 h-4" />
+                        EXPORT TO CSV
+                    </button>
+                </div>
+
+                {/* Status Message */}
+                {exportStatus && (
+                    <div className={`p-4 border ${exportStatus.includes('✅')
+                        ? 'bg-green-900/20 border-green-500/30 text-green-400'
+                        : exportStatus.includes('❌')
+                            ? 'bg-red-900/20 border-red-500/30 text-red-400'
+                            : 'bg-blue-900/20 border-blue-500/30 text-blue-400'
+                        } font-['JetBrains_Mono',monospace] text-sm space-y-2`}>
+                        <div>{exportStatus}</div>
+                        {/* Animated progress bar when fetching */}
+                        {isFetching && exportStatus.includes('Fetching') && (
+                            <>
+                                {/* Progress bar with actual percentage */}
+                                <div className="w-full bg-[#0B0B10] rounded-full h-3 overflow-hidden relative">
+                                    <div
+                                        className="h-full bg-gradient-to-r from-[#3B82F6] to-[#60A5FA] transition-all duration-500 ease-out"
+                                        style={{
+                                            width: `${Math.min(99, (elapsedTime / (totalStaffCount * 2)) * 100)}%`
+                                        }}>
+                                    </div>
+                                    {/* Progress text overlay */}
+                                    <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white drop-shadow-lg">
+                                        {Math.min(99, Math.round((elapsedTime / (totalStaffCount * 2)) * 100))}%
+                                    </div>
+                                </div>
+                                {/* Estimated progress and elapsed time */}
+                                <div className="flex justify-between text-xs">
+                                    <div className="text-[#60A5FA] font-bold">
+                                        📊 Processing ~{Math.min(totalStaffCount, Math.floor(elapsedTime / 2))}/{totalStaffCount} staff members
+                                    </div>
+                                    <div className="text-[#60A5FA] font-bold">
+                                        ⏱️ Elapsed: {elapsedTime}s
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                )}
+            </div>
+
+            {/* Preview */}
+            {showPreview && fetchedPublications.length > 0 && (
+                <div className="bg-[#1A1A1F] border border-[#334155] p-6">
+                    <h3 className="text-lg font-bold text-white font-['Orbitron',sans-serif] uppercase tracking-[0.1em] mb-4">
+                        // PREVIEW (FIRST 10 PUBLICATIONS)
+                    </h3>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-sm">
+                            <thead>
+                                <tr className="border-b border-[#334155]">
+                                    <th className="text-left py-2 px-3 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-xs">Title</th>
+                                    <th className="text-left py-2 px-3 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-xs">Year</th>
+                                    <th className="text-left py-2 px-3 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-xs">Authors</th>
+                                    <th className="text-left py-2 px-3 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-xs">Citations</th>
+                                    <th className="text-left py-2 px-3 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-xs">Staff</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {fetchedPublications.slice(0, 10).map((pub: any, idx: number) => (
+                                    <tr key={idx} className="border-b border-[#334155]/50 hover:bg-[#0B0B10]">
+                                        <td className="py-2 px-3 text-white font-['JetBrains_Mono',monospace] text-xs max-w-md truncate">
+                                            {pub.title}
+                                        </td>
+                                        <td className="py-2 px-3 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-xs">
+                                            {pub.publicationYear}
+                                        </td>
+                                        <td className="py-2 px-3 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-xs max-w-xs truncate">
+                                            {pub.authors.slice(0, 3).join(', ')}
+                                            {pub.authors.length > 3 && '...'}
+                                        </td>
+                                        <td className="py-2 px-3 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-xs">
+                                            {pub.citationCount}
+                                        </td>
+                                        <td className="py-2 px-3 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-xs">
+                                            {pub.staffName}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )}
+
+            {/* Information Panel */}
+            <div className="bg-[#1A1A1F] border border-[#334155] p-6">
+                <h3 className="text-sm font-bold text-white font-['Orbitron',sans-serif] uppercase tracking-[0.1em] mb-3">
+                    // EXPORT_INFORMATION
+                </h3>
+                <div className="space-y-2 text-[#94A3B8] font-['JetBrains_Mono',monospace] text-xs">
+                    <p>• CSV includes all Scopus metadata: title, authors, DOI, citations, abstract, keywords, etc.</p>
+                    <p>• WITH DUPLICATES: Co-authored papers appear once per author (useful for individual contribution tracking)</p>
+                    <p>• UNIQUE ONLY: Each paper appears once regardless of co-authors (useful for department/faculty totals)</p>
+                    <p>• Export time varies by scope: Individual (~2s), Department (~1 minute), Faculty (~7 minutes)</p>
+                    <p>• Actual time taken is displayed in the success message for performance tracking</p>
+                </div>
             </div>
         </div>
     );

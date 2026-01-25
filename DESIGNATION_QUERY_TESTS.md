@@ -147,6 +147,33 @@ Key Insights:
 
 ---
 
+### Test 11: List Large Group (>30) - Assistant Professors in LKC FES
+**Prompt:** "List all assistant professors in LKC FES"
+
+**Expected Answer:**
+- **Status:** Should show **preview of first 10** + **CSV Download Link**
+- **Count:** 101 Assistant Professors
+- **Message:** "There are 101 Assistant Professors. Showing first 10... Download the CSV for the full list."
+- **Reason:** Count > 30 threshold logic triggers CSV generation.
+
+---
+
+### Test 12: Table Summary Verification (Deterministic Stats)
+**Prompt:** "Summarize the number of lecturer, assistant professor, associate professors, professors, senior professors in LKCFES, in table."
+
+**Expected Answer:**
+Table with EXACT counts (sourced from pre-calculated metadata):
+| Designation | Count |
+| :--- | :--- |
+| Senior Professor | **6** (Must be 6, not 8) |
+| Professor | **14** |
+| Associate Professor | **48** |
+| Assistant Professor | **101** |
+| Lecturer | **40** |
+
+**Note:** If Senior Professor shows 8, it means the bot is hallucinating/recounting manually. It must show 6.
+
+
 ## Verification Commands
 
 ### Quick verification in PowerShell:

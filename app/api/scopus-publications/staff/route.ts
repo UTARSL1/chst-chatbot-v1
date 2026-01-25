@@ -20,20 +20,37 @@ export async function GET(request: NextRequest) {
 
         const { searchParams } = new URL(request.url);
         const department = searchParams.get('department');
-        // We assume Faculty is LKC FES for now as per current data structure, 
-        // but ideally we should pass faculty too. For now we can infer or check broadly.
-        // To be safe, let's allow if they have access to THIS department under ANY faculty 
-        // OR better, since the UI passes department acronym, we construct the key.
-        // The permission key format is "Faculty-DepartmentAcronym".
-        // Since we only have LKC FES now, we default to that.
-        const faculty = 'LKC FES';
-
-        if (!department) {
-            return NextResponse.json({ success: false, error: 'Department parameter required' }, { status: 400 });
-        }
+        const faculty = searchParams.get('faculty') || 'LKC FES';
 
         // Permission Check
         const isChairperson = session.user.role === 'chairperson';
+
+        // If no department specified, return all faculty staff (chairperson only)
+        if (!department) {
+            if (!isChairperson) {
+                return NextResponse.json({ success: false, error: 'Access Denied - Faculty-level access requires chairperson role' }, { status: 403 });
+            }
+
+            // Load all faculty staff
+            const publicationsPath = path.join(process.cwd(), 'lkcfes-scopus-publications.json');
+            const publicationsData = JSON.parse(fs.readFileSync(publicationsPath, 'utf-8'));
+
+            return NextResponse.json(
+                {
+                    success: true,
+                    staff: publicationsData.results
+                },
+                {
+                    headers: {
+                        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0',
+                    }
+                }
+            );
+        }
+
+        // Department-level access check
         if (!isChairperson) {
             const permissionKey = `${faculty}-${department}`;
             const perms = getPermissions();

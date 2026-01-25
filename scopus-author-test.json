@@ -1,0 +1,71 @@
+{
+  "@_fa": "true",
+  "prism:url": "https://api.elsevier.com/content/abstract/scopus_id/85185464020",
+  "dc:identifier": "SCOPUS_ID:85185464020",
+  "dc:title": "Stretchable liquid metal based biomedical devices",
+  "dc:creator": "Deng Y.",
+  "author": [
+    {
+      "@_fa": "true",
+      "@seq": "1",
+      "author-url": "https://api.elsevier.com/content/author/author_id/58789675500",
+      "authid": "58789675500",
+      "authname": "Deng Y.",
+      "surname": "Deng",
+      "given-name": "Yifan",
+      "initials": "Y."
+    },
+    {
+      "@_fa": "true",
+      "@seq": "2",
+      "author-url": "https://api.elsevier.com/content/author/author_id/57191980115",
+      "authid": "57191980115",
+      "authname": "Bu F.",
+      "surname": "Bu",
+      "given-name": "Fan",
+      "initials": "F."
+    },
+    {
+      "@_fa": "true",
+      "@seq": "3",
+      "author-url": "https://api.elsevier.com/content/author/author_id/59655083700",
+      "authid": "59655083700",
+      "orcid": "0009-0009-0949-7045",
+      "authname": "Wang Y.",
+      "surname": "Wang",
+      "given-name": "Yujie",
+      "initials": "Y."
+    },
+    {
+      "@_fa": "true",
+      "@seq": "4",
+      "author-url": "https://api.elsevier.com/content/author/author_id/37012425700",
+      "authid": "37012425700",
+      "authname": "Chee P.S.",
+      "surname": "Chee",
+      "given-name": "Pei Song",
+      "initials": "P.S."
+    },
+    {
+      "@_fa": "true",
+      "@seq": "5",
+      "author-url": "https://api.elsevier.com/content/author/author_id/55974680100",
+      "authid": "55974680100",
+      "authname": "Liu X.",
+      "surname": "Liu",
+      "given-name": "Xiangye",
+      "initials": "X."
+    },
+    {
+      "@_fa": "true",
+      "@seq": "6",
+      "author-url": "https://api.elsevier.com/content/author/author_id/53979628000",
+      "authid": "53979628000",
+      "orcid": "0000-0002-4468-7970",
+      "authname": "Guan C.",
+      "surname": "Guan",
+      "given-name": "Cao",
+      "initials": "C."
+    }
+  ]
+}

@@ -107,3 +107,14 @@ button[class*="bg-white"]:hover {
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
   filter: brightness(1.1);
 }
+
+/* Progress bar shimmer animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
