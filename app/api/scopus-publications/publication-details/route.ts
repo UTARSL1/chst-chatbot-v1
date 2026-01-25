@@ -4,8 +4,9 @@ import { authOptions } from '@/lib/auth';
 import fs from 'fs';
 import path from 'path';
 
-// Increase timeout for faculty-level exports (234 staff × 2s = ~468s = ~8 minutes)
-export const maxDuration = 900; // 15 minutes (safe buffer for faculty exports)
+// Timeout limit: 300s (5 mins) is the maximum for Vercel Hobby plan
+// Note: Faculty exports may time out if they exceed this limit.
+export const maxDuration = 300;
 export const dynamic = 'force-dynamic'; // Disable caching for real-time data
 
 const SCOPUS_API_KEY = process.env.SCOPUS_API_KEY || '246160ba1cace197268c2b42a06f5349';
