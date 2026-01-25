@@ -70,7 +70,11 @@ async function fetchPublicationDetails(
     retryCount = 0
 ): Promise<PublicationDetail[]> {
     try {
-        const publications: PublicationDetail[] = [];
+        let allPublications: PublicationDetail[] = [];
+        let startIndex = 0;
+        const count = 25; // Max allowed for non-institutional keys
+        let totalResults = 0;
+        let hasMore = true;
 
         // Build query for all years
         const yearQuery = years.length > 0
@@ -79,71 +83,100 @@ async function fetchPublicationDetails(
 
         const query = `AU-ID(${authorId}) ${yearQuery}`;
 
-        const url = new URL(SCOPUS_SEARCH_ENDPOINT);
-        url.searchParams.append('query', query);
-        url.searchParams.append('apiKey', SCOPUS_API_KEY);
-        url.searchParams.append('count', '200'); // Max results per request
-        url.searchParams.append('start', '0');
-        url.searchParams.append('httpAccept', 'application/json');
-        url.searchParams.append('field', 'dc:identifier,eid,doi,dc:title,dc:creator,author,prism:publicationName,prism:coverDate,prism:volume,prism:issueIdentifier,prism:pageRange,citedby-count,dc:description,authkeywords,subtypeDescription,affilname,openaccess,fund-agency,subject-area,prism:issn,prism:isbn,dc:publisher,prism:aggregationType,link');
+        while (hasMore) {
+            const url = new URL(SCOPUS_SEARCH_ENDPOINT);
+            url.searchParams.append('query', query);
+            url.searchParams.append('apiKey', SCOPUS_API_KEY);
+            url.searchParams.append('count', count.toString());
+            url.searchParams.append('start', startIndex.toString());
+            url.searchParams.append('httpAccept', 'application/json');
+            url.searchParams.append('field', 'dc:identifier,eid,doi,dc:title,dc:creator,author,prism:publicationName,prism:coverDate,prism:volume,prism:issueIdentifier,prism:pageRange,citedby-count,dc:description,authkeywords,subtypeDescription,affilname,openaccess,fund-agency,subject-area,prism:issn,prism:isbn,dc:publisher,prism:aggregationType,link');
+            // url.searchParams.append('view', 'COMPLETE'); // Avoid COMPLETE view as it consumes more quota
 
-        console.log(`Fetching publications for Author ID ${authorId}...`);
+            console.log(`Fetching publications for Author ID ${authorId} (Start: ${startIndex})...`);
 
-        const response = await fetch(url.toString(), {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-            },
-        });
+            const response = await fetch(url.toString(), {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                },
+            });
 
-        if (!response.ok) {
-            if (response.status === 429 && retryCount < MAX_RETRIES) {
-                console.log(`Rate limited. Waiting before retry ${retryCount + 1}/${MAX_RETRIES}...`);
-                await sleep(5000);
-                return fetchPublicationDetails(authorId, years, retryCount + 1);
+            if (!response.ok) {
+                if (response.status === 429 && retryCount < MAX_RETRIES) {
+                    console.log(`Rate limited. Waiting before retry ${retryCount + 1}/${MAX_RETRIES}...`);
+                    await sleep(5000);
+                    return fetchPublicationDetails(authorId, years, retryCount + 1);
+                }
+                const errorText = await response.text();
+                // If it's the "start index > total" error, just break (we are done)
+                if (errorText.includes('Page out of range') || response.status === 400) {
+                    console.warn(`[Scopus API] Pagination ended or error: ${errorText}`);
+                    break;
+                }
+                throw new Error(`HTTP ${response.status}: ${errorText}`);
             }
-            throw new Error(`HTTP ${response.status}: ${await response.text()}`);
+
+            const data = await response.json();
+            const entries = data['search-results']?.entry || [];
+
+            // Get total results on first page
+            if (startIndex === 0) {
+                totalResults = parseInt(data['search-results']?.['opensearch:totalResults'] || '0');
+                console.log(`[Scopus API] Found ${totalResults} matching publications for ${authorId}`);
+            }
+
+            if (entries.length === 0) {
+                hasMore = false;
+                break;
+            }
+
+            for (const entry of entries) {
+                // Extract all available metadata
+                const publication: PublicationDetail = {
+                    scopusId: entry['dc:identifier']?.replace('SCOPUS_ID:', '') || '',
+                    eid: entry['eid'] || '',
+                    doi: entry['prism:doi'] || entry['doi'] || '',
+                    title: entry['dc:title'] || '',
+                    authors: entry['author']?.map((a: any) => a['authname']) || [],
+                    authorIds: entry['author']?.map((a: any) => a['authid']) || [],
+                    publicationYear: parseInt(entry['prism:coverDate']?.substring(0, 4) || '0'),
+                    sourceTitle: entry['prism:publicationName'] || '',
+                    volume: entry['prism:volume'] || '',
+                    issue: entry['prism:issueIdentifier'] || '',
+                    pageRange: entry['prism:pageRange'] || '',
+                    citationCount: parseInt(entry['citedby-count'] || '0'),
+                    abstract: entry['dc:description'] || '',
+                    keywords: entry['authkeywords']?.split('|').map((k: string) => k.trim()).filter(Boolean) || [],
+                    documentType: entry['subtypeDescription'] || entry['subtype'] || '',
+                    affiliations: entry['affilname']?.split(';').map((a: string) => a.trim()).filter(Boolean) || [],
+                    openAccess: entry['openaccess'] === '1' || entry['openaccess'] === 'true' || entry['openaccess'] === true,
+                    fundingAgency: entry['fund-agency']?.split(';').map((f: string) => f.trim()).filter(Boolean) || [],
+                    subjectAreas: entry['subject-area']?.map((s: any) => s['$']) || [],
+                    issn: entry['prism:issn'] || '',
+                    isbn: entry['prism:isbn'] || '',
+                    publisher: entry['dc:publisher'] || '',
+                    aggregationType: entry['prism:aggregationType'] || '',
+                    coverDate: entry['prism:coverDate'] || '',
+                    publicationName: entry['prism:publicationName'] || '',
+                    link: entry['link']?.find((l: any) => l['@ref'] === 'scopus')?.['@href'] ||
+                        `https://www.scopus.com/record/display.uri?eid=${entry['eid']}&origin=resultslist`
+                };
+
+                allPublications.push(publication);
+            }
+
+            // Pagination logic
+            startIndex += entries.length;
+            if (startIndex >= totalResults || entries.length < count) {
+                hasMore = false;
+            }
+
+            // Be nice to the API
+            if (hasMore) await sleep(200);
         }
 
-        const data = await response.json();
-        const entries = data['search-results']?.entry || [];
-
-        for (const entry of entries) {
-            // Extract all available metadata
-            const publication: PublicationDetail = {
-                scopusId: entry['dc:identifier']?.replace('SCOPUS_ID:', '') || '',
-                eid: entry['eid'] || '',
-                doi: entry['prism:doi'] || entry['doi'] || '',
-                title: entry['dc:title'] || '',
-                authors: entry['author']?.map((a: any) => a['authname']) || [],
-                authorIds: entry['author']?.map((a: any) => a['authid']) || [],
-                publicationYear: parseInt(entry['prism:coverDate']?.substring(0, 4) || '0'),
-                sourceTitle: entry['prism:publicationName'] || '',
-                volume: entry['prism:volume'] || '',
-                issue: entry['prism:issueIdentifier'] || '',
-                pageRange: entry['prism:pageRange'] || '',
-                citationCount: parseInt(entry['citedby-count'] || '0'),
-                abstract: entry['dc:description'] || '',
-                keywords: entry['authkeywords']?.split('|').map((k: string) => k.trim()).filter(Boolean) || [],
-                documentType: entry['subtypeDescription'] || entry['subtype'] || '',
-                affiliations: entry['affilname']?.split(';').map((a: string) => a.trim()).filter(Boolean) || [],
-                openAccess: entry['openaccess'] === '1' || entry['openaccess'] === 'true' || entry['openaccess'] === true,
-                fundingAgency: entry['fund-agency']?.split(';').map((f: string) => f.trim()).filter(Boolean) || [],
-                subjectAreas: entry['subject-area']?.map((s: any) => s['$']) || [],
-                issn: entry['prism:issn'] || '',
-                isbn: entry['prism:isbn'] || '',
-                publisher: entry['dc:publisher'] || '',
-                aggregationType: entry['prism:aggregationType'] || '',
-                coverDate: entry['prism:coverDate'] || '',
-                publicationName: entry['prism:publicationName'] || '',
-                link: entry['link']?.find((l: any) => l['@ref'] === 'scopus')?.['@href'] ||
-                    `https://www.scopus.com/record/display.uri?eid=${entry['eid']}&origin=resultslist`
-            };
-
-            publications.push(publication);
-        }
-
-        return publications;
+        return allPublications;
     } catch (error) {
         console.error(`Error fetching publication details:`, error);
         throw error;
