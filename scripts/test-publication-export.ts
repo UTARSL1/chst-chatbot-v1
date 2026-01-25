@@ -2,8 +2,11 @@
  * Test script to verify Scopus publication details API
  */
 
-const SCOPUS_API_KEY = process.env.SCOPUS_API_KEY || '246160ba1cace197268c2b42a06f5349';
-const SCOPUS_SEARCH_ENDPOINT = 'https://api.elsevier.com/content/search/scopus';
+// Make this a module
+export { };
+
+const TEST_AG_API_KEY = process.env.SCOPUS_API_KEY || '246160ba1cace197268c2b42a06f5349';
+const TEST_AG_ENDPOINT = 'https://api.elsevier.com/content/search/scopus';
 
 async function testScopusAPI() {
     // Test with a known author ID from DMBE
@@ -13,9 +16,9 @@ async function testScopusAPI() {
     const yearQuery = `AND (${testYears.map(y => `PUBYEAR IS ${y}`).join(' OR ')})`;
     const query = `AU-ID(${testAuthorId}) ${yearQuery}`;
 
-    const url = new URL(SCOPUS_SEARCH_ENDPOINT);
+    const url = new URL(TEST_AG_ENDPOINT);
     url.searchParams.append('query', query);
-    url.searchParams.append('apiKey', SCOPUS_API_KEY);
+    url.searchParams.append('apiKey', TEST_AG_API_KEY);
     url.searchParams.append('count', '10');
     url.searchParams.append('start', '0');
     url.searchParams.append('httpAccept', 'application/json');

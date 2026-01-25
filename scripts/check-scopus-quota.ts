@@ -2,13 +2,16 @@
  * Check Scopus API quota and rate limits
  */
 
-const SCOPUS_API_KEY = process.env.SCOPUS_API_KEY || '246160ba1cace197268c2b42a06f5349';
-const SCOPUS_SEARCH_ENDPOINT = 'https://api.elsevier.com/content/search/scopus';
+// Make this file a module to avoid global scope pollution
+export { };
+
+const CHECK_QUOTA_API_KEY = process.env.SCOPUS_API_KEY || '246160ba1cace197268c2b42a06f5349';
+const CHECK_QUOTA_ENDPOINT = 'https://api.elsevier.com/content/search/scopus';
 
 async function checkAPIQuota() {
-    const url = new URL(SCOPUS_SEARCH_ENDPOINT);
+    const url = new URL(CHECK_QUOTA_ENDPOINT);
     url.searchParams.append('query', 'AU-ID(37012425700)');
-    url.searchParams.append('apiKey', SCOPUS_API_KEY);
+    url.searchParams.append('apiKey', CHECK_QUOTA_API_KEY);
     url.searchParams.append('count', '1');
 
     console.log('Checking Scopus API quota and limits...\n');

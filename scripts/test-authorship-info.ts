@@ -2,17 +2,20 @@
  * Test script to check what authorship information Scopus API provides
  */
 
+// Make this a module
+export { };
+
 const fs = require('fs');
-const SCOPUS_API_KEY = process.env.SCOPUS_API_KEY || '246160ba1cace197268c2b42a06f5349';
-const SCOPUS_SEARCH_ENDPOINT = 'https://api.elsevier.com/content/search/scopus';
+const TEST_AUTHOR_API_KEY = process.env.SCOPUS_API_KEY || '246160ba1cace197268c2b42a06f5349';
+const TEST_AUTHOR_ENDPOINT = 'https://api.elsevier.com/content/search/scopus';
 
 async function testAuthorshipInfo() {
     const testAuthorId = '37012425700';
     const query = `AU-ID(${testAuthorId}) AND PUBYEAR IS 2024`;
 
-    const url = new URL(SCOPUS_SEARCH_ENDPOINT);
+    const url = new URL(TEST_AUTHOR_ENDPOINT);
     url.searchParams.append('query', query);
-    url.searchParams.append('apiKey', SCOPUS_API_KEY);
+    url.searchParams.append('apiKey', TEST_AUTHOR_API_KEY);
     url.searchParams.append('count', '1');
     url.searchParams.append('start', '0');
     url.searchParams.append('httpAccept', 'application/json');
