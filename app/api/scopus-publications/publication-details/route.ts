@@ -4,6 +4,9 @@ import { authOptions } from '@/lib/auth';
 import fs from 'fs';
 import path from 'path';
 
+// Import data directly so Vercel bundles it
+import staffData from '@/lkcfes-scopus-publications.json';
+
 // Timeout limit: 300s (5 mins) is the maximum for Vercel Hobby plan
 // Note: Faculty exports may time out if they exceed this limit.
 export const maxDuration = 300;
@@ -191,9 +194,8 @@ export async function GET(request: NextRequest) {
             }
         }
 
-        // Load Scopus publications data
-        const publicationsPath = path.join(process.cwd(), 'lkcfes-scopus-publications.json');
-        const publicationsData = JSON.parse(fs.readFileSync(publicationsPath, 'utf-8'));
+        // Use imported data directly (works in Vercel)
+        const publicationsData = staffData;
 
         let staffToProcess: any[] = [];
 
