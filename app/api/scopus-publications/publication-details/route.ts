@@ -195,7 +195,8 @@ export async function GET(request: NextRequest) {
         }
 
         // Use imported data directly (works in Vercel)
-        const publicationsData = staffData;
+        // Handle potential default export wrapping
+        const publicationsData = (staffData as any).default || staffData;
 
         let staffToProcess: any[] = [];
 
@@ -216,7 +217,13 @@ export async function GET(request: NextRequest) {
             staffToProcess = publicationsData.results.filter((s: any) => s.departmentAcronym === department);
         } else if (scope === 'faculty') {
             // For now, all data is LKC FES
-            staffToProcess = publicationsData.results;
+            staffToProcess = publicationsData.results || [];
+        }
+
+        console.log(`[Publication Details Debug] Scope: ${scope}, Data Loaded: ${!!publicationsData}, Results: ${publicationsData?.results?.length}, Staff to process: ${staffToProcess.length}`);
+
+        if (staffToProcess.length === 0) {
+            console.warn(`[Publication Details Warning] No staff found. Debug: Data=${JSON.stringify(Object.keys(publicationsData || {}))}`);
         }
 
         // Fetch publication details for all staff members
