@@ -154,7 +154,7 @@ const UTAR_STAFF_TOOLS = [
         type: 'function' as const,
         function: {
             name: 'utar_staff_search',
-            description: 'Performs live staff lookups from the UTAR Staff Directory. Search by faculty, department, name, email, expertise, designation, or role.',
+            description: 'Searches the cached UTAR Staff Directory. Search by faculty, department, name, email, expertise, designation, or role. Uses pre-synced cached data for deterministic results.',
             parameters: {
                 type: 'object',
                 properties: {
@@ -308,9 +308,15 @@ const STAFF_SEARCH_SYSTEM_PROMPT = `
 You have access to three MCP tools:
 1. utar_resolve_unit: converts acronyms (CCR, CHST, FSc) into official UTAR names.
 2. utar_list_departments: lists all departments in a faculty.
-3. utar_staff_search: performs live staff lookups.
+3. utar_staff_search: searches the cached staff directory (uses pre-synced data, NOT live scraping).
 4. utar_designation_stats: gets cached statistics/lists for academic designations (Professor, etc.).
 5. utar_compare_designations: compares designation counts across all departments in a faculty.
+
+**IMPORTANT: ALL STAFF TOOLS USE CACHED DATA**
+- All staff search tools now use pre-synced cached data from the staff directory
+- This ensures deterministic, consistent results for queries like counting professors by designation
+- If the cache is out of date, users should run the sync command to update it
+- NO live scraping is performed - all results come from the cached staff_directory.json file
 
 WHEN TO USE:
 - When the user asks about UTAR staff (names, positions, chairs, heads, deans, emails), ALWAYS use the tools.
@@ -334,7 +340,7 @@ When asked for staff counts across ALL departments in a faculty (e.g., "how many
    - Breakdown by staff type (Full-Time, Expatriate, Adjunct, Part-Time) if applicable
    - Example format: "**TOTAL: 245 staff** (210 Full-Time, 15 Expatriate, 15 Adjunct, 5 Part-Time)"
 **IMPORTANT: DOCUMENT RECOMMENDATION RULE**
-- When you use tools (utar_staff_search, utar_resolve_unit, utar_list_departments, jcr_journal_metric), you are getting LIVE data
+- When you use tools (utar_staff_search, utar_resolve_unit, utar_list_departments, jcr_journal_metric), you are getting cached/deterministic data
 - DO NOT recommend policy documents when answering queries using these tools
 - The retrieved documents are NOT relevant to tool-based queries
 - DO recommend documents for policy/procedure questions (sabbatical, grants, RPS, etc.) where tools are NOT used

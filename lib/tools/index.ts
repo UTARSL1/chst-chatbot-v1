@@ -1,7 +1,5 @@
 import Fuse from 'fuse.js';
-import * as cheerio from 'cheerio';
 import unitsData from './units.json';
-import https from 'https';
 import { searchStaffFromDirectory } from './search-from-directory';
 import { StaffMember } from './staff-directory-types';
 import { queryStaffDirectory } from './query-staff-directory';
@@ -105,16 +103,8 @@ export function resolveUnit(query: string, logger?: (msg: string) => void) {
     return { canonical: "", acronym: null, type: null, error: "No match found" };
 }
 
-// --- Tool 2: Search Staff ---
-function httpsGet(url: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-        https.get(url, { rejectUnauthorized: false }, (res) => {
-            let data = '';
-            res.on('data', (chunk) => data += chunk);
-            res.on('end', () => resolve(data));
-        }).on('error', reject);
-    });
-}
+
+// --- Tool 2: Search Staff (Cache-Only) ---
 
 export async function searchStaff(
     params: {
@@ -332,442 +322,59 @@ export async function searchStaff(
                     } as any;
                 }
             } else {
-                log('No results from lookup table, falling back to live scraping...');
+                log('No results from lookup table.');
+                return {
+                    error: 'No staff found in cached directory. Please ensure the staff directory cache is up to date by running the sync command.',
+                    message: 'No staff members found matching your criteria in the cached directory.',
+                    totalCount: 0,
+                    fullTimeCount: 0,
+                    adjunctCount: 0,
+                    partTimeCount: 0,
+                    expatriateCount: 0,
+                    staff: []
+                } as any;
             }
         } catch (error: any) {
-            log(`Lookup table search failed: ${error.message}, falling back to live scraping...`);
+            log(`Lookup table search failed: ${error.message}`);
+            return {
+                error: `Staff directory search error: ${error.message}. Please ensure the staff directory cache is up to date.`,
+                message: 'An error occurred while searching the cached staff directory.',
+                totalCount: 0,
+                fullTimeCount: 0,
+                adjunctCount: 0,
+                partTimeCount: 0,
+                expatriateCount: 0,
+                staff: []
+            } as any;
         }
 
-        // **FALLBACK: Live scraping (slow, only if lookup table fails)**
-        log('Using live scraping (this may take 20-30 seconds)...');
-
-        const baseUrl = 'https://www2.utar.edu.my';
-        const results: StaffResult[] = [];
-        const seenIds = new Set<string>();
-
-        // --- DETERMINISTIC UNIT RESOLUTION ---
-
-        // Helper to find input in knowledge base
-        const findUnit = (query: string) => {
-            if (!query || query.toLowerCase() === 'all') return null;
-            const q = query.toLowerCase().trim();
-            return unitsData.find(u =>
-                u.canonical.toLowerCase() === q ||
-                (u.acronym && u.acronym.toLowerCase() === q) ||
-                (u.aliases && u.aliases.some(alias => alias.toLowerCase() === q))
-            );
-        };
-
-        let resolvedFaculty = params.faculty || 'All';
-        let resolvedDepartmentId = 'All';
-
-        // 0. Analyze 'faculty' argument robustly
-        // LLM sometimes passes a Department name (e.g. "D3E" or "Dept of Electrical...") as the 'faculty'.
-        if (resolvedFaculty.toLowerCase() !== 'all') {
-            const unit = findUnit(resolvedFaculty);
-            if (unit) {
-                // If the 'faculty' argument is actually a Department (has a departmentId)
-                if ((unit as any).departmentId) {
-                    resolvedDepartmentId = (unit as any).departmentId;
-                    // Resolve its parent to get the real Faculty
-                    if ((unit as any).parent) {
-                        const parentUnit = findUnit((unit as any).parent);
-                        if (parentUnit && parentUnit.acronym) {
-                            resolvedFaculty = parentUnit.acronym;
-                            log(`[Auto-fix] Input faculty '${params.faculty}' is actually a Department. Resolved to Faculty: '${resolvedFaculty}', DeptID: '${resolvedDepartmentId}'`);
-                        }
-                    }
-                } else if (unit.acronym) {
-                    // It is a valid Faculty/Centre, ensure we use the Acronym (e.g. found by name "Lee Kong Chian...")
-                    resolvedFaculty = unit.acronym;
-                }
-            }
-        }
-
-        // 1. Analyze 'department' argument first
-        // LLM often puts Research Centres (CCSN) in 'department' field incorrectly.
-        if (params.department && params.department.toLowerCase() !== 'all') {
-            const unit = findUnit(params.department);
-
-            if (unit) {
-                if ((unit as any).departmentId) {
-                    // CASE A: It is a valid Department (e.g., "Department of Computer Science")
-                    resolvedDepartmentId = (unit as any).departmentId;
-
-                    // Auto-fix faculty based on department's parent
-                    if ((unit as any).parent) {
-                        const parentUnit = findUnit((unit as any).parent);
-                        if (parentUnit && parentUnit.acronym) {
-                            resolvedFaculty = parentUnit.acronym;
-                            log(`Auto-corrected faculty to '${resolvedFaculty}' based on department '${unit.canonical}'`);
-                        }
-                    }
-                } else {
-                    // CASE B: It is a Top-Level Unit (Faculty/Research Centre) put in department field
-                    // e.g. department="CCSN" -> should be faculty="CCSN", department="All"
-                    if (unit.acronym) {
-                        resolvedFaculty = unit.acronym;
-                        resolvedDepartmentId = 'All';
-                        log(`Auto-corrected: Promoted '${unit.canonical}' from department to faculty (it is a Research Centre/Faculty).`);
-                    }
-                }
-            } else {
-                // Department name not matched in DB.
-                // Depending on strictness, we might warn or just pass it through. 
-                // For now, if we can't map it to an ID, we potentially lose it or fail. 
-                // But let's proceed with original logic's fallback or just warn.
-                log(`Warning: Department '${params.department}' not found in DB.`);
-            }
-        }
-
-        // 2. Normalize Faculty Acronym
-        if (resolvedFaculty !== 'All') {
-            const unit = findUnit(resolvedFaculty);
-            if (unit && unit.acronym) {
-                resolvedFaculty = unit.acronym;
-            }
-        }
-
-        // 3. (NEW) Analyze 'acronym' argument (HIGHEST PRIORITY)
-        // Code-based override for robust unit resolution.
-        if (params.acronym) {
-            const unit = findUnit(params.acronym);
-            if (unit) {
-                log(`[Code-Resolution] Overriding with acronym '${params.acronym}' -> '${unit.canonical}'`);
-                if ((unit as any).departmentId) {
-                    resolvedDepartmentId = (unit as any).departmentId;
-                    if ((unit as any).parent) {
-                        const parentUnit = findUnit((unit as any).parent);
-                        if (parentUnit && parentUnit.acronym) {
-                            resolvedFaculty = parentUnit.acronym;
-                        }
-                    }
-                } else if (unit.acronym) {
-                    resolvedFaculty = unit.acronym;
-                    resolvedDepartmentId = 'All';
-                }
-            } else {
-                log(`[Code-Resolution] Warning: Provided acronym '${params.acronym}' not found in DB.`);
-            }
-        }
-
-        // 4. Auto-correct: If Name provided but no unit, force Global Search (Faculty=All)
-        // unless we already have a specific resolved faculty
-        if (params.name && (!params.department || params.department === 'All') && resolvedFaculty === 'All') {
-            // Keep it All
-        }
-
-        // --- END RESOLUTION ---
-
-        // Build search URL
-        const searchParams = new URLSearchParams();
-        // IMPORTANT: UTAR website expects 'ALL' (uppercase), not 'All' (mixed case)
-        searchParams.set('searchDept', resolvedFaculty === 'All' ? 'ALL' : resolvedFaculty);
-        searchParams.set('searchDiv', resolvedDepartmentId); // resolvedId is 'All' or specific ID like 'DCS'
-        searchParams.set('searchName', params.name || '');
-        searchParams.set('searchExpertise', params.expertise || '');
-        searchParams.set('submit', 'Search');
-        searchParams.set('searchResult', 'Y');
-
-        const url = `${baseUrl}/staffListSearchV2.jsp?${searchParams.toString()}`;
-        log(`GET Request to: ${url}`);
-
-        let currentPage = 1;
-        let hasMorePages = true;
-        let totalStaffCount = 0; // Track total including those without searchId
-        let fullTimeCount = 0;
-        let adjunctCount = 0;
-        let partTimeCount = 0;
-
-        // Pagination loop - fetch all pages
-        while (hasMorePages && currentPage <= 10) { // Max 10 pages as safety limit
-            const pageUrl = currentPage === 1 ? url : `${url}&iPage=${currentPage}`;
-            log(`Fetching page ${currentPage}: ${pageUrl}`);
-
-            const html = await httpsGet(pageUrl);
-
-            const $ = cheerio.load(html);
-
-            // Find all staff card tables (they have onclick with staffListDetailV2.jsp)
-            const staffTables = $('table[onclick*="staffListDetailV2.jsp"]');
-            log(`Page ${currentPage}: Found ${staffTables.length} staff cards`);
-
-            if (staffTables.length === 0) {
-                // No more staff cards, stop pagination
-                hasMorePages = false;
-                break;
-            }
-
-            // Check if next page link exists
-            const nextPageNum = currentPage + 1;
-            if (!html.includes(`iPage=${nextPageNum}`)) {
-                log(`Page ${currentPage}: Last page`);
-                hasMorePages = false;
-            }
-
-            // Count ALL cards on this page (including those without searchId)
-            totalStaffCount += staffTables.length;
-
-            // Step 2: Extract all searchIds first, then fetch details in parallel
-            const detailFetchTasks = [];
-
-            for (let i = 0; i < staffTables.length; i++) {
-                const table = staffTables[i];
-                const onclick = $(table).attr('onclick') || '';
-
-                // Extract detail page URL from onclick="javascript:location='staffListDetailV2.jsp?searchId=16131';"
-                // searchId can be: numeric (20003) = full-time, AP##### = adjunct, J##### = part-time
-                const match = onclick.match(/staffListDetailV2\.jsp\?searchId=([A-Z0-9]+)/i);
-                if (!match) {
-                    log(`Card ${i + 1}: No searchId found in onclick (counted but details not fetched)`);
-                    continue;
-                }
-
-                const searchId = match[1];
-
-                // Categorize staff type based on searchId pattern
-                let staffType: 'full-time' | 'adjunct' | 'part-time' = 'full-time';
-                if (searchId.startsWith('AP')) {
-                    staffType = 'adjunct';
-                    adjunctCount++;
-                } else if (searchId.startsWith('J')) {
-                    staffType = 'part-time';
-                    partTimeCount++;
-                } else {
-                    fullTimeCount++;
-                }
-
-                if (seenIds.has(searchId)) continue;
-                seenIds.add(searchId);
-
-                const detailUrl = `${baseUrl}/staffListDetailV2.jsp?searchId=${searchId}`;
-
-                // Create async task for parallel execution
-                detailFetchTasks.push(
-                    (async () => {
-                        try {
-                            log(`Card ${i + 1}: Fetching detail page: ${detailUrl}`);
-                            const detailHtml = await httpsGet(detailUrl);
-                            const $detail = cheerio.load(detailHtml);
-
-                            // Parse the clean, structured detail page
-                            let name = "";
-                            let email = "";
-                            let faculty = "";
-                            let department = "";
-                            let designation = "";
-                            let administrativePosts: string[] = [];
-                            let googleScholarUrl = "";
-                            let scopusUrl = "";
-                            let orcidUrl = "";
-                            let homepageUrl = "";
-
-                            // Extract data from the detail page's structured format
-                            $detail('tr').each((_, row) => {
-                                const label = $detail(row).find('td').first().text().trim();
-                                const value = $detail(row).find('td').last();
-                                const valueText = value.text().trim();
-
-                                if (label.includes('Name')) name = valueText.replace(/^:\s*/, '');
-                                if (label.includes('Email')) email = valueText.replace(/^:\s*/, '');
-                                if (label.includes('Faculty') || label.includes('Division')) {
-                                    faculty = valueText.replace(/^:\s*/, '');
-                                }
-                                if (label.includes('Department') || label.includes('Unit')) {
-                                    department = valueText.replace(/^:\s*/, '');
-                                }
-                                if (label.includes('Designation')) designation = valueText.replace(/^:\s*/, '');
-
-                                // Capture ALL Administrative Posts
-                                const labelLower = label.toLowerCase();
-                                if (labelLower.includes('administrative') && labelLower.includes('post')) {
-                                    const postValue = valueText.replace(/^:\s*/, '').trim();
-                                    if (postValue) {
-                                        administrativePosts.push(postValue);
-                                        log(`Card ${i + 1}: Found admin post: "${postValue}" (label: "${label}")`);
-                                    }
-                                }
-
-                                if (label.includes('Google Scholar')) {
-                                    const link = value.find('a').attr('href');
-                                    if (link) googleScholarUrl = link;
-                                }
-                                if (label.includes('Scopus')) {
-                                    const link = value.find('a').attr('href');
-                                    if (link) scopusUrl = link;
-                                }
-                                if (label.includes('Orcid')) {
-                                    const link = value.find('a').attr('href');
-                                    if (link) orcidUrl = link;
-                                }
-                                if (label.includes('Homepage URL')) {
-                                    const link = value.find('a').attr('href');
-                                    if (link) homepageUrl = link;
-                                }
-                            });
-
-                            if (!name || !email) {
-                                log(`Card ${i + 1}: Missing name or email`);
-                                return null;
-                            }
-
-                            // Build position string from all administrative posts
-                            let position = "";
-                            if (administrativePosts.length > 0) {
-                                position = administrativePosts.join('; ');
-                            }
-                            if (designation) {
-                                if (position) position += ` (${designation})`;
-                                else position = designation;
-                            }
-                            if (!position) position = "Staff";
-
-                            log(`Card ${i + 1}: ✓ ${name} <${email}> - ${position}`);
-
-                            return {
-                                searchId,
-                                staffType,
-                                name,
-                                position,
-                                email,
-                                faculty,
-                                department,
-                                designation,
-                                administrativePosts,
-                                googleScholarUrl,
-                                scopusUrl,
-                                orcidUrl,
-                                homepageUrl,
-                                extra: `${faculty} | ${department}`
-                            };
-
-                        } catch (detailError: any) {
-                            log(`Card ${i + 1}: Error fetching detail page: ${detailError.message}`);
-                            return null;
-                        }
-                    })()
-                );
-            }
-
-            // Fetch all details in parallel
-            const detailResults = await Promise.all(detailFetchTasks);
-
-            // Add successful results to main results array
-            for (const result of detailResults) {
-                if (result) {
-                    results.push(result);
-
-                    // Check for early termination if searching for specific role
-                    if (params.role && result.administrativePosts) {
-                        const targetRole = params.role.toLowerCase();
-                        const hasRole = result.administrativePosts.some(post => {
-                            const p = post.toLowerCase();
-                            if (p.includes(targetRole)) {
-                                const falsePositives = ['deputy', 'assistant', 'associate', 'vice'];
-                                const hasPrefix = falsePositives.some(prefix => p.includes(prefix) && !targetRole.includes(prefix));
-                                if (hasPrefix) return false;
-                                return true;
-                            }
-                            return false;
-                        });
-
-                        if (hasRole && resolvedDepartmentId === 'All') {
-                            log(`Found ${params.role}: ${result.name}. Stopping pagination for efficiency.`);
-                            hasMorePages = false;
-                            break;
-                        }
-                    }
-                }
-            }
-
-
-            // Move to next page
-            currentPage++;
-        }
-
-        log(`Found ${totalStaffCount} total staff cards (${fullTimeCount} full-time, ${adjunctCount} adjunct, ${partTimeCount} part-time) across ${currentPage - 1} pages.`);
-
-        // Return with clear summary message that LLM can directly use
-        const breakdown = [];
-        if (fullTimeCount > 0) breakdown.push(`${fullTimeCount} full-time`);
-        if (adjunctCount > 0) breakdown.push(`${adjunctCount} adjunct`);
-        if (partTimeCount > 0) breakdown.push(`${partTimeCount} part-time`);
-
-        // Parse searchId to extract joining year
-        // Format: YYNNN (e.g., 16072 = 2016, 72nd staff)
-        // Special: J##NNN, AP##NNN, EP##NNN, E##NNN (External/Expat)
-        function parseSearchId(searchId: string): { year: number; seq: number; sortKey: number } {
-            if (searchId.startsWith('J')) {
-                const year = 2000 + parseInt(searchId.substring(1, 3));
-                const seq = parseInt(searchId.substring(3));
-                return { year, seq, sortKey: year * 10000 + seq };
-            }
-            if (searchId.startsWith('AP')) {
-                const year = 2000 + parseInt(searchId.substring(2, 4));
-                const seq = parseInt(searchId.substring(4));
-                return { year, seq, sortKey: year * 10000 + seq };
-            }
-            if (searchId.startsWith('EP')) {
-                const year = 2000 + parseInt(searchId.substring(2, 4));
-                const seq = parseInt(searchId.substring(4));
-                return { year, seq, sortKey: year * 10000 + seq };
-            }
-            if (searchId.startsWith('E')) {
-                const year = 2000 + parseInt(searchId.substring(1, 3));
-                const seq = parseInt(searchId.substring(3));
-                return { year, seq, sortKey: year * 10000 + seq };
-            }
-            const year = 2000 + parseInt(searchId.substring(0, 2));
-            const seq = parseInt(searchId.substring(2));
-            return { year, seq, sortKey: year * 10000 + seq };
-        }
-        // Sort staff by joining date (oldest first)
-        const sortedStaff = [...results]
-            .filter((staff): staff is typeof staff & { searchId: string } => !!staff.searchId)
-            .sort((a, b) => {
-                const aInfo = parseSearchId(a.searchId);
-                const bInfo = parseSearchId(b.searchId);
-                return aInfo.sortKey - bInfo.sortKey;
-            }).map(staff => {
-                const info = parseSearchId(staff.searchId);
-                return { ...staff, joiningYear: info.year, joiningSequence: info.seq };
-            });
-
-        // Build message with oldest/newest staff info
-        let message = `There are ${totalStaffCount} staff members (${breakdown.join(', ')}).`;
-
-        // Overall oldest/newest (all staff types)
-        if (sortedStaff.length > 0) {
-            const oldest = sortedStaff[0];
-            const newest = sortedStaff[sortedStaff.length - 1];
-            message += ` Overall: Oldest staff is ${oldest.name} (joined ${oldest.joiningYear}), newest is ${newest.name} (joined ${newest.joiningYear}).`;
-        }
-
-        // Full-time only oldest/newest
-        const fullTimeStaff = sortedStaff.filter(s => s.staffType === 'full-time');
-        if (fullTimeStaff.length > 0) {
-            const oldestFT = fullTimeStaff[0];
-            const newestFT = fullTimeStaff[fullTimeStaff.length - 1];
-            message += ` Full-time only: Oldest is ${oldestFT.name} (joined ${oldestFT.joiningYear}), newest is ${newestFT.name} (joined ${newestFT.joiningYear}).`;
-        }
-
+        // **LIVE SCRAPING DISABLED**
+        // Live scraping has been disabled to ensure deterministic results.
+        // All queries now use cached data only.
+        // This code path should never be reached.
+        log('ERROR: Reached unreachable code path. This should not happen.');
         return {
-            message,
-            totalCount: totalStaffCount,
-            fullTimeCount,
-            adjunctCount,
-            partTimeCount,
-            staff: results,
-            sortedStaff,  // All staff sorted by joining date
-            oldestStaff: sortedStaff[0] || null,
-            newestStaff: sortedStaff[sortedStaff.length - 1] || null,
-            oldestFullTimeStaff: fullTimeStaff[0] || null,
-            newestFullTimeStaff: fullTimeStaff[fullTimeStaff.length - 1] || null
+            error: 'Internal error: Reached unreachable code path in searchStaff function.',
+            message: 'An unexpected error occurred.',
+            totalCount: 0,
+            fullTimeCount: 0,
+            adjunctCount: 0,
+            partTimeCount: 0,
+            expatriateCount: 0,
+            staff: []
         } as any;
-
     } catch (error: any) {
-        log(`Error: ${error.message}`);
-        return [];
+        log(`Error in searchStaff: ${error.message}`);
+        return {
+            error: `Staff directory search error: ${error.message}`,
+            message: 'An error occurred while searching the staff directory.',
+            totalCount: 0,
+            fullTimeCount: 0,
+            adjunctCount: 0,
+            partTimeCount: 0,
+            expatriateCount: 0,
+            staff: []
+        } as any;
     }
 }
 
