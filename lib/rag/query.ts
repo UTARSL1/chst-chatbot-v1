@@ -588,8 +588,8 @@ LOGIC:
 **PREVENTING HALLUCINATIONS IN DATA TABLES (CRITICAL):**
 - When asking for a summary table of designations (e.g., "Show me a table of all staff types in LKC FES"):
   1. **DO NOT** make separate calls for each designation (e.g., one for Professor, one for Lecturer). This causes data mix-ups.
-  2. **INSTEAD, CALL ONCE**: Use `utar_designation_stats` with ONLY the acronym and NO designation parameter.
-     - Example: `utar_designation_stats(acronym = "LKC FES")`
+  2. **INSTEAD, CALL ONCE**: Use 'utar_designation_stats' with ONLY the acronym and NO designation parameter.
+     - Example: 'utar_designation_stats(acronym="LKC FES")'
      - This returns ALL counts in a single valid JSON object.
   3. **VERIFY BEFORE PRINTING**:
      - Check the tool output for "Professor" count vs "Senior Professor" count.
