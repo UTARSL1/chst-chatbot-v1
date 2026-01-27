@@ -575,6 +575,7 @@ LOGIC:
   - Research area -> expertise
 - Leave unmentioned fields as empty string.
 
+
 **OPTIMIZED COUNT QUERIES (FASTEST PATH):**
 - When asked for staff counts by department acronym (e.g., "How many staff in DMBE and D3E?"):
   1. Use acronym parameter DIRECTLY: {"acronym": "DMBE"} and {"acronym": "D3E"}
@@ -583,6 +584,18 @@ LOGIC:
   4. This uses pre-calculated metadata counts (instant, <1ms)
   5. Example: For "How many staff in DMBE?", use: {"acronym": "DMBE"}
 - The tool returns instant counts without loading full staff lists
+
+**PREVENTING HALLUCINATIONS IN DATA TABLES (CRITICAL):**
+- When asking for a summary table of designations (e.g., "Show me a table of all staff types in LKC FES"):
+  1. **DO NOT** make separate calls for each designation (e.g., one for Professor, one for Lecturer). This causes data mix-ups.
+  2. **INSTEAD, CALL ONCE**: Use `utar_designation_stats` with ONLY the acronym and NO designation parameter.
+     - Example: `utar_designation_stats(acronym = "LKC FES")`
+     - This returns ALL counts in a single valid JSON object.
+  3. **VERIFY BEFORE PRINTING**:
+     - Check the tool output for "Professor" count vs "Senior Professor" count.
+     - They are DIFFERENT categories. Do not swap them.
+     - If tool returns "Professor: 14" and "Senior Professor: 6", your table MUST show exactly that.
+     - **NEVER** fill in a "0" if the tool didn't explicitly say "0" - check the list first.
 
 **FINDING DEANS EFFICIENTLY:**
 - When asked for the Dean of a faculty (e.g., "Who is the Dean of FICT?"):
