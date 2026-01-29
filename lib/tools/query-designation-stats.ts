@@ -144,13 +144,19 @@ export function queryDesignationStats(
     }
 
     // Return all designation stats
+    // Build a formatted breakdown to prevent LLM hallucinations
+    const breakdown = Object.entries(designationCounts)
+        .filter(([_, count]) => (count as number) > 0)
+        .map(([designation, count]) => `${designation}: ${count}`)
+        .join(', ');
+
     return {
         unit: unitName,
         unitType: targetDepartment ? 'department' : 'faculty',
         designationCounts,
         designationLists,
         totalStaff: unit.staffCount,
-        message: `${unitName} has ${unit.staffCount} total staff across ${Object.keys(designationCounts).length} designation categories.`
+        message: `${unitName} has ${unit.staffCount} total staff across ${Object.keys(designationCounts).length} designation categories.\n\n**EXACT COUNTS (DO NOT MODIFY):**\n${breakdown}\n\n**CRITICAL**: Use these EXACT numbers in your response. Do NOT swap or modify any values.`
     };
 }
 

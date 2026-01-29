@@ -303,7 +303,26 @@ const NATURE_INDEX_JOURNAL_LIST_TOOL = {
 
 const AVAILABLE_TOOLS = [...UTAR_STAFF_TOOLS, JCR_TOOL, JCR_CATEGORY_SEARCH_TOOL, NATURE_INDEX_TOOL, NATURE_INDEX_JOURNAL_TOOL, NATURE_INDEX_JOURNAL_LIST_TOOL];
 
+
 const STAFF_SEARCH_SYSTEM_PROMPT = `
+=== CRITICAL: ANTI-HALLUCINATION RULE ===
+**YOU MUST NEVER MAKE UP OR MODIFY NUMBERS FROM TOOL OUTPUTS**
+
+When you call utar_designation_stats or any staff tool:
+1. The tool returns EXACT counts in the "message" field and "designationCounts" object
+2. You MUST copy these numbers VERBATIM into your response
+3. DO NOT round, estimate, or modify any numbers
+4. DO NOT swap values between different designations
+5. If the tool says "Professor: 14", you MUST write "Professor: 14" - NOT "Professor: 6" or any other number
+
+**VERIFICATION CHECKLIST** (Use this BEFORE sending your response):
+☑ Did I copy the exact number from the tool output for each designation?
+☑ Did I verify that "Professor" count ≠ "Senior Professor" count?
+☑ Did I verify that "Associate Professor" count ≠ "Professor" count?
+☑ Am I using the numbers from the CURRENT tool call, not from memory?
+
+If you cannot verify all checkboxes, DO NOT send the response. Re-read the tool output.
+
 === UTAR STAFF SEARCH TOOLS ===
 You have access to three MCP tools:
 1. utar_resolve_unit: converts acronyms (CCR, CHST, FSc) into official UTAR names.
@@ -327,6 +346,7 @@ WHEN TO USE:
   - "What is the staff breakdown in LKC FES?" -> utar_designation_stats(acronym="LKC FES")
 
 - **FOR SPECIFIC ROLES (Dean, Head, Chairperson):** Use utar_staff_search.
+
 
 
 **IMPORTANT WORKFLOW FOR "ALL DEPARTMENTS" QUERIES:**
@@ -596,6 +616,12 @@ LOGIC:
      - They are DIFFERENT categories. Do not swap them.
      - If tool returns "Professor: 14" and "Senior Professor: 6", your table MUST show exactly that.
      - **NEVER** fill in a "0" if the tool didn't explicitly say "0" - check the list first.
+  4. **CRITICAL WARNING - COMMON MISTAKE**:
+     - ❌ WRONG: Showing "Professor: 6" when tool returned "Professor: 14" (you swapped it with Senior Professor!)
+     - ❌ WRONG: Showing "Senior Professor: 14" when tool returned "Senior Professor: 6" (you swapped it with Professor!)
+     - ✅ CORRECT: Copy the EXACT numbers from the tool output. "Professor" ≠ "Senior Professor"
+     - **DOUBLE-CHECK**: Before finalizing your table, re-read the tool output and verify each number matches exactly.
+     - **If in doubt**: Quote the tool output verbatim in your response to show the user the raw data.
 
 **FINDING DEANS EFFICIENTLY:**
 - When asked for the Dean of a faculty (e.g., "Who is the Dean of FICT?"):
@@ -1087,7 +1113,23 @@ async function executeToolCall(name: string, args: any, logger?: (msg: string) =
         }
         if (name === 'utar_designation_stats') {
             if (logger) logger(`[utar_designation_stats] Getting stats for ${args.acronym}, designation: ${args.designation || 'All'}`);
-            return queryDesignationStats(args, logger);
+            const result = queryDesignationStats(args, logger);
+
+            // Log the exact counts to help prevent hallucinations
+            if (result && result.designationCounts) {
+                const counts = result.designationCounts;
+                if (logger) {
+                    logger(`[utar_designation_stats] EXACT COUNTS RETURNED:`);
+                    logger(`  - Senior Professor: ${counts['Senior Professor'] || 0}`);
+                    logger(`  - Professor: ${counts['Professor'] || 0}`);
+                    logger(`  - Associate Professor: ${counts['Associate Professor'] || 0}`);
+                    logger(`  - Assistant Professor: ${counts['Assistant Professor'] || 0}`);
+                    logger(`  - Lecturer: ${counts['Lecturer'] || 0}`);
+                    logger(`[WARNING] DO NOT swap Professor (${counts['Professor'] || 0}) with Senior Professor (${counts['Senior Professor'] || 0})!`);
+                }
+            }
+
+            return result;
         }
         if (name === 'utar_compare_designations') {
             if (logger) logger(`[utar_compare_designations] Comparing ${args.designation} in ${args.acronym}`);
